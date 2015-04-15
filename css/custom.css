@@ -1,0 +1,29 @@
+body {
+	font-family: CaviarDreamsRegular;
+	background-color: #343639;
+}
+
+#loading {
+	display: inline;
+	position: absolute;
+	z-index: 10001;
+}
+
+#loading #bounce {
+	position: absolute;
+	display: inline;
+	z-index: 1000;
+}
+
+#loading #loadingBackground {
+	display: none;
+	position: absolute;
+	z-index: -1;
+	background-color: rgb(173, 216, 230);
+	opacity: 0.8;
+}
+
+#stage {
+	display: block;
+	z-index: 0;
+}

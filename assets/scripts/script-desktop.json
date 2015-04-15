@@ -1,0 +1,118 @@
+{
+  "title": "Loom Test Script",
+  "subtitle": "",
+  "author": "Franco Speziali",
+  "summary": "",
+  "minimum_resolution": {
+    "width": 640,
+    "height": 480
+  },
+  "scenes": {
+    "intro": {
+      "media": "video",
+      "data": {
+        "file": "assets/video/bbc-the-wonder-of-animals.mp4",
+        "nextSceneByDefault": null
+      },
+      "parameters": {
+        "loop": true,
+        "autoplay": true,
+        "position": "full"
+      },
+      "events": [
+        {
+          "call": "spam",
+          "type": "activeEvent",
+          "schedule": {
+            "in": 400,
+            "length": 400,
+            "out": null
+          },
+          "data": {
+            "namespace": "Elastic",
+            "function": "activeEvent"
+          },
+          "parameters": {
+            "graphic": "phone",
+            "hasTimer": true
+          }
+        },
+        {
+          "call": "spam",
+          "type": "activeEvent",
+          "schedule": {
+            "in": 100,
+            "length": 400,
+            "out": null
+          },
+          "data": {
+          },
+          "parameters": {
+          }
+        },
+        {
+          "call": "activeEvent",
+          "type": "activeEvent",
+          "schedule": {
+            "in": 500,
+            "length": 8000,
+            "out": null
+          },
+          "data": {
+          },
+          "parameters": {
+            "graphic": "phone",
+            "hasTimer": true
+          }
+        },
+        {
+          "call": "activeEvent",
+          "type": "activeEvent",
+          "schedule": {
+            "in": 3000,
+            "length": 6000,
+            "out": null
+          },
+          "data": {
+          },
+          "parameters": {
+            "graphic": "phone",
+            "hasTimer": true
+          }
+        },
+        {
+          "call": "activeEvent",
+          "type": "activeEvent",
+          "schedule": {
+            "in": 4000,
+            "length": 6000,
+            "out": null
+          },
+          "data": {
+          },
+          "parameters": {
+            "graphic": "phone",
+            "hasTimer": true
+          }
+        },
+        {
+          "call": "activeEvent",
+          "type": "activeEvent",
+          "schedule": {
+            "in": 4500,
+            "length": 6000,
+            "out": null
+          },
+          "data": {
+          },
+          "parameters": {
+            "graphic": "phone",
+            "hasTimer": true
+          }
+        }
+      ]
+    },
+    "End": {
+    }
+  }
+}

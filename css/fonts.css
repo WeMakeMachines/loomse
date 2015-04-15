@@ -1,0 +1,14 @@
+@font-face {
+	font-family: OlneyLight;
+	src: url('../assets/fonts/olney_light.otf');
+}
+
+@font-face {
+	font-family: CaviarDreamsRegular;
+	src: url('../assets/fonts/CaviarDreams.ttf');
+}
+
+@font-face {
+	font-family: CaviarDreamsBold;
+	src: url('../assets/fonts/CaviarDreams_Bold.ttf');
+}

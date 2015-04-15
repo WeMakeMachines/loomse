@@ -1,0 +1,123 @@
+/* Add your custom styles here */
+
+.mainTitle {
+	font-size: 50px;
+	text-align: center;
+	font-family: OlneyLight;
+	color: #fff;
+	margin: 5px;
+}
+
+.subtitle {
+	font-size: 18px;
+	text-align: center;
+	color: #fff;
+	margin: 5px;
+}
+
+/* Default styles */
+
+.loom_question {
+	display: inline;
+	padding: 10px;
+	margin: 10px;
+	background-color: #55aa1c;
+	color: #fff;
+}
+
+ol.loom_answers {
+	list-style: none;
+	text-align: center;
+}
+
+ol.loom_answers li {
+	display: inline;
+	float: left;
+	clear: left;
+	padding: 10px 12px 10px 12px;
+	color: #fff;
+	border: 2px solid #fff;
+	cursor: pointer;
+	letter-spacing: 8px;
+	text-indent: 8px;
+	text-transform: uppercase;
+}
+
+.loom_fullscreen {
+	position: absolute;
+}
+
+.loom_fullscreen a,
+.loom_fullscreen a:link,
+.loom_fullscreen a:visited,
+.loom_fullscreen a:hover,
+.loom_fullscreen a:active {
+	font-size: 20px;
+	color: #fff;
+	text-decoration: none;
+}
+
+/* Do not edit below this line */
+#loom_stage {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 0;
+}
+
+#loom_overlay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 100;
+}
+
+/* media */
+
+#loom_video {
+	position: absolute;
+	z-index: -1;
+}
+
+/* events */
+
+.loom_title, .loom_decision {
+	/*opacity: 0;*/
+	position: absolute;
+}
+
+.loom_title {
+	overflow: hidden;
+}
+
+.loom_title div {
+	display: block;
+	position: relative;
+	overflow: hidden;
+	height: 100px;
+	text-align: center;
+}
+
+.loom_title p {
+	display: block;
+	position: absolute;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+	opacity: 1;
+}
+
+.loom_text {
+	position: absolute;
+}
+
+.loom_titleSvg {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.loom_plugin {
+	position: absolute;
+}

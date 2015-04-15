@@ -1,0 +1,28 @@
+
+#elastic {
+}
+
+#elasticBoard {
+	z-index: 1000000;
+	position: absolute;
+	opacity: 0;
+	left: auto;
+	right: auto;
+	background-color: #fff;
+	transform: perspective(400px) rotateX(10deg);
+}
+
+.elastic_interface {
+	position: absolute;
+}
+
+#parentSprites {
+	position:  absolute;
+}
+
+.childSprite {
+}
+
+#elastic_activeEvent_parent{
+    postion: absolute;
+}
