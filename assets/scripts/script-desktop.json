@@ -15,7 +15,7 @@
         "nextSceneByDefault": null
       },
       "parameters": {
-        "loop": true,
+        "loop": false,
         "autoplay": true,
         "position": "full"
       },
@@ -25,8 +25,7 @@
           "type": "activeEvent",
           "schedule": {
             "in": 400,
-            "length": 400,
-            "out": null
+            "out": 800
           },
           "data": {
             "namespace": "Elastic",
@@ -42,8 +41,7 @@
           "type": "activeEvent",
           "schedule": {
             "in": 100,
-            "length": 400,
-            "out": null
+            "out": 500
           },
           "data": {
           },
@@ -55,8 +53,7 @@
           "type": "activeEvent",
           "schedule": {
             "in": 500,
-            "length": 8000,
-            "out": null
+            "out": 8500
           },
           "data": {
           },
@@ -70,8 +67,7 @@
           "type": "activeEvent",
           "schedule": {
             "in": 3000,
-            "length": 6000,
-            "out": null
+            "out": 9000
           },
           "data": {
           },
@@ -85,8 +81,7 @@
           "type": "activeEvent",
           "schedule": {
             "in": 4000,
-            "length": 6000,
-            "out": null
+            "out": 10000
           },
           "data": {
           },
@@ -100,8 +95,7 @@
           "type": "activeEvent",
           "schedule": {
             "in": 4500,
-            "length": 6000,
-            "out": null
+            "out": 10500
           },
           "data": {
           },

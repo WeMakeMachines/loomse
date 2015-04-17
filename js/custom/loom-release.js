@@ -20,7 +20,7 @@ var Loom = (function() {
 
     // Properties
     var devOptions = {
-            lockEventToMediaTime: false // untested
+            lockEventToMediaTime: true // untested
         },
         script,
         firstScene = 'intro',
@@ -31,6 +31,9 @@ var Loom = (function() {
         },
         sizeMultiplier = 1,
         prefix = 'loom_',
+        status = {
+            media: null // current type of media in queue
+        },
         stage = (function() {
             var id = 'loom_stage',
                 elements = [];
@@ -134,7 +137,7 @@ var Loom = (function() {
             });
         },
 
-        create: function(id) {
+        add: function(id) {
             var element = document.create('div');
             element.setAttribute('id', id);
             return element;
@@ -204,7 +207,7 @@ var Loom = (function() {
                 //environment.clear();
 
                 currentScene = new Scene(scene, source[scene]);
-                //status.media = currentScene.media;
+                status.media = currentScene.media;
                 history.record(currentScene);
                 process(currentScene);
             }
@@ -215,16 +218,30 @@ var Loom = (function() {
                 // --
                 // Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
                 // Each 'media' type also has a number of events
-                media.create(scene.container, scene.media, scene.data, scene.parameters, function() {
+
+                media.create(scene.container, scene.media, scene.data, scene.parameters, function(object) {
+
+                    if(scene.media === 'video'){
+                        if(object.autoplay === true){
+                            publicMethods.control.play();
+                        }
+
+                        if(object.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
+                            object.element.onended = function(e){
+                                scriptLogic.mediaQueue.set(scene.data.nextSceneByDefault);
+                            };
+                        }
+                    }
+
                     if(scene.events !== null){
-                        events(scene.events);
+                        events(scene.events, function() {});
                     }
                     else {
                         console.log('No events to report');
                     }
                 });
 
-                function events(array) {
+                function events(array, callback) {
                     // --
                     // Schedules timed events for each media element
                     // --
@@ -247,9 +264,11 @@ var Loom = (function() {
                                 }, that.out);
                             }
                             else if(devOptions.lockEventToMediaTime === true && scene.media === 'video'){
-                                var selection = media.target(scene.sceneId);
+                                //var selection = media.target(scene.sceneId);
+                                var selection = document.getElementById(prefix + 'video');
                                 selection.addEventListener('timeupdate', function() {
-                                    if(this.currentTime >= that.in){
+                                    if(this.currentTime > 400){ // not working
+                                        console.log('running');
                                         that.run();
                                     }
                                 });
@@ -263,6 +282,8 @@ var Loom = (function() {
 
                         createEvent.schedule();
                     }
+
+                    callback();
                 }
             }
 
@@ -302,39 +323,66 @@ var Loom = (function() {
             }
         }
 
+        function play(element) {
+
+            //function ready(){
+            //    if(media === 'video' || 'audio'){
+            //        if(parameters.autoplay === true){
+            //
+            //        }
+            //        callback();
+            //    }
+            //}
+        }
+
         function create(container, media, data, parameters, callback) {
             // --
-            // Processes the media
+            // Creates a media object and posts to DOM
             // --
-            stage.object.appendChild(container);
+            var mediaElement;
 
-            switch(media) {
-                case 'audio':
-                    audio();
-                    break;
-                case 'video':
-                    video();
-                    break;
-                case 'graphic':
-                    graphic();
-                    break;
-                default:
-                    throw 'Invalid media';
-            }
-
-            function ready(){
-                if(media === 'video' || 'audio'){
-                    if(parameters.autoplay === true){
-
-                    }
-                    callback();
-                }
-            }
+            //switch(media) {
+            //    case 'audio':
+            //        audio();
+            //        break;
+            //    case 'video':
+            //        video();
+            //        break;
+            //    case 'graphic':
+            //        graphic();
+            //        break;
+            //    default:
+            //        throw 'Invalid media';
+            //}
 
             function audio(){
+
+                return;
             }
 
-            function video(){
+            var Video = function() {
+                // --
+                // Create video element for screen
+                // --
+
+                this.element = (function() {
+                    var element = document.createElement('video'),
+                        child = document.createElement('source'),
+                        width = stage.object.offsetWidth,
+                        height = stage.object.offsetHeight;
+                    element.setAttribute('width', width);
+                    element.setAttribute('height', height);
+                    element.setAttribute('id', prefix + 'video');
+                    child.setAttribute('src', data.file);
+                    child.setAttribute('type', 'video/mp4');
+                    element.appendChild(child);
+                    return element;
+                })();
+                this.loop = parameters.loop;
+                this.autoplay = parameters.autoplay;
+            }
+
+            function oldvideo(){
                 // --
                 // Handles HTML5 video on screen
                 // --
@@ -344,7 +392,7 @@ var Loom = (function() {
 
                 function createVideoElement(file, attributes){
                     function setVideoAttributes(value, index, array){
-                        element.setAttribute(value, null);
+                        element.setAttribute(value, '');
                     }
 
                     var element = document.createElement('video'),
@@ -354,6 +402,7 @@ var Loom = (function() {
 
                     element.setAttribute('width', width);
                     element.setAttribute('height', height);
+                    element.setAttribute('id', prefix + 'video');
                     attributes.forEach(setVideoAttributes);
                     child.setAttribute('src', file);
                     child.setAttribute('type', 'video/mp4');
@@ -364,6 +413,7 @@ var Loom = (function() {
                 if(parameters.loop === true){
                     videoAttributes.push('loop');
                 }
+
                 //if(parameters.autoplay === true){
                 //    videoAttributes.push('autoplay');
                 //}
@@ -376,17 +426,42 @@ var Loom = (function() {
                     };
                 }
 
-                container.appendChild(videoElement);
-                //pause('intro');
+                //pause('intro'); // remove
+
+                return videoElement;
             }
 
             function graphic(){
+
+                return;
+            }
+
+            stage.object.appendChild(container);
+
+            if(!callback){
+                throw 'Expected callback';
+            }
+
+            if(media === 'audio'){
+                callback(audio());
+            }
+            else if(media === 'video'){
+                mediaElement = new Video();
+                container.appendChild(mediaElement.element);
+                callback(mediaElement);
+            }
+            else if(media === 'graphic'){
+                callback(graphic());
+            }
+            else {
+                throw 'Invalid media type';
             }
         }
 
         return {
             target: target,
             pause: pause,
+            play: play,
             create: create
         };
     })();
@@ -398,19 +473,7 @@ var Loom = (function() {
         this.call = call;
         this.type = type;
         this.in = schedule.in;
-        this.out = (function () {
-            var out;
-
-            if(typeof schedule.out === 'number'){
-                out = schedule.out;
-            }
-
-            else if(typeof schedule.length === 'number'){
-                out = (schedule.in + schedule.length);
-            }
-
-            return out;
-        })();
+        this.out = schedule.out;
         this.data = data;
         this.parameters = parameters;
         this.run = function () {
@@ -428,9 +491,7 @@ var Loom = (function() {
     //
     var publicMethods = {
         version: '0.2b',
-        status: {
-            media: null // current type of media in queue
-        }
+        status: status
     };
 
     // Properties
@@ -482,6 +543,7 @@ var Loom = (function() {
 
             play: function(){
                 // resume all events, media, timeout
+
                 if(status.media === 'video'){
                     document.getElementById(prefix + 'video').play();
                 }
