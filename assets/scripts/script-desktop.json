@@ -17,6 +17,8 @@
       "parameters": {
         "loop": false,
         "autoplay": true,
+        "controls": true,
+        "muted": true,
         "position": "full"
       },
       "events": [

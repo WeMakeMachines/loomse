@@ -32,6 +32,7 @@ var Loom = (function() {
         sizeMultiplier = 1,
         prefix = 'loom_',
         status = {
+            control: 'dsdsd', // playing or paused?
             media: null // current type of media in queue
         },
         stage = (function() {
@@ -138,7 +139,7 @@ var Loom = (function() {
         },
 
         add: function(id) {
-            var element = document.create('div');
+            var element = document.createElement('div');
             element.setAttribute('id', id);
             return element;
         },
@@ -219,29 +220,29 @@ var Loom = (function() {
                 // Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
                 // Each 'media' type also has a number of events
 
-                media.create(scene.container, scene.media, scene.data, scene.parameters, function(object) {
+                media.create(scene.container, scene.media, scene.data, scene.parameters, function(playObject) {
 
                     if(scene.media === 'video'){
-                        if(object.autoplay === true){
+                        if(playObject.parameters.autoplay === true){
                             publicMethods.control.play();
                         }
 
-                        if(object.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
-                            object.element.onended = function(e){
+                        if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
+                            playObject.onended = function(e){
                                 scriptLogic.mediaQueue.set(scene.data.nextSceneByDefault);
                             };
                         }
                     }
 
                     if(scene.events !== null){
-                        events(scene.events, function() {});
+                        events(playObject, scene.events, function() {});
                     }
                     else {
                         console.log('No events to report');
                     }
                 });
 
-                function events(array, callback) {
+                function events(target, array, callback) {
                     // --
                     // Schedules timed events for each media element
                     // --
@@ -254,6 +255,7 @@ var Loom = (function() {
 
                         Event.prototype.schedule = function () {
                             var that = this;
+
                             if(devOptions.lockEventToMediaTime === false){
                                 setTimeout(function(){
                                     that.run();
@@ -265,20 +267,33 @@ var Loom = (function() {
                             }
                             else if(devOptions.lockEventToMediaTime === true && scene.media === 'video'){
                                 //var selection = media.target(scene.sceneId);
-                                var selection = document.getElementById(prefix + 'video');
-                                selection.addEventListener('timeupdate', function() {
-                                    if(this.currentTime > 400){ // not working
-                                        console.log('running');
-                                        that.run();
+                                //var selection = document.getElementById(prefix + 'video');
+
+                                //target.addEventListener('timeupdate', playIn(target, that));
+
+                                target.addEventListener('timeupdate', function () {
+                                    if (this.currentTime >= that.in) {
+                                        console.log('asdsd');
+                                        //node.remove(document.getElementById(id));
                                     }
                                 });
-                                selection.addEventListener('timeupdate', function () {
+
+                                target.addEventListener('timeupdate', function () {
                                     if (this.currentTime >= that.out) {
-                                        node.remove(document.getElementById(id));
+                                        //node.remove(document.getElementById(id));
                                     }
                                 });
                             }
                         };
+
+                        function playIn(object, that){
+                            console.log(object);
+                            if(object.currentTime >= that.in){
+                                console.log(that.in);
+                                //target.removeEventListener('timeupdate');
+                                //that.run();
+                            }
+                        }
 
                         createEvent.schedule();
                     }
@@ -317,6 +332,8 @@ var Loom = (function() {
         }
 
         function pause(sceneId) {
+            status.control = 'Paused';
+
             var selection = target(sceneId);
             if(typeof selection === 'object'){
                 selection.pause();
@@ -324,6 +341,7 @@ var Loom = (function() {
         }
 
         function play(element) {
+            status.control = 'Playing';
 
             //function ready(){
             //    if(media === 'video' || 'audio'){
@@ -365,71 +383,41 @@ var Loom = (function() {
                 // Create video element for screen
                 // --
 
-                this.element = (function() {
-                    var element = document.createElement('video'),
-                        child = document.createElement('source'),
-                        width = stage.object.offsetWidth,
-                        height = stage.object.offsetHeight;
-                    element.setAttribute('width', width);
-                    element.setAttribute('height', height);
-                    element.setAttribute('id', prefix + 'video');
-                    child.setAttribute('src', data.file);
-                    child.setAttribute('type', 'video/mp4');
-                    element.appendChild(child);
-                    return element;
-                })();
-                this.loop = parameters.loop;
-                this.autoplay = parameters.autoplay;
-            }
+                var element = document.createElement('video'),
+                    child = document.createElement('source'),
+                    width = stage.object.offsetWidth,
+                    height = stage.object.offsetHeight;
 
-            function oldvideo(){
-                // --
-                // Handles HTML5 video on screen
-                // --
+                element.setAttribute('width', width);
+                element.setAttribute('height', height);
+                element.setAttribute('id', prefix + 'video');
+                child.setAttribute('src', data.file);
+                child.setAttribute('type', 'video/mp4');
 
-                var videoAttributes = [],
-                    videoElement;
+                element.appendChild(child);
 
-                function createVideoElement(file, attributes){
-                    function setVideoAttributes(value, index, array){
-                        element.setAttribute(value, '');
-                    }
+                element.parameters = {};
 
-                    var element = document.createElement('video'),
-                        child = document.createElement('source'),
-                        width = stage.object.offsetWidth,
-                        height = stage.object.offsetHeight;
-
-                    element.setAttribute('width', width);
-                    element.setAttribute('height', height);
-                    element.setAttribute('id', prefix + 'video');
-                    attributes.forEach(setVideoAttributes);
-                    child.setAttribute('src', file);
-                    child.setAttribute('type', 'video/mp4');
-                    element.appendChild(child);
-                    return element;
+                if(parameters.muted === true){
+                    //element.volume = 0;
+                    element.muted = true;
                 }
+                if(parameters.controls === true){
+                    element.controls = true;
+                    //element.setAttribute('controls', true);
+                }
+                if(parameters.autoplay === true){
 
+                    element.parameters.autoplay = true;
+                }
                 if(parameters.loop === true){
-                    videoAttributes.push('loop');
+                    element.parameters.loop = true;
                 }
 
-                //if(parameters.autoplay === true){
-                //    videoAttributes.push('autoplay');
-                //}
+                status.control = 'Playing';
 
-                videoElement = createVideoElement(data.file, videoAttributes);
-
-                if(parameters.loop === false && (data.nextSceneByDefault !== null || data.nextnextSceneByDefault !== '')){
-                    videoElement.onended = function(e){
-                        scriptLogic.mediaQueue.set(data.nextSceneByDefault);
-                    };
-                }
-
-                //pause('intro'); // remove
-
-                return videoElement;
-            }
+                return element;
+            };
 
             function graphic(){
 
@@ -447,7 +435,7 @@ var Loom = (function() {
             }
             else if(media === 'video'){
                 mediaElement = new Video();
-                container.appendChild(mediaElement.element);
+                container.appendChild(mediaElement);
                 callback(mediaElement);
             }
             else if(media === 'graphic'){
@@ -472,8 +460,8 @@ var Loom = (function() {
         this.id = id;
         this.call = call;
         this.type = type;
-        this.in = schedule.in;
-        this.out = schedule.out;
+        this.in = (schedule.in / 1000); // convert ms to seconds for html5 media
+        this.out = (schedule.out / 1000); // convert ms to seconds for html5 media
         this.data = data;
         this.parameters = parameters;
         this.run = function () {
@@ -491,7 +479,7 @@ var Loom = (function() {
     //
     var publicMethods = {
         version: '0.2b',
-        status: status
+        status: status.control
     };
 
     // Properties
