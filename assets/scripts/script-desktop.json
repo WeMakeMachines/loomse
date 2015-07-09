@@ -7,6 +7,7 @@
     "width": 640,
     "height": 480
   },
+  "url": "http://localhost/loom-release/",
   "scenes": {
     "intro": {
       "media": "video",
@@ -26,8 +27,8 @@
           "call": "spam",
           "type": "activeEvent",
           "schedule": {
-            "in": 400,
-            "out": 800
+            "in": 4000,
+            "out": 8000
           },
           "data": {
             "namespace": "Elastic",
@@ -42,8 +43,8 @@
           "call": "spam",
           "type": "activeEvent",
           "schedule": {
-            "in": 100,
-            "out": 500
+            "in": 1000,
+            "out": 5000
           },
           "data": {
           },
@@ -54,7 +55,7 @@
           "call": "activeEvent",
           "type": "activeEvent",
           "schedule": {
-            "in": 500,
+            "in": 5000,
             "out": 8500
           },
           "data": {

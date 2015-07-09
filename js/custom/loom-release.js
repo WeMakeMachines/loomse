@@ -20,10 +20,12 @@ var Loom = (function() {
 
     // Properties
     var devOptions = {
-            lockEventToMediaTime: true // untested
+            lockEventToMediaTime: true, // default should be true, if false, uses setTimeOut
+            muteAll: true
         },
         script,
         firstScene = 'intro',
+        mediaTimeEventResolution = 0.2,
         minimumResolution = {
         // default values, overridden by values in script - if set
             width: 640,
@@ -254,7 +256,13 @@ var Loom = (function() {
                         var createEvent = new Event(id, event.call, event.type, event.schedule, event.data, event.parameters);
 
                         Event.prototype.schedule = function () {
-                            var that = this;
+                            var that = this,
+                                timeIn = that.in / 1000, // convert to seconds
+                                timeInLow = timeIn - (mediaTimeEventResolution / 2),
+                                timeInHigh = timeIn + (mediaTimeEventResolution / 2),
+                                timeOut = that.out / 1000, // convert to seconds
+                                timeOutLow = timeOut - (mediaTimeEventResolution / 2),
+                                timeOutHigh = timeOut + (mediaTimeEventResolution / 2);
 
                             if(devOptions.lockEventToMediaTime === false){
                                 setTimeout(function(){
@@ -266,34 +274,21 @@ var Loom = (function() {
                                 }, that.out);
                             }
                             else if(devOptions.lockEventToMediaTime === true && scene.media === 'video'){
-                                //var selection = media.target(scene.sceneId);
-                                //var selection = document.getElementById(prefix + 'video');
-
-                                //target.addEventListener('timeupdate', playIn(target, that));
-
+                                // 'In'
                                 target.addEventListener('timeupdate', function () {
-                                    if (this.currentTime >= that.in) {
-                                        console.log('asdsd');
-                                        //node.remove(document.getElementById(id));
+                                    if(this.currentTime >= timeInLow && this.currentTime <= timeInHigh){
+                                        that.run();
                                     }
                                 });
 
+                                // 'Out
                                 target.addEventListener('timeupdate', function () {
-                                    if (this.currentTime >= that.out) {
-                                        //node.remove(document.getElementById(id));
+                                    if(this.currentTime >= timeOutLow && this.currentTime <= timeOutHigh){
+                                        node.remove(document.getElementById(id));
                                     }
                                 });
                             }
                         };
-
-                        function playIn(object, that){
-                            console.log(object);
-                            if(object.currentTime >= that.in){
-                                console.log(that.in);
-                                //target.removeEventListener('timeupdate');
-                                //that.run();
-                            }
-                        }
 
                         createEvent.schedule();
                     }
@@ -402,6 +397,12 @@ var Loom = (function() {
                     //element.volume = 0;
                     element.muted = true;
                 }
+
+                // overrides any previous settings
+                if(devOptions.muteAll === true){
+                    element.muted = true;
+                }
+
                 if(parameters.controls === true){
                     element.controls = true;
                     //element.setAttribute('controls', true);
@@ -460,7 +461,7 @@ var Loom = (function() {
         this.id = id;
         this.call = call;
         this.type = type;
-        this.in = (schedule.in / 1000); // convert ms to seconds for html5 media
+        this.in = schedule.in;
         this.out = (schedule.out / 1000); // convert ms to seconds for html5 media
         this.data = data;
         this.parameters = parameters;
