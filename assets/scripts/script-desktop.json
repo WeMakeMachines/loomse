@@ -7,6 +7,7 @@
     "width": 640,
     "height": 480
   },
+  "positioning": "grid",
   "url": "http://localhost/loom-release/",
   "scenes": {
     "intro": {
@@ -27,49 +28,7 @@
           "call": "spam",
           "type": "activeEvent",
           "schedule": {
-            "in": 4000,
-            "out": 8000
-          },
-          "data": {
-            "namespace": "Elastic",
-            "function": "activeEvent"
-          },
-          "parameters": {
-            "graphic": "phone",
-            "hasTimer": true
-          }
-        },
-        {
-          "call": "spam",
-          "type": "activeEvent",
-          "schedule": {
-            "in": 1000,
-            "out": 5000
-          },
-          "data": {
-          },
-          "parameters": {
-          }
-        },
-        {
-          "call": "activeEvent",
-          "type": "activeEvent",
-          "schedule": {
-            "in": 5000,
-            "out": 8500
-          },
-          "data": {
-          },
-          "parameters": {
-            "graphic": "phone",
-            "hasTimer": true
-          }
-        },
-        {
-          "call": "activeEvent",
-          "type": "activeEvent",
-          "schedule": {
-            "in": 3000,
+            "in": 8000,
             "out": 9000
           },
           "data": {
@@ -80,25 +39,11 @@
           }
         },
         {
-          "call": "activeEvent",
+          "call": "tbTime",
           "type": "activeEvent",
           "schedule": {
-            "in": 4000,
-            "out": 10000
-          },
-          "data": {
-          },
-          "parameters": {
-            "graphic": "phone",
-            "hasTimer": true
-          }
-        },
-        {
-          "call": "activeEvent",
-          "type": "activeEvent",
-          "schedule": {
-            "in": 4500,
-            "out": 10500
+            "in": 15000,
+            "out": 30000
           },
           "data": {
           },

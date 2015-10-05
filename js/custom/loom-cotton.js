@@ -6,5 +6,5 @@
 
 Loom.Plugin.prototype.spam = function(data) {
     console.log('go spam!');
-    console.log(data);
+    //console.log(data);
 };
