@@ -26,7 +26,6 @@
       "events": [
         {
           "call": "spam",
-          "type": "activeEvent",
           "schedule": {
             "in": 8000,
             "out": 9000
@@ -40,7 +39,6 @@
         },
         {
           "call": "tbTime",
-          "type": "activeEvent",
           "schedule": {
             "in": 15000,
             "out": 30000
