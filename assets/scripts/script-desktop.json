@@ -25,29 +25,17 @@
       },
       "events": [
         {
-          "call": "spam",
+          "call": "mediaTime",
           "schedule": {
-            "in": 8000,
-            "out": 9000
-          },
-          "data": {
-          },
-          "parameters": {
-            "graphic": "phone",
-            "hasTimer": true
-          }
-        },
-        {
-          "call": "tbTime",
-          "schedule": {
-            "in": 15000,
+            "in": 3000,
             "out": 30000
           },
           "data": {
           },
           "parameters": {
-            "graphic": "phone",
-            "hasTimer": true
+            "x": "70",
+            "y": "70",
+            "class": "mediaTime"
           }
         }
       ]

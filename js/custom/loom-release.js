@@ -31,7 +31,7 @@ var Loom = (function() {
             width: 640,
             height: 480
         },
-        sizeMultiplier = 1,
+        sizeMultiplier = 1, // forgot why I put this here
         prefix = 'loom_', // to be made redundant, see id function below
         status = {
             version: '0.2b',
@@ -156,6 +156,8 @@ var Loom = (function() {
             });
         },
 
+
+        // not sure if I'm keeping add / remove or offloading onto module
         add: function(id) {
             var element = document.createElement('div');
             element.setAttribute('id', id);
@@ -163,7 +165,7 @@ var Loom = (function() {
         },
 
         remove: function(element) {
-            //element.parentNode.removeChild(element);
+            element.parentNode.removeChild(element);
         }
     };
 
@@ -267,9 +269,9 @@ var Loom = (function() {
 
                     for(var i in array){
                         var event = array[i],
-                            id = prefix + event.type + '_' + i;
+                            id = prefix + event.call + '_' + i;
 
-                        var createEvent = new Event(id, event.call, event.type, event.schedule, event.data, event.parameters);
+                        var createEvent = new Event(id, event.call, event.schedule, event.data, event.parameters);
 
                         Event.prototype.schedule = function () {
                             var that = this,
@@ -283,20 +285,25 @@ var Loom = (function() {
                                 timeOutLow = timeOut - (mediaTimeEventResolution / 2),
                                 timeOutHigh = timeOut + (mediaTimeEventResolution / 2);
 
-                            //console.log(timeIn);
+                            //console.log('>' + timeIn);
+                            //console.log('>' + timeInLow + ' ' + timeInHigh);
+                            //console.log('>' + timeOut);
+                            //console.log('>' + timeOutLow + ' ' + timeOutHigh);
 
-                            if(devOptions.lockEventToMediaTime === false){
-                                setTimeout(function(){
+                            if(devOptions.lockEventToMediaTime === false) {
+                                setTimeout(function() {
                                     that.run();
                                 }, that.in);
 
-                                if(typeof that.out === 'number'){
+                                if(typeof that.out === 'number') {
                                     setTimeout(function () {
-                                        node.remove(document.getElementById(id));
+                                        that.stop();
+                                        //node.remove(document.getElementById(that.id));
                                     }, that.out);
                                 }
                             }
-                            else if(devOptions.lockEventToMediaTime === true && scene.media === 'video'){
+
+                            else if(devOptions.lockEventToMediaTime === true && scene.media === 'video') {
                                 // 'In'
                                 target.addEventListener('timeupdate', function () {
                                     if(this.currentTime >= timeInLow && this.currentTime <= timeInHigh){
@@ -305,10 +312,11 @@ var Loom = (function() {
                                 });
 
                                 // 'Out
-                                if(typeof that.out === 'number'){
+                                if(typeof that.out === 'number') {
                                     target.addEventListener('timeupdate', function () {
-                                        if(this.currentTime >= timeOutLow && this.currentTime <= timeOutHigh){
-                                            node.remove(document.getElementById(id));
+                                        if(this.currentTime >= timeOutLow && this.currentTime <= timeOutHigh) {
+                                            that.stop();
+                                            //node.remove(document.getElementById(that.id));
                                         }
                                     });
                                 }
@@ -489,12 +497,17 @@ var Loom = (function() {
         };
     })();
 
-    var Event = function(id, call, type, schedule, data, parameters) {
-        var that = this;
+    var Event = function(id, call, schedule, data, parameters) {
+        var that = this,
+            plugin = new Loom.Modules();
 
-        this.id = id;
+        //check if the module reference exists as a function
+        if(typeof plugin[call] === 'function') {
+            var callModule = plugin[call]();
+        }
+
+        this.id = id; // event id
         this.call = call;
-        this.type = type;
         this.status = status;
         this.in = function() {
             var time;
@@ -520,32 +533,58 @@ var Loom = (function() {
         //this.out = (schedule.out / 1000); // convert ms to seconds for html5 media
         this.data = data;
         this.parameters = parameters;
-        this.run = function () {
-            //console.log('running');
-            //console.log(that.id);
-            //console.log(that.in + ' ' + that.out);
-            var plugin = new publicMethods.Plugin(that),
-                call = plugin[that.call];
-
-            if(typeof call === 'function'){ //check if the 'call' exists as a function
-                call(that);
-            }
+        this.run = function() {
+            callModule.run(document.getElementById(overlay.id), that);
+        };
+        this.stop = function() {
+            callModule.stop();
         };
     };
 
     //
     // Public
     //
+
+    //var Plugins = function() {
+    //
+    //};
+    //
+    //Loom.Plugins = function() {
+    //
+    //};
+
     var publicMethods = {
         status: status
+    };
+
+    // namespace for our external modules
+    publicMethods.Modules = function() {
+    };
+
+    publicMethods.runCounter = function() {
+    // temporary function designed to call a module from console
+
+        var j = new Loom.Modules(),
+            o = j.mediaTime(),
+            data = {
+                status: {
+                    media: 'video',
+                    id: status.id
+                },
+                id: 'mediaTime',
+                parameters: {
+                    x: 70,
+                    y: 70,
+                    class: 'mediaTime'
+                }
+            };
+
+        o.run(document.getElementById(overlay.id), data);
     };
 
     // Properties
     publicMethods.publicProperty = null;
 
-    publicMethods.Plugin = function(data) {
-
-    };
 
     // Methods
     publicMethods.initialise = function(scriptFile) {
@@ -594,6 +633,8 @@ var Loom = (function() {
                     status.control = 'paused';
                     selection.pause();
                 }
+
+                return 'Paused';
             },
 
             play: function(){
@@ -605,14 +646,20 @@ var Loom = (function() {
                     status.control = 'playing';
                     selection.play();
                 }
+
+                return 'Playing';
             },
 
             reload: function() {
                 // restarts the current scene
+
+                return 'Reloaded scene';
             },
 
             skip: function(sceneName) {
                 // abandon current scene and load the named scene
+
+                return 'Skipped to scene' + sceneName;
             },
 
             scaleMedia: function(dimensions, location) {
