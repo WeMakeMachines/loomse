@@ -1,17 +1,41 @@
 // displays current media time on screen
 
+Loom.Modules.prototype.jump = function() {
+
+};
+
+Loom.Modules.prototype.loop = function() {
+    // loops video between in and out points
+
+    return {
+        run: function(target, data) {
+            Loom.control.scrub(data.out);
+            Loom.control.play();
+        },
+        stop: function() {
+
+        }
+    }
+};
+
+
 Loom.Modules.prototype.mediaTime = function() {
+    // add an on screen timer
+    // time linked to media time
+
     var update;
 
     return {
         run: function(target, data) {
             if(data.status.media === 'video' || data.status === 'audio') {
-                var thisName = 'mediaTime',
-                    currentMedia = document.getElementById(data.status.id),
-                    //currentMediaTime = currentMedia.currentTime,
+                var currentMedia = document.getElementById(data.status.id),
+                    currentMediaTime = currentMedia.currentTime,
+                    clock = setClock(currentMediaTime),
                     xy = Loom.Modules.locatePerc(data.parameters.x, data.parameters.y),
                     element = document.createElement('div'),
                     child = document.createElement('span');
+
+                console.log(clock);
 
                 element.id = data.id;
 
@@ -21,18 +45,80 @@ Loom.Modules.prototype.mediaTime = function() {
 
                 element.appendChild(child);
 
+                updateTime();
+
                 Loom.Modules.draw(target, element, xy);
 
                 update = setInterval(
                     function() {
-                        var currentMediaTime = currentMedia.currentTime;
-                        child.innerHTML = currentMediaTime;
+                        updateTime();
                     }, 250
                 );
             }
+
+            function updateTime() {
+                currentMediaTime = currentMedia.currentTime;
+                clock = setClock(currentMediaTime);
+                child.innerHTML = clock.hours + ':' + clock.minutes + ':' + clock.seconds + ':' + clock.split;
+            };
+
+            function setClock(time) {
+                var remainder = time,
+                    hours,
+                    minutes,
+                    seconds,
+                    split;
+
+                if(remainder >= 3600) {
+                    hours = Math.floor(remainder / 3600);
+                    remainder = remainder - (hours * 3600);
+                }
+                else {
+                    hours = 0;
+                }
+
+                if(remainder >= 60) {
+                    minutes = Math.floor(remainder / 60);
+                    remainder = remainder - (minutes * 60);
+                }
+                else {
+                    minutes = 0;
+                }
+
+                if(remainder >= 1) {
+                    seconds = Math.floor(remainder);
+                    remainder = remainder - seconds;
+                }
+                else {
+                    seconds = 0;
+                }
+
+                split = remainder.toString();
+
+                if(split === '0') {
+                    split = '000';
+                }
+                else {
+                    split = split.substr(2,3);
+                }
+
+                function addLeadingZero(number) {
+                    if(number < 10) {
+                        number = '0' + number;
+                    }
+
+                    return number;
+                }
+
+                return {
+                    hours: addLeadingZero(hours),
+                    minutes: addLeadingZero(minutes),
+                    seconds: addLeadingZero(seconds),
+                    split: split
+                }
+            };
         },
         stop: function() {
-            console.log('stopping ' + update);
             clearInterval(update);
         }
     };

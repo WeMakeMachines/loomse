@@ -20,12 +20,13 @@ var Loom = (function() {
 
     // Properties
     var devOptions = {
-            lockEventToMediaTime: false, // default should be true, if false, uses setTimeOut
-            muteAudio: true
+            // developer options only
+            lockEventToMediaTime: true, // default should be true, if false, uses setTimeOut
+            muteAudio: false // overrides any settings in script
         },
         script,
         firstScene = 'intro',
-        mediaTimeEventResolution = 0.2,
+        mediaTimeEventResolution = 0.4,// this is margin for which events are detected on the timecode of the media playing, if flag lockEventToMediaTime is set to true
         minimumResolution = {
         // default values, overridden by values in script - if set
             width: 640,
@@ -145,6 +146,11 @@ var Loom = (function() {
                 }
                 element.style[attribute] = value;
             }
+        },
+
+        checkScript: function(script) {
+            // check for malformed data, validity
+
         }
     };
 
@@ -202,14 +208,14 @@ var Loom = (function() {
             var that = this;
             this.sceneTitle = sceneTitle;
             this.sceneId = utilities.cleanString(this.sceneTitle);
+            //this.media = assets.media;
+            //this.data = assets.data;
             this.media = assets.media;
-            this.data = assets.data;
-            this.parameters = assets.parameters;
             this.events = assets.events;
             this.container = (function() {
                 var element = document.createElement('div');
                 element.setAttribute('id', that.sceneId);
-                element.media = that.media;
+                element.media = that.media.type;
                 return element;
             })();
         }
@@ -228,7 +234,7 @@ var Loom = (function() {
                 //environment.clear();
 
                 currentScene = new Scene(scene, source[scene]);
-                status.media = currentScene.media;
+                status.media = currentScene.media.type;
                 history.record(currentScene);
                 process(currentScene);
             }
@@ -240,21 +246,44 @@ var Loom = (function() {
                 // Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
                 // Each 'media' type also has a number of events
 
-                media.create(scene.container, scene.media, scene.data, scene.parameters, function(playObject) {
+                media.create(scene.container, scene.media, function(playObject) {
 
-                    if(scene.media === 'video'){
-                        if(playObject.parameters.autoplay === true){
+                    if(scene.media.type === 'video') {
+                        if(playObject.parameters.autoplay === true) {
                             publicMethods.control.play();
                         }
 
-                        if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
-                            playObject.onended = function(e){
-                                scriptLogic.mediaQueue.set(scene.data.nextSceneByDefault);
-                            };
+                        //if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
+                        //    playObject.onended = function(e){
+                        //        scriptLogic.mediaQueue.set(scene.data.nextSceneByDefault);
+                        //    };
+                        //}
+
+                        if(playObject.parameters.loop === true) {
+                            if(playObject.parameters.loopIn === null) {
+                                playObject.onended = function(e){
+                                    publicMethods.control.scrub(0);
+                                    publicMethods.control.play();
+                                };
+                            }
+                            else {
+                                // add loop point as event
+                                // for the purposes of our system, in / out points are reversed
+                                // (schedule in point is actually loop out point etc)
+                                scene.events.push(
+                                    {
+                                        call: 'loop',
+                                        schedule: {
+                                            in: playObject.parameters.loopOut,
+                                            out: playObject.parameters.loopIn
+                                        }
+                                    }
+                                );
+                            }
                         }
                     }
 
-                    if(scene.events !== null){
+                    if(scene.events !== null) {
                         events(playObject, scene.events, function() {});
                     }
                     else {
@@ -271,7 +300,7 @@ var Loom = (function() {
                         var event = array[i],
                             id = prefix + event.call + '_' + i;
 
-                        var createEvent = new Event(id, event.call, event.schedule, event.data, event.parameters);
+                        var createEvent = new Event(id, event.call, event.schedule, event.parameters);
 
                         Event.prototype.schedule = function () {
                             var that = this,
@@ -303,23 +332,19 @@ var Loom = (function() {
                                 }
                             }
 
-                            else if(devOptions.lockEventToMediaTime === true && scene.media === 'video') {
-                                // 'In'
+                            // this is a weak point in the software, very reliant on the numbers being right
+                            else if(devOptions.lockEventToMediaTime === true && (scene.media.type === 'video' || scene.media.type === 'audio')) {
                                 target.addEventListener('timeupdate', function () {
+                                    // 'In'
                                     if(this.currentTime >= timeInLow && this.currentTime <= timeInHigh){
                                         that.run();
                                     }
+                                    // 'Out'
+                                    if(this.currentTime >= timeOutLow && this.currentTime <= timeOutHigh) {
+                                        that.stop();
+                                        //node.remove(document.getElementById(that.id));
+                                    }
                                 });
-
-                                // 'Out
-                                if(typeof that.out === 'number') {
-                                    target.addEventListener('timeupdate', function () {
-                                        if(this.currentTime >= timeOutLow && this.currentTime <= timeOutHigh) {
-                                            that.stop();
-                                            //node.remove(document.getElementById(that.id));
-                                        }
-                                    });
-                                }
                             }
                         };
 
@@ -367,7 +392,7 @@ var Loom = (function() {
             //status.control = 'paused';
 
             var selection = target(sceneId);
-            if(typeof selection === 'object'){
+            if(typeof selection === 'object') {
                 selection.pause();
             }
         }
@@ -389,7 +414,7 @@ var Loom = (function() {
             //}
         }
 
-        function create(container, media, data, parameters, callback) {
+        function create(container, media, callback) {
             // --
             // Creates a media object and posts to DOM
             // --
@@ -409,7 +434,7 @@ var Loom = (function() {
             //        throw 'Invalid media';
             //}
 
-            function audio(){
+            function audio() {
                 // TODO
 
                 return;
@@ -428,7 +453,7 @@ var Loom = (function() {
                 element.setAttribute('width', width);
                 element.setAttribute('height', height)
                 element.setAttribute('id', id.video);
-                child.setAttribute('src', data.file);
+                child.setAttribute('src', media.file);
                 child.setAttribute('type', 'video/mp4');
 
                 element.appendChild(child);
@@ -437,32 +462,32 @@ var Loom = (function() {
 
                 element.parameters = {};
 
-                if(parameters.muted === true){
-                    //element.volume = 0;
+                if(media.muted === true) {
                     element.muted = true;
                 }
 
                 // overrides any previous settings
-                if(devOptions.muteAudio === true){
+                if(devOptions.muteAudio === true) {
                     element.muted = true;
                 }
 
-                if(parameters.controls === true){
+                if(media.controls === true) {
                     element.controls = true;
                     //element.setAttribute('controls', true);
                 }
-                if(parameters.autoplay === true){
-
+                if(media.autoplay === true) {
                     element.parameters.autoplay = true;
                 }
-                if(parameters.loop === true){
+                if(media.loop === true) {
                     element.parameters.loop = true;
+                    element.parameters.loopIn = media.loop_in;
+                    element.parameters.loopOut = media.loop_out;
                 }
 
                 return element;
             };
 
-            function graphic(){
+            function graphic() {
 
                 return;
             }
@@ -473,15 +498,15 @@ var Loom = (function() {
                 throw 'Expected callback';
             }
 
-            if(media === 'audio'){
+            if(media.type === 'audio') {
                 callback(audio());
             }
-            else if(media === 'video'){
+            else if(media.type === 'video') {
                 mediaElement = new Video();
                 container.appendChild(mediaElement);
                 callback(mediaElement);
             }
-            else if(media === 'graphic'){
+            else if(media.type === 'graphic') {
                 callback(graphic());
             }
             else {
@@ -497,7 +522,7 @@ var Loom = (function() {
         };
     })();
 
-    var Event = function(id, call, schedule, data, parameters) {
+    var Event = function(id, call, schedule, parameters) {
         var that = this,
             plugin = new Loom.Modules();
 
@@ -511,7 +536,7 @@ var Loom = (function() {
         this.status = status;
         this.in = function() {
             var time;
-            if (devOptions.lockEventToMediaTime === true){
+            if (devOptions.lockEventToMediaTime === true) {
                 time = (schedule.in / 1000);
             }
             else {
@@ -521,7 +546,7 @@ var Loom = (function() {
         }();
         this.out = function() {
             var time;
-            if (devOptions.lockEventToMediaTime === true){
+            if (devOptions.lockEventToMediaTime === true) {
                 time = (schedule.out / 1000);
             }
             else {
@@ -529,9 +554,6 @@ var Loom = (function() {
             }
             return time;
         }();
-        //this.in = (schedule.in / 1000); // convert ms to seconds for html5 media
-        //this.out = (schedule.out / 1000); // convert ms to seconds for html5 media
-        this.data = data;
         this.parameters = parameters;
         this.run = function() {
             callModule.run(document.getElementById(overlay.id), that);
@@ -623,7 +645,7 @@ var Loom = (function() {
 
 
         return {
-            pause: function(){
+            pause: function() {
                 var selection = document.getElementById(status.id);
                 // pause all events, media, timeout
 
@@ -637,7 +659,7 @@ var Loom = (function() {
                 return 'Paused';
             },
 
-            play: function(){
+            play: function() {
                 var selection = document.getElementById(status.id);
                 // resume all events, media, timeout
 
@@ -648,6 +670,26 @@ var Loom = (function() {
                 }
 
                 return 'Playing';
+            },
+
+            scrub: function(time) {
+                // scrub to time in media
+                var selection = document.getElementById(status.id);
+
+                if(typeof time !== 'number') {
+                    return 'ERR: Can not seek';
+                }
+                else {
+                    selection.currentTime = time;
+                }
+            },
+
+            status: function() {
+                // report stats on media
+                // (unfinished)
+                var selection = document.getElementById(status.id);
+
+                return 'Length of media file: ' + selection.duration;
             },
 
             reload: function() {
@@ -666,7 +708,7 @@ var Loom = (function() {
                 // resizes currently playing media and repositions it
             },
 
-            viewportResize: function(){
+            viewportResize: function() {
                 // resizes the screen
                 node.maximise(stage.object);
                 node.maximise(overlay.object);
@@ -684,7 +726,7 @@ var Loom = (function() {
                 //});
             },
 
-            fullscreen: function(){
+            fullscreen: function() {
                 // set app to fullscreen
             }
         };

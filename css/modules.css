@@ -1,7 +1,8 @@
 /* Module specific css */
 
 div.mediaTime span {
-    font-size: large;
+    font-size: 30px;
     font-weight: bold;
-    background-color: white;
+    color: white;
+    background-color: darkred;
 }

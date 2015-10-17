@@ -7,34 +7,67 @@
     "width": 640,
     "height": 480
   },
-  "positioning": "grid",
   "url": "http://localhost/loom-release/",
   "scenes": {
     "intro": {
-      "media": "video",
-      "data": {
+      "media": {
+        "type": "video",
         "file": "assets/video/bbc-the-wonder-of-animals.mp4",
-        "nextSceneByDefault": null
-      },
-      "parameters": {
-        "loop": false,
         "autoplay": true,
         "controls": true,
         "muted": true,
-        "position": "full"
+        "in": 0,
+        "out": null,
+        "loop": true,
+        "loop_in": 10000,
+        "loop_out": 200000
       },
       "events": [
         {
           "call": "mediaTime",
           "schedule": {
-            "in": 3000,
-            "out": 30000
-          },
-          "data": {
+            "in": 0,
+            "out": 200000
           },
           "parameters": {
-            "x": "70",
-            "y": "70",
+            "x": "80",
+            "y": "10",
+            "class": "mediaTime"
+          }
+        },
+        {
+          "call": "mediaTime",
+          "schedule": {
+            "in": 3000,
+            "out": 5000
+          },
+          "parameters": {
+            "x": "10",
+            "y": "10",
+            "class": "mediaTime"
+          }
+        },
+        {
+          "call": "mediaTime",
+          "schedule": {
+            "in": 5000,
+            "out": 7000
+          },
+          "parameters": {
+            "x": "40",
+            "y": "40",
+            "class": "mediaTime"
+          }
+        },
+        {
+          "call": "mediaTime",
+          "schedule": {
+            "in": 7000,
+            "out": 9000
+          },
+          "parameters": {
+            "x": "80",
+            "y": "80",
             "class": "mediaTime"
           }
         }
