@@ -453,8 +453,10 @@ var Loom = (function() {
                 element.setAttribute('width', width);
                 element.setAttribute('height', height)
                 element.setAttribute('id', id.video);
-                child.setAttribute('src', media.file);
-                child.setAttribute('type', 'video/mp4');
+                child.setAttribute('src', media.videoOGG);
+                child.setAttribute('type', 'video/ogg');
+                //child.setAttribute('src', media.videoMP4);
+                //child.setAttribute('type', 'video/mp4');
 
                 element.appendChild(child);
 

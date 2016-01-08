@@ -12,10 +12,11 @@
     "intro": {
       "media": {
         "type": "video",
-        "file": "assets/video/bbc-the-wonder-of-animals.mp4",
+        "videoOGG": "assets/video/TvTestCard.ogg",
+        "videoMP4": "assets/video/TvTestCard_512kb.mp4",
         "autoplay": true,
         "controls": true,
-        "muted": true,
+        "muted": false,
         "in": 0,
         "out": null,
         "loop": true,
