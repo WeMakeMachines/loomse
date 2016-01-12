@@ -1,27 +1,34 @@
 {
-  "title": "Loom Test Script",
-  "subtitle": "",
-  "author": "Franco Speziali",
-  "summary": "",
-  "minimum_resolution": {
-    "width": 640,
-    "height": 480
+  "description": {
+    "short_name": "Loom Test Script",
+    "long_name": "",
+    "author": "Franco Speziali",
+    "date": "",
+    "description_short": "",
+    "description_long": ""
   },
-  "url": "http://localhost/loom-release/",
+  "settings": {
+    "minimum_resolution": {
+      "width": 640,
+      "height": 480
+    },
+    "url": "http://localhost/loom-release/"
+  },
   "scenes": {
     "intro": {
+      "long_name": "",
       "media": {
         "type": "video",
-        "videoOGG": "assets/video/TvTestCard.ogg",
-        "videoMP4": "assets/video/TvTestCard_512kb.mp4",
-        "autoplay": true,
-        "controls": true,
-        "muted": false,
-        "in": 0,
-        "out": null,
-        "loop": true,
-        "loop_in": 10000,
-        "loop_out": 200000
+        "video": {
+          "ogg": "assets/video/TvTestCard.ogg",
+          "mp4": "assets/video/TvTestCard_512kb.mp4",
+          "autoplay": true,
+          "controls": false,
+          "muted": false,
+          "loop": true,
+          "loop_in": 0,
+          "loop_out": null
+        }
       },
       "events": [
         {
@@ -74,7 +81,7 @@
         }
       ]
     },
-    "End": {
+    "end": {
     }
   }
 }

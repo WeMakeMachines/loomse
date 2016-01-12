@@ -22,7 +22,8 @@ var Loom = (function() {
     var devOptions = {
             // developer options only
             lockEventToMediaTime: true, // default should be true, if false, uses setTimeOut
-            muteAudio: false // overrides any settings in script
+            muteAudio: false, // overrides any settings in script
+            debug: false // verbose mode for errors
         },
         script,
         firstScene = 'intro',
@@ -82,24 +83,27 @@ var Loom = (function() {
 
     // Methods
     var utilities = {
-        ajaxRequest: function(file, dataType, async, callback) {
-            var data;
-            $.ajax({
-                url: file,
-                async: async,
-                data: null,
-                type: 'GET',
-                timeout: 2000,
-                dataType: dataType,
-                error: function(jqXHR,textStatus,errorThrown){
-                    var errorMessage = 'Function: ajaxRequest\nFile: ' + file + '\nType: ' + textStatus + '\nMessage: ' + errorThrown;
-                    utilities.displayError(errorMessage);
-                },
-                success: function(response){
-                    data = response;
+        ajaxRequest: function(file, async, callback) {
+            var data,
+                xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+
+                console.log(xmlhttp.readyState);
+
+                if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    data = JSON.parse(xmlhttp.responseText);
+                    callback(data);
                 }
-            });
-            return data;
+            };
+
+            xmlhttp.open('GET', file, async);
+            xmlhttp.send();
+        },
+
+        report: function(object) {
+            // display report
+            console.log(object);
         },
 
         displayError: function(errorMessage) {
@@ -110,7 +114,7 @@ var Loom = (function() {
         },
 
         random: function(minRange, maxRange) {
-            if(typeof minRange === 'undefined' ){
+            if(typeof minRange === 'undefined') {
                 var minRange = 0;
             }
             var range = maxRange - minRange;
@@ -162,7 +166,6 @@ var Loom = (function() {
             });
         },
 
-
         // not sure if I'm keeping add / remove or offloading onto module
         add: function(id) {
             var element = document.createElement('div');
@@ -204,13 +207,21 @@ var Loom = (function() {
     })();
 
     var scriptLogic = (function() {
-        function Scene(sceneTitle, assets) {
+        function Scene(title, assets) {
             var that = this;
-            this.sceneTitle = sceneTitle;
-            this.sceneId = utilities.cleanString(this.sceneTitle);
-            //this.media = assets.media;
+            this.title = title;
+            this.shortName = assets.short_name;
+            this.longName = assets.long_name;
+            this.sceneId = utilities.cleanString(this.title);
             //this.data = assets.data;
             this.media = assets.media;
+            // why is this not here?
+            //if(this.media === 'video') {
+            //    this.video = assets.video;
+            //}
+            //if(this.media === 'audio') {
+            //    this.audio = assets.audio;
+            //}
             this.events = assets.events;
             this.container = (function() {
                 var element = document.createElement('div');
@@ -229,28 +240,31 @@ var Loom = (function() {
                 // Runs when a new scene is set from the Script
                 // Pulls the relevant scene details from the object, resets parameters and launches the process() method.
                 // --
-                var source = script.scenes,
-                    currentScene;
+                //var source = script.scenes,
+                //    currentScene;
                 //environment.clear();
 
-                currentScene = new Scene(scene, source[scene]);
+                // var currentScene = new Scene(scene, source[scene]);
+                var currentScene = new Scene(scene, script.scenes[scene]);
                 status.media = currentScene.media.type;
                 history.record(currentScene);
                 process(currentScene);
             }
 
-            function process(scene) {
+            function process(currentScene) {
                 // --
                 // Processes the current scene
                 // --
                 // Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
                 // Each 'media' type also has a number of events
 
-                media.create(scene.container, scene.media, function(playObject) {
+                media.create(currentScene.container, currentScene.media, function(playObject) {
 
-                    if(scene.media.type === 'video') {
+                    if(currentScene.media.type === 'video') { // TODO need to allow this to accept and process multiple strings
+                        console.log(playObject.parameters);
+
                         if(playObject.parameters.autoplay === true) {
-                            publicMethods.control.play();
+                            publicMethods.control.play(); // TODO should setup a system to give 'all clear' before allowing video to start
                         }
 
                         //if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
@@ -260,7 +274,7 @@ var Loom = (function() {
                         //}
 
                         if(playObject.parameters.loop === true) {
-                            if(playObject.parameters.loopIn === null) {
+                            if(playObject.parameters.loopIn === 0 && typeof playObject.parameters.loopOut !== 'number') {
                                 playObject.onended = function(e){
                                     publicMethods.control.scrub(0);
                                     publicMethods.control.play();
@@ -270,7 +284,7 @@ var Loom = (function() {
                                 // add loop point as event
                                 // for the purposes of our system, in / out points are reversed
                                 // (schedule in point is actually loop out point etc)
-                                scene.events.push(
+                                currentScene.events.push(
                                     {
                                         call: 'loop',
                                         schedule: {
@@ -283,8 +297,8 @@ var Loom = (function() {
                         }
                     }
 
-                    if(scene.events !== null) {
-                        events(playObject, scene.events, function() {});
+                    if(currentScene.events !== null) {
+                        events(playObject, currentScene.events, function() {});
                     }
                     else {
                         console.log('No events to report');
@@ -333,7 +347,7 @@ var Loom = (function() {
                             }
 
                             // this is a weak point in the software, very reliant on the numbers being right
-                            else if(devOptions.lockEventToMediaTime === true && (scene.media.type === 'video' || scene.media.type === 'audio')) {
+                            else if(devOptions.lockEventToMediaTime === true && (currentScene.media.type === 'video' || currentScene.media.type === 'audio')) {
                                 target.addEventListener('timeupdate', function () {
                                     // 'In'
                                     if(this.currentTime >= timeInLow && this.currentTime <= timeInHigh){
@@ -420,20 +434,6 @@ var Loom = (function() {
             // --
             var mediaElement;
 
-            //switch(media) {
-            //    case 'audio':
-            //        audio();
-            //        break;
-            //    case 'video':
-            //        video();
-            //        break;
-            //    case 'graphic':
-            //        graphic();
-            //        break;
-            //    default:
-            //        throw 'Invalid media';
-            //}
-
             function audio() {
                 // TODO
 
@@ -453,9 +453,9 @@ var Loom = (function() {
                 element.setAttribute('width', width);
                 element.setAttribute('height', height)
                 element.setAttribute('id', id.video);
-                child.setAttribute('src', media.videoOGG);
+                child.setAttribute('src', media.video.ogg);
                 child.setAttribute('type', 'video/ogg');
-                //child.setAttribute('src', media.videoMP4);
+                //child.setAttribute('src', media.video.mp4);
                 //child.setAttribute('type', 'video/mp4');
 
                 element.appendChild(child);
@@ -464,7 +464,7 @@ var Loom = (function() {
 
                 element.parameters = {};
 
-                if(media.muted === true) {
+                if(media.video.muted === true) {
                     element.muted = true;
                 }
 
@@ -473,17 +473,28 @@ var Loom = (function() {
                     element.muted = true;
                 }
 
-                if(media.controls === true) {
+                if(media.video.controls === true) {
                     element.controls = true;
                     //element.setAttribute('controls', true);
                 }
-                if(media.autoplay === true) {
+
+                if(media.video.autoplay === true) {
                     element.parameters.autoplay = true;
                 }
-                if(media.loop === true) {
+
+                if(media.video.loop === true) {
                     element.parameters.loop = true;
-                    element.parameters.loopIn = media.loop_in;
-                    element.parameters.loopOut = media.loop_out;
+                    if(typeof media.video.loop_in === 'number') {
+                        element.parameters.loopIn = media.video.loop_in;
+                    } else {
+                        element.parameters.loopIn = 0;
+                    }
+
+                    if(typeof media.video.loop_out === 'number') {
+                        element.parameters.loopOut = media.video.loop_out;
+                    } else {
+                        element.parameters.loopOut = null;
+                    }
                 }
 
                 return element;
@@ -621,24 +632,37 @@ var Loom = (function() {
 
         //window.onresize = Loom.control.viewportResize();
 
-        //window.addEventListener('resize', Loom.rez(), true);
+        //window.addEventListener('resize', Loom.rez(), true);k
 
-        // grab data
-        // load minimum resolution requirements from script, and check
-        script = utilities.ajaxRequest(scriptFile, 'json', false); // TODO add promise and switch to async with callback
-        minimumResolution.width = script.minimum_resolution.width; // TODO check value is number
-        minimumResolution.height = script.minimum_resolution.height;
         //if(environment.check() == false){
         //    console.log('WARNING: Screen too small');
         //}
 
-        // turn IDs into objects
-        stage.object = document.getElementById(stage.id);
-        overlay.object = document.getElementById(overlay.id);
-        // set our environment
-        node.maximise(stage.object);
-        node.maximise(overlay.object);
-        scriptLogic.mediaQueue.set(firstScene);
+        // load script file and check the returned data
+        utilities.ajaxRequest(scriptFile, true, checkScriptReturn);
+
+        function checkScriptReturn(data) {
+
+            //var minimum_options = {['', ]};
+
+            function checkDataType(data, type, maximum) {
+
+            }
+
+            script = data; // TODO this needs to be individually parsed for data integrity, prerequisite - we need the script file schematics to be finalised
+
+            minimumResolution.width = script.settings.minimum_resolution.width; // TODO check value is number
+            minimumResolution.height = script.settings.minimum_resolution.height;
+
+            // turn IDs into objects
+            stage.object = document.getElementById(stage.id);
+            overlay.object = document.getElementById(overlay.id);
+
+            // set our environment
+            node.maximise(stage.object);
+            node.maximise(overlay.object);
+            scriptLogic.mediaQueue.set(firstScene);
+        }
     };
 
     publicMethods.control = (function () {
