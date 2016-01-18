@@ -12,7 +12,7 @@
       "width": 640,
       "height": 480
     },
-    "url": "http://localhost/loom-release/"
+    "url": "http://localhost/"
   },
   "scenes": {
     "intro": {
@@ -26,8 +26,9 @@
           "controls": false,
           "muted": false,
           "loop": true,
-          "loop_in": 0,
-          "loop_out": null
+          "loop_in": null,
+          "loop_out": null,
+          "duration": null
         }
       },
       "events": [

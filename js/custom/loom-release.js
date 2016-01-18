@@ -18,12 +18,13 @@ var Loom = (function() {
     // Private
     //
 
-    // Properties
+    // Private variables
     var devOptions = {
             // developer options only
             lockEventToMediaTime: true, // default should be true, if false, uses setTimeOut
             muteAudio: false, // overrides any settings in script
-            debug: false // verbose mode for errors
+            debug: false, // verbose mode for errors
+            disableCheckScript: false // by default script file is checked for errors, set to true to skip this
         },
         script,
         firstScene = 'intro',
@@ -41,8 +42,10 @@ var Loom = (function() {
             media: null, // current type of media in queue
             id: null // id of media in queue
         },
-        stage = (function() {
-            var id = 'loom_stage', // to be made redundant, see id function below
+        root = {},
+        stage = {},
+        mediaGroup = (function() {
+            var id = 'loom_mediaGroup', // to be made redundant, see id function below
                 elements = [];
 
             return {
@@ -67,21 +70,27 @@ var Loom = (function() {
             };
         })(),
         id = (function() {
-            var prefix = 'loom_',
+            var separator = '_',
+                root = 'loom',
                 stage = 'stage',
+                notify = 'notify',
+                mediaGroup = 'mediaGroup',
                 overlay = 'overlay',
                 video = 'video',
                 audio = 'audio';
 
             return {
-                overlay: prefix + overlay,
-                stage: prefix + stage,
-                video: prefix + video,
-                audio: prefix + audio
+                root: root,
+                stage: root + separator + stage,
+                notify: root + separator + notify,
+                overlay: root + separator + overlay,
+                mediaGroup: root + separator + mediaGroup,
+                video: root + separator + video,
+                audio: root + separator + audio
             };
         })();
 
-    // Methods
+    // Common utilities which may be referred to from other functions
     var utilities = {
         ajaxRequest: function(file, async, callback) {
             var data,
@@ -152,12 +161,35 @@ var Loom = (function() {
             }
         },
 
-        checkScript: function(script) {
-            // check for malformed data, validity
-
+        animateCSS: function(element, parameter, startValue, endValue, time, callback) {
+            var currentValue,
+                steps = 4, // adjust this value to make animation smoother
+                currentStep = 0,
+                difference = endValue - startValue,
+                timeStep = time / steps,
+                valueStep = difference / steps,
+                object = {},
+                step = setInterval(function() {
+                    if(currentStep > steps) {
+                        clearInterval(step);
+                        if(callback) {
+                            callback();
+                        }
+                    } else {
+                        if(currentStep === steps) {
+                            currentValue = endValue;
+                        } else {
+                            currentValue = startValue + (valueStep * currentStep);
+                        }
+                        object[parameter] = currentValue;
+                        utilities.style(element, object);
+                        currentStep = currentStep + 1;
+                    }
+                }, timeStep);
         }
     };
 
+    // Handles addition and removal of HTML nodes, as well as other exchanges
     var node = {
         maximise: function(element) {
             utilities.style(element, {
@@ -178,6 +210,7 @@ var Loom = (function() {
         }
     };
 
+    // Keeps a record of the scenes passed through by the user. Provides some control over how to navigate the history
     var history = (function() {
         var scenes = [];
         return {
@@ -206,6 +239,7 @@ var Loom = (function() {
         };
     })();
 
+    // Handles the script logic
     var scriptLogic = (function() {
         function Scene(title, assets) {
             var that = this;
@@ -261,10 +295,11 @@ var Loom = (function() {
                 media.create(currentScene.container, currentScene.media, function(playObject) {
 
                     if(currentScene.media.type === 'video') { // TODO need to allow this to accept and process multiple strings
-                        console.log(playObject.parameters);
+                        currentScene.media.video.duration = playObject.duration;
 
                         if(playObject.parameters.autoplay === true) {
                             publicMethods.control.play(); // TODO should setup a system to give 'all clear' before allowing video to start
+                            console.log(playObject.readyState);
                         }
 
                         //if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
@@ -380,6 +415,7 @@ var Loom = (function() {
         }
     })();
 
+    // Handles differing media
     var media = (function() {
         function target(sceneId) {
             var parent = document.getElementById(sceneId),
@@ -446,19 +482,26 @@ var Loom = (function() {
                 // --
 
                 var element = document.createElement('video'),
-                    child = document.createElement('source'),
-                    width = stage.object.offsetWidth,
-                    height = stage.object.offsetHeight;
+                    child1 = document.createElement('source'),
+                    child2 = document.createElement('source'),
+                    width = mediaGroup.object.offsetWidth,
+                    height = mediaGroup.object.offsetHeight;
 
                 element.setAttribute('width', width);
-                element.setAttribute('height', height)
+                element.setAttribute('height', height);
                 element.setAttribute('id', id.video);
-                child.setAttribute('src', media.video.ogg);
-                child.setAttribute('type', 'video/ogg');
-                //child.setAttribute('src', media.video.mp4);
-                //child.setAttribute('type', 'video/mp4');
 
-                element.appendChild(child);
+                if(typeof media.video.ogg === 'string') {
+                    child1.setAttribute('src', media.video.ogg);
+                    child1.setAttribute('type', 'video/ogg');
+                    element.appendChild(child1);
+                }
+
+                if(typeof media.video.mp4 === 'string') {
+                    child2.setAttribute('src', media.video.mp4);
+                    child2.setAttribute('type', 'video/mp4');
+                    element.appendChild(child2);
+                }
 
                 status.id = id.video;
 
@@ -505,7 +548,7 @@ var Loom = (function() {
                 return;
             }
 
-            stage.object.appendChild(container);
+            mediaGroup.object.appendChild(container);
 
             if(!callback){
                 throw 'Expected callback';
@@ -535,6 +578,87 @@ var Loom = (function() {
         };
     })();
 
+    var notify = (function() {
+        // possible options:
+        // message
+        // function to dismiss the notification
+        var isActive = false,
+            container = document.createElement('div'),
+            child = document.createElement('div'),
+            child2 = document.createElement('p');
+
+        function position(object) {
+            var availableWidth = window.innerWidth,
+                availableHeight = window.innerHeight;
+
+            utilities.style(object, {
+                opacity: 0
+            });
+
+            var objWidth = object.offsetWidth,
+                objHeight = object.offsetHeight,
+                x = (availableWidth - objWidth) / 2 ,
+                y = (availableHeight - objHeight) / 2;
+
+            console.log(objWidth + ' ' + objHeight);
+
+            utilities.style(object, {
+                position: 'absolute',
+                display: 'block',
+                left: x,
+                top: y,
+                opacity: 1
+            });
+        }
+
+        return {
+            push: function(message) {
+                if(status.control === 'playing') {
+                    publicMethods.control.pause();
+                }
+
+                if(isActive === false) {
+                    isActive = true; // set active flag
+                    // create conditions for notification
+
+                    container.setAttribute('id', id.notify);
+
+                    // make child full size of screen
+                    node.maximise(container);
+
+                    // animate the 'curtain falling' on stage
+
+                    utilities.animateCSS(stage.object, 'opacity', 1, 0.2, 200);
+
+                    root.object.appendChild(container);
+                    container.appendChild(child);
+                    child.appendChild(child2);
+                }
+
+                // push notification to screen
+
+                child2.innerHTML = message;
+                position(child);
+            },
+
+            dismiss: function() {
+                if(isActive === false) {
+                    return;
+                }
+                else {
+                    // function goes here
+                    isActive = false; // reset activity flag
+                    root.object.removeChild(container);
+                    utilities.animateCSS(stage.object, 'opacity', 0.2, 1, 200);
+                    if(status.control === 'paused') {
+                        publicMethods.control.play();
+                    }
+                }
+            }
+        };
+    })();
+
+    // Constructor function that creates instances of each event
     var Event = function(id, call, schedule, parameters) {
         var that = this,
             plugin = new Loom.Modules();
@@ -588,12 +712,20 @@ var Loom = (function() {
     //
     //};
 
-    var publicMethods = {
-        status: status
-    };
+    var publicMethods = {};
 
     // namespace for our external modules
     publicMethods.Modules = function() {
+    };
+
+    publicMethods.notify = function(message) {
+        // temporary function to test the notification function
+        notify.push(message);
+    };
+
+    publicMethods.notifyDismiss = function(message) {
+        // temporary function to test the notification function
+        notify.dismiss();
     };
 
     publicMethods.runCounter = function() {
@@ -639,36 +771,123 @@ var Loom = (function() {
         //}
 
         // load script file and check the returned data
-        utilities.ajaxRequest(scriptFile, true, checkScriptReturn);
 
-        function checkScriptReturn(data) {
+        function checkScriptReturn(returnedScript) {
+            // check the script file is valid
+            // we check for variable type validity
+            // as well as availability of media files
 
-            //var minimum_options = {['', ]};
+            var report = [];
 
-            function checkDataType(data, type, maximum) {
+            var scriptOptions = [['settings.minimum_resolution.width', 'number'], ['settings.minimum_resolution.height', 'number']];
+
+            var test = [[2133213, 'number'], ['dsadsd', 'number'], [2133213, 'number'], [2133213, 'number']];
+
+            function checkDataType(element, index) {
+                var option = element[0],
+                    expectedType = element[1],
+                    line;
+                if (typeof option !== expectedType) {
+                    line = 'Type mismatch on script option ' + option + ', expected ' + expectedType;
+                    report.push(line);
+                }
+            }
+
+            function checkURL(url, duration) {
+                var line;
+
+                if(typeof url === 'string') {
+                    var xmlhttp = new XMLHttpRequest();
+
+                    xmlhttp.onreadystatechange = function() {
+                        if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                            line = url + ' ready!';
+                            report.push(line);
+                        } else if (xmlhttp.readyState === 4 && xmlhttp.status === 404) {
+                            line = url + ' returns 404';
+                            report.push(line);
+                        }
+
+                        console.log(report);
+                    };
+
+                    xmlhttp.open('GET', url, true);
+                    xmlhttp.send();
+                }
+                else {
+                    line = 'Project base URL missing';
+                    report.push(line);
+                }
+            }
+
+            function checkDataTypes(options, source) {
+                options.forEach(function(element, index) {
+                    var option = element[0],
+                        selectedOption = source[option],
+                        expectedType = element[1],
+                        line;
+                    if (typeof option !== expectedType) {
+                        line = 'Type mismatch on script option ' + option + ', expected ' + expectedType;
+                        report.push(line);
+                    }
+                })
+            }
+
+            function checkValidity() {
 
             }
 
-            script = data; // TODO this needs to be individually parsed for data integrity, prerequisite - we need the script file schematics to be finalised
+            function checkMediaFiles() {
+
+            }
+
+            //test.forEach(checkDataType);
+
+            //checkDataTypes(scriptOptions, returnedScript);
+            //
+            checkURL(returnedScript.settings.url);
+            checkURL(returnedScript.scenes.intro.media.video.ogg);
+            checkURL(returnedScript.scenes.intro.media.video.mp4);
+
+            console.log(report);
+
+            script = returnedScript; // TODO this needs to be individually parsed for data integrity, prerequisite - we need the script file schematics to be finalised
 
             minimumResolution.width = script.settings.minimum_resolution.width; // TODO check value is number
             minimumResolution.height = script.settings.minimum_resolution.height;
 
             // turn IDs into objects
-            stage.object = document.getElementById(stage.id);
+
+            root.object = document.getElementById(id.root);
+            stage.object = document.getElementById(id.stage);
+            mediaGroup.object = document.getElementById(mediaGroup.id);
             overlay.object = document.getElementById(overlay.id);
 
             // set our environment
-            node.maximise(stage.object);
+            node.maximise(mediaGroup.object);
             node.maximise(overlay.object);
             scriptLogic.mediaQueue.set(firstScene);
         }
+
+        utilities.ajaxRequest(scriptFile, true, function(returnedData) {
+            if (devOptions.disableCheckScript === false) {
+                checkScriptReturn(returnedData)
+            }
+        });
+    };
+
+    publicMethods.status = function() {
+        // report stats on media
+        // (unfinished)
+        var selection = document.getElementById(status.id);
+
+        console.log('Length of media file: ' + selection.duration);
+        console.log(status);
     };
 
     publicMethods.control = (function () {
         // This is wrong
         // This is external control to control the playing / pausing of the SCENE - NOT just the video itself
-
 
         return {
             pause: function() {
@@ -710,14 +929,6 @@ var Loom = (function() {
                 }
             },
 
-            status: function() {
-                // report stats on media
-                // (unfinished)
-                var selection = document.getElementById(status.id);
-
-                return 'Length of media file: ' + selection.duration;
-            },
-
             reload: function() {
                 // restarts the current scene
 
@@ -736,7 +947,7 @@ var Loom = (function() {
 
             viewportResize: function() {
                 // resizes the screen
-                node.maximise(stage.object);
+                node.maximise(mediaGroup.object);
                 node.maximise(overlay.object);
                 //elements.array.forEach(function(element, index, array){
                 //    // find all records that have position information
