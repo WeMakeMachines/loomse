@@ -22,9 +22,10 @@ var Loom = (function() {
     var devOptions = {
             // developer options only
             lockEventToMediaTime: true, // default should be true, if false, uses setTimeOut
-            muteAudio: false, // overrides any settings in script
+            muteAudio: true, // overrides any settings in script
             debug: false, // verbose mode for errors
-            disableCheckScript: false // by default script file is checked for errors, set to true to skip this
+            disableCheckScript: false, // by default script file is checked for errors, set to true to skip this
+            mediaLoadType: 'progressive' // full | progressive
         },
         script,
         firstScene = 'intro',
@@ -38,10 +39,11 @@ var Loom = (function() {
         prefix = 'loom_', // to be made redundant, see id function below
         status = {
             version: '0.2b',
-            control: null, // playing or paused?
+            control: 'waiting', // playing | paused | waiting | error
             media: null, // current type of media in queue
             id: null // id of media in queue
         },
+        mediaObject = {},
         root = {},
         stage = {},
         mediaGroup = (function() {
@@ -97,9 +99,6 @@ var Loom = (function() {
                 xmlhttp = new XMLHttpRequest();
 
             xmlhttp.onreadystatechange = function() {
-
-                console.log(xmlhttp.readyState);
-
                 if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                     data = JSON.parse(xmlhttp.responseText);
                     callback(data);
@@ -294,12 +293,15 @@ var Loom = (function() {
 
                 media.create(currentScene.container, currentScene.media, function(playObject) {
 
+                    mediaObject = playObject;
+                    // check which media needs to play
+                    // play video
                     if(currentScene.media.type === 'video') { // TODO need to allow this to accept and process multiple strings
-                        currentScene.media.video.duration = playObject.duration;
+                        //currentScene.media.video.duration = playObject.duration;
 
-                        if(playObject.parameters.autoplay === true) {
-                            publicMethods.control.play(); // TODO should setup a system to give 'all clear' before allowing video to start
-                            console.log(playObject.readyState);
+                        // check if video SHOULD autoplay
+                        if(mediaObject.parameters.autoplay === true) {
+                            media.play(mediaObject);
                         }
 
                         //if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
@@ -308,6 +310,8 @@ var Loom = (function() {
                         //    };
                         //}
 
+
+                        // video loop logic must stay here
                         if(playObject.parameters.loop === true) {
                             if(playObject.parameters.loopIn === 0 && typeof playObject.parameters.loopOut !== 'number') {
                                 playObject.onended = function(e){
@@ -434,35 +438,87 @@ var Loom = (function() {
             return selection;
         }
 
-        function pause(sceneId) {
-            // Pause the SCENE
+        function pause(object) {
+            notify.push('Video paused');
+            this.poll.end();
+            object.pause();
+            status.control = 'paused';
+        }
 
-            // perhaps in the wrong place?
+        function play(object) {
+            if(status.media === 'video' || status.media === 'audio') {
+                if(object.paused === true && status.control === 'paused') {
+                    // check if media was paused, if so, simply unpause
 
-            //status.control = 'paused';
+                    notify.dismiss();
+                    object.play();
+                    this.poll.run(object);
+                    status.control = 'playing';
+                }
 
-            var selection = target(sceneId);
-            if(typeof selection === 'object') {
-                selection.pause();
+                else if(devOptions.mediaLoadType === 'full') {
+                    // wait for video / audio to fully load
+                    // show progress bar
+                    notify.push('Loading');
+
+                    object.oncanplaythrough = function() {
+                        notify.dismiss();
+                        object.play();
+                        status.control = 'playing';
+                    }
+                }
+
+                else if(devOptions.mediaLoadType === 'progressive') {
+                    // progressively load video / audio and play when enough data is loaded
+                    notify.push('Loading');
+
+                    object.oncanplay = function() {
+                        notify.dismiss();
+                        object.play();
+                        media.poll.run(object);
+                        status.control = 'playing';
+                    }
+                }
             }
         }
 
-        function play(element) {
-            // Play the SCENE
+        var poll = (function() {
+            var pollEvent,
+                pollInterval = 300,
+                playbackStopEvents = 0,
+                playBackStopState = false;
 
-            // perhaps in the wrong place?
+            return {
+                run: function(object) {
+                    var oldTime = object.currentTime,
+                        newTime;
 
-            //status.control = 'playing';
-
-            //function ready(){
-            //    if(media === 'video' || 'audio'){
-            //        if(parameters.autoplay === true){
-            //
-            //        }
-            //        callback();
-            //    }
-            //}
-        }
+                    pollEvent = setInterval(function() {
+                        newTime = object.currentTime;
+                        // perform analysis
+                        if(oldTime !== newTime) {
+                            // all ok
+                            if(playBackStopState === true) {
+                                playBackStopState = false;
+                                notify.dismiss();
+                            }
+                            oldTime = newTime;
+                        }
+                        else {
+                            // else do this if playback has stopped
+                            if(playBackStopState === false) { // check if it hasn't stopped before
+                                playbackStopEvents = playbackStopEvents + 1;
+                            }
+                            playBackStopState = true;
+                            notify.push('Buffering');
+                        }
+                    }, pollInterval);
+                },
+                end: function() {
+                    clearInterval(pollEvent);
+                }
+            }
+        })();
 
         function create(container, media, callback) {
             // --
@@ -574,14 +630,13 @@ var Loom = (function() {
             target: target,
             pause: pause,
             play: play,
+            poll: poll,
             create: create
         };
     })();
 
     var notify = (function() {
-        // possible options:
-        // message
-        // function to dismiss the notification
+        // lowers 'curtain' on screen and pushes notification
         var isActive = false,
             container = document.createElement('div'),
             child = document.createElement('div'),
@@ -600,8 +655,6 @@ var Loom = (function() {
                 x = (availableWidth - objWidth) / 2 ,
                 y = (availableHeight - objHeight) / 2;
 
-            console.log(objWidth + ' ' + objHeight);
-
             utilities.style(object, {
                 position: 'absolute',
                 display: 'block',
@@ -613,10 +666,6 @@ var Loom = (function() {
 
         return {
             push: function(message) {
-                if(status.control === 'playing') {
-                    publicMethods.control.pause();
-                }
-
                 if(isActive === false) {
                     isActive = true; // set active flag
                     // create conditions for notification
@@ -650,9 +699,6 @@ var Loom = (function() {
                     isActive = false; // reset activity flag
                     root.object.removeChild(container);
                     utilities.animateCSS(stage.object, 'opacity', 0.2, 1, 200);
-                    if(status.control === 'paused') {
-                        publicMethods.control.play();
-                    }
                 }
             }
         };
@@ -779,20 +825,6 @@ var Loom = (function() {
 
             var report = [];
 
-            var scriptOptions = [['settings.minimum_resolution.width', 'number'], ['settings.minimum_resolution.height', 'number']];
-
-            var test = [[2133213, 'number'], ['dsadsd', 'number'], [2133213, 'number'], [2133213, 'number']];
-
-            function checkDataType(element, index) {
-                var option = element[0],
-                    expectedType = element[1],
-                    line;
-                if (typeof option !== expectedType) {
-                    line = 'Type mismatch on script option ' + option + ', expected ' + expectedType;
-                    report.push(line);
-                }
-            }
-
             function checkURL(url, duration) {
                 var line;
 
@@ -807,8 +839,6 @@ var Loom = (function() {
                             line = url + ' returns 404';
                             report.push(line);
                         }
-
-                        console.log(report);
                     };
 
                     xmlhttp.open('GET', url, true);
@@ -820,36 +850,8 @@ var Loom = (function() {
                 }
             }
 
-            function checkDataTypes(options, source) {
-                options.forEach(function(element, index) {
-                    var option = element[0],
-                        selectedOption = source[option],
-                        expectedType = element[1],
-                        line;
-                    if (typeof option !== expectedType) {
-                        line = 'Type mismatch on script option ' + option + ', expected ' + expectedType;
-                        report.push(line);
-                    }
-                })
-            }
-
-            function checkValidity() {
-
-            }
-
-            function checkMediaFiles() {
-
-            }
-
-            //test.forEach(checkDataType);
-
-            //checkDataTypes(scriptOptions, returnedScript);
-            //
+            // check returned script came back ok
             checkURL(returnedScript.settings.url);
-            checkURL(returnedScript.scenes.intro.media.video.ogg);
-            checkURL(returnedScript.scenes.intro.media.video.mp4);
-
-            console.log(report);
 
             script = returnedScript; // TODO this needs to be individually parsed for data integrity, prerequisite - we need the script file schematics to be finalised
 
@@ -891,29 +893,12 @@ var Loom = (function() {
 
         return {
             pause: function() {
-                var selection = document.getElementById(status.id);
-                // pause all events, media, timeout
-
-                // media
-                if(status.media === 'video' || status.media === 'audio'){
-                    //document.getElementById(prefix + 'video').pause();
-                    status.control = 'paused';
-                    selection.pause();
-                }
-
+                media.pause(mediaObject);
                 return 'Paused';
             },
 
             play: function() {
-                var selection = document.getElementById(status.id);
-                // resume all events, media, timeout
-
-                // media
-                if(status.media === 'video' || status.media === 'audio'){
-                    status.control = 'playing';
-                    selection.play();
-                }
-
+                media.play(mediaObject);
                 return 'Playing';
             },
 
