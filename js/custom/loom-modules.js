@@ -10,7 +10,6 @@ Loom.Modules.prototype.loop = function() {
     return {
         run: function(target, data) {
             Loom.control.scrub(data.out);
-            Loom.control.play();
         },
         stop: function() {
 

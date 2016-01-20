@@ -39,7 +39,7 @@ var Loom = (function() {
         prefix = 'loom_', // to be made redundant, see id function below
         status = {
             version: '0.2b',
-            control: 'waiting', // playing | paused | waiting | error
+            control: 'waiting', // playing | paused | seeking | waiting | error
             media: null, // current type of media in queue
             id: null // id of media in queue
         },
@@ -315,8 +315,8 @@ var Loom = (function() {
                         if(playObject.parameters.loop === true) {
                             if(playObject.parameters.loopIn === 0 && typeof playObject.parameters.loopOut !== 'number') {
                                 playObject.onended = function(e){
-                                    publicMethods.control.scrub(0);
-                                    publicMethods.control.play();
+                                    status.media = 'seeking';
+                                    play(playObject, 0);
                                 };
                             }
                             else {
@@ -445,8 +445,16 @@ var Loom = (function() {
             status.control = 'paused';
         }
 
-        function play(object) {
+        function play(object, timecode) {
             if(status.media === 'video' || status.media === 'audio') {
+                if(status.control === 'seeking' && typeof timecode === 'number') {
+                    object.currentTime = timecode;
+                    object.play();
+                    this.poll.run(object);
+                    status.control = 'playing';
+                    return;
+                }
+
                 if(object.paused === true && status.control === 'paused') {
                     // check if media was paused, if so, simply unpause
 
@@ -454,6 +462,7 @@ var Loom = (function() {
                     object.play();
                     this.poll.run(object);
                     status.control = 'playing';
+                    return;
                 }
 
                 else if(devOptions.mediaLoadType === 'full') {
@@ -904,14 +913,17 @@ var Loom = (function() {
 
             scrub: function(time) {
                 // scrub to time in media
-                var selection = document.getElementById(status.id);
+                status.control = 'seeking';
+                media.play(mediaObject, time);
 
-                if(typeof time !== 'number') {
-                    return 'ERR: Can not seek';
-                }
-                else {
-                    selection.currentTime = time;
-                }
+                //var selection = document.getElementById(status.id);
+                //
+                //if(typeof time !== 'number') {
+                //    return 'ERR: Can not seek';
+                //}
+                //else {
+                //    selection.currentTime = time;
+                //}
             },
 
             reload: function() {
