@@ -316,7 +316,7 @@ var Loom = (function() {
                             if(playObject.parameters.loopIn === 0 && typeof playObject.parameters.loopOut !== 'number') {
                                 playObject.onended = function(e){
                                     status.media = 'seeking';
-                                    play(playObject, 0);
+                                    media.play(playObject, 0);
                                 };
                             }
                             else {
@@ -915,15 +915,7 @@ var Loom = (function() {
                 // scrub to time in media
                 status.control = 'seeking';
                 media.play(mediaObject, time);
-
-                //var selection = document.getElementById(status.id);
-                //
-                //if(typeof time !== 'number') {
-                //    return 'ERR: Can not seek';
-                //}
-                //else {
-                //    selection.currentTime = time;
-                //}
+                return 'Seeking';
             },
 
             reload: function() {
