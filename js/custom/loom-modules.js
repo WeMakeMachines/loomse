@@ -35,7 +35,7 @@ Loom.Modules.prototype.mediaTime = function() {
                     element = document.createElement('div'),
                     child = document.createElement('span');
 
-                console.log(clock);
+                //console.log(clock);
 
                 element.id = data.id;
 

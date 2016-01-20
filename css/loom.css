@@ -72,6 +72,23 @@ ol.loom_answers li {
 	z-index: 100;
 }
 
+#loom_notify {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 200;
+}
+
+#loom_notify div {
+	position: absolute;
+	opacity: 0;
+}
+
+#loom_notify p {
+	font-size: 20px;
+	color: white;
+}
+
 /* media */
 
 #loom_video {
