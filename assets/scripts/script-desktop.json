@@ -12,7 +12,9 @@
       "width": 640,
       "height": 480
     },
-    "url": "http://localhost/"
+    "url": "http://localhost/",
+    "language": "english",
+    "subtitlesOn": true
   },
   "scenes": {
     "intro": {
@@ -29,6 +31,9 @@
           "loop_in": null,
           "loop_out": null,
           "duration": null
+        },
+        "subtitles": {
+          "english": "assets/subtitles/english.srt"
         }
       },
       "events": [

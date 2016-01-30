@@ -29,6 +29,7 @@ var Loom = (function() {
         },
         script,
         firstScene = 'intro',
+        currentScene,
         mediaTimeEventResolution = 0.4,// this is margin for which events are detected on the timecode of the media playing, if flag lockEventToMediaTime is set to true
         minimumResolution = {
         // default values, overridden by values in script - if set
@@ -239,183 +240,152 @@ var Loom = (function() {
     })();
 
     // Handles the script logic
-    var scriptLogic = (function() {
-        function Scene(title, assets) {
-            var that = this;
-            this.title = title;
-            this.shortName = assets.short_name;
-            this.longName = assets.long_name;
-            this.sceneId = utilities.cleanString(this.title);
-            //this.data = assets.data;
-            this.media = assets.media;
-            // why is this not here?
-            //if(this.media === 'video') {
-            //    this.video = assets.video;
-            //}
-            //if(this.media === 'audio') {
-            //    this.audio = assets.audio;
-            //}
-            this.events = assets.events;
-            this.container = (function() {
-                var element = document.createElement('div');
-                element.setAttribute('id', that.sceneId);
-                element.media = that.media.type;
-                return element;
-            })();
+    var readScript = (function() {
+        // --
+        // A collection of methods that set process the media elements in the Script
+        // --
+        function setScene(scriptObject, scene) {
+            // --
+            // Runs when a new scene is set from the Script
+            // Pulls the relevant scene details from the object, resets parameters and launches the process() method.
+            // --
+            //var source = script.scenes,
+            //    currentScene;
+            //environment.clear();
+
+            currentScene = new Scene(scene, scriptObject.scenes[scene]);
+            status.media = currentScene.media.type;
+            history.record(currentScene);
+            process(currentScene);
         }
 
-        var mediaQueue = (function() {
+        function process(scene) {
             // --
-            // A collection of methods that set process the media elements in the Script
+            // Processes the current scene
             // --
-            function set(scene) {
-                // --
-                // Runs when a new scene is set from the Script
-                // Pulls the relevant scene details from the object, resets parameters and launches the process() method.
-                // --
-                //var source = script.scenes,
-                //    currentScene;
-                //environment.clear();
+            // Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
+            // Each 'media' type also has a number of events
 
-                // var currentScene = new Scene(scene, source[scene]);
-                var currentScene = new Scene(scene, script.scenes[scene]);
-                status.media = currentScene.media.type;
-                history.record(currentScene);
-                process(currentScene);
-            }
+            media.create(scene.container, scene.media, function(playObject) {
 
-            function process(currentScene) {
-                // --
-                // Processes the current scene
-                // --
-                // Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
-                // Each 'media' type also has a number of events
+                mediaObject = playObject;
+                // check which media needs to play
+                // play video
+                if(scene.media.type === 'video') { // TODO need to allow this to accept and process multiple strings
+                    //scene.media.video.duration = playObject.duration;
 
-                media.create(currentScene.container, currentScene.media, function(playObject) {
+                    // check if video SHOULD autoplay
+                    if(mediaObject.parameters.autoplay === true) {
+                        media.play(mediaObject);
+                    }
 
-                    mediaObject = playObject;
-                    // check which media needs to play
-                    // play video
-                    if(currentScene.media.type === 'video') { // TODO need to allow this to accept and process multiple strings
-                        //currentScene.media.video.duration = playObject.duration;
+                    //if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
+                    //    playObject.onended = function(e){
+                    //        readScript.setScene(scene.data.nextSceneByDefault);
+                    //    };
+                    //}
 
-                        // check if video SHOULD autoplay
-                        if(mediaObject.parameters.autoplay === true) {
-                            media.play(mediaObject);
+                    // video loop logic must stay here
+                    if(playObject.parameters.loop === true) {
+                        if(playObject.parameters.loopIn === 0 && typeof playObject.parameters.loopOut !== 'number') {
+                            playObject.onended = function(e){
+                                status.media = 'seeking';
+                                media.play(playObject, 0);
+                            };
                         }
-
-                        //if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
-                        //    playObject.onended = function(e){
-                        //        scriptLogic.mediaQueue.set(scene.data.nextSceneByDefault);
-                        //    };
-                        //}
-
-
-                        // video loop logic must stay here
-                        if(playObject.parameters.loop === true) {
-                            if(playObject.parameters.loopIn === 0 && typeof playObject.parameters.loopOut !== 'number') {
-                                playObject.onended = function(e){
-                                    status.media = 'seeking';
-                                    media.play(playObject, 0);
-                                };
-                            }
-                            else {
-                                // add loop point as event
-                                // for the purposes of our system, in / out points are reversed
-                                // (schedule in point is actually loop out point etc)
-                                currentScene.events.push(
-                                    {
-                                        call: 'loop',
-                                        schedule: {
-                                            in: playObject.parameters.loopOut,
-                                            out: playObject.parameters.loopIn
-                                        }
+                        else {
+                            // add loop point as event
+                            // for the purposes of our system, in / out points are reversed
+                            // (schedule in point is actually loop out point etc)
+                            currentScene.events.push(
+                                {
+                                    call: 'loop',
+                                    schedule: {
+                                        in: playObject.parameters.loopOut,
+                                        out: playObject.parameters.loopIn
                                     }
-                                );
-                            }
-                        }
-                    }
-
-                    if(currentScene.events !== null) {
-                        events(playObject, currentScene.events, function() {});
-                    }
-                    else {
-                        console.log('No events to report');
-                    }
-                });
-
-                function events(target, array, callback) {
-                    // --
-                    // Schedules timed events for each media element
-                    // --
-
-                    for(var i in array){
-                        var event = array[i],
-                            id = prefix + event.call + '_' + i;
-
-                        var createEvent = new Event(id, event.call, event.schedule, event.parameters);
-
-                        Event.prototype.schedule = function () {
-                            var that = this,
-                                // We calculate the ins and outs here depending on the flag lockEventToMediaTime
-                                // * HTML5 media *
-                                // * setTimeOut *
-                                timeIn = that.in,
-                                timeOut = that.out,
-                                timeInLow = timeIn - (mediaTimeEventResolution / 2),
-                                timeInHigh = timeIn + (mediaTimeEventResolution / 2),
-                                timeOutLow = timeOut - (mediaTimeEventResolution / 2),
-                                timeOutHigh = timeOut + (mediaTimeEventResolution / 2);
-
-                            //console.log('>' + timeIn);
-                            //console.log('>' + timeInLow + ' ' + timeInHigh);
-                            //console.log('>' + timeOut);
-                            //console.log('>' + timeOutLow + ' ' + timeOutHigh);
-
-                            if(devOptions.lockEventToMediaTime === false) {
-                                setTimeout(function() {
-                                    that.run();
-                                }, that.in);
-
-                                if(typeof that.out === 'number') {
-                                    setTimeout(function () {
-                                        that.stop();
-                                        //node.remove(document.getElementById(that.id));
-                                    }, that.out);
                                 }
-                            }
+                            );
+                        }
+                    }
+                }
 
-                            // this is a weak point in the software, very reliant on the numbers being right
-                            else if(devOptions.lockEventToMediaTime === true && (currentScene.media.type === 'video' || currentScene.media.type === 'audio')) {
-                                target.addEventListener('timeupdate', function () {
-                                    // 'In'
-                                    if(this.currentTime >= timeInLow && this.currentTime <= timeInHigh){
-                                        that.run();
-                                    }
-                                    // 'Out'
-                                    if(this.currentTime >= timeOutLow && this.currentTime <= timeOutHigh) {
-                                        that.stop();
-                                        //node.remove(document.getElementById(that.id));
-                                    }
-                                });
-                            }
-                        };
+                if(scene.events !== null) {
+                    events(playObject, scene.events, function() {});
+                }
+                else {
+                    console.log('No events to report');
+                }
+            });
+        }
 
-                        createEvent.schedule();
+        function events(target, array, callback) {
+            // --
+            // Schedules timed events for each media element
+            // --
+
+            for(var i in array){
+                var event = array[i],
+                    id = prefix + event.call + '_' + i;
+
+                var createEvent = new Event(id, event.call, event.schedule, event.parameters);
+
+                Event.prototype.schedule = function () {
+                    var that = this,
+                    // We calculate the ins and outs here depending on the flag lockEventToMediaTime
+                    // * HTML5 media *
+                    // * setTimeOut *
+                        timeIn = that.in,
+                        timeOut = that.out,
+                        timeInLow = timeIn - (mediaTimeEventResolution / 2),
+                        timeInHigh = timeIn + (mediaTimeEventResolution / 2),
+                        timeOutLow = timeOut - (mediaTimeEventResolution / 2),
+                        timeOutHigh = timeOut + (mediaTimeEventResolution / 2);
+
+                    //console.log('>' + timeIn);
+                    //console.log('>' + timeInLow + ' ' + timeInHigh);
+                    //console.log('>' + timeOut);
+                    //console.log('>' + timeOutLow + ' ' + timeOutHigh);
+
+                    if(devOptions.lockEventToMediaTime === false) {
+                        setTimeout(function() {
+                            that.run();
+                        }, that.in);
+
+                        if(typeof that.out === 'number') {
+                            setTimeout(function () {
+                                that.stop();
+                                //node.remove(document.getElementById(that.id));
+                            }, that.out);
+                        }
                     }
 
-                    callback();
-                }
+                    // this is a weak point in the software, very reliant on the numbers being right
+                    else if(devOptions.lockEventToMediaTime === true && (currentScene.media.type === 'video' || currentScene.media.type === 'audio')) {
+                        target.addEventListener('timeupdate', function () {
+                            // 'In'
+                            if(this.currentTime >= timeInLow && this.currentTime <= timeInHigh){
+                                that.run();
+                            }
+                            // 'Out'
+                            if(this.currentTime >= timeOutLow && this.currentTime <= timeOutHigh) {
+                                that.stop();
+                                //node.remove(document.getElementById(that.id));
+                            }
+                        });
+                    }
+                };
+
+                createEvent.schedule();
             }
 
-            return {
-                set: set,
-                process: process
-            };
-        })();
+            callback();
+        }
 
         return {
-            mediaQueue: mediaQueue
+            setScene: setScene,
+            process: process,
+            events: events
         }
     })();
 
@@ -713,6 +683,39 @@ var Loom = (function() {
         };
     })();
 
+    var subtitles = (function() {
+        return {
+            parseSubtitles: function(url) {
+
+            }
+        }
+    })();
+
+    // Constructor function that creates instances of each scene
+    var Scene = function(title, assets) {
+        var that = this;
+        this.title = title;
+        this.shortName = assets.short_name;
+        this.longName = assets.long_name;
+        this.sceneId = utilities.cleanString(this.title);
+        //this.data = assets.data;
+        this.media = assets.media;
+        // why is this not here?
+        //if(this.media === 'video') {
+        //    this.video = assets.video;
+        //}
+        //if(this.media === 'audio') {
+        //    this.audio = assets.audio;
+        //}
+        this.events = assets.events;
+        this.container = (function() {
+            var element = document.createElement('div');
+            element.setAttribute('id', that.sceneId);
+            element.media = that.media.type;
+            return element;
+        })();
+    };
+
     // Constructor function that creates instances of each event
     var Event = function(id, call, schedule, parameters) {
         var that = this,
@@ -773,6 +776,10 @@ var Loom = (function() {
     publicMethods.Modules = function() {
     };
 
+    publicMethods.events = function() {
+        console.log(currentScene.events);
+    };
+
     publicMethods.notify = function(message) {
         // temporary function to test the notification function
         notify.push(message);
@@ -807,7 +814,6 @@ var Loom = (function() {
     // Properties
     publicMethods.publicProperty = null;
 
-
     // Methods
     publicMethods.initialise = function(scriptFile) {
         // --
@@ -827,48 +833,15 @@ var Loom = (function() {
 
         // load script file and check the returned data
 
-        function checkScriptReturn(returnedScript) {
-            // check the script file is valid
-            // we check for variable type validity
-            // as well as availability of media files
-
-            var report = [];
-
-            function checkURL(url, duration) {
-                var line;
-
-                if(typeof url === 'string') {
-                    var xmlhttp = new XMLHttpRequest();
-
-                    xmlhttp.onreadystatechange = function() {
-                        if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                            line = url + ' ready!';
-                            report.push(line);
-                        } else if (xmlhttp.readyState === 4 && xmlhttp.status === 404) {
-                            line = url + ' returns 404';
-                            report.push(line);
-                        }
-                    };
-
-                    xmlhttp.open('GET', url, true);
-                    xmlhttp.send();
-                }
-                else {
-                    line = 'Project base URL missing';
-                    report.push(line);
-                }
-            }
-
-            // check returned script came back ok
-            checkURL(returnedScript.settings.url);
-
-            script = returnedScript; // TODO this needs to be individually parsed for data integrity, prerequisite - we need the script file schematics to be finalised
+        utilities.ajaxRequest(scriptFile, true, function(returnedData) {
+            script = returnedData;
 
             minimumResolution.width = script.settings.minimum_resolution.width; // TODO check value is number
             minimumResolution.height = script.settings.minimum_resolution.height;
 
             // turn IDs into objects
 
+            // TODO needs review
             root.object = document.getElementById(id.root);
             stage.object = document.getElementById(id.stage);
             mediaGroup.object = document.getElementById(mediaGroup.id);
@@ -877,13 +850,7 @@ var Loom = (function() {
             // set our environment
             node.maximise(mediaGroup.object);
             node.maximise(overlay.object);
-            scriptLogic.mediaQueue.set(firstScene);
-        }
-
-        utilities.ajaxRequest(scriptFile, true, function(returnedData) {
-            if (devOptions.disableCheckScript === false) {
-                checkScriptReturn(returnedData)
-            }
+            readScript.setScene(script, firstScene);
         });
     };
 
