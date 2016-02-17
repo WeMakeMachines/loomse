@@ -39,9 +39,10 @@
       "events": [
         {
           "call": "mediaTime",
+          "ignored": false,
           "schedule": {
             "in": 0,
-            "out": 200000
+            "out": 20000
           },
           "parameters": {
             "x": "80",
@@ -51,6 +52,7 @@
         },
         {
           "call": "mediaTime",
+          "ignored": false,
           "schedule": {
             "in": 3000,
             "out": 5000
@@ -63,6 +65,7 @@
         },
         {
           "call": "mediaTime",
+          "ignored": false,
           "schedule": {
             "in": 5000,
             "out": 7000
@@ -75,6 +78,7 @@
         },
         {
           "call": "mediaTime",
+          "ignored": false,
           "schedule": {
             "in": 7000,
             "out": 9000
