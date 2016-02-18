@@ -1,10 +1,10 @@
 // displays current media time on screen
 
-Loom.Modules.prototype.jump = function() {
+LoomSE.Modules.prototype.jump = function() {
 
 };
 
-Loom.Modules.prototype.loop = function() {
+LoomSE.Modules.prototype.loop = function() {
     // loops video between in and out points
 
     return {
@@ -18,7 +18,7 @@ Loom.Modules.prototype.loop = function() {
 };
 
 
-Loom.Modules.prototype.mediaTime = function() {
+LoomSE.Modules.prototype.mediaTime = function() {
     // add an on screen timer
     // time linked to media time
 
@@ -30,7 +30,7 @@ Loom.Modules.prototype.mediaTime = function() {
                 var currentMedia = document.getElementById(data.status.id),
                     currentMediaTime = currentMedia.currentTime,
                     clock = setClock(currentMediaTime),
-                    xy = Loom.Modules.locatePerc(data.parameters.x, data.parameters.y),
+                    xy = LoomSE.Modules.locatePerc(data.parameters.x, data.parameters.y),
                     element = document.createElement('div'),
                     child = document.createElement('span');
 
@@ -46,7 +46,7 @@ Loom.Modules.prototype.mediaTime = function() {
 
                 updateTime();
 
-                Loom.Modules.draw(target, element, xy);
+                LoomSE.Modules.draw(target, element, xy);
 
                 update = setInterval(
                     function() {
@@ -59,7 +59,7 @@ Loom.Modules.prototype.mediaTime = function() {
                 currentMediaTime = currentMedia.currentTime;
                 clock = setClock(currentMediaTime);
                 child.innerHTML = clock.hours + ':' + clock.minutes + ':' + clock.seconds + ':' + clock.split;
-            };
+            }
 
             function setClock(time) {
                 var remainder = time,
@@ -125,7 +125,7 @@ Loom.Modules.prototype.mediaTime = function() {
 
 // returns a pixel position from a %
 
-Loom.Modules.locatePerc = function(percentage_x, percentage_y) {
+LoomSE.Modules.locatePerc = function(percentage_x, percentage_y) {
     // using a co-ordinate system of %, place objects on screen
 
     var dimensions = getDimensions(),
@@ -144,18 +144,18 @@ Loom.Modules.locatePerc = function(percentage_x, percentage_y) {
 
 // output to the screen
 
-Loom.Modules.draw = function(target, element, xy, how) {
+LoomSE.Modules.draw = function(target, element, xy, how) {
 
     target.appendChild(element);
 
-    Loom.Modules.setCSS(element, {
+    LoomSE.Modules.setCSS(element, {
         position: 'absolute',
         left: xy[0],
         top: xy[1]
     });
 };
 
-Loom.Modules.setCSS = function(element, object) {
+LoomSE.Modules.setCSS = function(element, object) {
     for (var attribute in object) {
         var value = object[attribute];
 

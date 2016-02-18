@@ -1,5 +1,5 @@
 //
-// Loom Story Engine v0.18
+// Loom Story Engine v0.20
 //
 // Author: Franco Speziali
 //
@@ -12,7 +12,7 @@
 // see jsfiddle : http://jsfiddle.net/gakb4n6g/ and http://jsfiddle.net/gakb4n6g/1/ for example on jQuery promises
 //
 
-var Loom = (function() {
+var LoomSE = (function() {
 
     //
     // Private
@@ -463,111 +463,129 @@ var Loom = (function() {
 
     var subtitles = (function() {
         var subtitlesArray = [],
-            arrayPosition = 0;
+            arrayPosition = 0,
+            activeSubtitle = [0, 0, null, false],
+            id = 'subtitle',
+            container = document.createElement('div');
 
-        return {
-            parseSubtitles: function(url) {
-                var rawSubs,
-                    line,
-                    newLine = /\n/g;
+        container.setAttribute('id', id);
 
-                function convertToInternalTime(string, h, m, s, ms) {
-                    var hours = Number(string.slice(h[0], h[1])),
-                        minutes = Number(string.slice(m[0], m[1])),
-                        seconds = Number(string.slice(s[0], s[1])),
-                        milliseconds = Number(string.slice(ms[0], ms[1])) / 1000,
-                        time = (hours * 3600) + (minutes * 60) + seconds + milliseconds;
+        function parseSubtitles(url) {
+            var rawSubs,
+                line,
+                newLine = /\n/g;
 
-                    return time;
-                }
+            function convertToInternalTime(string, h, m, s, ms) {
+                var hours = Number(string.slice(h[0], h[1])),
+                    minutes = Number(string.slice(m[0], m[1])),
+                    seconds = Number(string.slice(s[0], s[1])),
+                    milliseconds = Number(string.slice(ms[0], ms[1])) / 1000,
+                    time = (hours * 3600) + (minutes * 60) + seconds + milliseconds;
 
-                //function convertToInternalTime(array) {
-                //    var number,
-                //        expression = /[;:,.-]/g; // separators to filter out
-                //
-                //    number = string.replace(expression, '');
-                //
-                //    if(isNaN(number) === false) {
-                //        number = Number(number) / 1000;
-                //    }
-                //    else {
-                //        number = 0;
-                //    }
-                //
-                //    return number;
-                //}
+                return time;
+            }
 
-                // support for .srt files
-                function srt(array) {
-                    var arrayPush = [],
-                        currentRecord,
-                        times,
-                        timeIn,
-                        timeOut,
-                        string = '';
+            // support for .srt files
+            function srt(array) {
+                var arrayPush = [],
+                    currentRecord,
+                    times,
+                    timeIn,
+                    timeOut,
+                    string = '';
 
-                    //console.log(array);
-                    for(var i=0; i < array.length; i++) {
-                        currentRecord = array[i];
-                        if(isNaN(currentRecord) === false) {
+                //console.log(array);
+                for(var i=0; i < array.length; i++) {
+                    currentRecord = array[i];
+                    if(isNaN(currentRecord) === false) {
                         //if(typeof currentRecord === 'number') {
-                            // push old string to array
-                            if(i > 0) {
-                                arrayPush = [timeIn, timeOut, string];
-                                subtitlesArray.push(arrayPush);
-                                string = '';
-                            }
-                            // skip to next line, we're expecting the times now
-                            times = array[i+1];
-                            timeIn = (function() {
-                                var string = times.slice(0,12);
-
-                                return convertToInternalTime(string, [0,2], [3,5], [6,8], [9,12]);
-                            }());
-                            timeOut = (function() {
-                                var string = times.slice(17,29);
-
-                                return convertToInternalTime(string, [0,2], [3,5], [6,8], [9,12]);
-                            }());
-                            i++;
+                        // push old string to array
+                        if(i > 0) {
+                            arrayPush = [timeIn, timeOut, string];
+                            subtitlesArray.push(arrayPush);
+                            string = '';
                         }
-                        else {
-                            string = string + ' ' + currentRecord;
-                        }
-                        //if(i === array.length-1) {
-                        //    console.log(subtitlesArray);
-                        //}
-                    }
-                }
+                        // skip to next line, we're expecting the times now
+                        times = array[i+1];
+                        timeIn = (function() {
+                            var string = times.slice(0,12);
 
-                utilities.ajaxRequest(url, null, true, function(data) {
-                    rawSubs = data.match(/[^\r\n]+/g);
-                    if(url.endsWith('srt')) {
-                        srt(rawSubs);
+                            return convertToInternalTime(string, [0,2], [3,5], [6,8], [9,12]);
+                        }());
+                        timeOut = (function() {
+                            var string = times.slice(17,29);
+
+                            return convertToInternalTime(string, [0,2], [3,5], [6,8], [9,12]);
+                        }());
+                        i++;
                     }
                     else {
-                        return 'No valid subtitles found';
+                        string = string + ' ' + currentRecord;
                     }
-                });
-            },
-
-            checkSubtitle: function(time) {
-                var currentSubtitle = subtitlesArray[arrayPosition];
-                //console.log(time, currentSubtitle[0]);
-                if(time > currentSubtitle[0]) {
-                    subtitles.displaySubtitle(currentSubtitle[2]);
                 }
-            },
-
-            displaySubtitle: function(phrase) {
-                console.log('Sub:', phrase);
-                arrayPosition++;
-            },
-
-            removeSubtitle: function() {
-
             }
-        };
+
+            utilities.ajaxRequest(url, null, true, function(data) {
+                rawSubs = data.match(/[^\r\n]+/g);
+                if(url.endsWith('srt')) {
+                    srt(rawSubs);
+                }
+                else {
+                    return 'No valid subtitles found';
+                }
+            });
+        }
+
+        function checkSubtitle(time) {
+            var check = subtitlesArray[arrayPosition]; // pull current record and see if it is ready
+            console.log(time, check[0]);
+            if(check[0] === time || check[0] < time) {
+
+                // check if preceding subtitle still exists, if it does, remove it
+                if(activeSubtitle[3] === true) {
+                    removeSubtitle();
+                }
+
+                activeSubtitle = check;
+                activeSubtitle[3] = true; // set visibility flag to true
+
+                displaySubtitle(activeSubtitle[2]); // display subtitle
+                arrayPosition++;
+            }
+        }
+
+        function displaySubtitle(phrase) {
+            console.log('Sub:', phrase);
+            container.innerHTML = phrase;
+            overlay.object.appendChild(container);
+            media.listen(removeSubtitle);
+        }
+
+        function removeSubtitle(time) {
+            function destroy() {
+                console.log('remove');
+                activeSubtitle[3] = false;
+                overlay.object.removeChild(container);
+            }
+
+            // check if time is defined
+            if(time) {
+                if((activeSubtitle[1] === time || activeSubtitle[1] < time) && activeSubtitle[3] === true) {
+                    destroy();
+                }
+            }
+            // if not, default behaviour is to remove subtitle
+            else {
+                destroy();
+            }
+        }
+
+        return {
+            parseSubtitles: parseSubtitles,
+            checkSubtitle: checkSubtitle,
+            displaySubtitle: displaySubtitle,
+            removeSubtitle: removeSubtitle
+        }
     })();
 
     // Handles differing media
@@ -652,6 +670,12 @@ var Loom = (function() {
                     }
                 }
             }
+        }
+
+        function listen(callback) {
+            mediaObject.addEventListener('timeupdate', function() {
+                callback(mediaObject.currentTime);
+            });
         }
 
         var poll = (function() {
@@ -802,9 +826,10 @@ var Loom = (function() {
             target: target,
             pause: pause,
             play: play,
+            listen: listen,
             poll: poll,
             create: create
-        };
+        }
     })();
 
     var notify = (function() {
@@ -905,7 +930,7 @@ var Loom = (function() {
     // Constructor function that creates instances of each event
     var Event = function(id, call, schedule, parameters) {
         var that = this,
-            plugin = new Loom.Modules();
+            plugin = new LoomSE.Modules();
 
         //check if the module reference exists as a function
         if(typeof plugin[call] === 'function') {
@@ -928,7 +953,7 @@ var Loom = (function() {
 
     var Event2 = function(id, call, parameters) {
         var that = this,
-            plugin = new Loom.Modules();
+            plugin = new LoomSE.Modules();
 
         //check if the module reference exists as a function
         if(typeof plugin[call] === 'function') {
