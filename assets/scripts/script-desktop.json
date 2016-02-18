@@ -42,7 +42,7 @@
           "ignored": false,
           "schedule": {
             "in": 0,
-            "out": 20000
+            "out": 200000
           },
           "parameters": {
             "x": "80",

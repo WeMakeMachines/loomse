@@ -383,7 +383,6 @@ var Loom = (function() {
                         target.addEventListener('timeupdate', function () {
                             // 'In'
                             if(this.currentTime >= timeInLow && this.currentTime <= timeInHigh){
-                                console.log(this.currentTime, timeIn);
                                 that.run();
                             }
                             // 'Out'
@@ -472,6 +471,32 @@ var Loom = (function() {
                     line,
                     newLine = /\n/g;
 
+                function convertToInternalTime(string, h, m, s, ms) {
+                    var hours = Number(string.slice(h[0], h[1])),
+                        minutes = Number(string.slice(m[0], m[1])),
+                        seconds = Number(string.slice(s[0], s[1])),
+                        milliseconds = Number(string.slice(ms[0], ms[1])) / 1000,
+                        time = (hours * 3600) + (minutes * 60) + seconds + milliseconds;
+
+                    return time;
+                }
+
+                //function convertToInternalTime(array) {
+                //    var number,
+                //        expression = /[;:,.-]/g; // separators to filter out
+                //
+                //    number = string.replace(expression, '');
+                //
+                //    if(isNaN(number) === false) {
+                //        number = Number(number) / 1000;
+                //    }
+                //    else {
+                //        number = 0;
+                //    }
+                //
+                //    return number;
+                //}
+
                 // support for .srt files
                 function srt(array) {
                     var arrayPush = [],
@@ -494,8 +519,16 @@ var Loom = (function() {
                             }
                             // skip to next line, we're expecting the times now
                             times = array[i+1];
-                            timeIn = convertToTime(times.slice(0,12));
-                            timeOut = convertToTime(times.slice(17,29));
+                            timeIn = (function() {
+                                var string = times.slice(0,12);
+
+                                return convertToInternalTime(string, [0,2], [3,5], [6,8], [9,12]);
+                            }());
+                            timeOut = (function() {
+                                var string = times.slice(17,29);
+
+                                return convertToInternalTime(string, [0,2], [3,5], [6,8], [9,12]);
+                            }());
                             i++;
                         }
                         else {
@@ -505,22 +538,6 @@ var Loom = (function() {
                         //    console.log(subtitlesArray);
                         //}
                     }
-                }
-
-                function convertToTime(string) {
-                    var number,
-                        expression = /[;:,.-]/g; // separators to filter out
-
-                    number = string.replace(expression, '');
-
-                    if(isNaN(number) === false) {
-                        number = Number(number);
-                    }
-                    else {
-                        number = 0;
-                    }
-
-                    return number;
                 }
 
                 utilities.ajaxRequest(url, null, true, function(data) {
@@ -898,8 +915,8 @@ var Loom = (function() {
         this.id = id; // event id
         this.call = call;
         this.status = status;
-        this.in = schedule.in;
-        this.out = schedule.out;
+        this.in = schedule.in / 1000;
+        this.out = schedule.out / 1000;
         this.parameters = parameters;
         this.run = function() {
             callModule.run(document.getElementById(overlay.id), that);
