@@ -1,5 +1,5 @@
 //
-// Loom Story Engine v0.20
+// Loom Story Engine v0.22
 //
 // Author: Franco Speziali
 //
@@ -12,6 +12,8 @@
 // see jsfiddle : http://jsfiddle.net/gakb4n6g/ and http://jsfiddle.net/gakb4n6g/1/ for example on jQuery promises
 //
 
+// I feel, I fought, I foundered
+
 var LoomSE = (function() {
 
     //
@@ -20,77 +22,77 @@ var LoomSE = (function() {
 
     // Private variables
     var devOptions = {
-            // developer options only
-            muteAudio: true, // overrides any settings in script
-            debug: false, // verbose mode for errors
-            disableCheckScript: false, // by default script file is checked for errors, set to true to skip this
-            mediaLoadType: 'progressive' // full | progressive
-        },
-        script,
-        firstScene = 'intro',
-        currentScene,
-        mediaTimeEventResolution = 0.4,// this is margin for which events are detected on the timecode of the media playing, if flag lockEventToMediaTime is set to true
-        minimumResolution = {
-        // default values, overridden by values in script - if set
-            width: 640,
-            height: 480
-        },
-        sizeMultiplier = 1, // forgot why I put this here
-        prefix = 'loom_', // to be made redundant, see id function below
-        status = {
-            version: '0.2b',
-            control: 'waiting', // playing | paused | seeking | waiting | error
-            media: null, // current type of media in queue
-            id: null // id of media in queue
-        },
-        mediaObject = {},
-        root = {},
-        stage = {},
-        mediaGroup = (function() {
-            var id = 'loom_mediaGroup', // to be made redundant, see id function below
-                elements = [];
+        // developer options only
+        muteAudio: true, // overrides any settings in script
+        verbose: 'full', // reports errors, findings, events etc to console. Options are full | minimal
+        disableCheckScript: false, // by default script file is checked for errors, set to true to skip this
+        mediaLoadType: 'progressive' // full | progressive
+    },
+    script,
+    firstScene = 'intro',
+    currentScene,
+    mediaTimeEventResolution = 0.4,// this is margin for which events are detected on the timecode of the media playing, if flag lockEventToMediaTime is set to true
+    minimumResolution = {
+    // default values, overridden by values in script - if set
+        width: 640,
+        height: 480
+    },
+    sizeMultiplier = 1, // forgot why I put this here
+    prefix = 'loom_', // to be made redundant, see id function below
+    status = {
+        version: '0.2b',
+        control: 'waiting', // playing | paused | seeking | waiting | error
+        media: null, // current type of media in queue
+        id: null // id of media in queue
+    },
+    mediaObject = {},
+    root = {},
+    stage = {},
+    mediaGroup = (function() {
+        var id = 'loom_mediaGroup', // to be made redundant, see id function below
+            elements = [];
 
-            return {
-                id: id,
-                add: function(id, media) {
-                    elements.push([id, media]);
-                },
-                remove: function(id) {
-                    for(var i=1; i <= elements.length; i++){
-                        if(elements.array[i - 1][0] === id){
-                            elements.splice(i-1, 1);
-                        }
+        return {
+            id: id,
+            add: function(id, media) {
+                elements.push([id, media]);
+            },
+            remove: function(id) {
+                for(var i=1; i <= elements.length; i++){
+                    if(elements.array[i - 1][0] === id){
+                        elements.splice(i-1, 1);
                     }
                 }
-            };
-        })(),
-        overlay = (function() { // function to be made redundant, see id function below - plan is to centralise ids
-            var id = 'loom_overlay';
+            }
+        };
+    })(),
+    overlay = (function() { // function to be made redundant, see id function below - plan is to centralise ids
+        var id = 'loom_overlay';
 
-            return {
-                id: id
-            };
-        })(),
-        id = (function() {
-            var separator = '_',
-                root = 'loom',
-                stage = 'stage',
-                notify = 'notify',
-                mediaGroup = 'mediaGroup',
-                overlay = 'overlay',
-                video = 'video',
-                audio = 'audio';
+        return {
+            id: id
+        };
+    })(),
+    id = (function() {
+        var separator = '_',
+            root = 'loom',
+            stage = 'stage',
+            notify = 'notify',
+            mediaGroup = 'mediaGroup',
+            overlay = 'overlay',
+            video = 'video',
+            audio = 'audio';
 
-            return {
-                root: root,
-                stage: root + separator + stage,
-                notify: root + separator + notify,
-                overlay: root + separator + overlay,
-                mediaGroup: root + separator + mediaGroup,
-                video: root + separator + video,
-                audio: root + separator + audio
-            };
-        })();
+        return {
+            root: root,
+            stage: root + separator + stage,
+            notify: root + separator + notify,
+            overlay: root + separator + overlay,
+            mediaGroup: root + separator + mediaGroup,
+            video: root + separator + video,
+            audio: root + separator + audio
+        };
+    })();
 
     // Common utilities which may be referred to from other functions
     var utilities = {
@@ -114,9 +116,9 @@ var LoomSE = (function() {
             xmlhttp.send();
         },
 
-        report: function(object) {
+        report: function(message) {
             // display report
-            console.log(object);
+            console.log(message);
         },
 
         displayError: function(errorMessage) {
@@ -257,35 +259,35 @@ var LoomSE = (function() {
             //    currentScene;
             //environment.clear();
 
-            function processEvents(array, callback) {
-                var id,
-                    currentRecord,
-                    event = {};
-
-                console.log(array);
-
-                if(array !== null){
-                    for(var i=1; i <= (array.length); i++) {
-                        currentRecord = array[i-1];
-
-                        console.log(currentRecord);
-
-                        //id = prefix + event.call + '_' + i;
-                        events.addToQueue(currentRecord.schedule.in, currentRecord.schedule.out, new Event2(id, currentRecord.call, currentRecord.parameters), currentRecord.ignored);
-                        if(i === array.length) {
-                            callback();
-                        }
-                    }
-                }
-            }
+            //function processEvents(array, callback) {
+            //    var id,
+            //        currentRecord,
+            //        event = {};
+            //
+            //    //console.log(array);
+            //
+            //    if(array !== null){
+            //        for(var i=1; i <= (array.length); i++) {
+            //            currentRecord = array[i-1];
+            //
+            //            //console.log(currentRecord);
+            //
+            //            //id = prefix + event.call + '_' + i;
+            //            events.addToQueue(currentRecord.schedule.in, currentRecord.schedule.out, new Event2(id, currentRecord.call, currentRecord.parameters), currentRecord.ignored);
+            //            if(i === array.length) {
+            //                callback();
+            //            }
+            //        }
+            //    }
+            //}
 
             currentScene = new Scene(scene, scriptObject.settings.language, scriptObject.scenes[scene]);
             if(scriptObject.settings.subtitlesOn === true) {
                 subtitles.parseSubtitles(currentScene.subtitles);
             }
-            processEvents(currentScene.events, function() {
-                events.sortQueue();
-            });
+            //processEvents(currentScene.events, function() {
+            //    events.sortQueue();
+            //});
             status.media = currentScene.media.type;
             history.record(currentScene);
             process(currentScene);
@@ -297,6 +299,56 @@ var LoomSE = (function() {
             // --
             // Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
             // Each 'media' type also has a number of events
+
+            function scheduleEvents(target, array, callback) {
+                // --
+                // Schedules timed events for each media element
+                // --
+
+                for(var i in array){
+                    var event = array[i],
+                        id = prefix + event.call + '_' + i;
+
+                    var createEvent = new Event(id, event.call, event.schedule, event.parameters);
+
+                    Event.prototype.schedule = function () {
+
+                        // We calculate the ins and outs here
+                        var that = this,
+                            timeIn = that.in,
+                            timeOut = that.out,
+                            timeInLow = timeIn - (mediaTimeEventResolution / 2),
+                            timeInHigh = timeIn + (mediaTimeEventResolution / 2),
+                            timeOutLow = timeOut - (mediaTimeEventResolution / 2),
+                            timeOutHigh = timeOut + (mediaTimeEventResolution / 2);
+
+                        media.listen(function(time) {
+                            if(time >= timeInLow && time <= timeInHigh){
+                                if(devOptions.verbose === 'full') {
+                                    utilities.report('[Event] Run: ' + id);
+                                    utilities.report('[Event] ' + 'T:' + time + ', L:' + timeInLow + ', H:' + timeInHigh);
+                                }
+
+                                that.run();
+                            }
+                            // 'Out'
+                            if(time >= timeOutLow && time <= timeOutHigh) {
+                                if(devOptions.verbose === 'full') {
+                                    utilities.report('[Event] Stop: ' + id);
+                                    utilities.report('[Event] ' + 'T:' + time + ', L:' + timeOutLow + ', H:' + timeOutHigh);
+                                }
+
+                                that.stop();
+                                //node.remove(document.getElementById(that.id));
+                            }
+                        });
+                    };
+
+                    createEvent.schedule();
+                }
+
+                callback();
+            }
 
             media.create(scene.container, scene.media, function(playObject) {
 
@@ -343,130 +395,81 @@ var LoomSE = (function() {
                 }
 
                 if(scene.events !== null) {
-                    events2(playObject, scene.events, function() {});
+                    scheduleEvents(playObject, scene.events, function() {});
                 }
                 else {
-                    console.log('No events to report');
+                    utilities.report('[Events] No events in scene.');
                 }
             });
         }
 
-        function events2(target, array, callback) {
-            // --
-            // Schedules timed events for each media element
-            // --
-
-            for(var i in array){
-                var event = array[i],
-                    id = prefix + event.call + '_' + i;
-
-                var createEvent = new Event(id, event.call, event.schedule, event.parameters);
-
-                Event.prototype.schedule = function () {
-
-                    // We calculate the ins and outs here
-                    var that = this,
-                        timeIn = that.in,
-                        timeOut = that.out,
-                        timeInLow = timeIn - (mediaTimeEventResolution / 2),
-                        timeInHigh = timeIn + (mediaTimeEventResolution / 2),
-                        timeOutLow = timeOut - (mediaTimeEventResolution / 2),
-                        timeOutHigh = timeOut + (mediaTimeEventResolution / 2);
-
-                    //console.log('>' + timeIn);
-                    //console.log('>' + timeInLow + ' ' + timeInHigh);
-                    //console.log('>' + timeOut);
-                    //console.log('>' + timeOutLow + ' ' + timeOutHigh);
-
-                    // this is a weak point in the software, very reliant on the numbers being right
-                    if(currentScene.media.type === 'video' || currentScene.media.type === 'audio') {
-                        target.addEventListener('timeupdate', function () {
-                            // 'In'
-                            if(this.currentTime >= timeInLow && this.currentTime <= timeInHigh){
-                                that.run();
-                            }
-                            // 'Out'
-                            if(this.currentTime >= timeOutLow && this.currentTime <= timeOutHigh) {
-                                that.stop();
-                                //node.remove(document.getElementById(that.id));
-                            }
-                        });
-                    }
-                };
-
-                createEvent.schedule();
-            }
-
-            callback();
-        }
-
         return {
             setScene: setScene,
-            process: process,
-            events: events
+            process: process
         };
     })();
 
-    var events = (function() {
-        // handles the events, event queue
-        // each event has a code assigned to it -
-        // 0 - pending
-        // 1 - processed
-        // 2 - ignored
-
-        var queue = [];
-
-        return {
-            returnQueue: function() {
-                // returns whole queue
-                return queue;
-            },
-
-            addToQueue: function(timeIn, timeOut, eventObject, ignored) {
-                // add record
-                if(ignored !== false) {
-                    ignored = true;
-                }
-                var record = [timeIn, timeOut, eventObject, ignored];
-                queue.push(record);
-            },
-
-            sortQueue: function() {
-                if(queue.length > 1) {
-                    var repeat = false;
-
-                    function logic() {
-                        for (var i = 0; i < (queue.length - 1); i++) {
-                            if (queue[i][0] > queue[i + 1][0]) {
-                                var swap = queue[i][0];
-                                queue[i][0] = queue[i + 1][0];
-                                queue[i + 1][0] = swap;
-                                repeat = true; // keep sorting
-                            }
-
-                            if (i === (queue.length - 2) && repeat === true) {
-                                repeat = false;
-                                logic();
-                            }
-                        }
-                    }
-
-                    logic();
-                }
-            }
-            //update: function(index, code) {
-            //    // check if index and code are valid, if not ignore
-            //    // if valid, update
-            //},
-        };
-    })();
+    //var events = (function() {
+    //    // handles the events, event queue
+    //    // each event has a code assigned to it -
+    //    // 0 - pending
+    //    // 1 - processed
+    //    // 2 - ignored
+    //
+    //    var queue = [];
+    //
+    //    return {
+    //        returnQueue: function() {
+    //            // returns whole queue
+    //            return queue;
+    //        },
+    //
+    //        addToQueue: function(timeIn, timeOut, eventObject, ignored) {
+    //            // add record
+    //            if(ignored !== false) {
+    //                ignored = true;
+    //            }
+    //            var record = [timeIn, timeOut, eventObject, ignored];
+    //            queue.push(record);
+    //        },
+    //
+    //        sortQueue: function() {
+    //            if(queue.length > 1) {
+    //                var repeat = false;
+    //
+    //                function logic() {
+    //                    for (var i = 0; i < (queue.length - 1); i++) {
+    //                        if (queue[i][0] > queue[i + 1][0]) {
+    //                            var swap = queue[i][0];
+    //                            queue[i][0] = queue[i + 1][0];
+    //                            queue[i + 1][0] = swap;
+    //                            repeat = true; // keep sorting
+    //                        }
+    //
+    //                        if (i === (queue.length - 2) && repeat === true) {
+    //                            repeat = false;
+    //                            logic();
+    //                        }
+    //                    }
+    //                }
+    //
+    //                logic();
+    //            }
+    //        }
+    //        //update: function(index, code) {
+    //        //    // check if index and code are valid, if not ignore
+    //        //    // if valid, update
+    //        //},
+    //    };
+    //})();
 
     var subtitles = (function() {
         var subtitlesArray = [],
             arrayPosition = 0,
             activeSubtitle = [0, 0, null, false],
             id = 'subtitle',
-            container = document.createElement('div');
+            container = document.createElement('div'),
+            element = document.createElement('p');
 
         container.setAttribute('id', id);
 
@@ -538,7 +541,7 @@ var LoomSE = (function() {
 
         function checkSubtitle(time) {
             var check = subtitlesArray[arrayPosition]; // pull current record and see if it is ready
-            console.log(time, check[0]);
+            //console.log(time, check[0]);
             if(check[0] === time || check[0] < time) {
 
                 // check if preceding subtitle still exists, if it does, remove it
@@ -548,22 +551,23 @@ var LoomSE = (function() {
 
                 activeSubtitle = check;
                 activeSubtitle[3] = true; // set visibility flag to true
-
                 displaySubtitle(activeSubtitle[2]); // display subtitle
                 arrayPosition++;
             }
         }
 
         function displaySubtitle(phrase) {
-            console.log('Sub:', phrase);
-            container.innerHTML = phrase;
+            if(devOptions.verbose === 'full' || devOptions.verbose === 'minimal') {
+                utilities.report('[Subtitle] ' + phrase);
+            }
+            element.innerHTML = phrase;
             overlay.object.appendChild(container);
+            container.appendChild(element);
             media.listen(removeSubtitle);
         }
 
         function removeSubtitle(time) {
             function destroy() {
-                console.log('remove');
                 activeSubtitle[3] = false;
                 overlay.object.removeChild(container);
             }
@@ -588,7 +592,7 @@ var LoomSE = (function() {
         }
     })();
 
-    // Handles differing media
+    // Handles media
     var media = (function() {
         function target(sceneId) {
             var parent = document.getElementById(sceneId),
@@ -620,7 +624,7 @@ var LoomSE = (function() {
                     object.currentTime = timecode;
                     object.play();
                     object.ontimeupdate = function() {
-                        subtitles.checkSubtitle(object.currentTime);
+                        // assuming we don't need this, that the listener remains
                     };
                     this.poll.run(object);
                     status.control = 'playing';
@@ -633,7 +637,7 @@ var LoomSE = (function() {
                     notify.dismiss();
                     object.play();
                     object.ontimeupdate = function() {
-                        subtitles.checkSubtitle(object.currentTime);
+
                     };
                     this.poll.run(object);
                     status.control = 'playing';
@@ -646,11 +650,12 @@ var LoomSE = (function() {
                     notify.push('Loading');
 
                     object.oncanplaythrough = function() {
+                        if(devOptions.verbose === 'full' || devOptions.verbose === 'minimal') {
+                            console.log('[Media] Fully loaded, playing.');
+                        }
                         notify.dismiss();
                         object.play();
-                        object.ontimeupdate = function() {
-                            subtitles.checkSubtitle(object.currentTime);
-                        };
+                        watch(object);
                         status.control = 'playing';
                     }
                 }
@@ -660,11 +665,12 @@ var LoomSE = (function() {
                     notify.push('Loading');
 
                     object.oncanplay = function() {
+                        if(devOptions.verbose === 'full' || devOptions.verbose === 'minimal') {
+                            console.log('[Media] Partially loaded, playing.');
+                        }
                         notify.dismiss();
                         object.play();
-                        object.ontimeupdate = function() {
-                            subtitles.checkSubtitle(object.currentTime);
-                        };
+                        watch(object);
                         media.poll.run(object);
                         status.control = 'playing';
                     }
@@ -673,9 +679,20 @@ var LoomSE = (function() {
         }
 
         function listen(callback) {
+            // add an event listener
             mediaObject.addEventListener('timeupdate', function() {
                 callback(mediaObject.currentTime);
             });
+        }
+
+        function watch(object) {
+            // everytime the timecode changes, the following series of actions are taken:
+            //  - check to see if any subtitle needs displaying
+            //  - check to see if a scene event needs to be fired
+            object.ontimeupdate = function() {
+                // I begin my watch...
+                subtitles.checkSubtitle(object.currentTime);
+            };
         }
 
         var poll = (function() {
@@ -702,7 +719,13 @@ var LoomSE = (function() {
                         }
                         else {
                             // else do this if playback has stopped
+                            if(devOptions.verbose === 'full' || devOptions.verbose === 'minimal') {
+                                console.log('[Poll] Video has stopped playing.');
+                            }
                             if(playBackStopState === false) { // check if it hasn't stopped before
+                                if(devOptions.verbose === 'full' || devOptions.verbose === 'minimal') {
+                                    console.log('[Poll] This is the first time the video has stopped without user input.');
+                                }
                                 playbackStopEvents = playbackStopEvents + 1;
                             }
                             playBackStopState = true;
@@ -827,6 +850,7 @@ var LoomSE = (function() {
             pause: pause,
             play: play,
             listen: listen,
+            watch: watch,
             poll: poll,
             create: create
         }
@@ -1075,6 +1099,10 @@ var LoomSE = (function() {
             node.maximise(overlay.object);
             readScript.setScene(script, firstScene);
         });
+    };
+
+    publicMethods.verbose = function() {
+        devOptions.verbose = 'full'; // activate verbose mode from console
     };
 
     publicMethods.status = function() {
