@@ -9,7 +9,7 @@ LoomSE.Modules.prototype.loop = function() {
 
     return {
         run: function(target, data) {
-            Loom.control.scrub(data.out);
+            LoomSE.control.scrub(data.out);
         },
         stop: function() {
 

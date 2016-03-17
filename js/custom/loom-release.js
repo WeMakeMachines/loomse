@@ -1,18 +1,6 @@
 //
-// Loom Story Engine v0.22
+// Loom Story Engine v0.26
 //
-// Author: Franco Speziali
-//
-// API for handling onscreen graphics, html5 video, and simple on screen interactions
-//
-// Future ideas:
-// -Filters
-//
-// Notes:
-// see jsfiddle : http://jsfiddle.net/gakb4n6g/ and http://jsfiddle.net/gakb4n6g/1/ for example on jQuery promises
-//
-
-// I feel, I fought, I foundered
 
 var LoomSE = (function() {
 
@@ -22,77 +10,47 @@ var LoomSE = (function() {
 
     // Private variables
     var devOptions = {
-        // developer options only
-        muteAudio: true, // overrides any settings in script
-        verbose: 'full', // reports errors, findings, events etc to console. Options are full | minimal
-        disableCheckScript: false, // by default script file is checked for errors, set to true to skip this
-        mediaLoadType: 'progressive' // full | progressive
-    },
-    script,
-    firstScene = 'intro',
-    currentScene,
-    mediaTimeEventResolution = 0.4,// this is margin for which events are detected on the timecode of the media playing, if flag lockEventToMediaTime is set to true
-    minimumResolution = {
-    // default values, overridden by values in script - if set
-        width: 640,
-        height: 480
-    },
-    sizeMultiplier = 1, // forgot why I put this here
-    prefix = 'loom_', // to be made redundant, see id function below
-    status = {
-        version: '0.2b',
-        control: 'waiting', // playing | paused | seeking | waiting | error
-        media: null, // current type of media in queue
-        id: null // id of media in queue
-    },
-    mediaObject = {},
-    root = {},
-    stage = {},
-    mediaGroup = (function() {
-        var id = 'loom_mediaGroup', // to be made redundant, see id function below
-            elements = [];
-
-        return {
-            id: id,
-            add: function(id, media) {
-                elements.push([id, media]);
-            },
-            remove: function(id) {
-                for(var i=1; i <= elements.length; i++){
-                    if(elements.array[i - 1][0] === id){
-                        elements.splice(i-1, 1);
-                    }
-                }
+            // developer options only
+            muteAudio: false, // overrides any settings in script
+            verbose: 'minimal', // reports errors, findings, events etc to console. Options are full | minimal | subtitles
+            disableCheckScript: false, // by default script file is checked for errors, set to true to skip this
+            mediaLoadType: 'full' // full | progressive
+        },
+        script,
+        firstScene,
+        currentScene,
+        mediaTimeEventResolution = 0.4,// this is margin for which events are detected on the timecode of the media playing, if flag lockEventToMediaTime is set to true
+        minimumResolution = {
+        // default values, overridden by values in script - if set
+            width: 640,
+            height: 480
+        },
+        status = {
+            version: '0.26',
+            control: 'waiting', // playing | paused | seeking | waiting | error
+            media: null, // current type of media in queue
+            id: null // id of media in queue
+        },
+        screenObjects = {
+            root: {},
+            stage: {},
+            overlay: {},
+            mediaGroup: {},
+            mediaObject: {},
+            clearOverlay: function() {
+                // this function clears any active on screen events
+                while (this.overlay.firstChild) this.overlay.removeChild(this.overlay.firstChild);
             }
-        };
-    })(),
-    overlay = (function() { // function to be made redundant, see id function below - plan is to centralise ids
-        var id = 'loom_overlay';
+        },
 
-        return {
-            id: id
+        id = {
+            stage: 'loom_stage',
+            notify: 'loom_notify',
+            overlay: 'loom_overlay',
+            mediaGroup: 'loom_mediaGroup',
+            video: 'loom_video',
+            audio: 'loom_audio'
         };
-    })(),
-    id = (function() {
-        var separator = '_',
-            root = 'loom',
-            stage = 'stage',
-            notify = 'notify',
-            mediaGroup = 'mediaGroup',
-            overlay = 'overlay',
-            video = 'video',
-            audio = 'audio';
-
-        return {
-            root: root,
-            stage: root + separator + stage,
-            notify: root + separator + notify,
-            overlay: root + separator + overlay,
-            mediaGroup: root + separator + mediaGroup,
-            video: root + separator + video,
-            audio: root + separator + audio
-        };
-    })();
 
     // Common utilities which may be referred to from other functions
     var utilities = {
@@ -216,6 +174,15 @@ var LoomSE = (function() {
         }
     };
 
+    var screenHandler = (function() {
+        return {
+            reset: function(){
+                subtitles.reset();
+                screenObjects.clearOverlay();
+            }
+        }
+    })();
+
     // Keeps a record of the scenes passed through by the user. Provides some control over how to navigate the history
     var history = (function() {
         var scenes = [];
@@ -259,30 +226,8 @@ var LoomSE = (function() {
             //    currentScene;
             //environment.clear();
 
-            //function processEvents(array, callback) {
-            //    var id,
-            //        currentRecord,
-            //        event = {};
-            //
-            //    //console.log(array);
-            //
-            //    if(array !== null){
-            //        for(var i=1; i <= (array.length); i++) {
-            //            currentRecord = array[i-1];
-            //
-            //            //console.log(currentRecord);
-            //
-            //            //id = prefix + event.call + '_' + i;
-            //            events.addToQueue(currentRecord.schedule.in, currentRecord.schedule.out, new Event2(id, currentRecord.call, currentRecord.parameters), currentRecord.ignored);
-            //            if(i === array.length) {
-            //                callback();
-            //            }
-            //        }
-            //    }
-            //}
-
             currentScene = new Scene(scene, scriptObject.settings.language, scriptObject.scenes[scene]);
-            if(scriptObject.settings.subtitlesOn === true) {
+            if(scriptObject.settings.subtitles === true) {
                 subtitles.parseSubtitles(currentScene.subtitles);
             }
             //processEvents(currentScene.events, function() {
@@ -307,7 +252,7 @@ var LoomSE = (function() {
 
                 for(var i in array){
                     var event = array[i],
-                        id = prefix + event.call + '_' + i;
+                        id = event.call + '_' + i;
 
                     var createEvent = new Event(id, event.call, event.schedule, event.parameters);
 
@@ -322,26 +267,26 @@ var LoomSE = (function() {
                             timeOutLow = timeOut - (mediaTimeEventResolution / 2),
                             timeOutHigh = timeOut + (mediaTimeEventResolution / 2);
 
-                        media.listen(function(time) {
-                            if(time >= timeInLow && time <= timeInHigh){
-                                if(devOptions.verbose === 'full') {
-                                    utilities.report('[Event] Run: ' + id);
-                                    utilities.report('[Event] ' + 'T:' + time + ', L:' + timeInLow + ', H:' + timeInHigh);
-                                }
-
-                                that.run();
-                            }
-                            // 'Out'
-                            if(time >= timeOutLow && time <= timeOutHigh) {
-                                if(devOptions.verbose === 'full') {
-                                    utilities.report('[Event] Stop: ' + id);
-                                    utilities.report('[Event] ' + 'T:' + time + ', L:' + timeOutLow + ', H:' + timeOutHigh);
-                                }
-
-                                that.stop();
-                                //node.remove(document.getElementById(that.id));
-                            }
-                        });
+                        // media.listen(function(time) {
+                        //     if(time >= timeInLow && time <= timeInHigh){
+                        //         if(devOptions.verbose === 'full') {
+                        //             utilities.report('[Event] Run: ' + id);
+                        //             utilities.report('[Event] ' + 'T:' + time + ', L:' + timeInLow + ', H:' + timeInHigh);
+                        //         }
+                        //
+                        //         that.run();
+                        //     }
+                        //     // 'Out'
+                        //     if(time >= timeOutLow && time <= timeOutHigh) {
+                        //         if(devOptions.verbose === 'full') {
+                        //             utilities.report('[Event] Stop: ' + id);
+                        //             utilities.report('[Event] ' + 'T:' + time + ', L:' + timeOutLow + ', H:' + timeOutHigh);
+                        //         }
+                        //
+                        //         that.stop();
+                        //         //node.remove(document.getElementById(that.id));
+                        //     }
+                        // });
                     };
 
                     createEvent.schedule();
@@ -370,14 +315,18 @@ var LoomSE = (function() {
                     //}
 
                     // video loop logic must stay here
+
                     if(playObject.parameters.loop === true) {
-                        if(playObject.parameters.loopIn === 0 && typeof playObject.parameters.loopOut !== 'number') {
+                        if(playObject.parameters.loopIn === 0 && playObject.parameters.loopOut === null) {
                             playObject.onended = function(e){
-                                status.media = 'seeking';
+                                console.log('looping from end to beginning');
+                                status.control = 'seeking'; // required for media.play check
+                                screenHandler.reset();
                                 media.play(playObject, 0);
                             };
                         }
                         else {
+                            console.log('Im going to loop the video from the in and out points defined');
                             // add loop point as event
                             // for the purposes of our system, in / out points are reversed
                             // (schedule in point is actually loop out point etc)
@@ -408,60 +357,6 @@ var LoomSE = (function() {
             process: process
         };
     })();
-
-    //var events = (function() {
-    //    // handles the events, event queue
-    //    // each event has a code assigned to it -
-    //    // 0 - pending
-    //    // 1 - processed
-    //    // 2 - ignored
-    //
-    //    var queue = [];
-    //
-    //    return {
-    //        returnQueue: function() {
-    //            // returns whole queue
-    //            return queue;
-    //        },
-    //
-    //        addToQueue: function(timeIn, timeOut, eventObject, ignored) {
-    //            // add record
-    //            if(ignored !== false) {
-    //                ignored = true;
-    //            }
-    //            var record = [timeIn, timeOut, eventObject, ignored];
-    //            queue.push(record);
-    //        },
-    //
-    //        sortQueue: function() {
-    //            if(queue.length > 1) {
-    //                var repeat = false;
-    //
-    //                function logic() {
-    //                    for (var i = 0; i < (queue.length - 1); i++) {
-    //                        if (queue[i][0] > queue[i + 1][0]) {
-    //                            var swap = queue[i][0];
-    //                            queue[i][0] = queue[i + 1][0];
-    //                            queue[i + 1][0] = swap;
-    //                            repeat = true; // keep sorting
-    //                        }
-    //
-    //                        if (i === (queue.length - 2) && repeat === true) {
-    //                            repeat = false;
-    //                            logic();
-    //                        }
-    //                    }
-    //                }
-    //
-    //                logic();
-    //            }
-    //        }
-    //        //update: function(index, code) {
-    //        //    // check if index and code are valid, if not ignore
-    //        //    // if valid, update
-    //        //},
-    //    };
-    //})();
 
     var subtitles = (function() {
         var subtitlesArray = [],
@@ -557,19 +452,21 @@ var LoomSE = (function() {
         }
 
         function displaySubtitle(phrase) {
-            if(devOptions.verbose === 'full' || devOptions.verbose === 'minimal') {
+            if(devOptions.verbose === 'full' || devOptions.verbose === 'subtitles') {
                 utilities.report('[Subtitle] ' + phrase);
             }
             element.innerHTML = phrase;
-            overlay.object.appendChild(container);
+            screenObjects.overlay.appendChild(container);
             container.appendChild(element);
-            media.listen(removeSubtitle);
+            //media.listen(removeSubtitle);
         }
 
         function removeSubtitle(time) {
             function destroy() {
-                activeSubtitle[3] = false;
-                overlay.object.removeChild(container);
+                if(activeSubtitle === true){
+                    activeSubtitle[3] = false;
+                    screenObjects.overlay.removeChild(container);
+                }
             }
 
             // check if time is defined
@@ -584,11 +481,20 @@ var LoomSE = (function() {
             }
         }
 
+        function reset() {
+            if(activeSubtitle[3] === true){
+                activeSubtitle[3] = false;
+                screenObjects.overlay.removeChild(container);
+            }
+            arrayPosition = 0;
+        }
+
         return {
             parseSubtitles: parseSubtitles,
             checkSubtitle: checkSubtitle,
             displaySubtitle: displaySubtitle,
-            removeSubtitle: removeSubtitle
+            removeSubtitle: removeSubtitle,
+            reset: reset
         }
     })();
 
@@ -619,6 +525,7 @@ var LoomSE = (function() {
         }
 
         function play(object, timecode) {
+            console.log(object, timecode, status.media, status.control);
             if(status.media === 'video' || status.media === 'audio') {
                 if(status.control === 'seeking' && typeof timecode === 'number') {
                     object.currentTime = timecode;
@@ -631,7 +538,7 @@ var LoomSE = (function() {
                     return;
                 }
 
-                if(object.paused === true && status.control === 'paused') {
+                if(object.paused === true || status.control === 'paused') {
                     // check if media was paused, if so, simply unpause
 
                     notify.dismiss();
@@ -759,8 +666,8 @@ var LoomSE = (function() {
                 var element = document.createElement('video'),
                     child1 = document.createElement('source'),
                     child2 = document.createElement('source'),
-                    width = mediaGroup.object.offsetWidth,
-                    height = mediaGroup.object.offsetHeight;
+                    width = screenObjects.mediaGroup.offsetWidth,
+                    height = screenObjects.mediaGroup.offsetHeight;
 
                 element.setAttribute('width', width);
                 element.setAttribute('height', height);
@@ -802,12 +709,15 @@ var LoomSE = (function() {
 
                 if(media.video.loop === true) {
                     element.parameters.loop = true;
+
+                    // check if loop in is a number, if it isn't set in point to 0 by default
                     if(typeof media.video.loop_in === 'number') {
                         element.parameters.loopIn = media.video.loop_in;
                     } else {
                         element.parameters.loopIn = 0;
                     }
 
+                    // check if loop out is a number, if it isn't, default to null
                     if(typeof media.video.loop_out === 'number') {
                         element.parameters.loopOut = media.video.loop_out;
                     } else {
@@ -823,7 +733,7 @@ var LoomSE = (function() {
                 return;
             }
 
-            mediaGroup.object.appendChild(container);
+            screenObjects.mediaGroup.appendChild(container);
 
             if(!callback){
                 throw 'Expected callback';
@@ -898,9 +808,9 @@ var LoomSE = (function() {
 
                     // animate the 'curtain falling' on stage
 
-                    utilities.animateCSS(stage.object, 'opacity', 1, 0.2, 200);
+                    utilities.animateCSS(screenObjects.stage, 'opacity', 1, 0.2, 200);
 
-                    root.object.appendChild(container);
+                    screenObjects.root.appendChild(container);
                     container.appendChild(child);
                     child.appendChild(child2);
                 }
@@ -918,8 +828,8 @@ var LoomSE = (function() {
                 else {
                     // function goes here
                     isActive = false; // reset activity flag
-                    root.object.removeChild(container);
-                    utilities.animateCSS(stage.object, 'opacity', 0.2, 1, 200);
+                    screenObjects.root.removeChild(container);
+                    utilities.animateCSS(screenObjects.stage, 'opacity', 0.2, 1, 200);
                 }
             }
         };
@@ -968,28 +878,7 @@ var LoomSE = (function() {
         this.out = schedule.out / 1000;
         this.parameters = parameters;
         this.run = function() {
-            callModule.run(document.getElementById(overlay.id), that);
-        };
-        this.stop = function() {
-            callModule.stop();
-        };
-    };
-
-    var Event2 = function(id, call, parameters) {
-        var that = this,
-            plugin = new LoomSE.Modules();
-
-        //check if the module reference exists as a function
-        if(typeof plugin[call] === 'function') {
-            var callModule = plugin[call]();
-        }
-
-        this.id = id; // event id
-        this.call = call;
-        this.status = status;
-        this.parameters = parameters;
-        this.run = function() {
-            callModule.run(document.getElementById(overlay.id), that);
+            callModule.run(screenObjects.overlay, that);
         };
         this.stop = function() {
             callModule.stop();
@@ -999,14 +888,6 @@ var LoomSE = (function() {
     //
     // Public
     //
-
-    //var Plugins = function() {
-    //
-    //};
-    //
-    //Loom.Plugins = function() {
-    //
-    //};
 
     var publicMethods = {};
 
@@ -1062,7 +943,7 @@ var LoomSE = (function() {
     publicMethods.publicProperty = null;
 
     // Methods
-    publicMethods.initialise = function(scriptFile) {
+    publicMethods.initialise = function(target, scriptFile, firstScene, resolution) {
         // --
         // Program begins here. Runs once and sets sets up the environment.
         // --
@@ -1086,17 +967,14 @@ var LoomSE = (function() {
             minimumResolution.width = script.settings.minimum_resolution.width; // TODO check value is number
             minimumResolution.height = script.settings.minimum_resolution.height;
 
-            // turn IDs into objects
-
-            // TODO needs review
-            root.object = document.getElementById(id.root);
-            stage.object = document.getElementById(id.stage);
-            mediaGroup.object = document.getElementById(mediaGroup.id);
-            overlay.object = document.getElementById(overlay.id);
+            screenObjects.root = document.getElementById(target);
+            screenObjects.stage = document.getElementById(id.stage);
+            screenObjects.mediaGroup = document.getElementById(id.mediaGroup);
+            screenObjects.overlay = document.getElementById(id.overlay);
 
             // set our environment
-            node.maximise(mediaGroup.object);
-            node.maximise(overlay.object);
+            node.maximise(screenObjects.mediaGroup);
+            node.maximise(screenObjects.overlay);
             readScript.setScene(script, firstScene);
         });
     };
@@ -1132,7 +1010,10 @@ var LoomSE = (function() {
             scrub: function(time) {
                 // scrub to time in media
                 status.control = 'seeking';
-                media.play(mediaObject, time);
+                //screenHandler.reset();
+                //media.play(mediaObject, time);
+                mediaObject.pause();
+                mediaObject.currentTime = time;
                 return 'Seeking';
             },
 
@@ -1154,8 +1035,8 @@ var LoomSE = (function() {
 
             viewportResize: function() {
                 // resizes the screen
-                node.maximise(mediaGroup.object);
-                node.maximise(overlay.object);
+                node.maximise(screenObjects.mediaGroup);
+                node.maximise(screenObjects.overlay);
                 //elements.array.forEach(function(element, index, array){
                 //    // find all records that have position information
                 //    if(element[1] !== null){

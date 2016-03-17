@@ -14,7 +14,7 @@
     },
     "url": "http://localhost/",
     "language": "english",
-    "subtitlesOn": true
+    "subtitles": true
   },
   "scenes": {
     "intro": {
@@ -27,7 +27,7 @@
           "autoplay": true,
           "controls": false,
           "muted": false,
-          "loop": true,
+          "loop": false,
           "loop_in": null,
           "loop_out": null,
           "duration": null

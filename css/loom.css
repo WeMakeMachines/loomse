@@ -8,11 +8,20 @@
 	margin: 5px;
 }
 
-.subtitle {
-	font-size: 18px;
+div#subtitle {
+	position: absolute;
+	bottom: 50px;
+	width: 100%;
 	text-align: center;
-	color: #fff;
-	margin: 5px;
+}
+
+div#subtitle p {
+	display: inline;
+	background: #fff;
+	font-size: 18px;
+	font-weight: bold;
+	color: #222;
+	padding: 5px;
 }
 
 /* Default styles */
