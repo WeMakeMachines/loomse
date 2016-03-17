@@ -1,5 +1,5 @@
 //
-// Loom Story Engine v0.26
+// Loom Story Engine
 //
 
 var LoomSE = (function() {
@@ -9,13 +9,21 @@ var LoomSE = (function() {
     //
 
     // Private variables
-    var devOptions = {
+    var status = {
+            version: '0.28',
+            control: 'waiting', // playing | paused | seeking | waiting (initial load of media) | error
+            media: null, // current type of media in queue
+            id: null, // id of media in queue
+            subtitles: null // subtitles on? true or false
+        },
+        devOptions = {
             // developer options only
             muteAudio: false, // overrides any settings in script
             verbose: 'minimal', // reports errors, findings, events etc to console. Options are full | minimal | subtitles
             disableCheckScript: false, // by default script file is checked for errors, set to true to skip this
-            mediaLoadType: 'full' // full | progressive
+            disableScrubScreen: false // disables clearing the screen when media is scrubbed
         },
+        mediaLoadType = 'full', // full | progressive
         script,
         firstScene,
         currentScene,
@@ -24,12 +32,6 @@ var LoomSE = (function() {
         // default values, overridden by values in script - if set
             width: 640,
             height: 480
-        },
-        status = {
-            version: '0.26',
-            control: 'waiting', // playing | paused | seeking | waiting | error
-            media: null, // current type of media in queue
-            id: null // id of media in queue
         },
         screenObjects = {
             root: {},
@@ -227,12 +229,8 @@ var LoomSE = (function() {
             //environment.clear();
 
             currentScene = new Scene(scene, scriptObject.settings.language, scriptObject.scenes[scene]);
-            if(scriptObject.settings.subtitles === true) {
-                subtitles.parseSubtitles(currentScene.subtitles);
-            }
-            //processEvents(currentScene.events, function() {
-            //    events.sortQueue();
-            //});
+
+            subtitles.parse(currentScene.subtitles);
             status.media = currentScene.media.type;
             history.record(currentScene);
             process(currentScene);
@@ -267,26 +265,26 @@ var LoomSE = (function() {
                             timeOutLow = timeOut - (mediaTimeEventResolution / 2),
                             timeOutHigh = timeOut + (mediaTimeEventResolution / 2);
 
-                        // media.listen(function(time) {
-                        //     if(time >= timeInLow && time <= timeInHigh){
-                        //         if(devOptions.verbose === 'full') {
-                        //             utilities.report('[Event] Run: ' + id);
-                        //             utilities.report('[Event] ' + 'T:' + time + ', L:' + timeInLow + ', H:' + timeInHigh);
-                        //         }
-                        //
-                        //         that.run();
-                        //     }
-                        //     // 'Out'
-                        //     if(time >= timeOutLow && time <= timeOutHigh) {
-                        //         if(devOptions.verbose === 'full') {
-                        //             utilities.report('[Event] Stop: ' + id);
-                        //             utilities.report('[Event] ' + 'T:' + time + ', L:' + timeOutLow + ', H:' + timeOutHigh);
-                        //         }
-                        //
-                        //         that.stop();
-                        //         //node.remove(document.getElementById(that.id));
-                        //     }
-                        // });
+                        media.listen(function(time) {
+                            if(time >= timeInLow && time <= timeInHigh){
+                                if(devOptions.verbose === 'full') {
+                                    utilities.report('[Event] Run: ' + id);
+                                    utilities.report('[Event] ' + 'T:' + time + ', L:' + timeInLow + ', H:' + timeInHigh);
+                                }
+
+                                that.run();
+                            }
+                            // 'Out'
+                            if(time >= timeOutLow && time <= timeOutHigh) {
+                                if(devOptions.verbose === 'full') {
+                                    utilities.report('[Event] Stop: ' + id);
+                                    utilities.report('[Event] ' + 'T:' + time + ', L:' + timeOutLow + ', H:' + timeOutHigh);
+                                }
+
+                                that.stop();
+                                //node.remove(document.getElementById(that.id));
+                            }
+                        });
                     };
 
                     createEvent.schedule();
@@ -361,14 +359,14 @@ var LoomSE = (function() {
     var subtitles = (function() {
         var subtitlesArray = [],
             arrayPosition = 0,
-            activeSubtitle = [0, 0, null, false],
+            active = [0, 0, null, false],
             id = 'subtitle',
             container = document.createElement('div'),
             element = document.createElement('p');
 
         container.setAttribute('id', id);
 
-        function parseSubtitles(url) {
+        function parse(url) {
             var rawSubs,
                 line,
                 newLine = /\n/g;
@@ -434,44 +432,47 @@ var LoomSE = (function() {
             });
         }
 
-        function checkSubtitle(time) {
+        function check(time) {
             var check = subtitlesArray[arrayPosition]; // pull current record and see if it is ready
             //console.log(time, check[0]);
             if(check[0] === time || check[0] < time) {
 
                 // check if preceding subtitle still exists, if it does, remove it
-                if(activeSubtitle[3] === true) {
-                    removeSubtitle();
+                if(active[3] === true) {
+                    remove();
                 }
 
-                activeSubtitle = check;
-                activeSubtitle[3] = true; // set visibility flag to true
-                displaySubtitle(activeSubtitle[2]); // display subtitle
+                active = check;
+                active[3] = true; // set visibility flag to true
+                display(active[2]); // display subtitle
                 arrayPosition++;
             }
         }
 
-        function displaySubtitle(phrase) {
-            if(devOptions.verbose === 'full' || devOptions.verbose === 'subtitles') {
-                utilities.report('[Subtitle] ' + phrase);
+        function display(phrase) {
+            // if the subtitles weren't meant to be displayed, fall silent
+            if(status.subtitles === true) {
+                if(devOptions.verbose === 'full' || devOptions.verbose === 'subtitles') {
+                    utilities.report('[Subtitle] ' + phrase);
+                }
+                element.innerHTML = phrase;
+                screenObjects.overlay.appendChild(container);
+                container.appendChild(element);
+                media.listen(remove);
             }
-            element.innerHTML = phrase;
-            screenObjects.overlay.appendChild(container);
-            container.appendChild(element);
-            //media.listen(removeSubtitle);
         }
 
-        function removeSubtitle(time) {
+        function remove(time) {
             function destroy() {
-                if(activeSubtitle === true){
-                    activeSubtitle[3] = false;
+                if(active === true){
+                    active[3] = false;
                     screenObjects.overlay.removeChild(container);
                 }
             }
 
             // check if time is defined
             if(time) {
-                if((activeSubtitle[1] === time || activeSubtitle[1] < time) && activeSubtitle[3] === true) {
+                if((active[1] === time || active[1] < time) && active[3] === true) {
                     destroy();
                 }
             }
@@ -481,20 +482,32 @@ var LoomSE = (function() {
             }
         }
 
-        function reset() {
-            if(activeSubtitle[3] === true){
-                activeSubtitle[3] = false;
+        function reset(time) {
+            if(active[3] === true){
+                active[3] = false;
                 screenObjects.overlay.removeChild(container);
             }
-            arrayPosition = 0;
+            if(typeof time === 'number' && time !== 0) {
+                // find the next subtitle with the timecode
+                for(i=0; i<(subtitlesArray.length-1); i++) {
+                    var currentRecord = subtitlesArray[i];
+                    if(time < currentRecord[0]) {
+                        arrayPosition = i;
+                        break;
+                    }
+                }
+            }
+            else {
+                arrayPosition = 0;
+            }
         }
 
         return {
-            parseSubtitles: parseSubtitles,
-            checkSubtitle: checkSubtitle,
-            displaySubtitle: displaySubtitle,
-            removeSubtitle: removeSubtitle,
-            reset: reset
+            parse: parse, // parse subtitle file
+            check: check, // check if next subtitle is ready to be displayed
+            display: display, // show the subtitle
+            remove: remove, // remove existing subtitle
+            reset: reset // reset subtitles
         }
     })();
 
@@ -527,31 +540,7 @@ var LoomSE = (function() {
         function play(object, timecode) {
             console.log(object, timecode, status.media, status.control);
             if(status.media === 'video' || status.media === 'audio') {
-                if(status.control === 'seeking' && typeof timecode === 'number') {
-                    object.currentTime = timecode;
-                    object.play();
-                    object.ontimeupdate = function() {
-                        // assuming we don't need this, that the listener remains
-                    };
-                    this.poll.run(object);
-                    status.control = 'playing';
-                    return;
-                }
-
-                if(object.paused === true || status.control === 'paused') {
-                    // check if media was paused, if so, simply unpause
-
-                    notify.dismiss();
-                    object.play();
-                    object.ontimeupdate = function() {
-
-                    };
-                    this.poll.run(object);
-                    status.control = 'playing';
-                    return;
-                }
-
-                else if(devOptions.mediaLoadType === 'full') {
+                if(status.control === 'waiting' && mediaLoadType === 'full') {
                     // wait for video / audio to fully load
                     // show progress bar
                     notify.push('Loading');
@@ -567,7 +556,7 @@ var LoomSE = (function() {
                     }
                 }
 
-                else if(devOptions.mediaLoadType === 'progressive') {
+                if(status.control === 'waiting' && mediaLoadType === 'progressive') {
                     // progressively load video / audio and play when enough data is loaded
                     notify.push('Loading');
 
@@ -581,6 +570,31 @@ var LoomSE = (function() {
                         media.poll.run(object);
                         status.control = 'playing';
                     }
+                }
+
+                if(status.control === 'seeking' && typeof timecode === 'number') {
+                    object.currentTime = timecode;
+                    subtitles.reset(timecode);
+                    object.play();
+                    object.ontimeupdate = function() {
+                        // assuming we don't need this, that the listener remains
+                    };
+                    this.poll.run(object);
+                    status.control = 'playing';
+                    return;
+                }
+
+                if(object.paused === true && status.control === 'paused') {
+                    // check if media was paused, if so, simply unpause
+
+                    notify.dismiss();
+                    object.play();
+                    object.ontimeupdate = function() {
+
+                    };
+                    this.poll.run(object);
+                    status.control = 'playing';
+                    return;
                 }
             }
         }
@@ -598,7 +612,7 @@ var LoomSE = (function() {
             //  - check to see if a scene event needs to be fired
             object.ontimeupdate = function() {
                 // I begin my watch...
-                subtitles.checkSubtitle(object.currentTime);
+                subtitles.check(object.currentTime);
             };
         }
 
@@ -896,7 +910,13 @@ var LoomSE = (function() {
     };
 
     publicMethods.loadSubtitles = function(url) {
-        subtitles.parseSubtitles(url);
+        subtitles.parse(url);
+    };
+
+    publicMethods.timecode = function() {
+        setInterval(function() {
+            console.log(mediaObject.currentTime);
+        }, 500);
     };
 
     publicMethods.events = function() {
@@ -972,6 +992,8 @@ var LoomSE = (function() {
             screenObjects.mediaGroup = document.getElementById(id.mediaGroup);
             screenObjects.overlay = document.getElementById(id.overlay);
 
+            status.subtitles = script.settings.subtitles;
+
             // set our environment
             node.maximise(screenObjects.mediaGroup);
             node.maximise(screenObjects.overlay);
@@ -1009,11 +1031,12 @@ var LoomSE = (function() {
 
             scrub: function(time) {
                 // scrub to time in media
+                // time in seconds 4 = 4 seconds
                 status.control = 'seeking';
-                //screenHandler.reset();
-                //media.play(mediaObject, time);
-                mediaObject.pause();
-                mediaObject.currentTime = time;
+                if(devOptions.disableScrubScreen === false) {
+                    screenHandler.reset();
+                }
+                media.play(mediaObject, time);
                 return 'Seeking';
             },
 

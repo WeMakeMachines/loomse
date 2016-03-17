@@ -27,8 +27,8 @@
           "autoplay": true,
           "controls": false,
           "muted": false,
-          "loop": false,
-          "loop_in": null,
+          "loop": true,
+          "loop_in": 4000,
           "loop_out": null,
           "duration": null
         },
@@ -82,6 +82,19 @@
           "schedule": {
             "in": 7000,
             "out": 9000
+          },
+          "parameters": {
+            "x": "80",
+            "y": "80",
+            "class": "mediaTime"
+          }
+        },
+        {
+          "call": "mediaTime",
+          "ignored": false,
+          "schedule": {
+            "in": 180000,
+            "out": 200000
           },
           "parameters": {
             "x": "80",
