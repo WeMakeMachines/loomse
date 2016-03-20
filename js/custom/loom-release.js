@@ -566,7 +566,6 @@ var LoomSE = (function() {
         }
 
         function play(object, timecode) {
-            console.log(object, timecode, status.media, status.control);
             if(status.media === 'video' || status.media === 'audio') {
                 if(status.control === 'waiting' && mediaLoadType === 'full') {
                     // wait for video / audio to fully load
@@ -1024,7 +1023,6 @@ var LoomSE = (function() {
 
             // set our environment
             if(resolution){
-                console.log('asdsad');
                 environment.resolution.width = resolution[0];
                 environment.resolution.height = resolution[1];
             }
