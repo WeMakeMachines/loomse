@@ -33,18 +33,6 @@ var LoomSE = (function() {
             width: 640,
             height: 480
         },
-        screenObjects = {
-            root: {},
-            stage: {},
-            overlay: {},
-            mediaGroup: {},
-            mediaObject: {},
-            clearOverlay: function() {
-                // this function clears any active on screen events
-                while (this.overlay.firstChild) this.overlay.removeChild(this.overlay.firstChild);
-            }
-        },
-
         id = {
             stage: 'loom_stage',
             notify: 'loom_notify',
@@ -157,13 +145,6 @@ var LoomSE = (function() {
 
     // Handles addition and removal of HTML nodes, as well as other exchanges
     var node = {
-        maximise: function(element) {
-            utilities.style(element, {
-                'width': window.innerWidth,
-                'height': window.innerHeight
-            });
-        },
-
         // not sure if I'm keeping add / remove or offloading onto module
         add: function(id) {
             var element = document.createElement('div');
@@ -176,12 +157,62 @@ var LoomSE = (function() {
         }
     };
 
-    var screenHandler = (function() {
+    var environment = (function() {
+
+        var resolution = {
+                width: null,
+                height: null
+            },
+            controls = {},
+            screenObjects = {
+                root: {},
+                stage: {},
+                overlay: {},
+                mediaGroup: {},
+                mediaObject: {},
+                clearOverlay: function() {
+                    // this function clears any active on screen events
+                    while (this.overlay.firstChild) this.overlay.removeChild(this.overlay.firstChild);
+                }
+            };
+
+        controls.container = document.createElement('div');
+        controls.playpause = document.createElement('div');
+        controls.rewind = document.createElement('div');
+        controls.skip = document.createElement('div');
+
+        controls.container.setAttribute('id', 'LoomSE_controls');
+        controls.playpause.setAttribute('id', 'LoomSE_playpause');
+        controls.rewind.setAttribute('id', 'LoomSE_rewind');
+        controls.skip.setAttribute('id', 'LoomSE_skip');
+
+        controls.package = function() {
+            this.container.appendChild(this.playpause);
+            this.container.appendChild(this.rewind);
+            this.container.appendChild(this.skip);
+        };
+
         return {
+            gui: (function() {
+                return {
+                    show: function() {
+                        controls.package();
+                        environment.screenObjects.overlay.appendChild(controls.container);
+                    }
+                }
+            })(),
             reset: function(){
                 subtitles.reset();
-                screenObjects.clearOverlay();
-            }
+                environment.screenObjects.clearOverlay();
+            },
+            resize: function(element, width, height) {
+                utilities.style(element, {
+                    'width': width,
+                    'height': height
+                });
+            },
+            screenObjects: screenObjects,
+            resolution: resolution
         }
     })();
 
@@ -224,9 +255,6 @@ var LoomSE = (function() {
             // Runs when a new scene is set from the Script
             // Pulls the relevant scene details from the object, resets parameters and launches the process() method.
             // --
-            //var source = script.scenes,
-            //    currentScene;
-            //environment.clear();
 
             currentScene = new Scene(scene, scriptObject.settings.language, scriptObject.scenes[scene]);
 
@@ -319,7 +347,7 @@ var LoomSE = (function() {
                             playObject.onended = function(e){
                                 console.log('looping from end to beginning');
                                 status.control = 'seeking'; // required for media.play check
-                                screenHandler.reset();
+                                environment.reset();
                                 media.play(playObject, 0);
                             };
                         }
@@ -456,7 +484,7 @@ var LoomSE = (function() {
                     utilities.report('[Subtitle] ' + phrase);
                 }
                 element.innerHTML = phrase;
-                screenObjects.overlay.appendChild(container);
+                environment.screenObjects.overlay.appendChild(container);
                 container.appendChild(element);
                 media.listen(remove);
             }
@@ -466,7 +494,7 @@ var LoomSE = (function() {
             function destroy() {
                 if(active === true){
                     active[3] = false;
-                    screenObjects.overlay.removeChild(container);
+                    environment.screenObjects.overlay.removeChild(container);
                 }
             }
 
@@ -485,7 +513,7 @@ var LoomSE = (function() {
         function reset(time) {
             if(active[3] === true){
                 active[3] = false;
-                screenObjects.overlay.removeChild(container);
+                environment.screenObjects.overlay.removeChild(container);
             }
             if(typeof time === 'number' && time !== 0) {
                 // find the next subtitle with the timecode
@@ -507,7 +535,7 @@ var LoomSE = (function() {
             check: check, // check if next subtitle is ready to be displayed
             display: display, // show the subtitle
             remove: remove, // remove existing subtitle
-            reset: reset // reset subtitles
+            reset: reset // reset subtitles (fixes to current time index)
         }
     })();
 
@@ -680,8 +708,8 @@ var LoomSE = (function() {
                 var element = document.createElement('video'),
                     child1 = document.createElement('source'),
                     child2 = document.createElement('source'),
-                    width = screenObjects.mediaGroup.offsetWidth,
-                    height = screenObjects.mediaGroup.offsetHeight;
+                    width = environment.screenObjects.mediaGroup.offsetWidth,
+                    height = environment.screenObjects.mediaGroup.offsetHeight;
 
                 element.setAttribute('width', width);
                 element.setAttribute('height', height);
@@ -747,7 +775,7 @@ var LoomSE = (function() {
                 return;
             }
 
-            screenObjects.mediaGroup.appendChild(container);
+            environment.screenObjects.mediaGroup.appendChild(container);
 
             if(!callback){
                 throw 'Expected callback';
@@ -818,13 +846,13 @@ var LoomSE = (function() {
                     container.setAttribute('id', id.notify);
 
                     // make child full size of screen
-                    node.maximise(container);
+                    //node.maximise(container);
 
                     // animate the 'curtain falling' on stage
 
-                    utilities.animateCSS(screenObjects.stage, 'opacity', 1, 0.2, 200);
+                    utilities.animateCSS(environment.screenObjects.stage, 'opacity', 1, 0.2, 200);
 
-                    screenObjects.root.appendChild(container);
+                    environment.screenObjects.root.appendChild(container);
                     container.appendChild(child);
                     child.appendChild(child2);
                 }
@@ -842,8 +870,8 @@ var LoomSE = (function() {
                 else {
                     // function goes here
                     isActive = false; // reset activity flag
-                    screenObjects.root.removeChild(container);
-                    utilities.animateCSS(screenObjects.stage, 'opacity', 0.2, 1, 200);
+                    environment.screenObjects.root.removeChild(container);
+                    utilities.animateCSS(environment.screenObjects.stage, 'opacity', 0.2, 1, 200);
                 }
             }
         };
@@ -856,7 +884,6 @@ var LoomSE = (function() {
         this.shortName = assets.short_name;
         this.longName = assets.long_name;
         this.sceneId = utilities.cleanString(this.title);
-        //this.data = assets.data;
         this.media = assets.media;
         this.subtitles = assets.media.subtitles[language];
         // why is this not here?
@@ -892,7 +919,7 @@ var LoomSE = (function() {
         this.out = schedule.out / 1000;
         this.parameters = parameters;
         this.run = function() {
-            callModule.run(screenObjects.overlay, that);
+            callModule.run(environment.screenObjects.overlay, that);
         };
         this.stop = function() {
             callModule.stop();
@@ -984,19 +1011,30 @@ var LoomSE = (function() {
         utilities.ajaxRequest(scriptFile, 'JSON', true, function(returnedData) {
             script = returnedData;
 
+            // this doesnt actually do anything yet
             minimumResolution.width = script.settings.minimum_resolution.width; // TODO check value is number
             minimumResolution.height = script.settings.minimum_resolution.height;
 
-            screenObjects.root = document.getElementById(target);
-            screenObjects.stage = document.getElementById(id.stage);
-            screenObjects.mediaGroup = document.getElementById(id.mediaGroup);
-            screenObjects.overlay = document.getElementById(id.overlay);
+            environment.screenObjects.root = document.getElementById(target);
+            environment.screenObjects.stage = document.getElementById(id.stage);
+            environment.screenObjects.mediaGroup = document.getElementById(id.mediaGroup);
+            environment.screenObjects.overlay = document.getElementById(id.overlay);
 
             status.subtitles = script.settings.subtitles;
 
             // set our environment
-            node.maximise(screenObjects.mediaGroup);
-            node.maximise(screenObjects.overlay);
+            if(resolution){
+                console.log('asdsad');
+                environment.resolution.width = resolution[0];
+                environment.resolution.height = resolution[1];
+            }
+            else {
+                environment.resolution.width = window.innerWidth;
+                environment.resolution.height = window.innerHeight;
+            }
+
+            environment.resize(environment.screenObjects.mediaGroup, environment.resolution.width, environment.resolution.height);
+            environment.resize(environment.screenObjects.overlay, environment.resolution.width, environment.resolution.height);
             readScript.setScene(script, firstScene);
         });
     };
@@ -1015,10 +1053,13 @@ var LoomSE = (function() {
     };
 
     publicMethods.control = (function () {
-        // This is wrong
-        // This is external control to control the playing / pausing of the SCENE - NOT just the video itself
+        // API for system control
 
         return {
+            displayControls: function() {
+                environment.gui.show();
+            },
+
             pause: function() {
                 media.pause(mediaObject);
                 return 'Paused';
@@ -1034,7 +1075,7 @@ var LoomSE = (function() {
                 // time in seconds 4 = 4 seconds
                 status.control = 'seeking';
                 if(devOptions.disableScrubScreen === false) {
-                    screenHandler.reset();
+                    environment.reset();
                 }
                 media.play(mediaObject, time);
                 return 'Seeking';
@@ -1058,8 +1099,8 @@ var LoomSE = (function() {
 
             viewportResize: function() {
                 // resizes the screen
-                node.maximise(screenObjects.mediaGroup);
-                node.maximise(screenObjects.overlay);
+                // node.maximise(environment.screenObjects.mediaGroup);
+                // node.maximise(environment.screenObjects.overlay);
                 //elements.array.forEach(function(element, index, array){
                 //    // find all records that have position information
                 //    if(element[1] !== null){

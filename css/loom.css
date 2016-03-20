@@ -147,3 +147,13 @@ ol.loom_answers li {
 .loom_plugin {
 	position: absolute;
 }
+
+/* gui controls */
+
+#LoomSE_controls div {
+	display: block;
+	height: 50px;
+	width: 50px;
+	border: 5px solid red;
+	border-radius: 20px;
+}

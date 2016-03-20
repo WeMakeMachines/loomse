@@ -28,7 +28,7 @@
           "controls": false,
           "muted": false,
           "loop": true,
-          "loop_in": 4000,
+          "loop_in": null,
           "loop_out": null,
           "duration": null
         },
