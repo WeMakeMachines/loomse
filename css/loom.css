@@ -10,7 +10,7 @@
 
 div#subtitle {
 	position: absolute;
-	bottom: 50px;
+	bottom: 90px;
 	width: 100%;
 	text-align: center;
 }
@@ -26,7 +26,7 @@ div#subtitle p {
 
 /* Default styles */
 
-.loom_question {
+.loomSE_question {
 	display: inline;
 	padding: 10px;
 	margin: 10px;
@@ -34,12 +34,12 @@ div#subtitle p {
 	color: #fff;
 }
 
-ol.loom_answers {
+ol.loomSE_answers {
 	list-style: none;
 	text-align: center;
 }
 
-ol.loom_answers li {
+ol.loomSE_answers li {
 	display: inline;
 	float: left;
 	clear: left;
@@ -52,71 +52,76 @@ ol.loom_answers li {
 	text-transform: uppercase;
 }
 
-.loom_fullscreen {
+.loomSE_fullscreen {
 	position: absolute;
 }
 
-.loom_fullscreen a,
-.loom_fullscreen a:link,
-.loom_fullscreen a:visited,
-.loom_fullscreen a:hover,
-.loom_fullscreen a:active {
+.loomSE_fullscreen a,
+.loomSE_fullscreen a:link,
+.loomSE_fullscreen a:visited,
+.loomSE_fullscreen a:hover,
+.loomSE_fullscreen a:active {
 	font-size: 20px;
 	color: #fff;
 	text-decoration: none;
 }
 
 /* Do not edit below this line */
-#loom_stage {
+#loomSE_theatre {
 	position: absolute;
 	left: 0;
 	top: 0;
-	z-index: 0;
+	z-index: 10000;
 }
 
-#loom_overlay {
+#loomSE_overlay {
 	position: absolute;
 	left: 0;
 	top: 0;
 	z-index: 100;
 }
 
-#loom_notify {
+#loomSE_notify {
 	position: absolute;
 	left: 0;
 	top: 0;
 	z-index: 200;
 }
 
-#loom_notify div {
+#loomSE_notify div {
 	position: absolute;
 	opacity: 0;
 }
 
-#loom_notify p {
+#loomSE_notify p {
 	font-size: 20px;
 	color: white;
 }
 
 /* media */
 
-#loom_video {
+#loomSE_video {
 	position: absolute;
+	bottom: 0;
 	z-index: -1;
+}
+
+#loomSE_poster {
+	z-index: 10;
 }
 
 /* events */
 
-.loom_title, .loom_decision {
+.loomSE_title, .loomSE_decision {
 	/*opacity: 0;*/
 	position: absolute;
 }
 
-.loom_title {
+.loomSE_title {
 	overflow: hidden;
 }
 
-.loom_title div {
+.loomSE_title div {
 	display: block;
 	position: relative;
 	overflow: hidden;
@@ -124,7 +129,7 @@ ol.loom_answers li {
 	text-align: center;
 }
 
-.loom_title p {
+.loomSE_title p {
 	display: block;
 	position: absolute;
 	margin-left: auto;
@@ -134,26 +139,140 @@ ol.loom_answers li {
 	opacity: 1;
 }
 
-.loom_text {
+.loomSE_text {
 	position: absolute;
 }
 
-.loom_titleSvg {
+.loomSE_titleSvg {
 	position: absolute;
 	left: 0;
 	top: 0;
 }
 
-.loom_plugin {
+.loomSE_plugin {
 	position: absolute;
 }
 
 /* gui controls */
 
-#LoomSE_controls div {
-	display: block;
-	height: 50px;
-	width: 50px;
-	border: 5px solid red;
-	border-radius: 20px;
+#loomSE_gui {
+	position: absolute;
+	bottom: 0;
+	z-index: 300;
+	height: 76px;
+	width: 100%;
+}
+
+#loomSE_gui__shadow {
+	/*display: block;*/
+	z-index: 200;
+	height: 76px;
+	width: 100%;
+	background-color: #000;
+	opacity: 0.6;
+}
+
+#loomSE_gui_group {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	height: 76px;
+	width: 100%;
+}
+
+#loomSE_gui_group .gui__play {
+	background-position: left bottom;
+}
+
+#loomSE_gui_group .gui__pause {
+	background-position: -74px bottom;
+}
+
+#loomSE_gui_group .gui_bhv_hover {
+	opacity: 0.6;
+}
+
+#loomSE_gui_group .gui_bhv_release {
+	opacity: 1;
+}
+
+#loomSE_gui_group_left {
+	position: absolute;
+	left: 0;
+}
+
+#loomSE_gui_group_right {
+	position: absolute;
+	right: 0;
+}
+
+#loomSE_gui_timeGroup {
+	position: absolute;
+	left: 300px;
+	top: 20px;
+	width: 400px;
+	height: 30px;
+	border: 1px solid white;
+}
+
+#loomSE_gui_timeGroup span {
+	font-size: 20px;
+	color: #ffffff;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#loomSE_gui__elapsed, #loomSE_gui__timeSlider {
+	float: left;
+}
+
+#loomSE_gui__timeSlider {
+	height: 10px;
+	margin-top: 10px;
+	background-color: #ffffff;
+}
+
+#loomSE_gui__duration {
+	float: right;
+}
+
+#loomSE_gui_group_left div, #loomSE_gui_group_right div {
+	display: inline-block;
+}
+
+#loomSE_gui__playPause, #loomSE_gui__rewind, #loomSE_gui__skip, #loomSE_gui__share {
+	background-image: url("../assets/images/gui_sprites_medium.png");
+
+	/* large */
+	/*width: 157px;*/
+	/*height: 157px;*/
+
+	/* medium */
+	width: 67px;
+	height: 66px;
+	margin: 5px;
+	opacity: 0.6;
+}
+
+#loomSE_gui_group:first-child {
+	margin-left: 10px;
+}
+
+/*#loomSE_gui__playpause {*/
+	/*background-position: left bottom;*/
+/*}*/
+
+#loomSE_gui__rewind {
+	/*background-position: -98px bottom;*/
+	background-position: -149px bottom;
+}
+
+#loomSE_gui__skip {
+	background-position: -223px bottom;
+}
+
+#loomSE_gui__share {
+	background-position: right bottom;
 }

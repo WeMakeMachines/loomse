@@ -13,22 +13,27 @@
 		<script type="text/javascript" src="js/vendor/snap.svg.js"></script>
 
 		<script type="text/javascript" src="js/custom/loom-release.js"></script>
-
 		<script type="text/javascript" src="js/custom/loom-modules.js"></script>
 	</head>
 
 	<body>
 
 	<div id="loomSE">
-		<div id="loom_stage">
-			<div id="loom_overlay"></div>
-			<div id="loom_mediaGroup">
+		<div id="loomSE_theatre">
+			<div id="loomSE_stage">
+				<div id="loomSE_overlay"></div>
+				<div id="loomSE_mediaGroup">
+			</div>
 			</div>
 		</div>
 	</div>
 
 	<script type="text/javascript">
-		LoomSE.initialise('loomSE', 'assets/scripts/script-desktop.json', 'intro', [640, 480]);
+		window.onload = function() {
+			LoomSE.initialise('loomSE', 'assets/scripts/script-desktop.json', 'intro', [900, 600], function() {
+				var activepage = document.getElementById('loomSE_stage');
+			});
+		};
 	</script>
 	</body>
 </html>

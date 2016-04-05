@@ -5,7 +5,8 @@
     "author": "Franco Speziali",
     "date": "",
     "description_short": "",
-    "description_long": ""
+    "description_long": "",
+    "poster": ""
   },
   "settings": {
     "minimum_resolution": {
@@ -24,7 +25,8 @@
         "video": {
           "ogg": "assets/video/TvTestCard.ogg",
           "mp4": "assets/video/TvTestCard_512kb.mp4",
-          "autoplay": true,
+          "poster": "assets/images/default-poster.png",
+          "autoplay": false,
           "controls": false,
           "muted": false,
           "loop": true,
