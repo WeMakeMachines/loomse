@@ -44,19 +44,6 @@
           "ignored": false,
           "schedule": {
             "in": 0,
-            "out": 200000
-          },
-          "parameters": {
-            "x": "80",
-            "y": "10",
-            "class": "mediaTime"
-          }
-        },
-        {
-          "call": "mediaTime",
-          "ignored": false,
-          "schedule": {
-            "in": 3000,
             "out": 5000
           },
           "parameters": {
@@ -70,37 +57,37 @@
           "ignored": false,
           "schedule": {
             "in": 5000,
-            "out": 7000
+            "out": 10000
+          },
+          "parameters": {
+            "x": "20",
+            "y": "20",
+            "class": "mediaTime"
+          }
+        },
+        {
+          "call": "mediaTime",
+          "ignored": false,
+          "schedule": {
+            "in": 10000,
+            "out": 15000
+          },
+          "parameters": {
+            "x": "30",
+            "y": "30",
+            "class": "mediaTime"
+          }
+        },
+        {
+          "call": "mediaTime",
+          "ignored": false,
+          "schedule": {
+            "in": 15000,
+            "out": 20000
           },
           "parameters": {
             "x": "40",
             "y": "40",
-            "class": "mediaTime"
-          }
-        },
-        {
-          "call": "mediaTime",
-          "ignored": false,
-          "schedule": {
-            "in": 7000,
-            "out": 9000
-          },
-          "parameters": {
-            "x": "80",
-            "y": "80",
-            "class": "mediaTime"
-          }
-        },
-        {
-          "call": "mediaTime",
-          "ignored": false,
-          "schedule": {
-            "in": 180000,
-            "out": 200000
-          },
-          "parameters": {
-            "x": "80",
-            "y": "80",
             "class": "mediaTime"
           }
         }

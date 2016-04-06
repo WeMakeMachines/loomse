@@ -12,7 +12,7 @@ var LoomSE = (function() {
 
     // Private variables
     var status = {
-            version: '0.30 beta',
+            version: '0.3',
             control: 'waiting', // playing | paused | seeking | waiting (initial load of media) | error
             media: null, // current type of media in queue
             id: null, // id of media in queue
@@ -27,13 +27,13 @@ var LoomSE = (function() {
             disableCheckScript: false, // by default script file is checked for errors, set to true to skip this
             disableScrubScreen: false, // disables clearing the screen when media is scrubbed
             useAlternativePoster: true, // alternative poster
-            showPosterWhenPaused: true // show poster when media is paused?
+            showPosterWhenPaused: false // show poster when media is paused?
         },
         mediaLoadType = 'full', // full | progressive
         script,
         firstScene,
         currentScene,
-        mediaTimeEventResolution = 0.4, // this is margin for which events are detected on the timecode of the media playing, if flag lockEventToMediaTime is set to true
+        mediaTimeEventResolution = 1, // this is margin for which events are detected on the timecode of the media playing, if flag lockEventToMediaTime is set to true
         id = {
             theatre: applicationId + '_theatre',
             stage: applicationId + '_stage',
@@ -111,60 +111,10 @@ var LoomSE = (function() {
             }
 
             if(style) {
-                helper.style(object, style); // test for bug here with the reference
+                css.style(object, style); // test for bug here with the reference
             }
 
             return object;
-        },
-
-        style: function(element, object) {
-            for(var attribute in object)
-            {
-                var value = object[attribute];
-
-                switch(attribute)
-                {
-                    case 'width':
-                    case 'height':
-                    case 'top':
-                    case 'left':
-                    case 'right':
-                    case 'bottom':
-                        value = value + 'px';
-                }
-                element.style[attribute] = value;
-            }
-        },
-
-        animateCSS: function(element, parameter, startValue, endValue, time, callback, steps) {
-            if(typeof steps !== 'number') {
-                steps = 4; // the more steps the smoother the animation
-            }
-
-            var currentValue,
-                steps = steps,
-                currentStep = 0,
-                difference = endValue - startValue,
-                timeStep = time / steps,
-                valueStep = difference / steps,
-                object = {},
-                step = setInterval(function() {
-                    if(currentStep > steps) {
-                        clearInterval(step);
-                        if(callback) {
-                            callback();
-                        }
-                    } else {
-                        if(currentStep === steps) {
-                            currentValue = endValue;
-                        } else {
-                            currentValue = startValue + (valueStep * currentStep);
-                        }
-                        object[parameter] = currentValue;
-                        helper.style(element, object);
-                        currentStep = currentStep + 1;
-                    }
-                }, timeStep);
         },
 
         secondsToMinutes: function(number) {
@@ -176,17 +126,37 @@ var LoomSE = (function() {
     };
 
     var css = (function() {
-        var currentValue,
-            numberOfSteps,
-            currentStep,
-            difference,
-            timeStep,
-            valueStep,
-            object = {},
-            step;
 
         return {
+            style: function(element, object) {
+                for(var attribute in object)
+                {
+                    var value = object[attribute];
+
+                    switch(attribute)
+                    {
+                        case 'width':
+                        case 'height':
+                        case 'top':
+                        case 'left':
+                        case 'right':
+                        case 'bottom':
+                            value = value + 'px';
+                    }
+                    element.style[attribute] = value;
+                }
+            },
+
             animate: function(element, parameter, startValue, endValue, time, callback, steps) {
+                var currentValue,
+                    numberOfSteps,
+                    currentStep,
+                    difference,
+                    timeStep,
+                    valueStep,
+                    styles = {},
+                    step;
+
                 if(typeof steps !== 'number') {
                     steps = 4; // the more steps the smoother the animation, default is 4
                 }
@@ -208,15 +178,16 @@ var LoomSE = (function() {
                         } else {
                             currentValue = startValue + (valueStep * currentStep);
                         }
-                        object[parameter] = currentValue;
-                        helper.style(element, object);
+                        styles[parameter] = currentValue;
+                        css.style(element, styles);
                         currentStep = currentStep + 1;
                     }
                 }, timeStep);
+                return step;
             },
 
-            interrupt: function() {
-                clearInterval(step);
+            interrupt: function(interval) {
+                clearInterval(interval);
             }
         }
     })();
@@ -244,7 +215,7 @@ var LoomSE = (function() {
             scale, // gui scale - 1 small, 2 medium, 3 large
             status,
             guiAnimate,
-            delayGuiUnload;
+            delayGui;
 
         container.appendChild(shadow);
         container.appendChild(btnGroup);
@@ -268,15 +239,15 @@ var LoomSE = (function() {
 
             object = helper.newElement(id, type);
 
-            object.parameters = {
+            object.loomSE_parameters = {
                 id: id
             };
             
             if(hoverBehaviour) {
-                object.parameters.hover = hoverBehaviour;
+                object.loomSE_parameters.hover = hoverBehaviour;
             }
             if(clickBehaviour) {
-                object.parameters.click = clickBehaviour;
+                object.loomSE_parameters.click = clickBehaviour;
             }
 
             return object;
@@ -301,7 +272,7 @@ var LoomSE = (function() {
                 getCurrentTime = helper.secondsToMinutes(media.getCurrentTime()),
                 progressWidth = (getCurrentTime / getDuration) * 300;
 
-            helper.style(timeSlider, {
+            css.style(timeSlider, {
                 width: progressWidth
             });
         }
@@ -328,7 +299,7 @@ var LoomSE = (function() {
                 duration = getDuration;
             }
 
-            helper.style(timeSlider, {
+            css.style(timeSlider, {
                 width: progressWidth
             });
 
@@ -339,30 +310,32 @@ var LoomSE = (function() {
         function entryBehaviour() {
             if(enabled === true && active === false) {
                 environment.screenObjects.theatre.appendChild(container);
-                css.interrupt(); // make sure any running animations are stopped
-                constructTimeGroup();
-                updateProgressBar();
-                if (typeof delayGuiUnload === 'number') {
-                    clearInterval(delayGuiUnload);
+                css.interrupt(guiAnimate); // make sure any running animations are stopped
+                if (typeof delayGui === 'number') { // check to see if it is waiting to unload gui
+                    clearInterval(delayGui);
                 }
-                switchPlayPause(media.object, playPause, 'gui__pause', 'gui__play');
-                helper.style(container, {
-                    opacity: 0
-                });
-                //environment.screenObjects.overlay.appendChild(container);
-                status = 'showing';
-                guiAnimate = css.animate(container, 'opacity', 0, 1, 200, function () {
-                    status = 'shown';
-                }, 10);
+                delayGui = setTimeout(function() {
+                    constructTimeGroup();
+                    updateProgressBar();
+                    switchPlayPause(media.object, playPause, 'gui__pause', 'gui__play');
+                    css.style(container, {
+                        opacity: 0
+                    });
+                    //environment.screenObjects.overlay.appendChild(container);
+                    status = 'showing';
+                    guiAnimate = css.animate(container, 'opacity', 0, 1, 200, function () {
+                        status = 'shown';
+                    }, 10);
+                }, 500);
             }
         }
 
         function exitBehaviour() {
             if(enabled === true && active === false) {
-                css.interrupt();
-                delayGuiUnload = setTimeout(function() {
-                    guiAnimate = css.animate(container, 'opacity', 0.4, 0, 200, function() {
-                        //environment.screenObjects.overlay.removeChild(container);
+                css.interrupt(guiAnimate);
+                delayGui = setTimeout(function() {
+                    guiAnimate = css.animate(container, 'opacity', 0.3, 0, 200, function() {
+                        environment.screenObjects.theatre.removeChild(container);
                         status = 'hidden';
                     }, 10);
                 }, 500);
@@ -377,23 +350,23 @@ var LoomSE = (function() {
 
                         var currentChild = array[i];
 
-                        if(currentChild.parameters.hover) {
+                        if(currentChild.loomSE_parameters.hover) {
 
                             // hover events
                             currentChild.addEventListener('mouseover', function() {
                                 active = true;
-                                this.classList.remove(this.parameters.hover[0]);
-                                this.classList.add(this.parameters.hover[1]);
+                                this.classList.remove(this.loomSE_parameters.hover[0]);
+                                this.classList.add(this.loomSE_parameters.hover[1]);
                             });
 
                             array[i].addEventListener('mouseout', function() {
                                 active = false;
-                                this.classList.remove(this.parameters.hover[1]);
-                                this.classList.add(this.parameters.hover[0]);
+                                this.classList.remove(this.loomSE_parameters.hover[1]);
+                                this.classList.add(this.loomSE_parameters.hover[0]);
                             });
                         }
 
-                        if(currentChild.parameters.click) {
+                        if(currentChild.loomSE_parameters.click) {
 
                             // click events
                             currentChild.addEventListener('click', function() {
@@ -401,7 +374,7 @@ var LoomSE = (function() {
                                 // find which button was pressed and add behavours
 
                                 // play pause button
-                                if(this.parameters.id = 'gui__playPause') {
+                                if(this.loomSE_parameters.id = 'gui__playPause') {
 
                                     if(media.object.paused === true) {
                                         media.play();
@@ -436,18 +409,23 @@ var LoomSE = (function() {
             reveal: function() {
                 entryBehaviour();
             },
+
             hide: function() {
                 exitBehaviour();
             },
+
             enable: function() {
                 enabled = true;
             },
+
             disable: function() {
                 enabled = false;
             },
+
             initialise: function() {
                 listenForEvents();
             },
+
             updateProgressBar: updateProgressBar
         }
     })();
@@ -465,6 +443,7 @@ var LoomSE = (function() {
                     height: null
                 }
             },
+
             screenObjects = {
                 root: {},
                 theatre: {},
@@ -481,12 +460,14 @@ var LoomSE = (function() {
                 subtitles.reset();
                 environment.screenObjects.clearOverlay();
             },
+
             resize: function(element, width, height) {
-                helper.style(element, {
+                css.style(element, {
                     'width': width,
                     'height': height
                 });
             },
+
             screenObjects: screenObjects,
             resolution: resolution
         }
@@ -500,15 +481,18 @@ var LoomSE = (function() {
                 // records scene
                 scenes.push(object);
             },
+
             erase: function() {
                 // removes scene
 
             },
+
             remind: function() {
                 // returns current scene
                 var scene = scenes[scenes.length-1];
                 return scene;
             },
+
             rewind: function() {
                 // goes back 1 scene & erases current scene
                 var scene;
@@ -517,6 +501,10 @@ var LoomSE = (function() {
                 }
                 scene = scenes[scenes.length-1];
                 return scene;
+            },
+
+            saveToLocalStorage: function() {
+                // save to html5 local storage
             }
         };
     })();
@@ -606,7 +594,7 @@ var LoomSE = (function() {
                     //scene.media.video.duration = playObject.duration;
 
                     // check if video SHOULD autoplay
-                    if(media.object.parameters.autoplay === true) {
+                    if(media.object.loomSE_parameters.autoplay === true) {
                         media.play();
                     }
                     else {
@@ -621,8 +609,8 @@ var LoomSE = (function() {
 
                     // video loop logic must stay here
 
-                    if(media.object.parameters.loop === true) {
-                        if(media.object.parameters.loopIn === 0 && media.object.parameters.loopOut === null) {
+                    if(media.object.loomSE_parameters.loop === true) {
+                        if(media.object.loomSE_parameters.loopIn === 0 && media.object.loomSE_parameters.loopOut === null) {
                             media.object.onended = function(e){
                                 console.log('looping from end to beginning');
                                 status.control = 'seeking'; // required for media.play check
@@ -639,8 +627,8 @@ var LoomSE = (function() {
                                 {
                                     call: 'loop',
                                     schedule: {
-                                        in: media.object.parameters.loopOut,
-                                        out: media.object.parameters.loopIn
+                                        in: media.object.loomSE_parameters.loopOut,
+                                        out: media.object.loomSE_parameters.loopIn
                                     }
                                 }
                             );
@@ -664,14 +652,12 @@ var LoomSE = (function() {
     })();
 
     var subtitles = (function() {
-        var subtitlesArray = [],
+        var id = 'subtitle',
+            container = helper.newElement(id, 'div', 'subtitle'),
+            element = helper.newElement(undefined, 'p'),
+            subtitlesArray = [],
             arrayPosition = 0,
-            active = [0, 0, null, false],
-            id = 'subtitle',
-            container = document.createElement('div'),
-            element = document.createElement('p');
-
-        container.setAttribute('id', id);
+            active = [0, 0, null, false];
 
         function parse(url) {
             var rawSubs,
@@ -830,7 +816,7 @@ var LoomSE = (function() {
 
             return {
                 set: function(image) {
-                    helper.style(container, {
+                    css.style(container, {
                         height: environment.resolution.current.height,
                         width: environment.resolution.current.width,
                         'background-image': 'url(' + image + ')',
@@ -845,8 +831,8 @@ var LoomSE = (function() {
                 },
                 reveal: function() {
                     if(customPoster === true) {
-                        css.interrupt();
-                        helper.style(container, {
+                        //css.interrupt();
+                        css.style(container, {
                             top: 0,
                             opacity: 1
                         });
@@ -866,7 +852,7 @@ var LoomSE = (function() {
                         //helper.animateCSS(container, 'opacity', 1, 0, 600, undefined, 100);
                     }
                     if(customPoster === true && type === 'none') {
-                        helper.style(container, {
+                        css.style(container, {
                             top: 0,
                             opacity: 0
                         });
@@ -921,8 +907,7 @@ var LoomSE = (function() {
 
         // external functions and variables
 
-        var object,
-            length;
+        var object;
 
         function target(sceneId) {
             var parent = document.getElementById(sceneId),
@@ -995,6 +980,7 @@ var LoomSE = (function() {
                     object.play();
                     object.ontimeupdate = function() {
                         // assuming we don't need this, that the listener remains
+                        gui.updateProgressBar();
                     };
                     poll.run(object);
                     status.control = 'playing';
@@ -1008,7 +994,7 @@ var LoomSE = (function() {
                     poster.hide();
                     object.play();
                     object.ontimeupdate = function() {
-
+                        gui.updateProgressBar();
                     };
                     poll.run(object);
                     status.control = 'playing';
@@ -1090,7 +1076,7 @@ var LoomSE = (function() {
 
                 status.id = id.video;
 
-                element.parameters = {};
+                element.loomSE_parameters = {};
 
                 if(media.video.muted === true) {
                     element.muted = true;
@@ -1107,24 +1093,24 @@ var LoomSE = (function() {
                 }
 
                 if(media.video.autoplay === true) {
-                    element.parameters.autoplay = true;
+                    element.loomSE_parameters.autoplay = true;
                 }
 
                 if(media.video.loop === true) {
-                    element.parameters.loop = true;
+                    element.loomSE_parameters.loop = true;
 
                     // check if loop in is a number, if it isn't set in point to 0 by default
                     if(typeof media.video.loop_in === 'number') {
-                        element.parameters.loopIn = media.video.loop_in;
+                        element.loomSE_parameters.loopIn = media.video.loop_in;
                     } else {
-                        element.parameters.loopIn = 0;
+                        element.loomSE_parameters.loopIn = 0;
                     }
 
                     // check if loop out is a number, if it isn't, default to null
                     if(typeof media.video.loop_out === 'number') {
-                        element.parameters.loopOut = media.video.loop_out;
+                        element.loomSE_parameters.loopOut = media.video.loop_out;
                     } else {
-                        element.parameters.loopOut = null;
+                        element.loomSE_parameters.loopOut = null;
                     }
                 }
 
@@ -1154,13 +1140,13 @@ var LoomSE = (function() {
         }
 
         function getLength() {
-            if(media.object.tagName === 'VIDEO') {
+            if(media.object.tagName === 'VIDEO' || media.object.tagName === 'AUDIO') {
                 return media.object.duration;
             }
         }
 
         function getCurrentTime() {
-            if(media.object.tagName === 'VIDEO') {
+            if(media.object.tagName === 'VIDEO' || media.object.tagName === 'AUDIO') {
                 return media.object.currentTime;
             }
         }
@@ -1190,7 +1176,7 @@ var LoomSE = (function() {
             var availableWidth = environment.resolution.current.width,
                 availableHeight = environment.resolution.current.height;
 
-            helper.style(object, {
+            css.style(object, {
                 opacity: 0
             });
 
@@ -1199,7 +1185,7 @@ var LoomSE = (function() {
                 x = (availableWidth - objWidth) / 2 ,
                 y = (availableHeight - objHeight) / 2;
 
-            helper.style(object, {
+            css.style(object, {
                 position: 'absolute',
                 display: 'block',
                 left: x,
@@ -1219,7 +1205,9 @@ var LoomSE = (function() {
 
                     // animate the 'curtain falling' on theatre
 
-                    helper.animateCSS(environment.screenObjects.stage, 'opacity', 1, 0.2, 200);
+                    css.animate(environment.screenObjects.stage, 'opacity', 1, 0.2, 200);
+
+                    //helper.animateCSS(environment.screenObjects.stage, 'opacity', 1, 0.2, 200);
 
                     environment.screenObjects.theatre.appendChild(container);
                     container.appendChild(child);
@@ -1240,7 +1228,8 @@ var LoomSE = (function() {
                     // function goes here
                     isActive = false; // reset activity flag
                     environment.screenObjects.theatre.removeChild(container);
-                    helper.animateCSS(environment.screenObjects.stage, 'opacity', 0.2, 1, 200);
+                    css.animate(environment.screenObjects.stage, 'opacity', 0.2, 1, 200);
+                    //helper.animateCSS(environment.screenObjects.stage, 'opacity', 0.2, 1, 200);
                 }
             }
         };
@@ -1273,7 +1262,7 @@ var LoomSE = (function() {
 
     // Constructor function that creates instances of each event
     var Event = function(id, call, schedule, parameters) {
-        var that = this;
+        // not really happy with the way this is defined, but will work for now
 
         //check if the module reference exists as a function
         if(typeof modules[call] === 'function') {
@@ -1282,16 +1271,32 @@ var LoomSE = (function() {
 
         this.id = id; // event id
         this.call = call;
-        this.status = status;
+        this.status = 'waiting'; // waiting, fired, expired
         this.in = schedule.in / 1000;
         this.out = schedule.out / 1000;
         this.parameters = parameters;
+        this.class = parameters.class;
         this.run = function() {
-            callModule.run(environment.screenObjects.overlay, that);
+            if(this.status === 'waiting') {
+                this.status = 'fired';
+                container.loomSE_parameters = this.parameters;
+                container.loomSE_schedule = {
+                    in: this.in,
+                    out: this.out
+                };
+                environment.screenObjects.overlay.appendChild(container);
+                callModule.run(container);
+            }
         };
         this.stop = function() {
-            callModule.stop();
+            if(this.status === 'fired') {
+                this.status = 'expired';
+                callModule.stop();
+                environment.screenObjects.overlay.removeChild(container);
+            }
         };
+
+        var container = helper.newElement(id, 'div', that.class);
     };
 
     //
@@ -1331,27 +1336,6 @@ var LoomSE = (function() {
     publicMethods.eventQueue = function() {
         // temporary function to show event queue
         console.log(events.returnQueue());
-    };
-
-    publicMethods.runCounter = function() {
-    // temporary function designed to call a module from console
-
-        var j = new Loom.Modules(),
-            o = j.mediaTime(),
-            data = {
-                status: {
-                    media: 'video',
-                    id: status.id
-                },
-                id: 'mediaTime',
-                parameters: {
-                    x: 70,
-                    y: 70,
-                    class: 'mediaTime'
-                }
-            };
-
-        o.run(document.getElementById(overlay.id), data);
     };
 
     // Properties
@@ -1435,18 +1419,29 @@ var LoomSE = (function() {
         // API for system control
 
         return {
+            duration: function() {
+                return media.getLength();
+            },
+
+            currentTime: function() {
+                return media.getCurrentTime();
+            },
+
             gui: (function() {
 
                 return {
                     reveal: function() {
                         gui.reveal();
                     },
+
                     hide: function() {
                         gui.hide();
                     },
+
                     enable: function() {
                         gui.enable();
                     },
+
                     disable: function() {
                         gui.disable();
                     }

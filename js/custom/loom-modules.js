@@ -8,15 +8,14 @@ LoomSE.Modules.prototype.loop = function() {
     // loops video between in and out points
 
     return {
-        run: function(target, data) {
-            LoomSE.control.scrub(data.out);
+        run: function(container) {
+            LoomSE.control.scrub(container.loomSE_schedule.out);
         },
         stop: function() {
 
         }
     }
 };
-
 
 LoomSE.Modules.prototype.mediaTime = function() {
     // add an on screen timer
@@ -25,40 +24,18 @@ LoomSE.Modules.prototype.mediaTime = function() {
     var update;
 
     return {
-        run: function(target, data) {
-            if(data.status.media === 'video' || data.status === 'audio') {
-                var currentMedia = document.getElementById(data.status.id),
-                    currentMediaTime = currentMedia.currentTime,
-                    clock = setClock(currentMediaTime),
-                    xy = LoomSE.Modules.locatePerc(data.parameters.x, data.parameters.y),
-                    element = document.createElement('div'),
-                    child = document.createElement('span');
+        run: function(container) {
+            var clock = setClock(LoomSE.control.currentTime()),
+                xy = LoomSE.Modules.locatePerc(container.loomSE_parameters.x, container.loomSE_parameters.y),
+                element = document.createElement('span');
 
-                //console.log(clock);
+            container.appendChild(element);
 
-                element.id = data.id;
-
-                if(data.parameters.class !== null) {
-                    element.setAttribute('class', data.parameters.class);
-                }
-
-                element.appendChild(child);
-
-                updateTime();
-
-                LoomSE.Modules.draw(target, element, xy);
-
-                update = setInterval(
-                    function() {
-                        updateTime();
-                    }, 250
-                );
-            }
 
             function updateTime() {
-                currentMediaTime = currentMedia.currentTime;
+                currentMediaTime = LoomSE.control.currentTime();
                 clock = setClock(currentMediaTime);
-                child.innerHTML = clock.hours + ':' + clock.minutes + ':' + clock.seconds + ':' + clock.split;
+                element.innerHTML = clock.hours + ':' + clock.minutes + ':' + clock.seconds + ':' + clock.split;
             }
 
             function setClock(time) {
@@ -115,7 +92,17 @@ LoomSE.Modules.prototype.mediaTime = function() {
                     seconds: addLeadingZero(seconds),
                     split: split
                 }
-            };
+            }
+
+            updateTime();
+
+            LoomSE.Modules.draw(container, xy);
+
+            update = setInterval(
+                function() {
+                    updateTime();
+                }, 250
+            );
         },
         stop: function() {
             clearInterval(update);
@@ -144,9 +131,7 @@ LoomSE.Modules.locatePerc = function(percentage_x, percentage_y) {
 
 // output to the screen
 
-LoomSE.Modules.draw = function(target, element, xy, how) {
-
-    target.appendChild(element);
+LoomSE.Modules.draw = function(element, xy, how) {
 
     LoomSE.Modules.setCSS(element, {
         position: 'absolute',

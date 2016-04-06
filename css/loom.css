@@ -8,14 +8,14 @@
 	margin: 5px;
 }
 
-div#subtitle {
+.subtitle {
 	position: absolute;
 	bottom: 90px;
 	width: 100%;
 	text-align: center;
 }
 
-div#subtitle p {
+.subtitle p {
 	display: inline;
 	background: #fff;
 	font-size: 18px;
