@@ -1296,7 +1296,7 @@ var LoomSE = (function() {
             }
         };
 
-        var container = helper.newElement(id, 'div', that.class);
+        var container = helper.newElement(id, 'div', this.class);
     };
 
     //
