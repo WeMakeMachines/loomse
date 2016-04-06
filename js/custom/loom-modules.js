@@ -26,7 +26,7 @@ LoomSE.Modules.prototype.mediaTime = function() {
     return {
         run: function(container) {
             var clock = setClock(LoomSE.control.currentTime()),
-                xy = LoomSE.Modules.locatePerc(container.loomSE_parameters.x, container.loomSE_parameters.y),
+                xy = LoomSE.Modules.locatePerc(container.loomSE_parameters.x, container.loomSE_parameters.y, container.loomSE_resolution.width, container.loomSE_resolution.height),
                 element = document.createElement('span');
 
             container.appendChild(element);
@@ -112,7 +112,7 @@ LoomSE.Modules.prototype.mediaTime = function() {
 
 // returns a pixel position from a %
 
-LoomSE.Modules.locatePerc = function(percentage_x, percentage_y) {
+LoomSE.Modules.locatePerc = function(percentage_x, percentage_y, total_x, total_y) {
     // using a co-ordinate system of %, place objects on screen
 
     var dimensions = getDimensions(),
@@ -122,8 +122,8 @@ LoomSE.Modules.locatePerc = function(percentage_x, percentage_y) {
     return [pixel_x, pixel_y];
 
     function getDimensions() {
-        var availableWidth = window.innerWidth,
-            availableHeight = window.innerHeight;
+        var availableWidth = total_x,
+            availableHeight = total_y;
 
         return [availableWidth, availableHeight];
     }
@@ -131,7 +131,7 @@ LoomSE.Modules.locatePerc = function(percentage_x, percentage_y) {
 
 // output to the screen
 
-LoomSE.Modules.draw = function(element, xy, how) {
+LoomSE.Modules.draw = function(element, xy) {
 
     LoomSE.Modules.setCSS(element, {
         position: 'absolute',

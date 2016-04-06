@@ -1279,6 +1279,10 @@ var LoomSE = (function() {
         this.run = function() {
             if(this.status === 'waiting') {
                 this.status = 'fired';
+                container.loomSE_resolution = {
+                    width: environment.resolution.current.width,
+                    height: environment.resolution.current.height
+                };
                 container.loomSE_parameters = this.parameters;
                 container.loomSE_schedule = {
                     in: this.in,
