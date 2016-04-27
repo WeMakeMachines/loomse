@@ -12,7 +12,7 @@ var LoomSE = (function() {
 
     // Private variables
     var status = {
-            version: '0.3',
+            version: '0.31',
             control: 'waiting', // playing | paused | seeking | waiting (initial load of media) | error
             media: null, // current type of media in queue
             id: null, // id of media in queue
@@ -547,11 +547,13 @@ var LoomSE = (function() {
                 // Schedules timed events for each media element
                 // --
 
+                var createEvent;
+
                 for(var i in array){
                     var event = array[i],
                         id = event.call + '_' + i;
 
-                    var createEvent = new Event(id, event.call, event.schedule, event.parameters);
+                    createEvent = new Event(id, event.call, event.ignored, event.schedule, event.parameters);
 
                     Event.prototype.schedule = function () {
 
@@ -622,6 +624,7 @@ var LoomSE = (function() {
                                 console.log('looping from end to beginning');
                                 status.control = 'seeking'; // required for media.play check
                                 environment.reset();
+                                createEvent.resetStatus();
                                 media.play(0);
                             };
                         }
@@ -1278,12 +1281,21 @@ var LoomSE = (function() {
     };
 
     // Constructor function that creates instances of each event
-    var Event = function(id, call, schedule, parameters) {
+    var Event = function(id, call, ignored, schedule, parameters) {
         // not really happy with the way this is defined, but will work for now
 
         //check if the module reference exists as a function
         if(typeof modules[call] === 'function') {
             var callModule = modules[call]();
+        }
+
+        this.status; // waiting, fired, expired, ignored
+
+        if(ignored === true) {
+            this.status = 'ignored';
+        }
+        else {
+            this.status = 'waiting';
         }
 
         this.id = id; // event id
@@ -1315,6 +1327,9 @@ var LoomSE = (function() {
                 callModule.stop();
                 environment.screenObjects.overlay.removeChild(container);
             }
+        };
+        this.resetStatus = function() {
+            this.status = 'waiting';
         };
 
         var container = helper.newElement(id, 'div', this.class);
