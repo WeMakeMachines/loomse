@@ -1,0 +1,154 @@
+/* show gui on hover */
+
+//#loomSE_theatre:hover #loomSE_gui {
+//  opacity: 1;
+//  visibility: visible;
+//  transition: opacity 0.5s;
+//}
+
+/* gui controls */
+
+#loomSE_gui {
+  opacity: 1;
+  //visibility: hidden;
+  position: absolute;
+  bottom: 0;
+  z-index: 300;
+  width: $gui_width;
+  height: $gui_height;
+}
+
+#loomSE_gui_shadow {
+  z-index: 200;
+  height: $gui_height;
+  width: 100%;
+  background-color: #000;
+  opacity: 0.6;
+}
+
+// time
+#loomSE_timeGroup {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: $gui_width;
+  height: $gui_timeGroup_height;
+}
+
+#loomSE_timeGroup span {
+  font-size: 1.2em;
+  color: #ffffff;
+  opacity: 0.6;
+  padding-left: 15px;
+}
+
+#loomSE_time_elapsed {
+}
+
+#loomSE_time_duration {
+}
+
+#loomSE_time_timeSlider {
+  height: 5px;
+  margin-top: 5px;
+  width: 0;
+  background-color: #ffffff;
+}
+
+// buttons
+#loomSE_btnGroup {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  height: $gui_buttonGroup_height;
+  width: $gui_width;
+  padding: $gui_buttonGroup_padding;
+}
+
+#loomSE_btnGroupLeft {
+  float: left;
+}
+
+#loomSE_btnGroupRight {
+  float: right;
+}
+
+.btn_sprite {
+  background-image: url("../assets/images/app/sprites.png");
+  opacity: 0.6;
+  width: $gui_sprite_width;
+  height: $gui_sprite_height;
+  background-position-y: top;
+  display: inline-block;
+}
+
+.btn_sprite:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+// button states
+
+// play
+#loomSE_btnGroup .btn_play {
+  background-position-x: left;
+}
+
+#loomSE_btnGroup .btn_pause {
+  background-position-x: -($gui_sprite_width);
+}
+
+
+// volume
+#loomSE_btnGroup .btn_vol_off {
+  background-position-x: -($gui_sprite_width * 4);
+}
+
+#loomSE_btnGroup .btn_vol_med {
+  background-position-x: -($gui_sprite_width * 5);
+}
+
+#loomSE_btnGroup .btn_vol_high {
+  background-position-x: -($gui_sprite_width * 6);
+}
+
+// subtitle
+
+#loomSE_btnGroup .btn_sub_off {
+  background-position-x: -($gui_sprite_width * 10);
+}
+
+#loomSE_btnGroup .btn_sub_on {
+  background-position-x: -($gui_sprite_width * 9);
+}
+
+// sprite positionings
+
+#loomSE_btn_playPause {
+  background-position-x: left;
+}
+
+#loomSE_btn_rewind {
+  background-position-x: -($gui_sprite_width * 2);
+}
+
+#loomSE_btn_skip {
+  background-position-x: -($gui_sprite_width * 3);
+}
+
+#loomSE_btn_volume {
+  background-position-x: -($gui_sprite_width * 6);
+}
+
+#loomSE_btn_share {
+  background-position-x: -($gui_sprite_width * 8);
+}
+
+#loomSE_btn_subtitles {
+  background-position-x: -($gui_sprite_width * 10);
+}
+
+#loomSE_btn_fullscreen {
+  background-position-x: -($gui_sprite_width * 11);
+}

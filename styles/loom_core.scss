@@ -1,0 +1,118 @@
+@import 'loom_variables';
+@import 'loom_gui';
+
+body {
+  font-family: Roboto;
+  font-size: 100%;
+  background-color: #222222;
+}
+
+.mainTitle {
+  font-size: 50px;
+  text-align: center;
+  color: #fff;
+  margin: 5px;
+}
+
+.subtitle {
+  position: absolute;
+  bottom: 90px;
+  width: 100%;
+  text-align: center;
+}
+
+.subtitle p {
+  display: inline;
+  background: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
+  padding: 5px;
+}
+
+/* Do not edit below this line */
+#loomSE_theatre {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10000;
+}
+
+#loomSE_overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 100;
+}
+
+#loomSE_notify {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 200;
+}
+
+#loomSE_notify div {
+  position: absolute;
+  opacity: 0;
+}
+
+#loomSE_notify p {
+  font-size: 20px;
+  color: white;
+}
+
+/* media */
+
+#loomSE_video {
+  position: absolute;
+  bottom: 0;
+  z-index: -1;
+}
+
+#loomSE_poster {
+  z-index: 10;
+}
+
+/* events */
+
+.loom_title, .loom_decision {
+  /*opacity: 0;*/
+  position: absolute;
+}
+
+.loom_title {
+  overflow: hidden;
+}
+
+.loom_title div {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  height: 100px;
+  text-align: center;
+}
+
+.loom_title p {
+  display: block;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  opacity: 1;
+}
+
+.loom_text {
+  position: absolute;
+}
+
+.loom_titleSvg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.loom_plugin {
+  position: absolute;
+}
