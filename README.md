@@ -1,5 +1,5 @@
 # Loom Story Engine
-> Interactive storytelling for the modern web
+*Interactive storytelling for the modern web*
 
 ## Installation
 
