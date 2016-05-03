@@ -1,0 +1,252 @@
+* {
+  box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal; }
+
+ul, ol, p {
+  margin: 0;
+  padding: 0; }
+
+a, a:link, a:visited, a:hover {
+  text-decoration: none;
+  color: inherit; }
+
+button {
+  border: none;
+  background: transparent; }
+
+input, textarea {
+  border: none;
+  background: transparent; }
+
+@font-face {
+  font-family: 'Roboto';
+  src: url("../assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); }
+@font-face {
+  font-family: 'Roboto-Italic';
+  src: url("../assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); }
+@font-face {
+  font-family: 'Roboto-Light';
+  src: url("../assets/fonts/Roboto/Roboto-Light.ttf") format("truetype"); }
+@font-face {
+  font-family: 'Roboto-Medium';
+  src: url("../assets/fonts/Roboto/Roboto-Medium.ttf") format("truetype"); }
+@font-face {
+  font-family: 'Roboto-Bold';
+  src: url("../assets/fonts/Roboto/Roboto-Bold.ttf") format("truetype"); }
+/* show gui on hover */
+/* gui controls */
+#loomSE_gui {
+  opacity: 1;
+  position: absolute;
+  bottom: 0;
+  z-index: 300;
+  width: 100%;
+  height: 75px; }
+
+#loomSE_gui_shadow {
+  z-index: 200;
+  height: 75px;
+  width: 100%;
+  background-color: #000;
+  opacity: 0.6; }
+
+#loomSE_timeGroup {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 35px; }
+
+#loomSE_timeGroup span {
+  font-size: 1.2em;
+  color: #ffffff;
+  opacity: 0.6;
+  padding-left: 15px; }
+
+#loomSE_time_timeSlider {
+  height: 5px;
+  margin-top: 5px;
+  width: 0;
+  background-color: #ffffff; }
+
+#loomSE_btnGroup {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  height: 40px;
+  width: 100%;
+  padding: 5px; }
+
+#loomSE_btnGroupLeft {
+  float: left; }
+
+#loomSE_btnGroupRight {
+  float: right; }
+
+.btn_sprite {
+  background-image: url("../assets/images/app/sprites.png");
+  opacity: 0.6;
+  width: 32.5px;
+  height: 30px;
+  background-position-y: top;
+  display: inline-block; }
+
+.btn_sprite:hover {
+  cursor: pointer;
+  opacity: 1; }
+
+#loomSE_btnGroup .btn_play {
+  background-position-x: left; }
+
+#loomSE_btnGroup .btn_pause {
+  background-position-x: -32.5px; }
+
+#loomSE_btnGroup .btn_vol_off {
+  background-position-x: -130px; }
+
+#loomSE_btnGroup .btn_vol_med {
+  background-position-x: -162.5px; }
+
+#loomSE_btnGroup .btn_vol_high {
+  background-position-x: -195px; }
+
+#loomSE_btnGroup .btn_sub_off {
+  background-position-x: -325px; }
+
+#loomSE_btnGroup .btn_sub_on {
+  background-position-x: -292.5px; }
+
+#loomSE_btn_playPause {
+  background-position-x: left; }
+
+#loomSE_btn_rewind {
+  background-position-x: -65px; }
+
+#loomSE_btn_skip {
+  background-position-x: -97.5px; }
+
+#loomSE_btn_volume {
+  background-position-x: -195px; }
+
+#loomSE_btn_share {
+  background-position-x: -260px; }
+
+#loomSE_btn_subtitles {
+  background-position-x: -325px; }
+
+#loomSE_btn_fullscreen {
+  background-position-x: -357.5px; }
+
+body {
+  font-family: Roboto;
+  font-size: 100%;
+  background-color: #222222; }
+
+.mainTitle {
+  font-size: 50px;
+  text-align: center;
+  color: #fff;
+  margin: 5px; }
+
+.subtitle {
+  position: absolute;
+  bottom: 90px;
+  width: 100%;
+  text-align: center; }
+
+.subtitle p {
+  display: inline;
+  background: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
+  padding: 5px; }
+
+/* Do not edit below this line */
+#loomSE_theatre {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10000; }
+
+#loomSE_overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 100; }
+
+#loomSE_notify {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 200; }
+
+#loomSE_notify div {
+  position: absolute;
+  opacity: 0; }
+
+#loomSE_notify p {
+  font-size: 20px;
+  color: white; }
+
+/* media */
+#loomSE_video {
+  position: absolute;
+  bottom: 0;
+  z-index: -1; }
+
+#loomSE_poster {
+  z-index: 10; }
+
+/* events */
+.loom_title, .loom_decision {
+  /*opacity: 0;*/
+  position: absolute; }
+
+.loom_title {
+  overflow: hidden; }
+
+.loom_title div {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  height: 100px;
+  text-align: center; }
+
+.loom_title p {
+  display: block;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  opacity: 1; }
+
+.loom_text {
+  position: absolute; }
+
+.loom_titleSvg {
+  position: absolute;
+  left: 0;
+  top: 0; }
+
+.loom_plugin {
+  position: absolute; }
+
+/* Module specific css */
+div.mediaTime span {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  background-color: darkred; }
+
+/*# sourceMappingURL=master.css.map */
