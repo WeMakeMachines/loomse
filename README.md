@@ -10,11 +10,11 @@ Extract and deploy Loom to your server
 
 ## Writing your own modules
 
-Modules are written with 2 exposed return functions, `run()` and `stop()`. These are each called respectively during media playback at the in and out times set by the script. When `run()` is called, an object reference to the the container in which the module will be posted is passed via the argument `container`. After `stop()` is run by the engine, the container for your module will also be removed from screen.
+Modules are written with 2 exposed return functions, `run()` and `stop()`. These are each called respectively during media playback at the in and out times set by the script. When `run()` is called, an object reference to the the container in which the module will be posted is passed via the argument `container`. You can append any custom elements to this container with vanilla JavaScript as follows `container.appendChild(yourElement)`. After `stop()` is run by the engine, the container for your module will also be removed from screen.
 
 ###### Example module
 
-You can use the following structure to create your own modules, or see the live examples inside `js/loom-modules.js`.
+You can use the following structure to create your own modules, or see the live examples included inside `js/loom-modules.js`.
 
 ```
 loomSE.Modules.prototype.myModule = function() {
