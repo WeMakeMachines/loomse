@@ -3,15 +3,27 @@
 
 ## Installation
 
-Extract and deploy Loom to your web server, following the web servers 
+Extract and deploy Loom to your web server, following the current file structure.
 
-## Configuration
+## Configuration & Behaviours
 
 Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with custom modules.
 
-## Behaviours
-
 The behaviours file can be found and edited in `js/behaviours.json`. This file is in JSON format. Certain behaviours within the application can be edited from here.
+
+#### The Script
+
+All the power for developing your non-linear narrative rests inside a JSON based script file. The default location for this is `assets/scripts/script-desktop.json`.
+
+## Running the application
+
+Check the initialisation arguments are set correctly in `index.html`. The function which needs to run is `loomSE.initialise()` The default arguments are as follows;
+
+```
+loomSE.initialise('loomSE', 'assets/scripts/script-desktop.json', 'intro', function() {
+    // callback
+});
+```
 
 ## Writing your own modules
 
@@ -34,3 +46,5 @@ loomSE.Modules.prototype.myModule = function() {
     }
 };
 ```
+
+You can communicate with 
