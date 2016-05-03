@@ -3,10 +3,15 @@
 
 ## Installation
 
-Extract and deploy Loom to your server
+Extract and deploy Loom to your web server, following the web servers 
 
-## Development and configuration
+## Configuration
 
+Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with custom modules.
+
+## Behaviours
+
+The behaviours file can be found and edited in `js/behaviours.json`. This file is in JSON format. Certain behaviours within the application can be edited from here.
 
 ## Writing your own modules
 
@@ -29,9 +34,3 @@ loomSE.Modules.prototype.myModule = function() {
     }
 };
 ```
-
-#### In short...
-
-- Modules can be placed in the Modules file `js/loom-modules.js`, or written in your own linked JavaScript file
-- `run()` will execute at the time in point for your module during media playback
-- `stop()` will execute at the time out point for your module during media playback
