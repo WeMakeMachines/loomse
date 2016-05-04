@@ -9,7 +9,7 @@ Extract and deploy Loom to your web server, following the current file structure
 
 Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with custom modules.
 
-The behaviours file can be found and edited in `js/behaviours.json`. This file is in JSON format. Certain behaviours within the application can be edited from here.
+The behaviours file can be found and edited in `js/behaviours.json`. This file is in JSON format. Certain behaviours within the application can be controlled from here.
 
 #### The Script
 
