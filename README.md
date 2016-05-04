@@ -54,7 +54,7 @@ You can communicate with the core application with the loomSE API.
 Current API commands:
 
 - `loomSE.control.pause()` - pause current media
-- `loomSE.control.play()` - play current media
+- `loomSE.control.play(time)` - play current media
 - `loomSE.control.duration()` - duration of current media
-- `loomSE.control.scrub(time)` - seek to time in media
+- `loomSE.control.scrub(time)` - seek to time (in seconds) in media
 - `loomSE.control.reload()` - reload current scene
