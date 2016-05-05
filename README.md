@@ -3,7 +3,20 @@
 
 ## Installation
 
-Extract and deploy Loom to your web server, following the current file structure.
+Extract and deploy Loom to your web server, following the current file structure. If you wish to embed Loom into an existing webpage, make sure to insert the following HTML markup.
+
+```
+<div id="loomSE">
+	<div id="loomSE_theatre">
+		<div id="loomSE_stage">
+			<div id="loomSE_overlay"></div>
+			<div id="loomSE_mediaGroup">
+		</div>
+		</div>
+	</div>
+</div>
+
+```
 
 ## Configuration & Behaviours
 
@@ -17,7 +30,17 @@ All the power for developing your non-linear narrative rests inside a JSON based
 
 ## Running the application
 
-Check the initialisation arguments are set correctly in `index.html`. The function which needs to run is `loomSE.initialise()` The default arguments are as follows;
+The function `loomSE.initialise()` must be called to start the Loom application. By default this sites inside `index.html`. Check the initialisation arguments are set correctly, using the following syntax:
+
+`loomSE.initialise([*target*], [*script_url*], [*first_scene*], [*callback*]. [*resolution*])`
+
+target - the node ID for which Loom will attach itself
+script_url - the URL location of the script file
+first_scene - the name of the first scene in the script to launch
+callback - *optional* the function to run once Loom has prepared it's environment
+resolution - *optional* a fixed resolution for all media playback
+
+The default arguments are as follows;
 
 ```
 loomSE.initialise('loomSE', 'assets/scripts/script-desktop.json', 'intro', function() {
@@ -47,9 +70,9 @@ loomSE.Modules.prototype.myModule = function() {
 };
 ```
 
-You can communicate with the core application with the loomSE API.
-
 ## API
+
+You can communicate with the core application with the Loom API.
 
 Current API commands:
 
