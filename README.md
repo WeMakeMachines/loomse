@@ -76,6 +76,8 @@ You can communicate with the core application with the Loom API.
 
 Current API commands:
 
+- `loomSE.currentTime()` - returns current time (in seconds)
+- `loomSE.duration()` - returns duration of media (in seconds)
 - `loomSE.control.pause()` - pause current media
 - `loomSE.control.play(time)` - play current media
 - `loomSE.control.duration()` - duration of current media
