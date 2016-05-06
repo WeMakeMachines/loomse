@@ -33,22 +33,31 @@
   top: 0;
   width: $gui_width;
   height: $gui_timeGroup_height;
+  clear: both;
 }
 
 #loomSE_timeGroup span {
   font-size: 1.2em;
   color: #ffffff;
   opacity: 0.6;
-  padding-left: 15px;
+}
+
+#loomSE_timeGroup > div {
+  clear: both;
 }
 
 #loomSE_time_elapsed {
+  display: inline-block;
+  padding-left: 10px;
 }
 
 #loomSE_time_duration {
+  float: right;
+  padding-right: 10px;
 }
 
 #loomSE_time_timeSlider {
+  display: block;
   height: 5px;
   margin-top: 5px;
   width: 0;
@@ -92,63 +101,67 @@
 
 // play
 #loomSE_btnGroup .btn_play {
-  background-position-x: left;
+  background-position: left top;
 }
 
 #loomSE_btnGroup .btn_pause {
-  background-position-x: -($gui_sprite_width);
+  background-position: -($gui_sprite_width) top;
 }
 
 
 // volume
 #loomSE_btnGroup .btn_vol_off {
-  background-position-x: -($gui_sprite_width * 4);
+  background-position: -($gui_sprite_width * 5) top;
 }
 
 #loomSE_btnGroup .btn_vol_med {
-  background-position-x: -($gui_sprite_width * 5);
+  background-position: -($gui_sprite_width * 6) top;
 }
 
 #loomSE_btnGroup .btn_vol_high {
-  background-position-x: -($gui_sprite_width * 6);
+  background-position: -($gui_sprite_width * 7) top;
 }
 
 // subtitle
 
 #loomSE_btnGroup .btn_sub_off {
-  background-position-x: -($gui_sprite_width * 10);
+  background-position: -($gui_sprite_width * 11) top;
 }
 
 #loomSE_btnGroup .btn_sub_on {
-  background-position-x: -($gui_sprite_width * 9);
+  background-position: -($gui_sprite_width * 10) top;
 }
 
 // sprite positionings
 
 #loomSE_btn_playPause {
-  background-position-x: left;
+  background-position: left;
 }
 
 #loomSE_btn_rewind {
-  background-position-x: -($gui_sprite_width * 2);
+  background-position: -($gui_sprite_width * 2) top;
+}
+
+#loomSE_btn_fforward {
+  background-position: -($gui_sprite_width * 3) top;
 }
 
 #loomSE_btn_skip {
-  background-position-x: -($gui_sprite_width * 3);
+  background-position: -($gui_sprite_width * 4) top;
 }
 
 #loomSE_btn_volume {
-  background-position-x: -($gui_sprite_width * 6);
+  background-position: -($gui_sprite_width * 7) top;
 }
 
 #loomSE_btn_share {
-  background-position-x: -($gui_sprite_width * 8);
+  background-position: -($gui_sprite_width * 9) top;
 }
 
 #loomSE_btn_subtitles {
-  background-position-x: -($gui_sprite_width * 10);
+  background-position: -($gui_sprite_width * 10) top;
 }
 
 #loomSE_btn_fullscreen {
-  background-position-x: -($gui_sprite_width * 11);
+  background-position: -($gui_sprite_width * 12) top;
 }

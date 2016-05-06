@@ -63,15 +63,27 @@ input, textarea {
   left: 0;
   top: 0;
   width: 100%;
-  height: 35px; }
+  height: 35px;
+  clear: both; }
 
 #loomSE_timeGroup span {
   font-size: 1.2em;
   color: #ffffff;
-  opacity: 0.6;
-  padding-left: 15px; }
+  opacity: 0.6; }
+
+#loomSE_timeGroup > div {
+  clear: both; }
+
+#loomSE_time_elapsed {
+  display: inline-block;
+  padding-left: 10px; }
+
+#loomSE_time_duration {
+  float: right;
+  padding-right: 10px; }
 
 #loomSE_time_timeSlider {
+  display: block;
   height: 5px;
   margin-top: 5px;
   width: 0;
@@ -105,46 +117,49 @@ input, textarea {
   opacity: 1; }
 
 #loomSE_btnGroup .btn_play {
-  background-position-x: left; }
+  background-position: left top; }
 
 #loomSE_btnGroup .btn_pause {
-  background-position-x: -32.5px; }
+  background-position: -32.5px top; }
 
 #loomSE_btnGroup .btn_vol_off {
-  background-position-x: -130px; }
+  background-position: -162.5px top; }
 
 #loomSE_btnGroup .btn_vol_med {
-  background-position-x: -162.5px; }
+  background-position: -195px top; }
 
 #loomSE_btnGroup .btn_vol_high {
-  background-position-x: -195px; }
+  background-position: -227.5px top; }
 
 #loomSE_btnGroup .btn_sub_off {
-  background-position-x: -325px; }
+  background-position: -357.5px top; }
 
 #loomSE_btnGroup .btn_sub_on {
-  background-position-x: -292.5px; }
+  background-position: -325px top; }
 
 #loomSE_btn_playPause {
-  background-position-x: left; }
+  background-position: left; }
 
 #loomSE_btn_rewind {
-  background-position-x: -65px; }
+  background-position: -65px top; }
+
+#loomSE_btn_fforward {
+  background-position: -97.5px top; }
 
 #loomSE_btn_skip {
-  background-position-x: -97.5px; }
+  background-position: -130px top; }
 
 #loomSE_btn_volume {
-  background-position-x: -195px; }
+  background-position: -227.5px top; }
 
 #loomSE_btn_share {
-  background-position-x: -260px; }
+  background-position: -292.5px top; }
 
 #loomSE_btn_subtitles {
-  background-position-x: -325px; }
+  background-position: -325px top; }
 
 #loomSE_btn_fullscreen {
-  background-position-x: -357.5px; }
+  background-position: -390px top; }
 
 body {
   font-family: Roboto;
@@ -205,7 +220,8 @@ body {
   z-index: -1; }
 
 #loomSE_poster {
-  z-index: 10; }
+  z-index: 10;
+  background-size: cover; }
 
 /* events */
 .loom_title, .loom_decision {

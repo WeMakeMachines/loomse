@@ -1,9 +1,5 @@
 // displays current media time on screen
 
-loomSE.Modules.prototype.jump = function() {
-
-};
-
 loomSE.Modules.prototype.loop = function() {
     // loops video between in and out points
 
@@ -25,75 +21,16 @@ loomSE.Modules.prototype.mediaTime = function() {
 
     return {
         run: function(container) {
-            var clock = setClock(loomSE.control.currentTime()),
+            var clock,
                 xy = loomSE.Modules.locatePerc(container.loomSE_parameters.x, container.loomSE_parameters.y, container.loomSE_resolution.width, container.loomSE_resolution.height),
                 element = document.createElement('span');
 
-            container.appendChild(element);
-
-
             function updateTime() {
-                currentMediaTime = loomSE.control.currentTime();
-                clock = setClock(currentMediaTime);
+                clock = loomSE.currentTime.object();
                 element.innerHTML = clock.hours + ':' + clock.minutes + ':' + clock.seconds + ':' + clock.split;
             }
 
-            function setClock(time) {
-                var remainder = time,
-                    hours,
-                    minutes,
-                    seconds,
-                    split;
-
-                if(remainder >= 3600) {
-                    hours = Math.floor(remainder / 3600);
-                    remainder = remainder - (hours * 3600);
-                }
-                else {
-                    hours = 0;
-                }
-
-                if(remainder >= 60) {
-                    minutes = Math.floor(remainder / 60);
-                    remainder = remainder - (minutes * 60);
-                }
-                else {
-                    minutes = 0;
-                }
-
-                if(remainder >= 1) {
-                    seconds = Math.floor(remainder);
-                    remainder = remainder - seconds;
-                }
-                else {
-                    seconds = 0;
-                }
-
-                split = remainder.toString();
-
-                if(split === '0') {
-                    split = '000';
-                }
-                else {
-                    split = split.substr(2,3);
-                }
-
-                function addLeadingZero(number) {
-                    if(number < 10) {
-                        number = '0' + number;
-                    }
-
-                    return number;
-                }
-
-                return {
-                    hours: addLeadingZero(hours),
-                    minutes: addLeadingZero(minutes),
-                    seconds: addLeadingZero(seconds),
-                    split: split
-                }
-            }
-
+            container.appendChild(element);
             updateTime();
 
             loomSE.Modules.draw(container, xy);

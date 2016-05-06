@@ -26,7 +26,7 @@
         "video": {
           "ogg": "assets/video/TvTestCard.ogg",
           "mp4": "assets/video/TvTestCard_512kb.mp4",
-          "poster": "assets/images/default-poster.png",
+          "poster": "assets/images/app/default-poster.png",
           "autoplay": false,
           "controls": false,
           "muted": false,

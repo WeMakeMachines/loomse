@@ -1,0 +1,17 @@
+{
+  "gui": {
+    "btnGroupLeft": {
+      "btnPlayPause": true,
+      "btnRewind": true,
+      "btnSkip": true
+    },
+    "btnGroupRight": {
+      "btnVolume": true,
+      "btnSubtitles": true,
+      "btnShare": true,
+      "btnFullscreen": true
+    }
+  },
+  "resizeTo": "screen",
+  "subtitles": false
+}
