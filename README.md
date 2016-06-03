@@ -3,17 +3,10 @@
 
 ## Installation
 
-Extract and deploy Loom to your web server, following the current file structure. If you wish to embed Loom into an existing webpage, make sure to insert the following HTML markup.
+Extract and deploy Loom to your web server, following the current file structure. If you wish to embed Loom into an existing webpage, you need to assign a container for it with a unique ID. Below is the default HTML structure.
 
 ```
 <div id="loomSE">
-	<div id="loomSE_theatre">
-		<div id="loomSE_stage">
-			<div id="loomSE_overlay"></div>
-			<div id="loomSE_mediaGroup">
-		</div>
-		</div>
-	</div>
 </div>
 
 ```
@@ -22,7 +15,7 @@ Extract and deploy Loom to your web server, following the current file structure
 
 Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with custom modules.
 
-The behaviours file can be found and edited in `js/behaviours.json`. This file is in JSON format. Certain behaviours within the application can be controlled from here.
+The behaviours file can be found and edited in `js/behaviour.json`. This file is in JSON format. Certain behaviours within the application can be controlled from here.
 
 #### The Script
 
@@ -54,7 +47,7 @@ Modules must be constructed under the Loom namespace `loomSE`, and as a prototyp
 
 #### Example module
 
-You can use the following structure to create your own modules, or see the live examples included inside `js/loom-modules.js`.
+You can use the following structure to create your own modules, or see the live examples included inside `js/loomSE-modules.js`.
 
 ```
 loomSE.Modules.prototype.myModule = function() {
@@ -78,8 +71,8 @@ Current API commands:
 
 - `loomSE.currentTime()` - returns current time (in seconds)
 - `loomSE.duration()` - returns duration of media (in seconds)
-- `loomSE.control.pause()` - pause current media
-- `loomSE.control.play(time)` - play current media
-- `loomSE.control.duration()` - duration of current media
-- `loomSE.control.scrub(time)` - seek to time (in seconds) in media
-- `loomSE.control.reload()` - reload current scene
+- `loomSE.pause()` - pause current media
+- `loomSE.play(time)` - play current media
+- `loomSE.duration()` - duration of current media
+- `loomSE.seek(time)` - seek to time (in seconds) in media
+- `loomSE.reload()` - reload current scene

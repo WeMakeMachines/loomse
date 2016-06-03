@@ -1,17 +1,24 @@
 {
   "gui": {
-    "btnGroupLeft": {
       "btnPlayPause": true,
       "btnRewind": true,
-      "btnSkip": true
-    },
-    "btnGroupRight": {
+      "btnSkip": true,
       "btnVolume": true,
       "btnSubtitles": true,
       "btnShare": true,
       "btnFullscreen": true
-    }
+  },
+  "media": {
+    "timeEventResolution": 0.4,
+    "showPosterWhenPaused": false,
+    "fastForwardSkip": 10
   },
   "resizeTo": "screen",
-  "subtitles": false
+  "subtitles": false,
+  "developer": {
+    "mute": true,
+    "verbose": "subtitles",
+    "disableCheckScript": false,
+    "disableScrubScreen": false
+  }
 }
