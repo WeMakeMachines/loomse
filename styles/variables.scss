@@ -1,7 +1,15 @@
+// colours
 
-// gui
-// export page at 60.21 dpi 41h 44w
-// 89.58  page at 65w 61h
+$colour_white: #fafde1;
+$colour_black: #170508;
+
+// notification sprites
+
+$notify_sprite_size: 61px;
+
+// gui dimensions
+// export page at 60.21 dpi for 41h 44w
+// export page at 89.58 dpi for 65w 61h
 
 $gui_sprite_height: 30px;
 $gui_sprite_width: 32.5px;

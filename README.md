@@ -15,7 +15,30 @@ Extract and deploy Loom to your web server, following the current file structure
 
 Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with custom modules.
 
+#### Application Behaviour
+
 The behaviours file can be found and edited in `js/behaviour.json`. This file is in JSON format. Certain behaviours within the application can be controlled from here.
+
+##### Configurable Behaviours
+
+{
+  "media": {
+    "timeEventResolution": 0.4,
+    "showPosterWhenPaused": false,
+    "fastForwardSkip": 10,
+    "minimum_resolution": {
+      "width": 640,
+      "height": 480
+    }
+  },
+  "subtitles": false,
+  "developer": {
+    "mute": true,
+    "verbose": "subtitles",
+    "disableCheckScript": false,
+    "disableScrubScreen": false
+  }
+}
 
 #### The Script
 
@@ -25,7 +48,7 @@ All the power for developing your non-linear narrative rests inside a JSON based
 
 The function `loomSE.initialise()` must be called to start the Loom application. By default this sites inside `index.html`. Check the initialisation arguments are set correctly, using the following syntax:
 
-`loomSE.initialise([*target*], [*script_url*], [*first_scene*], [*callback*]. [*resolution*])`
+`loomSE.initialise([*target*], [*script_url*], [*first_scene*], [*callback*], [*resolution*])`
 
 target - the node ID for which Loom will attach itself
 script_url - the URL location of the script file

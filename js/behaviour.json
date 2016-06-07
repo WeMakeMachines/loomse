@@ -1,19 +1,13 @@
 {
-  "gui": {
-      "btnPlayPause": true,
-      "btnRewind": true,
-      "btnSkip": true,
-      "btnVolume": true,
-      "btnSubtitles": true,
-      "btnShare": true,
-      "btnFullscreen": true
-  },
   "media": {
     "timeEventResolution": 0.4,
     "showPosterWhenPaused": false,
-    "fastForwardSkip": 10
+    "fastForwardSkip": 10,
+    "minimum_resolution": {
+      "width": 640,
+      "height": 480
+    }
   },
-  "resizeTo": "screen",
   "subtitles": false,
   "developer": {
     "mute": true,

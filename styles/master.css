@@ -1,31 +1,3 @@
-* {
-  box-sizing: border-box; }
-
-body {
-  margin: 0;
-  padding: 0; }
-
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-  padding: 0;
-  font-weight: normal; }
-
-ul, ol, p {
-  margin: 0;
-  padding: 0; }
-
-a, a:link, a:visited, a:hover {
-  text-decoration: none;
-  color: inherit; }
-
-button {
-  border: none;
-  background: transparent; }
-
-input, textarea {
-  border: none;
-  background: transparent; }
-
 @font-face {
   font-family: 'Roboto';
   src: url("../assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); }
@@ -41,21 +13,60 @@ input, textarea {
 @font-face {
   font-family: 'Roboto-Bold';
   src: url("../assets/fonts/Roboto/Roboto-Bold.ttf") format("truetype"); }
-/* show gui on hover */
-/* gui controls */
-#loomSE_gui {
-  opacity: 1;
-  position: absolute;
-  bottom: 0;
-  z-index: 300;
-  width: 100%;
-  height: 75px; }
+* {
+  box-sizing: border-box; }
 
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, sans-serif;
+  font-size: 100%;
+  color: #fafde1;
+  background-color: #170508; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal; }
+
+ul, ol, p {
+  margin: 0;
+  padding: 0; }
+
+a, a:link, a:visited, a:hover {
+  text-decoration: none;
+  color: inherit; }
+
+.mainTitle {
+  font-size: 50px;
+  text-align: center;
+  color: #fafde1;
+  margin: 5px; }
+
+#loomSE_subtitles div {
+  position: absolute;
+  bottom: 90px;
+  width: 100%;
+  text-align: center; }
+  #loomSE_subtitles div p {
+    display: inline;
+    background: #fafde1;
+    font-size: 18px;
+    font-weight: bold;
+    color: #170508;
+    padding: 5px; }
+
+/* show gui on hover */
+#loomSE:hover #loomSE_gui {
+  opacity: 1;
+  transition: opacity 0.5s; }
+
+/* gui controls */
 #loomSE_gui_shadow {
   z-index: 200;
   height: 75px;
   width: 100%;
-  background-color: #000;
+  background-color: #170508;
   opacity: 0.6; }
 
 #loomSE_timeGroup {
@@ -68,7 +79,7 @@ input, textarea {
 
 #loomSE_timeGroup span {
   font-size: 1.2em;
-  color: #ffffff;
+  color: #fafde1;
   opacity: 0.6; }
 
 #loomSE_timeGroup > div {
@@ -87,7 +98,7 @@ input, textarea {
   height: 5px;
   margin-top: 5px;
   width: 0;
-  background-color: #ffffff; }
+  background-color: #fafde1; }
 
 #loomSE_btnGroup {
   position: absolute;
@@ -161,104 +172,60 @@ input, textarea {
 #loomSE_btn_fullscreen {
   background-position: -390px top; }
 
-body {
-  font-family: Roboto;
-  font-size: 100%;
-  background-color: #222222; }
-
-.mainTitle {
-  font-size: 50px;
-  text-align: center;
-  color: #fff;
-  margin: 5px; }
-
-.subtitle {
-  position: absolute;
-  bottom: 90px;
-  width: 100%;
-  text-align: center; }
-
-.subtitle p {
-  display: inline;
-  background: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  color: #222;
-  padding: 5px; }
-
-/* Do not edit below this line */
 #loomSE {
   position: absolute;
   left: 0;
   top: 0;
   z-index: 10000; }
-
-#loomSE_overlay {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 100; }
-
-#loomSE_notify {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 200; }
-
-#loomSE_notify div {
-  position: absolute;
-  opacity: 0; }
-
-#loomSE_notify p {
-  font-size: 20px;
-  color: white; }
+  #loomSE #loomSE_gui {
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 300;
+    width: 100%;
+    height: 75px; }
+  #loomSE #loomSE_stage #loomSE_overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 100; }
+    #loomSE #loomSE_stage #loomSE_overlay #loomSE_events {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 100; }
+    #loomSE #loomSE_stage #loomSE_overlay #loomSE_subtitles {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 100; }
+  #loomSE #loomSE_notify {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 200; }
+    #loomSE #loomSE_notify div {
+      opacity: 0; }
+    #loomSE #loomSE_notify p {
+      display: block;
+      height: 61px;
+      font-size: 78px;
+      line-height: 67px;
+      letter-spacing: 6px;
+      font-weight: 700;
+      color: #fafde1;
+      padding-left: 61px;
+      margin-left: -61px; }
+    #loomSE #loomSE_notify p.paused {
+      background: url("../assets/images/app/notify_sprite_paused.png") no-repeat left transparent; }
 
 /* media */
-#loomSE_video {
-  position: absolute;
-  bottom: 0;
-  z-index: -1; }
-
 #loomSE_poster {
   z-index: 10;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat; }
-
-/* events */
-.loom_title, .loom_decision {
-  /*opacity: 0;*/
-  position: absolute; }
-
-.loom_title {
-  overflow: hidden; }
-
-.loom_title div {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  height: 100px;
-  text-align: center; }
-
-.loom_title p {
-  display: block;
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-  opacity: 1; }
-
-.loom_text {
-  position: absolute; }
-
-.loom_titleSvg {
-  position: absolute;
-  left: 0;
-  top: 0; }
-
-.loom_plugin {
-  position: absolute; }
 
 /* Module specific css */
 div.mediaTime span {

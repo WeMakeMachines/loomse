@@ -1,28 +1,17 @@
 /* show gui on hover */
 
-//#loomSE_theatre:hover #loomSE_gui {
-//  opacity: 1;
-//  visibility: visible;
-//  transition: opacity 0.5s;
-//}
+#loomSE:hover #loomSE_gui {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
 
 /* gui controls */
-
-#loomSE_gui {
-  opacity: 1;
-  //visibility: hidden;
-  position: absolute;
-  bottom: 0;
-  z-index: 300;
-  width: $gui_width;
-  height: $gui_height;
-}
 
 #loomSE_gui_shadow {
   z-index: 200;
   height: $gui_height;
   width: 100%;
-  background-color: #000;
+  background-color: $colour_black;
   opacity: 0.6;
 }
 
@@ -38,7 +27,7 @@
 
 #loomSE_timeGroup span {
   font-size: 1.2em;
-  color: #ffffff;
+  color: $colour_white;
   opacity: 0.6;
 }
 
@@ -61,7 +50,7 @@
   height: 5px;
   margin-top: 5px;
   width: 0;
-  background-color: #ffffff;
+  background-color: $colour_white;
 }
 
 // buttons

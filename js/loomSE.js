@@ -13,7 +13,7 @@ var loomSE = (function() {
     // Variables used by the entire app
     var behaviour = {},
         status = {
-            version: '0.32'
+            version: '0.34'
         },
         script,
         currentScene,
@@ -27,14 +27,19 @@ var loomSE = (function() {
                 xmlhttp = new XMLHttpRequest();
 
             xmlhttp.onreadystatechange = function() {
-                if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    if(fileType === 'JSON'){
-                        data = JSON.parse(xmlhttp.responseText);
+                if(xmlhttp.readyState === 4) {
+                    if(xmlhttp.status === 200) {
+                        if(fileType === 'JSON'){
+                            data = JSON.parse(xmlhttp.responseText);
+                        }
+                        else {
+                            data = xmlhttp.responseText;
+                        }
+                        callback(data);
                     }
                     else {
-                        data = xmlhttp.responseText;
+                        callback(false);
                     }
-                    callback(data);
                 }
             };
 
@@ -71,6 +76,30 @@ var loomSE = (function() {
             // removes whitespace, and converts to lowercase
             var cleanedString = string.replace(/[^a-z0-9_]+]/gi, '');
             return cleanedString.toLowerCase();
+        },
+
+        newDOMobject: function(parent, type, id, cssClass, cssProperties) {
+
+            var newObject = document.createElement(type),
+                newObjectId = applicationId + '_' + id;
+
+            if(parent) {
+                parent.appendChild(newObject);
+            }
+
+            if(id) {
+                newObject.setAttribute('id', newObjectId);
+            }
+
+            if(cssClass) {
+                newObject.setAttribute('class', cssClass);
+            }
+
+            if(cssProperties) {
+                css.style(newObject, cssProperties); // test for bug here with the reference
+            }
+
+            return newObject;
         },
         
         newElement: function(type, id, cssClass, style) {
@@ -157,26 +186,28 @@ var loomSE = (function() {
     var css = (function() {
 
         return {
-            style: function(element, object) {
-                for(var attribute in object)
+            style: function(DOMobject, cssProperties) {
+                for(var attribute in cssProperties)
                 {
-                    var value = object[attribute];
+                    if(cssProperties.hasOwnProperty(attribute)) {
+                        var value = cssProperties[attribute];
 
-                    switch(attribute)
-                    {
-                        case 'width':
-                        case 'height':
-                        case 'top':
-                        case 'left':
-                        case 'right':
-                        case 'bottom':
-                            value = value + 'px';
+                        switch(attribute)
+                        {
+                            case 'width':
+                            case 'height':
+                            case 'top':
+                            case 'left':
+                            case 'right':
+                            case 'bottom':
+                                value = value + 'px';
+                        }
+                        DOMobject.style[attribute] = value;
                     }
-                    element.style[attribute] = value;
                 }
             },
 
-            animate: function(element, parameter, startValue, endValue, time, callback, steps) {
+            animate: function(DOMobject, parameter, startValue, endValue, time, callback, steps) {
                 var currentValue,
                     numberOfSteps,
                     currentStep,
@@ -190,7 +221,7 @@ var loomSE = (function() {
                     steps = 4; // the more steps the smoother the animation, default is 4
                 }
 
-                numberOfSteps = steps;
+                //numberOfSteps = steps;
                 currentStep = 0;
                 difference = endValue - startValue;
                 timeStep = time / steps;
@@ -208,7 +239,7 @@ var loomSE = (function() {
                             currentValue = startValue + (valueStep * currentStep);
                         }
                         styles[parameter] = currentValue;
-                        css.style(element, styles);
+                        css.style(DOMobject, styles);
                         currentStep = currentStep + 1;
                     }
                 }, timeStep);
@@ -225,15 +256,16 @@ var loomSE = (function() {
     var gui = (function() {
 
         var id = 'gui',
-            container = helper.newElement('div', id),
-            shadow = helper.newElement('div', 'gui_shadow'),
-            timeGroup = helper.newElement('div', 'timeGroup'),
-            timeElapsed = helper.newElement('div', 'time_elapsed'),
-            timeDuration = helper.newElement('div', 'time_duration'),
-            timeSlider = helper.newElement('div', 'time_timeSlider'),
-            btnGroup = helper.newElement('div', 'btnGroup'),
-            btnGroupLeft = helper.newElement('div', 'btnGroupLeft'),
-            btnGroupRight = helper.newElement('div', 'btnGroupRight'),
+            container = helper.newDOMobject(undefined, 'div', id),
+            shadow = helper.newDOMobject(container, 'div', 'gui_shadow'),
+            btnGroup = helper.newDOMobject(container, 'div', 'btnGroup'),
+            timeGroup = helper.newDOMobject(container, 'div', 'timeGroup'),
+
+            btnGroupLeft = helper.newDOMobject(btnGroup, 'div', 'btnGroupLeft'),
+            btnGroupRight = helper.newDOMobject(btnGroup, 'div', 'btnGroupRight'),
+            timeElapsed = helper.newDOMobject(timeGroup, 'div', 'time_elapsed'),
+            timeDuration = helper.newDOMobject(timeGroup, 'div', 'time_duration'),
+            timeSlider = helper.newDOMobject(timeGroup, 'div', 'time_timeSlider'),
 
             btnPlayPause = new GuiComponent('div', 'btn_playPause', 'btn_sprite', ['pause', 'play']),
             btnRewind = new GuiComponent('div', 'btn_rewind', 'btn_sprite'),
@@ -246,17 +278,7 @@ var loomSE = (function() {
 
             scale; // gui scale - 1 small, 2 medium, 3 large
 
-        function appendComponents(selection) {
-            container.appendChild(shadow);
-            container.appendChild(timeGroup);
-            container.appendChild(btnGroup);
-
-            btnGroup.appendChild(btnGroupLeft);
-            btnGroup.appendChild(btnGroupRight);
-
-            timeGroup.appendChild(timeElapsed);
-            timeGroup.appendChild(timeDuration);
-            timeGroup.appendChild(timeSlider);
+        function appendButtonComponents() {
 
             btnGroupLeft.appendChild(btnPlayPause.element);
             btnGroupLeft.appendChild(btnRewind.element);
@@ -396,17 +418,13 @@ var loomSE = (function() {
                 dividerHours.innerHTML = ':';
                 dividerMinutes.innerHTML = ':';
 
-                //if(object.hours !== '00') {
-                    timeHours.innerHTML = object.hours;
-                    timeContainer.appendChild(timeHours);
-                    timeContainer.appendChild(dividerHours);
-                //}
+                timeHours.innerHTML = object.hours;
+                timeContainer.appendChild(timeHours);
+                timeContainer.appendChild(dividerHours);
 
-                //if(object.minutes !== '00') {
-                    timeMinutes.innerHTML = object.minutes;
-                    timeContainer.appendChild(timeMinutes);
-                    timeContainer.appendChild(dividerMinutes);
-                //}
+                timeMinutes.innerHTML = object.minutes;
+                timeContainer.appendChild(timeMinutes);
+                timeContainer.appendChild(dividerMinutes);
 
                 timeSeconds.innerHTML = object.seconds;
                 timeContainer.appendChild(timeSeconds);
@@ -430,7 +448,7 @@ var loomSE = (function() {
         }
 
         function load() {
-            appendComponents(behaviour.gui);
+            appendButtonComponents();
             updateProgressBar();
             environment.containers.root.appendChild(container);
         }
@@ -504,122 +522,79 @@ var loomSE = (function() {
         }
     })();
 
-    // Handles the environmental setup for our application
     var environment = (function() {
-
-        var id = {
-            stage: applicationId + '_stage',
-            overlay: applicationId + '_overlay',
-            mediaGroup: applicationId + '_mediaGroup',
-            video: applicationId + '_video', //
-            audio: applicationId + '_audio'
-        };
-
-        var resolution = {
-                // default values, overridden by values in script - if set
-                minimum: {
-                    width: 640,
-                    height: 480
-                },
-                current: {
-                    width: null,
-                    height: null,
-                    orientation: null
-                },
-                designed: {
-                    width: null,
-                    height: null,
-                    orientation: null
-                }
+        var containers = {},
+            resolution = {
+                width: null,
+                height: null
             },
+            scaleTo;
 
-            containers = {};
-
-        function setup(root) {
-            // sets up the DOM environment for our app
-            containers.root = document.getElementById(root);
-            containers.stage = helper.newElement('div', 'stage');
-            containers.overlay = helper.newElement('div', 'overlay');
-            containers.mediaGroup = helper.newElement('div', 'mediaGroup');
-            containers.root.appendChild(containers.stage);
-            containers.stage.appendChild(containers.overlay);
-            containers.stage.appendChild(containers.mediaGroup);
+        function getClientDimensions() {
+            resolution.width = document.documentElement.clientWidth;
+            resolution.height = document.documentElement.clientHeight;
         }
 
-        var setSize = function(element, dimensions) {
-            var width,
-                height,
-                orientation;
+        function initialise(DOMroot, expectedResolution) {
+            // sets up the DOM environment for our app
+            containers.root = document.getElementById(DOMroot);
+            containers.stage = helper.newDOMobject(containers.root, 'div', 'stage');
+            containers.overlay = helper.newDOMobject(containers.stage, 'div', 'overlay');
+            containers.mediaGroup = helper.newDOMobject(containers.stage, 'div', 'mediaGroup');
+            containers.events = helper.newDOMobject(containers.overlay, 'div', 'events');
+            containers.subtitles = helper.newDOMobject(containers.overlay, 'div', 'subtitles');
 
-            // if dimensions haven't been passed, AND no previously stored dimensions were set,
-            // look to behaviour.resizeTo for guidance
-            if(typeof dimensions !== 'object' && resolution.designed.width === null) {
-                // 'media' disabled for now
-                // doesn't work unless video is preloaded and dimensions can be gotten
-                // if (behaviour.resizeTo === 'media') {
-                //     var videoDimensions = media.getDimensions();
-                //
-                //     width = videoDimensions.width;
-                //     height = videoDimensions.height;
-                // }
-                if (behaviour.resizeTo === 'screen') {
-                    width = document.documentElement.clientWidth;
-                    height = document.documentElement.clientHeight;
-                }
+            if(typeof expectedResolution === 'object' && typeof expectedResolution.width === 'number' && typeof expectedResolution.height === 'number') {
+                // if the resolution has been defined, we use the numbers given
+                scaleTo = 'fixed';
+                resolution.width = expectedResolution.width;
+                resolution.height = expectedResolution.height;
+            }
+            else {
+                scaleTo = 'responsive';
+                getClientDimensions();
+                setResizeListener();
             }
 
-            // otherwise look to passed dimensions for guidance
-            if (typeof dimensions === 'object' && resolution.designed.width === null) {
-                resolution.designed.width = dimensions.width;
-                resolution.designed.height = dimensions.height;
-                width = dimensions.width;
-                height = dimensions.height;
-            }
+            resizeContainers();
+        }
 
-            // otherwise look to stored dimensions for guidance
-            else if (dimensions === 'object') {
-                width = resolution.designed.width;
-                height = resolution.designed.height;
-            }
+        function resizeContainers() {
+            for(var container in containers) {
+                if(containers.hasOwnProperty(container)) {
 
-            orientation = function() {
-                if(height > width) {
-                    orientation = 'portrait';
+                    css.style(containers[container], {
+                        width: resolution.width,
+                        height: resolution.height
+                    })
                 }
-                else {
-                    orientation = 'landscape';
-                }
-            };
+            }
+        }
 
-            resolution.current = {
-                width: width,
-                height: height,
-                orientation: orientation
-            };
-
-            css.style(element, {
-                'width': width,
-                'height': height
-            });
-        };
-
-        var resize = function() {
-            setSize(environment.containers.mediaGroup);
-            setSize(environment.containers.overlay);
-        };
-
-        return {
-            setup: setup,
-            reset: function(){
-                //subtitles.reset();
-                events.killAll(function() {
-                    if(container.overlay.firstChild) {
-                        container.overlay.removeChild(container.overlay.firstChild);
+        function repositionEvents() {
+            var activeEvents = environment.containers.events.children;
+            if(activeEvents.length > 0) {
+                for(var i=0; i<activeEvents.length; i++) {
+                    if(typeof activeEvents[i].loomSE.position === 'function') {
+                        activeEvents[i].loomSE.resolution.width = resolution.width;
+                        activeEvents[i].loomSE.resolution.height = resolution.height;
+                        activeEvents[i].loomSE.position();
                     }
-                });
-            },
-            setSize: setSize,
-            resize: resize,
+                }
+            }
+        }
+
+        function setResizeListener() {
+            window.addEventListener("resize", function() {
+                getClientDimensions();
+                resizeContainers();
+                repositionEvents();
+                notify.resize();
+            });
+        }
+
+        return  {
+            initialise: initialise,
             containers: containers,
             resolution: resolution
         }
@@ -704,6 +679,8 @@ var loomSE = (function() {
                     // check if video SHOULD autoplay
                     if(media.object.loomSE_parameters.autoplay === true) {
                         media.play();
+                        // environment.resolution.video.height = media.object.videoHeight;
+                        // environment.resolution.video.height = media.object.videoWidth;
                     }
 
                     //if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
@@ -805,29 +782,45 @@ var loomSE = (function() {
             this.parameters = parameters;
             this.class = parameters.class;
             this.container = helper.newElement('div', id, this.class);
+            this.container.loomSE = {
+                resolution: {
+                    width: environment.resolution.width,
+                    height: environment.resolution.height
+                },
+                parameters: this.parameters,
+                schedule: {
+                    in: this.in,
+                    out: this.out
+                }
+            };
+            this.container.loomSE.parameters.id = this.id;
+            if(typeof this.parameters.x === 'number' && typeof this.parameters.y === 'number') {
+                this.container.loomSE.position = function() {
+
+                    // using a co-ordinate system of %, place objects on screen
+                    var translatedCoords = {
+                            x: this.resolution.width / 100 * this.parameters.x,
+                            y: this.resolution.height / 100 * this.parameters.y
+                        },
+                        thisObject = document.getElementById('loomSE_' + this.parameters.id);
+
+                    console.log(translatedCoords);
+                    thisObject.setAttribute('style', 'position: absolute; left: ' + translatedCoords.x + 'px; ' + 'top: ' + translatedCoords.y + 'px');
+                };
+            }
+            // runs at beginning of event (in time)
             this.run = function() {
                 if(this.state === 'waiting') {
                     this.state = 'fired';
-                    this.container.loomSE_resolution = {
-                        width: environment.resolution.current.width,
-                        height: environment.resolution.current.height
-                    };
-                    this.container.loomSE_parameters = this.parameters;
-                    this.container.loomSE_schedule = {
-                        in: this.in,
-                        out: this.out
-                    };
-                    environment.containers.overlay.appendChild(this.container);
+                    environment.containers.events.appendChild(this.container);
                     callModule.run(this.container, {in: this.in, out:this.out}, this.parameters);
                 }
             };
+            // runs when the event has expired (out time)
             this.stop = function() {
                 if(this.state === 'fired') {
                     this.state = 'expired';
-                    callModule.stop();
-                    this.kill(function() {
-                        environment.containers.overlay.removeChild(this.container);
-                    });
+                    environment.containers.events.removeChild(this.container);
                 }
             };
             this.kill = function(callback) {
@@ -837,7 +830,7 @@ var loomSE = (function() {
                 else {
                     callback();
                 }
-            }
+            };
         };
 
         function schedule(target, array, callback) {
@@ -918,7 +911,7 @@ var loomSE = (function() {
     // we always keep on record the current subtitle to be displayed
     var subtitles = (function() {
         var id = 'subtitle',
-            container = helper.newElement('div', id, 'subtitle'),
+            container = document.createElement('div'),
             element = document.createElement('p'),
             isActive, // boolean which determines whether subtitles are on or off
             subtitlesArray = [], // our array which holds all of the subtitles
@@ -979,14 +972,18 @@ var loomSE = (function() {
 
             // Pull the data from the subtitles file, and also determine what type of file we need to parse
             helper.ajaxRequest(url, null, true, function(data) {
-                rawSubs = data.match(/[^\r\n]+/g);
-                // check the ending characters of the url to determine the type of file
-                if(url.endsWith('srt')) {
-                    srt(rawSubs);
+                if(data !== false) {
+                    rawSubs = data.match(/[^\r\n]+/g);
+                    // check the ending characters of the url to determine the type of file
+                    if(url.endsWith('srt')) {
+                        srt(rawSubs);
+                    }
                 }
                 else {
                     isActive = false;
-                    return 'No valid subtitles found';
+                    if(behaviour.developer.verbose === 'subtitles') {
+                        helper.report('[Subtitle] No valid subtitles found');
+                    }
                 }
             });
         }
@@ -1026,7 +1023,7 @@ var loomSE = (function() {
                     helper.report('[Subtitle] ' + phrase);
                 }
                 element.innerHTML = phrase;
-                environment.containers.overlay.appendChild(container);
+                environment.containers.subtitles.appendChild(container);
                 container.appendChild(element);
             }
         }
@@ -1037,7 +1034,7 @@ var loomSE = (function() {
             function destroy() {
                 if(activeTitle[3] === true){
                     activeTitle[3] = false;
-                    environment.containers.overlay.removeChild(container);
+                    environment.containers.subtitles.removeChild(container);
                 }
             }
 
@@ -1094,48 +1091,6 @@ var loomSE = (function() {
     var media = (function() {
 
         var object = {};
-
-        // // this function shows the poster image for the video
-        // var poster = (function() {
-        //     var id = 'poster',
-        //         container = helper.newElement('div', id),
-        //         customPoster,
-        //         type = 'fade'; //  (beta) type of transition for removing poster - 'slideUp', 'fade'
-        //
-        //     return {
-        //         set: function(image) {
-        //             css.style(container, {
-        //                 height: environment.resolution.current.height,
-        //                 width: environment.resolution.current.width,
-        //                 'background-image': 'url(' + image + ')',
-        //                 position: 'absolute',
-        //                 top: 0,
-        //                 opacity: 1
-        //             });
-        //             environment.containers.overlay.appendChild(container);
-        //             customPoster = true;
-        //         },
-        //         reveal: function() {
-        //             if(customPoster === true) {
-        //                 css.style(container, {
-        //                     top: 0,
-        //                     opacity: 1
-        //                 });
-        //             }
-        //         },
-        //         hide: function() {
-        //             if(customPoster === true && type === 'fade') {
-        //                 css.animate(container, 'opacity', 1, 0, 100, undefined, 100);
-        //             }
-        //             if(customPoster === true && type === 'none') {
-        //                 css.style(container, {
-        //                     top: 0,
-        //                     opacity: 0
-        //                 });
-        //             }
-        //         }
-        //     }
-        // })();
 
         // internal watcher to keep track of the current time - if it stops, we know then that playback has been interrupted
         var poll = (function() {
@@ -1205,19 +1160,14 @@ var loomSE = (function() {
             if(object.paused === false) {
                 poll.end();
                 object.pause();
-                notify.push('Video paused');
-                // if(behaviour.media.showPosterWhenPaused === true) {
-                //     //poster.reveal();
-                // }
+                notify.push('Paused', 'paused');
             }
         }
 
         function play(timecode) {
-            // first pause the media
             poll.end();
             notify.dismiss();
-            //poster.hide();
-            // check if a timecode has been specified, and if it within range
+            // check if a timecode has been specified, and if it is within range
             if(timecode && timecode > 0 && timecode < object.duration) {
                 object.currentTime = timecode;
             }
@@ -1265,13 +1215,17 @@ var loomSE = (function() {
 
                 var element = document.createElement('video'),
                     child1 = document.createElement('source'),
-                    child2 = document.createElement('source'),
-                    width = environment.containers.mediaGroup.offsetWidth,
-                    height = environment.containers.mediaGroup.offsetHeight;
+                    child2 = document.createElement('source');
+                    // width = environment.containers.mediaGroup.offsetWidth,
+                    // height = environment.containers.mediaGroup.offsetHeight;
 
-                element.setAttribute('width', width);
-                element.setAttribute('height', height);
+                // element.setAttribute('width', media.video.width);
+                // element.setAttribute('height', media.video.height);
                 element.setAttribute('id', applicationId + '_video');
+
+                if(typeof environment.width !== 'number') {
+                    element.setAttribute('width', '100%');
+                }
 
                 if(typeof media.video.ogg === 'string') {
                     child1.setAttribute('src', media.video.ogg);
@@ -1285,14 +1239,9 @@ var loomSE = (function() {
                     element.appendChild(child2);
                 }
 
-                // if(media.video.poster !== null) {
-                //     if(behaviour.developer.useAlternativePoster === true) {
-                //         poster.set(media.video.poster);
-                //     }
-                //     else {
-                         element.setAttribute('poster', media.video.poster);
-                //     }
-                // }
+                if(media.video.poster !== null) {
+                    element.setAttribute('poster', media.video.poster);
+                }
 
                 element.loomSE_parameters = {};
 
@@ -1307,7 +1256,6 @@ var loomSE = (function() {
 
                 if(media.video.controls === true) {
                     element.controls = true;
-                    //element.setAttribute('controls', true);
                 }
 
                 if(media.video.autoplay === true) {
@@ -1347,6 +1295,7 @@ var loomSE = (function() {
             else if(media.type === 'video') {
                 object = new Video();
                 container.appendChild(object);
+                //environment.scaleVideo(media.video.width, media.video.height, behaviour.media.scaleVideoTo);
                 callback(object);
             }
             else if(media.type === 'graphic') {
@@ -1407,8 +1356,8 @@ var loomSE = (function() {
             isActive = false;
 
         function position(object) {
-            var availableWidth = environment.resolution.current.width,
-                availableHeight = environment.resolution.current.height;
+            var availableWidth = environment.resolution.width,
+                availableHeight = environment.resolution.height;
 
             css.style(object, {
                 opacity: 0
@@ -1416,7 +1365,7 @@ var loomSE = (function() {
 
             var objWidth = object.offsetWidth,
                 objHeight = object.offsetHeight,
-                x = (availableWidth - objWidth) / 2 ,
+                x = availableWidth / 2,
                 y = (availableHeight - objHeight) / 2;
 
             css.style(object, {
@@ -1429,13 +1378,20 @@ var loomSE = (function() {
         }
 
         return {
-            push: function(message) {
+            resize: function() {
+                position(child);
+            },
+
+            push: function(message, cssClass) {
                 if(isActive === false) {
                     isActive = true;
                     // animate the 'curtain falling' on theatre
 
                     css.animate(environment.containers.stage, 'opacity', 1, 0.2, 200);
                     environment.containers.root.appendChild(container);
+                    if(cssClass) {
+                        child2.setAttribute('class', cssClass);
+                    }
                     container.appendChild(child);
                     child.appendChild(child2);
                 }
@@ -1531,7 +1487,7 @@ var loomSE = (function() {
     };
 
     // our public initialise method, used to initialise our application
-    publicInterface.initialise = function(target, scriptFile, firstScene, callback, resolution) {
+    publicInterface.initialise = function(target, scriptFile, firstScene, resolution, callback) {
         // --
         // Program begins here. Runs once and sets sets up the environment.
         // --
@@ -1544,22 +1500,10 @@ var loomSE = (function() {
             helper.ajaxRequest(scriptFile, 'JSON', true, function(returnedData) {
                 script = returnedData;
 
-                // this doesnt actually do anything yet
-                environment.setup(target);
-
-                environment.resolution.minimum.width = script.settings.minimum_resolution.width; // TODO check value is number
-                environment.resolution.minimum.height = script.settings.minimum_resolution.height;
-
-                // set our environment
-                environment.setSize(environment.containers.mediaGroup, resolution);
-                environment.setSize(environment.containers.overlay, resolution);
-
+                // set up the environment
+                environment.initialise(target, resolution);
                 modules = new loomSE.Modules();
-
                 readScript.setScene(script, firstScene);
-
-                // load gui and listen for gui mouse events
-
                 gui.load();
 
                 if(callback) {
@@ -1567,13 +1511,7 @@ var loomSE = (function() {
                 }
             });
         });
-
-        window.addEventListener("resize", function() {
-            environment.setSize(environment.containers.mediaGroup);
-            environment.setSize(environment.containers.overlay);
-        });
     };
-
     // return just the public parts
     return publicInterface;
 }());

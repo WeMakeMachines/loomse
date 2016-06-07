@@ -10,10 +10,6 @@
     "length": ""
   },
   "settings": {
-    "minimum_resolution": {
-      "width": 640,
-      "height": 480
-    },
     "url": "http://localhost/",
     "language": "english",
     "subtitles": true
@@ -33,7 +29,9 @@
           "loop": true,
           "loop_in": null,
           "loop_out": null,
-          "duration": null
+          "duration": null,
+          "width": 400,
+          "height": 304
         },
         "subtitles": {
           "english": "assets/subtitles/english.srt"
@@ -48,8 +46,8 @@
             "out": 5000
           },
           "parameters": {
-            "x": "10",
-            "y": "10",
+            "x": 11,
+            "y": 10,
             "class": "mediaTime"
           }
         },
@@ -61,8 +59,8 @@
             "out": 10000
           },
           "parameters": {
-            "x": "20",
-            "y": "20",
+            "x": 20,
+            "y": 20,
             "class": "mediaTime"
           }
         },
@@ -74,8 +72,8 @@
             "out": 15000
           },
           "parameters": {
-            "x": "30",
-            "y": "30",
+            "x": 30,
+            "y": 30,
             "class": "mediaTime"
           }
         },
@@ -87,8 +85,8 @@
             "out": 20000
           },
           "parameters": {
-            "x": "80",
-            "y": "80",
+            "x": 80,
+            "y": 80,
             "class": "mediaTime"
           }
         }
