@@ -221,6 +221,10 @@ a, a:link, a:visited, a:hover {
       background: url("../assets/images/app/notify_sprite_paused.png") no-repeat left transparent; }
 
 /* media */
+#loomSE_video {
+  display: block;
+  margin: 0 auto; }
+
 #loomSE_poster {
   z-index: 10;
   background-size: cover;

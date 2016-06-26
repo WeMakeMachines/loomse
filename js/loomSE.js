@@ -13,7 +13,7 @@ var loomSE = (function() {
     // Variables used by the entire app
     var behaviour = {},
         status = {
-            version: '0.34'
+            version: '0.34r'
         },
         script,
         currentScene,
@@ -69,13 +69,12 @@ var loomSE = (function() {
                 minRange = 0;
             }
             // returns a random number between 1 and number
-            return (Math.floor((Math.random() * range)) + minRange);
+            return Math.floor(Math.random() * range) + minRange;
         },
 
         cleanString: function(string) {
             // removes whitespace, and converts to lowercase
-            var cleanedString = string.replace(/[^a-z0-9_]+]/gi, '');
-            return cleanedString.toLowerCase();
+            return string.replace(/\s+/g, '').toLowerCase();
         },
 
         newDOMobject: function(parent, type, id, cssClass, cssProperties) {
@@ -178,7 +177,7 @@ var loomSE = (function() {
                 minutes: addLeadingZero(minutes),
                 seconds: addLeadingZero(seconds),
                 split: split
-            }
+            };
         }
     };
 
@@ -192,16 +191,10 @@ var loomSE = (function() {
                     if(cssProperties.hasOwnProperty(attribute)) {
                         var value = cssProperties[attribute];
 
-                        switch(attribute)
-                        {
-                            case 'width':
-                            case 'height':
-                            case 'top':
-                            case 'left':
-                            case 'right':
-                            case 'bottom':
-                                value = value + 'px';
+                        if(attribute === 'width' || attribute === 'height'  || attribute === 'top' || attribute === 'left' || attribute === 'right' || attribute === 'bottom') {
+                            value = value + 'px';
                         }
+
                         DOMobject.style[attribute] = value;
                     }
                 }
@@ -249,7 +242,7 @@ var loomSE = (function() {
             interrupt: function(interval) {
                 clearInterval(interval);
             }
-        }
+        };
     })();
 
     // Generates and handles the graphical user interface for our media player
@@ -323,10 +316,10 @@ var loomSE = (function() {
                         this.currentStateIndex = 0;
                     }
                     else {
-                        this.currentStateIndex++;
+                        this.currentStateIndex+=1;
                     }
                     this.currentState = states[this.currentStateIndex];
-                }
+                };
             }
         }
 
@@ -461,7 +454,7 @@ var loomSE = (function() {
 
             function listenToChildren(array) {
                 if(typeof array.length === 'number') {
-                    for(var i=0; i < array.length; i++) {
+                    for(var i=0; i < array.length; i+=1) {
 
                         var currentChild = array[i];
 
@@ -504,7 +497,7 @@ var loomSE = (function() {
             },
 
             updateProgressBar: updateProgressBar
-        }
+        };
     })();
 
     // Handles the fullscreen API
@@ -519,7 +512,7 @@ var loomSE = (function() {
         return {
             toggle: toggle,
             state: state
-        }
+        };
     })();
 
     var environment = (function() {
@@ -533,6 +526,7 @@ var loomSE = (function() {
         function getClientDimensions() {
             resolution.width = document.documentElement.clientWidth;
             resolution.height = document.documentElement.clientHeight;
+            console.log(document.documentElement.clientWidth);
         }
 
         function initialise(DOMroot, expectedResolution) {
@@ -566,7 +560,7 @@ var loomSE = (function() {
                     css.style(containers[container], {
                         width: resolution.width,
                         height: resolution.height
-                    })
+                    });
                 }
             }
         }
@@ -574,7 +568,7 @@ var loomSE = (function() {
         function repositionEvents() {
             var activeEvents = environment.containers.events.children;
             if(activeEvents.length > 0) {
-                for(var i=0; i<activeEvents.length; i++) {
+                for(var i=0; i<activeEvents.length; i+=1) {
                     if(typeof activeEvents[i].loomSE.position === 'function') {
                         activeEvents[i].loomSE.resolution.width = resolution.width;
                         activeEvents[i].loomSE.resolution.height = resolution.height;
@@ -597,7 +591,7 @@ var loomSE = (function() {
             initialise: initialise,
             containers: containers,
             resolution: resolution
-        }
+        };
     })();
 
     // Keeps a record of the scenes passed through by the user and provides some control over how to navigate the history
@@ -616,8 +610,7 @@ var loomSE = (function() {
 
             remind: function() {
                 // returns current scene
-                var scene = scenes[scenes.length-1];
-                return scene;
+                return scenes[scenes.length-1];
             },
 
             rewind: function() {
@@ -756,8 +749,7 @@ var loomSE = (function() {
 
     // Handles all the logic for the scene events, for example we handle the schedule for each event here
     var events = (function() {
-        var createEvent,
-            eventQueue = [];
+        var eventQueue = [];
 
         // Constructor function that creates instances of each event
         var Event = function(id, call, ignored, schedule, parameters) {
@@ -803,8 +795,6 @@ var loomSE = (function() {
                             y: this.resolution.height / 100 * this.parameters.y
                         },
                         thisObject = document.getElementById('loomSE_' + this.parameters.id);
-
-                    console.log(translatedCoords);
                     thisObject.setAttribute('style', 'position: absolute; left: ' + translatedCoords.x + 'px; ' + 'top: ' + translatedCoords.y + 'px');
                 };
             }
@@ -838,7 +828,7 @@ var loomSE = (function() {
             // Schedules timed events for each media element
             // --
 
-            for(var i=0; i < array.length; i++){
+            for(var i=0; i < array.length; i+=1){
                 var event = array[i],
                     id = event.call + '_' + i;
 
@@ -884,7 +874,7 @@ var loomSE = (function() {
         }
 
         function reset() {
-            for(var i=0; i < eventQueue.length; i++){
+            for(var i=0; i < eventQueue.length; i+=1){
                 eventQueue[i].state = 'waiting';
             }
         }
@@ -894,7 +884,7 @@ var loomSE = (function() {
         }
 
         function killAll(callback) {
-            for(var i=0; i < eventQueue.length; i++) {
+            for(var i=0; i < eventQueue.length; i+=1) {
                 eventQueue[i].kill(callback);
             }
         }
@@ -903,7 +893,7 @@ var loomSE = (function() {
             schedule: schedule,
             reset: reset,
             killAll: killAll
-        }
+        };
     })();
 
     // Subtitles handling and rendering
@@ -941,7 +931,7 @@ var loomSE = (function() {
                     timeOut,
                     string = '';
 
-                for(var i=0; i < array.length; i++) {
+                for(var i=0; i < array.length; i+=1) {
                     currentRecord = array[i];
                     if(isNaN(currentRecord) === false) {
                         // push old string to array
@@ -962,7 +952,7 @@ var loomSE = (function() {
 
                             return convertToInternalTime(string, [0,2], [3,5], [6,8], [9,12]);
                         }());
-                        i++;
+                        i+=1;
                     }
                     else {
                         string = string + ' ' + currentRecord;
@@ -1005,7 +995,7 @@ var loomSE = (function() {
                     activeTitle = check;
                     activeTitle[3] = true; // set visibility flag to true
                     display(activeTitle[2]); // display subtitle
-                    arrayPosition++;
+                    arrayPosition+=1;
                 }
             }
             else {
@@ -1057,7 +1047,7 @@ var loomSE = (function() {
             remove();
             if(typeof time === 'number' && time !== 0) {
                 // find the next subtitle with the timecode
-                for(i=0; i<(subtitlesArray.length-1); i++) {
+                for(i=0; i<(subtitlesArray.length-1); i+=1) {
                     var currentRecord = subtitlesArray[i];
                     if(time < currentRecord[0]) {
                         arrayPosition = i;
@@ -1084,7 +1074,7 @@ var loomSE = (function() {
                 remove();
                 isActive = false;
             }
-        }
+        };
     })();
 
     // Handles all our media object and requests
@@ -1134,7 +1124,7 @@ var loomSE = (function() {
                 end: function() {
                     clearInterval(pollEvent);
                 }
-            }
+            };
         })();
 
         // external functions and variables
@@ -1215,17 +1205,14 @@ var loomSE = (function() {
 
                 var element = document.createElement('video'),
                     child1 = document.createElement('source'),
-                    child2 = document.createElement('source');
-                    // width = environment.containers.mediaGroup.offsetWidth,
-                    // height = environment.containers.mediaGroup.offsetHeight;
+                    child2 = document.createElement('source'),
+                    dimensions = calcVideoSize(media.video.width, media.video.height, environment.resolution.width, environment.resolution.height);
 
-                // element.setAttribute('width', media.video.width);
-                // element.setAttribute('height', media.video.height);
+                element.setAttribute('width', dimensions.width);
+                element.setAttribute('height', dimensions.height);
                 element.setAttribute('id', applicationId + '_video');
 
-                if(typeof environment.width !== 'number') {
-                    element.setAttribute('width', '100%');
-                }
+                console.log(dimensions);
 
                 if(typeof media.video.ogg === 'string') {
                     child1.setAttribute('src', media.video.ogg);
@@ -1312,25 +1299,45 @@ var loomSE = (function() {
             }
         }
 
-        function getDimensions() {
-            if(object.tagName === 'VIDEO') {
-                var width = object.videoWidth,
-                    height = object.videoHeight;
-
-                return {
-                    width: width,
-                    height: height
-                }
-            }
-            else {
-                return false;
-            }
-        }
-
         function getCurrentTime() {
             if(object.tagName === 'VIDEO' || object.tagName === 'AUDIO') {
                 return object.currentTime;
             }
+        }
+
+        function calcVideoSize(nativeWidth, nativeHeight, hostWidth, hostHeight) {
+
+            var ratio;
+
+            // first see if we need to scale down or up, depending on the size of video
+            // and host device properties
+
+            if(nativeWidth <= hostWidth && nativeHeight <= hostHeight) {
+                // scale up
+
+                // first find out if the video should be scaled up from the
+                // width or the height
+                if((hostWidth / nativeWidth) > (hostHeight / nativeHeight)) {
+                    ratio = hostHeight / nativeHeight;
+                }
+                else {
+                    ratio = hostWidth / nativeWidth;
+                }
+            }
+            else {
+                // scale down
+                if((nativeWidth / hostWidth) > (nativeHeight / hostHeight)) {
+                    ratio = nativeHeight / hostHeight;
+                }
+                else {
+                    ratio = nativeWidth / hostWidth;
+                }
+            }
+
+            return {
+                height: ratio * nativeHeight,
+                width: ratio * nativeWidth
+            };
         }
 
         return {
@@ -1341,9 +1348,8 @@ var loomSE = (function() {
             listen: listen,
             create: create,
             getLength: getLength,
-            getDimensions: getDimensions,
             getCurrentTime: getCurrentTime
-        }
+        };
     })();
 
     // Handles all user friendly notifications
@@ -1447,10 +1453,6 @@ var loomSE = (function() {
             // abandon current scene and load the named scene
 
             return 'Skipped to scene' + sceneName;
-        },
-
-        scaleMedia: function(dimensions, location) {
-            // resizes currently playing media and repositions it
         },
 
         viewportResize: function() {

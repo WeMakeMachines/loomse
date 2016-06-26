@@ -74,9 +74,8 @@
 /* media */
 
 #loomSE_video {
-  //position: absolute;
-  //bottom: 0;
-  //z-index: -1;
+  display: block;
+  margin: 0 auto;
 }
 
 #loomSE_poster {
