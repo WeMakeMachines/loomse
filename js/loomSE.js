@@ -13,7 +13,7 @@ var loomSE = (function() {
     // Variables used by the entire app
     var behaviour = {},
         status = {
-            version: '0.34r'
+            version: '0.4'
         },
         script,
         currentScene,
