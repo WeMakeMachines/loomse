@@ -8,6 +8,11 @@
       "height": 480
     }
   },
+  "settings": {
+    "url": "http://localhost/",
+    "language": "english",
+    "subtitles": true
+  },
   "subtitles": false,
   "developer": {
     "mute": true,
