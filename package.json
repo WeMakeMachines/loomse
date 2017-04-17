@@ -1,0 +1,23 @@
+{
+	"private": true,
+	"name": "loomse",
+	"version": "0.4.0",
+	"description": "Interactive storytelling for the modern web",
+	"scripts": {
+		"build": "./node_modules/.bin/rollup -c"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@bitbucket.org/wemakemachines/loom.git"
+	},
+	"author": "Franco Speziali",
+	"license": "GPL-3.0",
+	"homepage": "http://www.loomse.org/",
+	"dependencies": {},
+	"devDependencies": {
+		"babel-preset-es2015-rollup": "^3.0.0",
+		"rollup": "^0.41.6",
+		"rollup-plugin-babel": "^2.7.1",
+		"rollup-plugin-eslint": "^3.0.0"
+	}
+}

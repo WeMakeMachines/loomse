@@ -4,7 +4,7 @@
 
 var loomSE = (function () {
 
-	// Variables used by the entire app
+	// Variables used by the entire app-src
 	var _behaviour = {},
 		_status = {
 			version: '0.4'
@@ -517,7 +517,7 @@ var loomSE = (function () {
 		}
 
 		function initialise(DOMroot, expectedResolution) {
-			// sets up the DOM environment for our app
+			// sets up the DOM environment for our app-src
 			containers.root = document.getElementById(DOMroot);
 			containers.stage = helper.newDOMobject(containers.root, 'div', 'stage');
 			containers.overlay = helper.newDOMobject(containers.stage, 'div', 'overlay');
