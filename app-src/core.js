@@ -21,8 +21,12 @@ const loomSE = (function () {
 
 		let state;
 
+		/**
+		 * Toggle fullscreen state
+		 *
+		 */
 		function toggle() {
-			console.log('Not implemented yet');
+			report('Not implemented yet');
 		}
 
 		return {
@@ -31,7 +35,11 @@ const loomSE = (function () {
 		};
 	}());
 
-	// Keeps a record of the scenes passed through by the user and provides some control over how to navigate the history
+	/**
+	 * Keeps a record of the scenes passed through by the user,
+	 * and provides some control over how to navigate the history
+	 *
+	 */
 	let history = (function () {
 		let scenes = [];
 		return {
@@ -66,12 +74,13 @@ const loomSE = (function () {
 		};
 	}());
 
-	// Handles the script logic
+	/**
+	 * Handles the script logic;
+	 * a collection of methods that set and process
+	 * the media elements in the Script
+	 *
+	 */
 	let readScript = (function () {
-
-		// --
-		// A collection of methods that set process the media elements in the Script
-		// --
 
 		// Constructor function that creates instances of each scene
 		let Scene = function (title, language, assets) {
@@ -91,12 +100,14 @@ const loomSE = (function () {
 			}());
 		};
 
+		/**
+		 * Processes the current scene
+		 * Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
+		 * Each 'media' type also has a number of events
+		 *
+		 * @param {Object} scene
+		 */
 		function process(scene) {
-			// --
-			// Processes the current scene
-			// --
-			// Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
-			// Each 'media' type also has a number of events
 
 			media.create(scene.container, scene.media, function (playObject) {
 
@@ -124,13 +135,13 @@ const loomSE = (function () {
 					if (media.object.loomSE_parameters.loop === true) {
 						if (media.object.loomSE_parameters.loopIn === 0 && media.object.loomSE_parameters.loopOut === null) {
 							media.object.onended = function (e) {
-								console.log('Looping from end to beginning');
+								report('Looping from end to beginning');
 								environment.reset();
 								events.reset();
 								media.play(0);
 							};
 						} else {
-							console.log('Im going to loop the video from the in and out points defined');
+							report('Im going to loop the video from the in and out points defined');
 							// add loop point as event
 							// for the purposes of our system, in / out points are reversed
 							// (schedule in point is actually loop out point etc)
@@ -156,12 +167,16 @@ const loomSE = (function () {
 			});
 		}
 
+		/**
+		 * Sets the scene
+		 * Runs when a new scene is set from the Script
+		 * Pulls the relevant scene details from the object,
+		 * resets parameters and launches the process() method.
+		 *
+		 * @param {Object} scriptObject
+		 * @param {Object} scene
+		 */
 		function setScene(scriptObject, scene) {
-			// --
-			// Runs when a new scene is set from the Script
-			// Pulls the relevant scene details from the object, resets parameters and launches the process() method.
-			// --
-
 			_currentScene = new Scene(scene, config.behaviour.settings.language, scriptObject.scenes[scene]);
 
 			//check if subtitles should be on
@@ -181,7 +196,11 @@ const loomSE = (function () {
 		};
 	}());
 
-	// Handles all the logic for the scene events, for example we handle the schedule for each event here
+	/**
+	 * Handles all the logic for the scene events,
+	 * for example we handle the schedule for each event here
+	 *
+	 */
 	let events = (function () {
 		let eventQueue = [];
 
@@ -209,12 +228,12 @@ const loomSE = (function () {
 			this.container = newObject('div', { id: id, class: this.class });
 			this.container.loomSE = {
 				resolution: {
-					width: environment.resolution.width,
+					width : environment.resolution.width,
 					height: environment.resolution.height
 				},
 				parameters: this.parameters,
-				schedule: {
-					in: this.in,
+				schedule  : {
+					in : this.in,
 					out: this.out
 				}
 			};
@@ -255,10 +274,14 @@ const loomSE = (function () {
 			};
 		};
 
+		/**
+		 * Schedules timed events for each media element
+		 *
+		 * @param {Object} target ?
+		 * @param {Array} array
+		 * @param {Function} callback
+		 */
 		function schedule(target, array, callback) {
-			// --
-			// Schedules timed events for each media element
-			// --
 
 			for (let i = 0; i < array.length; i += 1) {
 				let event = array[i],
@@ -305,16 +328,29 @@ const loomSE = (function () {
 			callback();
 		}
 
+		/**
+		 * Reset all events back to waiting
+		 *
+		 */
 		function reset() {
 			for (let i = 0; i < eventQueue.length; i += 1) {
 				eventQueue[i].state = 'waiting';
 			}
 		}
 
+		/**
+		 * Report all events
+		 *
+		 */
 		function show() {
-			console.log(eventQueue);
+			report(eventQueue);
 		}
 
+		/**
+		 * Kill all scheduled events
+		 *
+		 * @param {Function} callback
+		 */
 		function killAll(callback) {
 			for (let i = 0; i < eventQueue.length; i += 1) {
 				eventQueue[i].kill(callback);
@@ -323,8 +359,8 @@ const loomSE = (function () {
 
 		return {
 			schedule: schedule,
-			reset: reset,
-			killAll: killAll
+			reset   : reset,
+			killAll : killAll
 		};
 	}());
 
@@ -374,8 +410,8 @@ const loomSE = (function () {
 
 		status: function () {
 			// report stats on media
-			console.log(config);
-			console.log('Current time:' + media.getCurrentTime() + ' / Duration: ' + media.getLength());
+			report(config);
+			report('Current time:' + media.getCurrentTime() + ' / Duration: ' + media.getLength());
 		},
 
 		currentTime: {
