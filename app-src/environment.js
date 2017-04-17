@@ -1,5 +1,5 @@
 import { default as css } from './css';
-import { default as helper } from './helpers';
+import { newObject } from './tools';
 import { default as notify } from './notify';
 
 export default (function () {
@@ -26,11 +26,11 @@ export default (function () {
 	function initialise(DOMroot, expectedResolution) {
 		// sets up the DOM environment
 		containers.root = document.getElementById(DOMroot);
-		containers.stage = helper.newDOMobject(containers.root, 'div', 'stage');
-		containers.overlay = helper.newDOMobject(containers.stage, 'div', 'overlay');
-		containers.mediaGroup = helper.newDOMobject(containers.stage, 'div', 'mediaGroup');
-		containers.events = helper.newDOMobject(containers.overlay, 'div', 'events');
-		containers.subtitles = helper.newDOMobject(containers.overlay, 'div', 'subtitles');
+		containers.stage = newObject('div', { id: 'stage', parent: containers.root });
+		containers.overlay = newObject('div', { id: 'overlay', parent: containers.stage });
+		containers.mediaGroup = newObject('div', { id: 'mediaGroup', parent: containers.stage });
+		containers.events = newObject('div', { id: 'events', parent: containers.overlay });
+		containers.subtitles = newObject('div', { id: 'subtitles', parent: containers.overlay });
 
 		if (typeof expectedResolution === 'object' && typeof expectedResolution.width === 'number' && typeof expectedResolution.height === 'number') {
 			// if the resolution has been defined, we use the numbers given

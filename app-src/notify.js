@@ -2,12 +2,12 @@
 
 import { default as css } from './css';
 import { default as environment } from './environment';
-import { default as helper } from './helpers';
+import { newObject } from './tools';
 
 export default (function () {
 	// lowers 'curtain' on screen and pushes notification
 	let id = 'notify',
-		container = helper.newElement('div', id),
+		container = newObject('div', { id: id }),
 		child = document.createElement('div'),
 		child2 = document.createElement('p'),
 		isActive = false;
@@ -27,10 +27,10 @@ export default (function () {
 
 		css.style(object, {
 			position: 'absolute',
-			display: 'block',
-			left: x,
-			top: y,
-			opacity: 1
+			display : 'block',
+			left    : x,
+			top     : y,
+			opacity : 1
 		});
 	}
 

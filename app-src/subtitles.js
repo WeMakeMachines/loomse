@@ -2,9 +2,9 @@
 // Since subtitles appear in a linear fashion (the next one always follows the previous one),
 // we always keep on record the current subtitle to be displayed
 
+import { ajaxRequest, report } from './tools';
 import { config } from './config';
 import { default as environment } from './environment';
-import { default as helper } from './helpers';
 import { default as media } from './media';
 
 export default (function () {
@@ -68,7 +68,7 @@ export default (function () {
 		}
 
 		// Pull the data from the subtitles file, and also determine what type of file we need to parse
-		helper.ajaxRequest(url, null, true, function (data) {
+		ajaxRequest(url, null, true, function (data) {
 			if (data !== false) {
 				rawSubs = data.match(/[^\r\n]+/g);
 				// check the ending characters of the url to determine the type of file
@@ -78,7 +78,7 @@ export default (function () {
 			} else {
 				isActive = false;
 				if (config.behaviour.developer.verbose === 'subtitles') {
-					helper.report('[Subtitle] No valid subtitles found');
+					report('[Subtitle] No valid subtitles found');
 				}
 			}
 		});
@@ -115,7 +115,7 @@ export default (function () {
 	function display(phrase) {
 		if (isActive === true) {
 			if (config.behaviour.developer.verbose === 'subtitles') {
-				helper.report('[Subtitle] ' + phrase);
+				report('[Subtitle] ' + phrase);
 			}
 			element.innerHTML = phrase;
 			environment.containers.subtitles.appendChild(container);
