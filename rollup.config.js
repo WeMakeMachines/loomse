@@ -1,5 +1,6 @@
 // Rollup plugins
 import babel from 'rollup-plugin-babel';
+import config from './app-src/config';
 import eslint from 'rollup-plugin-eslint';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
@@ -7,11 +8,12 @@ import uglify from 'rollup-plugin-uglify';
 // eslint-disable-next-line
 let environment = process.env.NODE_ENV || 'development',
 	buildArguments = {
-	entry    : 'app-src/core.js',
-	dest     : 'app-build/loomSE-0.4.0.js',
-	format   : 'iife',
-	sourceMap: 'inline',
-	plugins  : [
+	entry     : 'app-src/core.js',
+	dest      : 'app-build/loomSE-0.4.0.js',
+	format    : 'iife',
+	exports   : 'default',
+	moduleName: config.applicationID,
+	plugins   : [
 		babel({
 			exclude: 'node_modules/**'
 		}),
@@ -21,6 +23,10 @@ let environment = process.env.NODE_ENV || 'development',
 		})
 	]
 };
+
+if (environment === 'development') {
+	buildArguments.sourceMap = 'inline';
+}
 
 if (environment === 'production') {
 	buildArguments.plugins.push(

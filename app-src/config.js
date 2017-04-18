@@ -1,4 +1,4 @@
-export const config = {
+const config = {
 	version      : '0.4.0',
 	applicationID: 'loomSE',
 	target       : 'loomSE',
@@ -29,3 +29,11 @@ export const config = {
 		}
 	}
 };
+
+let data = {
+	script      : null,
+	currentScene: null,
+	modules     : null
+};
+
+export { config as default, data };

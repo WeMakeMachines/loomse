@@ -1,8 +1,8 @@
 // Handles all user friendly notifications
 
-import { default as css } from './css';
-import { default as environment } from './environment';
-import { newObject } from './tools';
+import css from './css';
+import { newObject } from './tools/common';
+import view from './view/controller';
 
 export default (function () {
 	// lowers 'curtain' on screen and pushes notification
@@ -13,8 +13,8 @@ export default (function () {
 		isActive = false;
 
 	function position(object) {
-		let availableWidth = environment.resolution.width,
-			availableHeight = environment.resolution.height;
+		let availableWidth = view.resolution.width,
+			availableHeight = view.resolution.height;
 
 		css.style(object, {
 			opacity: 0
@@ -44,8 +44,8 @@ export default (function () {
 				isActive = true;
 				// animate the 'curtain falling' on theatre
 
-				css.animate(environment.containers.stage, 'opacity', 1, 0.2, 200);
-				environment.containers.root.appendChild(container);
+				css.animate(view.containers.stage, 'opacity', 1, 0.2, 200);
+				view.containers.root.appendChild(container);
 				if (cssClass) {
 					child2.setAttribute('class', cssClass);
 				}
@@ -62,8 +62,8 @@ export default (function () {
 		dismiss: function () {
 			if (isActive !== false) {
 				isActive = false; // reset activity flag
-				environment.containers.root.removeChild(container);
-				css.animate(environment.containers.stage, 'opacity', 0.2, 1, 200);
+				view.containers.root.removeChild(container);
+				css.animate(view.containers.stage, 'opacity', 0.2, 1, 200);
 			}
 		}
 	};

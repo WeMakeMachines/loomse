@@ -2,10 +2,10 @@
 // Since subtitles appear in a linear fashion (the next one always follows the previous one),
 // we always keep on record the current subtitle to be displayed
 
-import { ajaxRequest, report } from './tools';
-import { config } from './config';
-import { default as environment } from './environment';
-import { default as media } from './media';
+import { ajaxRequest, report } from './tools/common';
+import config from './config';
+import media from './media';
+import view from './view/controller';
 
 export default (function () {
 	let id = 'subtitle',
@@ -118,7 +118,7 @@ export default (function () {
 				report('[Subtitle] ' + phrase);
 			}
 			element.innerHTML = phrase;
-			environment.containers.subtitles.appendChild(container);
+			view.containers.subtitles.appendChild(container);
 			container.appendChild(element);
 		}
 	}
@@ -129,7 +129,7 @@ export default (function () {
 		function destroy() {
 			if (activeTitle[3] === true) {
 				activeTitle[3] = false;
-				environment.containers.subtitles.removeChild(container);
+				view.containers.subtitles.removeChild(container);
 			}
 		}
 

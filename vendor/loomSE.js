@@ -447,7 +447,7 @@ var loomSE = (function () {
 
 						if (currentChild.mouseOverEvent) {
 
-							// hover events
+							// hover events.js
 							currentChild.addEventListener('mouseover', function () {
 								this.mouseOverEvent();
 							});
@@ -645,7 +645,7 @@ var loomSE = (function () {
 			// Processes the current scene
 			// --
 			// Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
-			// Each 'media' type also has a number of events
+			// Each 'media' type also has a number of events.js
 
 			media.create(scene.container, scene.media, function (playObject) {
 
@@ -700,7 +700,7 @@ var loomSE = (function () {
 					events.schedule(media.object, scene.events, function () {
 					});
 				} else {
-					helper.report('[Events] No events in scene.');
+					helper.report('[Events] No events.js in scene.');
 				}
 			});
 		}
@@ -730,7 +730,7 @@ var loomSE = (function () {
 		};
 	}());
 
-	// Handles all the logic for the scene events, for example we handle the schedule for each event here
+	// Handles all the logic for the scene events.js, for example we handle the schedule for each event here
 	var events = (function () {
 		var eventQueue = [];
 
@@ -806,7 +806,7 @@ var loomSE = (function () {
 
 		function schedule(target, array, callback) {
 			// --
-			// Schedules timed events for each media element
+			// Schedules timed events.js for each media element
 			// --
 
 			for (var i = 0; i < array.length; i += 1) {

@@ -1,6 +1,6 @@
-import { default as css } from './css';
-import { newObject } from './tools';
-import { default as notify } from './notify';
+import css from '../css';
+import { newObject } from '../tools/common';
+import notify from '../notify';
 
 export default (function () {
 	let containers = {},

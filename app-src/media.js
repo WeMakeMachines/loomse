@@ -1,9 +1,9 @@
 // Handles all our media object and requests
 
-import { config } from './config';
-import { default as environment } from './environment';
-import { default as notify } from './notify';
-import { default as subtitles } from './subtitles';
+import config from './config';
+import notify from './notify';
+import subtitles from './subtitles';
+import view from './view/controller';
 
 export default (function () {
 
@@ -132,7 +132,7 @@ export default (function () {
 			let element = document.createElement('video'),
 				child1 = document.createElement('source'),
 				child2 = document.createElement('source'),
-				dimensions = calcVideoSize(media.video.width, media.video.height, environment.resolution.width, environment.resolution.height);
+				dimensions = calcVideoSize(media.video.width, media.video.height, view.resolution.width, view.resolution.height);
 
 			element.setAttribute('width', dimensions.width);
 			element.setAttribute('height', dimensions.height);
@@ -196,7 +196,7 @@ export default (function () {
 			return element;
 		};
 
-		environment.containers.mediaGroup.appendChild(container);
+		view.containers.mediaGroup.appendChild(container);
 
 		if (!callback) {
 			throw 'Expected callback';
@@ -206,7 +206,7 @@ export default (function () {
 		} else if (media.type === 'video') {
 			object = new Video();
 			container.appendChild(object);
-			//environment.scaleVideo(media.video.width, media.video.height, config.behaviour.media.scaleVideoTo);
+			//view.scaleVideo(media.video.width, media.video.height, config.behaviour.media.scaleVideoTo);
 			callback(object);
 		} else if (media.type === 'graphic') {
 			//callback(graphic());

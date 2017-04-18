@@ -1,10 +1,10 @@
 // Generates and handles the graphical user interface for our media player
 
-import { clock, newObject } from './tools';
-import { default as css } from './css';
-import { default as environment } from './environment';
-import { default as media } from './media';
-import { default as subtitles } from './subtitles';
+import { clock, newObject } from './tools/common';
+import css from './css';
+import environment from './view/controller';
+import media from './media';
+import subtitles from './subtitles';
 
 export default (function () {
 
@@ -219,7 +219,7 @@ export default (function () {
 
 					if (currentChild.mouseOverEvent) {
 
-						// hover events
+						// hover events.js
 						currentChild.addEventListener('mouseover', function () {
 							this.mouseOverEvent();
 						});

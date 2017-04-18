@@ -1,5 +1,5 @@
-import { config } from './config';
-import { default as css } from './css';
+import config from '../config';
+import cssLib from '../css';
 
 /**
  * Simplified AJAX call
@@ -104,7 +104,7 @@ export function newObject (type, options, css) {
 	}
 
 	if (css) {
-		css.style(newObject, css); // test for bug here with the reference
+		cssLib.style(newObject, css); // test for bug here with the reference
 	}
 
 	return newObject;
