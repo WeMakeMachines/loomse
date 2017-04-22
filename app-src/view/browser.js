@@ -1,8 +1,9 @@
+
 /**
  * Handles the fullscreen API
  *
  */
-let fullScreen = (function () {
+const fullScreen = (function () {
 
 	let state;
 
@@ -25,8 +26,10 @@ let fullScreen = (function () {
  * and provides some control over how to navigate the history
  *
  */
-let history = (function () {
+const history = (function () {
+
 	let scenes = [];
+
 	return {
 		record: function (object) {
 			// records scene
@@ -59,4 +62,16 @@ let history = (function () {
 	};
 }());
 
-export { fullScreen, history };
+const browser = {
+
+	check: function() {
+		return true;
+	},
+
+	unsupported: function() {
+		//report('Your browser is not supported, sorry');
+	}
+
+};
+
+export { fullScreen, history, browser };

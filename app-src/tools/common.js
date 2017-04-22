@@ -9,7 +9,7 @@ import cssLib from '../css';
  * @param {Function} callback
  *
  */
-export function ajaxRequest (file, fileType, async, callback) {
+const ajaxRequest = function (file, fileType, async, callback) {
 	let data,
 		xmlhttp = new XMLHttpRequest();
 
@@ -30,40 +30,7 @@ export function ajaxRequest (file, fileType, async, callback) {
 
 	xmlhttp.open('GET', file, async);
 	xmlhttp.send();
-}
-
-/**
- * Outputs debugging information
- * @param {String} message
- *
- */
-export function report (message) {
-	if (ENV === 'development') {
-		// eslint-disable-next-line
-		console.log(message);
-	}
-}
-
-/**
- * Returns a random number between minRange and maxRange
- * @param {Number} minRange
- * @param {Number} maxRange
- *
- * @return {Number}
- */
-export function random (minRange, maxRange) {
-	let range = maxRange - minRange;
-
-	if (typeof minRange === 'undefined') {
-		minRange = 0;
-	}
-	if (range <= 0) {
-		range = maxRange;
-		minRange = 0;
-	}
-
-	return Math.floor(Math.random() * range) + minRange;
-}
+};
 
 /**
  * Removes whitespace from a string, and converts to lowercase
@@ -71,44 +38,10 @@ export function random (minRange, maxRange) {
  *
  * @return {String}
  */
-export function cleanString (string) {
+const cleanString = function (string) {
 
 	return string.replace(/\s+/g, '').toLowerCase();
-}
-
-/**
- * Creates a DOM object
- * @param {String} type
- * @param {Object} options
- * @param {Object} css
- *
- * @return {Object}
- */
-export function newObject (type, options, css) {
-
-	//parent, type, id, cssClass, cssProperties
-
-	let newObject = document.createElement(type),
-		newObjectId = config.applicationID + '_' + options.id;
-
-	if (options.parent) {
-		options.parent.appendChild(newObject);
-	}
-
-	if (options.id) {
-		newObject.setAttribute('id', newObjectId);
-	}
-
-	if (options.class) {
-		newObject.setAttribute('class', options.class);
-	}
-
-	if (css) {
-		cssLib.style(newObject, css); // test for bug here with the reference
-	}
-
-	return newObject;
-}
+};
 
 /**
  * Turns seconds into hours, minutes, seconds
@@ -116,7 +49,7 @@ export function newObject (type, options, css) {
  *
  * @return {Object}
  */
-export function clock (timeInSeconds) {
+const clock = function (timeInSeconds) {
 	let remainder = timeInSeconds,
 		hours,
 		minutes,
@@ -178,4 +111,73 @@ export function clock (timeInSeconds) {
 		seconds: addLeadingZero(seconds),
 		split  : split
 	};
-}
+};
+
+/**
+ * Creates a DOM object
+ * @param {String} type
+ * @param {Object} options
+ * @param {Object} css
+ *
+ * @return {Object}
+ */
+const newObject = function (type, options, css) {
+
+	//parent, type, id, cssClass, cssProperties
+
+	let newObject = document.createElement(type),
+		newObjectId = config.applicationID + '_' + options.id;
+
+	if (options.parent) {
+		options.parent.appendChild(newObject);
+	}
+
+	if (options.id) {
+		newObject.setAttribute('id', newObjectId);
+	}
+
+	if (options.class) {
+		newObject.setAttribute('class', options.class);
+	}
+
+	if (css) {
+		cssLib.style(newObject, css); // test for bug here with the reference
+	}
+
+	return newObject;
+};
+
+/**
+ * Returns a random number between minRange and maxRange
+ * @param {Number} minRange
+ * @param {Number} maxRange
+ *
+ * @return {Number}
+ */
+const random = function (minRange, maxRange) {
+	let range = maxRange - minRange;
+
+	if (typeof minRange === 'undefined') {
+		minRange = 0;
+	}
+	if (range <= 0) {
+		range = maxRange;
+		minRange = 0;
+	}
+
+	return Math.floor(Math.random() * range) + minRange;
+};
+
+/**
+ * Outputs debugging information
+ * @param {String} message
+ *
+ */
+const report = function (message) {
+	if (ENV === 'development') {
+		// eslint-disable-next-line
+		console.log(message);
+	}
+};
+
+export { ajaxRequest, cleanString, clock, newObject, random, report };

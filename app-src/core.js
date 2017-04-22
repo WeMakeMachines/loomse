@@ -3,8 +3,8 @@
  *
  */
 import { ajaxRequest, clock, report } from './tools/common';
+import { browser, fullScreen } from './view/browser';
 import { default as config, data } from './config';
-import { fullscreen } from './tools/browser_api';
 import gui from './gui';
 import media from './media';
 import scriptHandler from './model/scriptHandler';
@@ -54,7 +54,7 @@ export default (function () {
 
 		},
 
-		fullScreen: fullscreen.toggle,
+		fullScreen: fullScreen.toggle,
 
 		status: function () {
 			// report stats on media
@@ -89,27 +89,50 @@ export default (function () {
 		 */
 		initialise: function (callback) {
 
+			let validScript;
+
 			// view check : check browser can handle HTML5 events.js
+			if (browser.check() === false) {
+				browser.unsupported();
+				return false;
+			}
+
+			function getScriptData() {
+				ajaxRequest(config.scriptFile, 'JSON', true, function (returnedData) {
+
+					if (typeof returnedData === 'object') {
+
+						data.script = returnedData;
+						data.modules = new loomSE.Modules(); // review this
+						//scriptHandler.setScene(data.script, config.firstScene);
+						//view.initialise(config.target, config.resolution);
+						//gui.load();
+
+						console.log(data.script);
+
+						if (callback) {
+							callback();
+						}
+					} else {
+						report('Script file not found or invalid');
+					}
+				});
+			}
+
 			// begin load screen
 
-			ajaxRequest(config.scriptFile, 'JSON', true, function (returnedData) {
-
-				if (typeof returnedData === 'object') {
-
-					data.script = returnedData;
-					data.modules = new loomSE.Modules(); // review this
-					scriptHandler.setScene(data.script, config.firstScene);
-					view.initialise(config.target, config.resolution);
-					gui.load();
-
-					if (callback) {
-						callback();
-					}
-				} else {
-					report('Script file not found or invalid');
+			validScript = new Promise((resolve, reject) => {
+				if () {
+					resolve();
+				}
+				else () {
+					reject();
 				}
 			});
+
 		}
 	};
+
 	return publicInterface;
+
 }());
