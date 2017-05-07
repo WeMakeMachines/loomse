@@ -64,13 +64,14 @@ const history = (function () {
 
 const browser = {
 
+	/**
+	 * Checks which device is currently being used
+	 *
+	 * @returns {String / Boolean}
+	 */
 	check: function() {
-		return true;
+		return 'desktop';
 	},
-
-	unsupported: function() {
-		//report('Your browser is not supported, sorry');
-	}
 
 };
 

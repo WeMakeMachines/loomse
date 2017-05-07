@@ -1,8 +1,8 @@
 // Handles all user friendly notifications
 
-import css from './css';
-import { newObject } from './tools/common';
-import view from './view/controller';
+import css from '../tools/css';
+import { newObject } from '../tools/common';
+import view from './controller';
 
 export default (function () {
 	// lowers 'curtain' on screen and pushes notification

@@ -1,8 +1,8 @@
 // Generates and handles the graphical user interface for our media player
 
-import { clock, newObject } from './tools/common';
-import css from './css';
-import environment from './view/controller';
+import { clock, newObject } from '../tools/common';
+import css from '../tools/css';
+import view from './controller';
 import media from './media';
 import subtitles from './subtitles';
 
@@ -202,11 +202,11 @@ export default (function () {
 	function load() {
 		appendButtonComponents();
 		updateProgressBar();
-		environment.containers.root.appendChild(container);
+		view.containers.root.appendChild(container);
 	}
 
 	function unload() {
-		environment.containers.root.removeChild(container);
+		view.containers.root.removeChild(container);
 	}
 
 	function listenForEvents() {

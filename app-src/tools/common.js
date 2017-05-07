@@ -1,35 +1,45 @@
 import config from '../config';
-import cssLib from '../css';
+import cssLib from './css';
 
 /**
  * Simplified AJAX call
- * @param {String} file
- * @param {String} fileType
- * @param {Boolean} async
- * @param {Function} callback
+ * @param {String} url
+ * @param {String} type
  *
+ * @return {Promise}
  */
-const ajaxRequest = function (file, fileType, async, callback) {
-	let data,
-		xmlhttp = new XMLHttpRequest();
+const ajaxRequest = function (url, type) {
 
-	xmlhttp.onreadystatechange = function () {
-		if (xmlhttp.readyState === 4) {
-			if (xmlhttp.status === 200) {
-				if (fileType === 'JSON') {
-					data = JSON.parse(xmlhttp.responseText);
-				} else {
-					data = xmlhttp.responseText;
+	return new Promise((resolve, reject) => {
+
+		let xmlHTTP = new XMLHttpRequest();
+
+		xmlHTTP.open('GET', url);
+		xmlHTTP.send();
+
+		xmlHTTP.onload = function() {
+
+			if (xmlHTTP.status === 200) {
+				switch (type) {
+					case 'JSON':
+						resolve(JSON.parse(xmlHTTP.responseText));
+						break;
+					default:
+						resolve(xmlHTTP.status);
+						break;
 				}
-				callback(data);
 			} else {
-				callback(false);
+				reject(xmlHTTP.status);
 			}
-		}
-	};
 
-	xmlhttp.open('GET', file, async);
-	xmlhttp.send();
+		};
+
+		xmlHTTP.onerror = function() {
+			reject(report('File or network error'));
+		};
+
+	});
+
 };
 
 /**
@@ -122,22 +132,37 @@ const clock = function (timeInSeconds) {
  * @return {Object}
  */
 const newObject = function (type, options, css) {
+	let newObject,
+		id = config.appRoot;
 
-	//parent, type, id, cssClass, cssProperties
+	if (!type) { type = 'div'; }
 
-	let newObject = document.createElement(type),
-		newObjectId = config.applicationID + '_' + options.id;
+	newObject = document.createElement(type);
 
-	if (options.parent) {
-		options.parent.appendChild(newObject);
-	}
+	if (options) {
+		if (options.id) {
+			id = id + '_' + options.id;
+		}
 
-	if (options.id) {
-		newObject.setAttribute('id', newObjectId);
-	}
+		if (options.id || options.root) {
+			newObject.setAttribute('id', id);
+		}
 
-	if (options.class) {
-		newObject.setAttribute('class', options.class);
+		if (options.class) {
+			newObject.setAttribute('class', options.class);
+		}
+
+		if (options.parent) {
+			options.parent.appendChild(newObject);
+		}
+
+		if (options.attributes && Array.isArray(options.attributes)) {
+			for(let i = 0; i < options.attributes.length; i++) {
+				let property = options.attributes[i][0],
+					value = options.attributes[i][1];
+				newObject.setAttribute(property, value);
+			}
+		}
 	}
 
 	if (css) {
@@ -180,4 +205,4 @@ const report = function (message) {
 	}
 };
 
-export { ajaxRequest, cleanString, clock, newObject, random, report };
+export { ajaxRequest, cleanString, clock, newObject, random, report, urlExists };

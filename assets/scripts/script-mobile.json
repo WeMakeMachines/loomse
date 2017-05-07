@@ -13,16 +13,20 @@
       "long_name": "",
       "media": {
         "type": "video",
+        "loop": [
+          true,
+          {
+            "in": null,
+            "out": null
+          }
+        ],
+        "autoplay": false,
+        "controls": false,
+        "muted": false,
+        "poster": "assets/images/app/default-poster.png",
         "video": {
-          "ogg": "assets/video/TvTestCard.ogg",
-          "mp4": "assets/video/TvTestCard_512kb.mp4",
-          "poster": "assets/images/app/default-poster.png",
-          "autoplay": false,
-          "controls": false,
-          "muted": false,
-          "loop": true,
-          "loop_in": null,
-          "loop_out": null,
+          "ogg": "assets/videos/TvTestCard.ogv",
+          "mp4": "assets/videos/TvTestCard_512kb.mp4",
           "duration": null,
           "width": 400,
           "height": 304

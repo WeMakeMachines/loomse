@@ -4,9 +4,10 @@
  *
  */
 
-import { default as config, data } from '../config';
 import { newObject, report } from '../tools/common';
-import media from '../media';
+import config from '../config';
+import data from './data';
+import media from '../view/media';
 import view from '../view/controller';
 
 const events = (function () {

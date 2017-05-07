@@ -8,11 +8,11 @@ import uglify from 'rollup-plugin-uglify';
 // eslint-disable-next-line
 let environment = process.env.NODE_ENV || 'development',
 	buildArguments = {
-	entry     : 'app-src/core.js',
+	entry     : 'app-src/base.js',
 	dest      : 'app-build/loomSE-0.4.0.js',
 	format    : 'iife',
 	exports   : 'default',
-	moduleName: config.applicationID,
+	moduleName: config.appName,
 	plugins   : [
 		babel({
 			exclude: 'node_modules/**'

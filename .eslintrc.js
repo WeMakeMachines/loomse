@@ -53,7 +53,6 @@ module.exports = {
         "consistent-this": "error",
         "curly": "error",
         "default-case": "error",
-        "dot-location": "error",
         "dot-notation": [
             "error",
             {
@@ -106,7 +105,12 @@ module.exports = {
         "max-nested-callbacks": "error",
         "max-params": "off",
         "max-statements": "off",
-        "max-statements-per-line": "error",
+        "max-statements-per-line": [
+            "error",
+            {
+                "max": 2
+            }
+        ],
         "multiline-ternary": "error",
         "new-cap": "error",
         "new-parens": "error",
@@ -286,9 +290,10 @@ module.exports = {
         "valid-jsdoc": [
         	"error",
 	        {
-	        	"requireReturn": false,
+		        "requireReturn": false,
 		        "requireParamDescription": false,
-		        "requireReturnDescription": false
+		        "requireReturnDescription": false,
+	        	"prefer": { "return": "returns" }
 	        }
         ],
         "vars-on-top": "error",

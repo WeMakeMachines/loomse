@@ -1,9 +1,15 @@
-import css from '../css';
+import config from '../config';
+import css from '../tools/css';
+import media from './media';
 import { newObject } from '../tools/common';
-import notify from '../notify';
+import notify from './notify';
 
 export default (function () {
-	let containers = {},
+	let containers = {
+			root   : null,
+			stage  : newObject('div', { id: 'stage' }),
+			overlay: newObject('div', { id: 'overlay' })
+		},
 		resolution = {
 			width : null,
 			height: null
@@ -20,17 +26,34 @@ export default (function () {
 	}
 
 	/**
-	 * Initialises the environment
+	 * Sets up the DOM in browser
 	 *
 	 */
-	function initialise(DOMroot, expectedResolution) {
-		// sets up the DOM environment
-		containers.root = document.getElementById(DOMroot);
-		containers.stage = newObject('div', { id: 'stage', parent: containers.root });
-		containers.overlay = newObject('div', { id: 'overlay', parent: containers.stage });
-		containers.mediaGroup = newObject('div', { id: 'mediaGroup', parent: containers.stage });
-		containers.events = newObject('div', { id: 'events', parent: containers.overlay });
-		containers.subtitles = newObject('div', { id: 'subtitles', parent: containers.overlay });
+	function initialise() {
+
+		if (config.appRoot) {
+			containers.root = document.getElementById(config.appRoot);
+		} else {
+			return false;
+		}
+
+		// if ID can't be found, create root
+		if (containers.root !== null || containers.root !== undefined) {
+			containers.root = newObject('div', { root: true });
+			document.body.appendChild(containers.root);
+		}
+
+		containers.root
+			.appendChild(containers.stage);
+
+		containers.root
+			.appendChild(containers.overlay);
+
+		containers.stage
+			.appendChild(media.container);
+
+		//containers.events = newObject('div', { id: 'events', parent: containers.overlay });
+		//containers.subtitles = newObject('div', { id: 'subtitles', parent: containers.overlay });
 
 		if (typeof expectedResolution === 'object' && typeof expectedResolution.width === 'number' && typeof expectedResolution.height === 'number') {
 			// if the resolution has been defined, we use the numbers given
@@ -44,6 +67,8 @@ export default (function () {
 		}
 
 		resizeContainers();
+
+		return true;
 	}
 
 	function resizeContainers() {

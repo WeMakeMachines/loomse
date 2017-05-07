@@ -3,10 +3,11 @@
  *
  */
 import { ajaxRequest, clock, report } from './tools/common';
-import { browser, fullScreen } from './view/browser';
-import { default as config, data } from './config';
-import gui from './gui';
-import media from './media';
+import { browser, fullScreen } from './tools/browser';
+import config from './config';
+import data from './model/data';
+import gui from './view/gui';
+import media from './view/media';
 import scriptHandler from './model/scriptHandler';
 import view from './view/controller';
 
@@ -16,7 +17,7 @@ export default (function () {
 	 * The public interface
 	 *
 	 */
-	let publicInterface = {
+	return {
 		// namespace for our external modules
 		Modules: function () {
 		},
@@ -86,53 +87,51 @@ export default (function () {
 		 * Our public initialise method, used to initialise our application
 		 * @param {Function} callback - callback to run after script processing
 		 *
+		 * @return {Boolean} returns false and halts script if conditions are not met
 		 */
 		initialise: function (callback) {
 
-			let validScript;
+			let scriptSrc,
+				deviceType = browser.check(),
+				validateDOM,
+				validateScript;
 
-			// view check : check browser can handle HTML5 events.js
-			if (browser.check() === false) {
-				browser.unsupported();
-				return false;
+			switch (deviceType) {
+				case 'mobile':
+					scriptSrc = config.scripts.mobile;
+					break;
+				case 'desktop':
+					scriptSrc = config.scripts.desktop;
+					break;
+				default:
+					report('Your browser is not supported.');
+					return false;
 			}
 
-			function getScriptData() {
-				ajaxRequest(config.scriptFile, 'JSON', true, function (returnedData) {
-
-					if (typeof returnedData === 'object') {
-
-						data.script = returnedData;
-						data.modules = new loomSE.Modules(); // review this
-						//scriptHandler.setScene(data.script, config.firstScene);
-						//view.initialise(config.target, config.resolution);
-						//gui.load();
-
-						console.log(data.script);
-
-						if (callback) {
-							callback();
-						}
-					} else {
-						report('Script file not found or invalid');
-					}
-				});
-			}
-
-			// begin load screen
-
-			validScript = new Promise((resolve, reject) => {
-				if () {
-					resolve();
-				}
-				else () {
-					reject();
-				}
+			validateDOM = new Promise(function (resolve) {
+				resolve(view.initialise());
 			});
+			validateScript = ajaxRequest(scriptSrc, 'JSON');
+
+			Promise.all([validateDOM, validateScript])
+				.then((values) => {
+					data.script = values[1];
+					data.modules = new loomSE.Modules();
+					scriptHandler.initialise(data.script);
+					//gui.load();
+					if (callback) {
+						callback();
+					}
+				})
+				.catch((reason) => {
+					report('Unable to initialise. Please check your configuration files.');
+					report(reason);
+					return false;
+				});
+
+			return true;
 
 		}
 	};
-
-	return publicInterface;
 
 }());

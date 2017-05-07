@@ -1,11 +1,14 @@
 const config = {
-	version      : '0.4.0',
-	applicationID: 'loomSE',
-	target       : 'loomSE',
-	scriptFile   : 'assets/scripts/script-desktop.json',
-	firstScene   : 'intro',
-	resolution   : false,
-	behaviour    : {
+	version: '0.4.0',
+	appName: 'loomSE',
+	appRoot: 'loomSE',
+	scripts: {
+		mobile : 'assets/scripts/script-mobile.json',
+		desktop: 'assets/scripts/script-desktop.json'
+	},
+	firstScene: 'intro',
+	resolution: false,
+	behaviour : {
 		media: {
 			timeEventResolution : 0.4,
 			showPosterWhenPaused: false,
@@ -30,10 +33,4 @@ const config = {
 	}
 };
 
-let data = {
-	script      : null,
-	currentScene: null,
-	modules     : null
-};
-
-export { config as default, data };
+export { config as default };
