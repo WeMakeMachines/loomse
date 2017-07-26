@@ -1,18 +1,23 @@
 @font-face {
   font-family: 'Roboto';
   src: url("../assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); }
+
 @font-face {
   font-family: 'Roboto-Italic';
   src: url("../assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); }
+
 @font-face {
   font-family: 'Roboto-Light';
   src: url("../assets/fonts/Roboto/Roboto-Light.ttf") format("truetype"); }
+
 @font-face {
   font-family: 'Roboto-Medium';
   src: url("../assets/fonts/Roboto/Roboto-Medium.ttf") format("truetype"); }
+
 @font-face {
   font-family: 'Roboto-Bold';
   src: url("../assets/fonts/Roboto/Roboto-Bold.ttf") format("truetype"); }
+
 * {
   box-sizing: border-box; }
 
@@ -218,7 +223,7 @@ a, a:link, a:visited, a:hover {
       padding-left: 61px;
       margin-left: -61px; }
     #loomSE #loomSE_notify p.paused {
-      background: url("../../assets/images/app/notify_sprite_paused.png") no-repeat left transparent; }
+      background: url("/assets/images/app/notify_sprite_paused.png") no-repeat left transparent; }
 
 /* media */
 #loomSE_video {
@@ -237,5 +242,3 @@ div.mediaTime span {
   font-weight: bold;
   color: white;
   background-color: darkred; }
-
-/*# sourceMappingURL=master.css.map */

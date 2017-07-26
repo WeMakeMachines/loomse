@@ -1,26 +1,29 @@
 {
-	"private": true,
-	"name": "loomse",
-	"version": "0.4.0",
-	"description": "Interactive storytelling for the modern web",
-	"scripts": {
-		"dev" : "./node_modules/.bin/rollup -c",
-		"prod": "NODE_ENV=production ./node_modules/.bin/rollup -c"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+ssh://git@bitbucket.org/wemakemachines/loom.git"
-	},
-	"author": "Franco Speziali",
-	"license": "GPL-3.0",
-	"homepage": "http://www.loomse.org/",
-	"dependencies": {},
-	"devDependencies": {
-		"babel-preset-es2015-rollup": "^3.0.0",
-		"rollup": "^0.41.6",
-		"rollup-plugin-babel": "^2.7.1",
-		"rollup-plugin-eslint": "^3.0.0",
-		"rollup-plugin-replace": "^1.1.1",
-		"rollup-plugin-uglify": "^1.0.1"
-	}
+  "private": true,
+  "name": "loomse",
+  "version": "0.4.0",
+  "description": "Interactive storytelling for the modern web",
+  "scripts": {
+    "scss": "./node_modules/.bin/node-sass --include-path scss styles/master.scss styles/master.css",
+    "dev": "./node_modules/.bin/rollup -c --watch",
+    "prod": "NODE_ENV=production ./node_modules/.bin/rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/wemakemachines/loom.git"
+  },
+  "author": "Franco Speziali",
+  "license": "GPL-3.0",
+  "homepage": "http://www.loomse.org/",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "node-sass": "^4.5.3",
+    "rollup": "^0.41.6",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-eslint": "^3.0.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-uglify": "^1.0.1",
+    "rollup-watch": "^4.3.1"
+  }
 }
