@@ -49,7 +49,6 @@ module.exports = {
             "error",
             "never"
         ],
-        "consistent-return": "error",
         "consistent-this": "error",
         "curly": "error",
         "default-case": "error",
@@ -191,7 +190,6 @@ module.exports = {
         "no-template-curly-in-string": "error",
         "no-ternary": "error",
         "no-throw-literal": "off",
-        "no-trailing-spaces": "error",
         "no-undef-init": "error",
         "no-undefined": "off",
         "no-underscore-dangle": "off",

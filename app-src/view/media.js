@@ -1,14 +1,14 @@
 // Handles all our media object and requests
 
-import { ajaxRequest, newObject, report } from '../tools/common';
-import config from '../config';
-import notify from './notify';
-import subtitles from './subtitles';
+import { ajaxRequest, newObject } from '../tools/common';
+
+let mediaObject = {};
+
+const MILLISECONDS_IN_SECONDS = 1000;
 
 export default (function () {
 
-	let container = newObject('div', { id: 'mediaGroup' }),
-		mediaObject = {};
+	let container = newObject('div', { id: 'mediaGroup' });
 
 	/**
 	 * Creates a media object and posts it to the DOM
@@ -16,11 +16,10 @@ export default (function () {
 	 * @param {Object} media
 	 * @param {Function} callback
 	 *
-	 * @returns {Boolean}
 	 */
 	function initialise(media, callback) {
 
-		mediaObject = {};
+		let initialised;
 
 		switch (media.type) {
 			case 'video':
@@ -29,21 +28,23 @@ export default (function () {
 					.setSources()
 					.setDimensions(800, 800);
 
+				initialised = true;
 				break;
 
 			case 'audio':
 				mediaObject = new Audio(media);
+				initialised = true;
 				break;
 
 			default:
-				return false;
+				initialised = false;
 		}
 
 		container.appendChild(mediaObject.element);
 
-		if (callback) {	callback();	}
+		listenToMediaEvents();
 
-		return true;
+		callback(initialised, media.autoplay);
 	}
 
 	/**
@@ -189,6 +190,15 @@ export default (function () {
 	}
 
 	/**
+	 * Returns current play position of media object
+	 *
+	 * @returns {Number}
+	 */
+	function getCurrentTime() {
+		return mediaObject.element.currentTime * MILLISECONDS_IN_SECONDS;
+	}
+
+	/**
 	 * Returns length of media object
 	 *
 	 * @returns {Number}
@@ -198,12 +208,12 @@ export default (function () {
 	}
 
 	/**
-	 * Returns current play position of media object
+	 * Returns length of media object
 	 *
 	 * @returns {Number}
 	 */
-	function getCurrentTime() {
-		return mediaObject.element.currentTime;
+	function getState() {
+		return mediaObject.state;
 	}
 
 	/**
@@ -230,151 +240,50 @@ export default (function () {
 
 	}
 
-	/////// old code below this line
+	/**
+	 *
+	 */
+	function listenToMediaEvents() {
+		let events = [
+			'playing',
+			'paused',
+			'seeking',
+			'seeked',
+			'timeupdate',
+			'ended'
+		];
 
-	// function calcVideoSize(nativeWidth, nativeHeight, hostWidth, hostHeight) {
-	//
-	// 	let ratio;
-	//
-	// 	// first see if we need to scale down or up, depending on the size of video
-	// 	// and host device properties
-	//
-	// 	if (nativeWidth <= hostWidth && nativeHeight <= hostHeight) {
-	// 		// scale up
-	//
-	// 		// first find out if the video should be scaled up from the
-	// 		// width or the height
-	// 		if (hostWidth / nativeWidth > hostHeight / nativeHeight) {
-	// 			ratio = hostHeight / nativeHeight;
-	// 		} else {
-	// 			ratio = hostWidth / nativeWidth;
-	// 		}
-	// 	} else {
-	// 		// scale down
-	// 		if (nativeWidth / hostWidth > nativeHeight / hostHeight) {
-	// 			ratio = nativeHeight / hostHeight;
-	// 		} else {
-	// 			ratio = nativeWidth / hostWidth;
-	// 		}
-	// 	}
-	//
-	// 	return {
-	// 		height: ratio * nativeHeight,
-	// 		width : ratio * nativeWidth
-	// 	};
-	// }
-	//
-	// let object = {};
-	//
-	// // internal watcher to keep track of the current time - if it stops, we know then that playback has been interrupted
-	// let poll = (function () {
-	// 	let pollEvent,
-	// 		pollInterval = 300,
-	// 		playbackStopEvents = 0,
-	// 		playBackStopState = false;
-	//
-	// 	return {
-	// 		run: function (object) {
-	// 			let oldTime = object.currentTime,
-	// 				newTime;
-	//
-	// 			pollEvent = setInterval(function () {
-	// 				newTime = object.currentTime;
-	// 				// perform analysis
-	// 				if (oldTime !== newTime) {
-	// 					// all ok
-	// 					if (playBackStopState === true) {
-	// 						playBackStopState = false;
-	// 						notify.dismiss();
-	// 					}
-	// 					oldTime = newTime;
-	// 				} else {
-	// 					// else do this if playback has stopped
-	// 					if (config.behaviour.developer.verbose === 'full' || config.behaviour.developer.verbose === 'minimal') {
-	// 						report('[Poll] Video has stopped playing.');
-	// 					}
-	// 					if (playBackStopState === false) { // check if it hasn't stopped before
-	// 						if (config.behaviour.developer.verbose === 'full' || config.behaviour.developer.verbose === 'minimal') {
-	// 							report('[Poll] This is the first time the video has stopped without user input.');
-	// 						}
-	// 						playbackStopEvents = playbackStopEvents + 1;
-	// 					}
-	// 					playBackStopState = true;
-	// 					notify.push('Buffering');
-	// 				}
-	// 			}, pollInterval);
-	// 		},
-	// 		end: function () {
-	// 			clearInterval(pollEvent);
-	// 		}
-	// 	};
-	// }());
-	//
-	// // external functions and variables
-	//
-	// function target(sceneId) {
-	// 	let parent = document.getElementById(sceneId),
-	// 		media = parent.media,
-	// 		selection;
-	// 	switch (media) {
-	// 		case 'video':
-	// 			selection = document.querySelector('video');
-	// 			break;
-	// 		case 'audio':
-	// 			selection = document.querySelector('audio');
-	// 			break;
-	// 		default:
-	// 			break;
-	// 	}
-	// 	return selection;
-	// }
-	//
-	// function pause() {
-	// 	if (object.paused === false) {
-	// 		poll.end();
-	// 		object.pause();
-	// 		notify.push('Paused', 'paused');
-	// 	}
-	// }
-	//
-	// function play(timecode) {
-	// 	poll.end();
-	// 	notify.dismiss();
-	// 	// check if a timecode has been specified, and if it is within range
-	// 	if (timecode && timecode > 0 && timecode < object.duration) {
-	// 		object.currentTime = timecode;
-	// 	}
-	// 	object.play();
-	// 	poll.run(object);
-	//
-	// 	// everytime the timecode changes, the following series of actions are taken:
-	// 	//  - check to see if any subtitle needs displaying
-	// 	//  - check to see if a scene event needs to be fired
-	// 	//  - update progress bar
-	// 	object.ontimeupdate = function () {
-	// 		// I begin my watch...
-	// 		subtitles.check(object.currentTime);
-	// 		//gui.updateProgressBar();
-	// 	};
-	// }
-	//
-	// function listen(callback) {
-	// 	// add an event listener
-	//
-	// 	object.addEventListener('timeupdate', function () {
-	// 		callback(object.currentTime);
-	// 	});
-	// }
+		for (let i = 0; i < events.length; i += 1) {
+			let event = events[i];
+
+			mediaObject.element.addEventListener(event, () => {
+				broadcastMediaState(event);
+			});
+		}
+	}
+
+	/**
+	 * Sends a custom event message with the media state
+	 * @param {String} state
+	 */
+	function broadcastMediaState(state) {
+		let event = new CustomEvent('media:state:change', { detail:
+			{
+				state: state,
+				time : getCurrentTime()
+			}
+		});
+
+		container.dispatchEvent(event);
+	}
 
 	return {
 		container     : container,
 		initialise    : initialise,
 		play          : play,
 		pause         : pause,
+		getCurrentTime: getCurrentTime,
 		getLength     : getLength,
-		getCurrentTime: getCurrentTime
-		// target        : target,
-		// listen        : listen,
-		//object        : object,
+		getState      : getState
 	};
 }());

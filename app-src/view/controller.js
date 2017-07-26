@@ -1,4 +1,4 @@
-import config from '../config';
+import config from '../configs/config';
 import css from '../tools/css';
 import media from './media';
 import { newObject } from '../tools/common';
@@ -27,7 +27,7 @@ export default (function () {
 
 	/**
 	 * Sets up the DOM in browser
-	 *
+	 * @returns {Boolean}
 	 */
 	function initialise() {
 
@@ -51,6 +51,8 @@ export default (function () {
 
 		containers.stage
 			.appendChild(media.container);
+
+		//console.log(containers);
 
 		//containers.events = newObject('div', { id: 'events', parent: containers.overlay });
 		//containers.subtitles = newObject('div', { id: 'subtitles', parent: containers.overlay });

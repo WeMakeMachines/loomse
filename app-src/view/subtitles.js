@@ -3,7 +3,7 @@
 // we always keep on record the current subtitle to be displayed
 
 import { ajaxRequest, report } from '../tools/common';
-import config from '../config';
+import config from '../configs/config';
 import media from './media';
 import view from './controller';
 
@@ -151,7 +151,7 @@ export default (function () {
 		remove();
 		if (typeof time === 'number' && time !== 0) {
 			// find the next subtitle with the timecode
-			for (i = 0; i < subtitlesArray.length - 1; i += 1) {
+			for (let i = 0; i < subtitlesArray.length - 1; i += 1) {
 				let currentRecord = subtitlesArray[i];
 				if (time < currentRecord[0]) {
 					arrayPosition = i;
@@ -164,12 +164,12 @@ export default (function () {
 	}
 
 	return {
-		parse: parse, // parse subtitle file
-		check: check, // check if next subtitle is ready to be displayed
+		parse  : parse, // parse subtitle file
+		check  : check, // check if next subtitle is ready to be displayed
 		display: display, // show the subtitle
-		remove: remove, // remove existing subtitle
-		reset: reset, // reset subtitles (fixes to current time index)
-		on: function () {
+		remove : remove, // remove existing subtitle
+		reset  : reset, // reset subtitles (fixes to current time index)
+		on     : function () {
 			reset(media.object.currentTime);
 			isActive = true;
 		},

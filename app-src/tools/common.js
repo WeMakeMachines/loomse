@@ -1,4 +1,4 @@
-import config from '../config';
+import config from '../configs/config';
 import cssLib from './css';
 
 /**
@@ -6,7 +6,7 @@ import cssLib from './css';
  * @param {String} url
  * @param {String} type
  *
- * @return {Promise}
+ * @returns {Promise}
  */
 const ajaxRequest = function (url, type) {
 
@@ -46,7 +46,7 @@ const ajaxRequest = function (url, type) {
  * Removes whitespace from a string, and converts to lowercase
  * @param {String} string
  *
- * @return {String}
+ * @returns {String}
  */
 const cleanString = function (string) {
 
@@ -57,7 +57,7 @@ const cleanString = function (string) {
  * Turns seconds into hours, minutes, seconds
  * @param {Number} timeInSeconds
  *
- * @return {Object}
+ * @returns {Object}
  */
 const clock = function (timeInSeconds) {
 	let remainder = timeInSeconds,
@@ -70,7 +70,7 @@ const clock = function (timeInSeconds) {
 	 * Normalises time display by adding a leading zero
 	 * @param {Number} number
 	 *
-	 * @return {String}
+	 * @returns {String}
 	 */
 	function addLeadingZero(number) {
 		let string = number.toString();
@@ -129,7 +129,7 @@ const clock = function (timeInSeconds) {
  * @param {Object} options
  * @param {Object} css
  *
- * @return {Object}
+ * @returns {Object}
  */
 const newObject = function (type, options, css) {
 	let newObject,
@@ -157,7 +157,7 @@ const newObject = function (type, options, css) {
 		}
 
 		if (options.attributes && Array.isArray(options.attributes)) {
-			for(let i = 0; i < options.attributes.length; i++) {
+			for (let i = 0; i < options.attributes.length; i += 1) {
 				let property = options.attributes[i][0],
 					value = options.attributes[i][1];
 				newObject.setAttribute(property, value);
@@ -177,7 +177,7 @@ const newObject = function (type, options, css) {
  * @param {Number} minRange
  * @param {Number} maxRange
  *
- * @return {Number}
+ * @returns {Number}
  */
 const random = function (minRange, maxRange) {
 	let range = maxRange - minRange;
@@ -205,4 +205,4 @@ const report = function (message) {
 	}
 };
 
-export { ajaxRequest, cleanString, clock, newObject, random, report, urlExists };
+export { ajaxRequest, cleanString, clock, newObject, random, report };

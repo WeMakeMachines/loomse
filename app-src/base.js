@@ -4,12 +4,13 @@
  */
 import { ajaxRequest, clock, report } from './tools/common';
 import { browser, fullScreen } from './tools/browser';
-import config from './config';
-import data from './model/data';
-import gui from './view/gui';
+import { data, initialiseDataObject } from './model/data';
+import config from './configs/config';
 import media from './view/media';
 import scriptHandler from './model/scriptHandler';
 import view from './view/controller';
+
+const VERSION = '0.4.0';
 
 export default (function () {
 
@@ -87,14 +88,14 @@ export default (function () {
 		 * Our public initialise method, used to initialise our application
 		 * @param {Function} callback - callback to run after script processing
 		 *
-		 * @return {Boolean} returns false and halts script if conditions are not met
+		 * @returns {Boolean} returns false and halts script if conditions are not met
 		 */
 		initialise: function (callback) {
 
 			let scriptSrc,
 				deviceType = browser.check(),
-				validateDOM,
-				validateScript;
+				checkDOM,
+				receiveScript;
 
 			switch (deviceType) {
 				case 'mobile':
@@ -108,15 +109,17 @@ export default (function () {
 					return false;
 			}
 
-			validateDOM = new Promise(function (resolve) {
+			checkDOM = new Promise(function (resolve) {
 				resolve(view.initialise());
 			});
-			validateScript = ajaxRequest(scriptSrc, 'JSON');
+			receiveScript = ajaxRequest(scriptSrc, 'JSON');
 
-			Promise.all([validateDOM, validateScript])
+			initialiseDataObject();
+
+			Promise.all([checkDOM, receiveScript])
 				.then((values) => {
 					data.script = values[1];
-					data.modules = new loomSE.Modules();
+					//data.modules = new loomSE.Modules();
 					scriptHandler.initialise(data.script);
 					//gui.load();
 					if (callback) {
@@ -124,13 +127,10 @@ export default (function () {
 					}
 				})
 				.catch((reason) => {
-					report('Unable to initialise. Please check your configuration files.');
+					report('Oops! Something went wrong. This experience will not work correctly.');
 					report(reason);
 					return false;
 				});
-
-			return true;
-
 		}
 	};
 

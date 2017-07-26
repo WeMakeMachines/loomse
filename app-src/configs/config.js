@@ -1,5 +1,4 @@
 const config = {
-	version: '0.4.0',
 	appName: 'loomSE',
 	appRoot: 'loomSE',
 	scripts: {
@@ -10,7 +9,6 @@ const config = {
 	resolution: false,
 	behaviour : {
 		media: {
-			timeEventResolution : 0.4,
 			showPosterWhenPaused: false,
 			fastForwardSkip     : 10,
 			minimum_resolution  : {

@@ -1,6 +1,6 @@
 // Rollup plugins
 import babel from 'rollup-plugin-babel';
-import config from './app-src/config';
+import config from './app-src/configs/config';
 import eslint from 'rollup-plugin-eslint';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';

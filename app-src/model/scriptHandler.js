@@ -6,22 +6,24 @@
  */
 
 import { cleanString, report } from '../tools/common';
-import config from '../config';
-import { newObject } from '../tools/common';
-import data from './data';
+import config from '../configs/config';
+import { data } from './data';
 import events from './events';
 import media from '../view/media';
-import subtitles from '../view/subtitles';
-import view from '../view/controller';
 
 const scriptHandler = (function () {
 
 	/**
-	 * Constructor function that creates instances of each scene
-	 *
-	 * @param {Object} scene
+	 * Scene class
 	 */
 	class Scene {
+
+		/**
+		 * Constructor
+		 * @param {String} title
+		 * @param {String} language
+		 * @param {Object} assets
+		 */
 		constructor (title, language, assets) {
 			this.title = title;
 			this.shortName = assets.short_name;
@@ -31,6 +33,18 @@ const scriptHandler = (function () {
 			this.subtitles = assets.media.subtitles[language];
 			this.events = assets.events;
 		}
+	}
+
+	/**TODO
+	 * Parses and normalises values in the script
+	 * @param {Object} script
+	 * @param {Function} callback
+	 */
+	function normaliseScript(script, callback) {
+		let returnedScript = script,
+			status = true;
+
+		callback(status, returnedScript);
 	}
 
 	/**
@@ -43,6 +57,12 @@ const scriptHandler = (function () {
 	 * @param {Object} scene
 	 */
 	function setScene(scriptObject, scene) {
+		let checkForPreviousScene = !data.currentScene === null;
+
+		if (checkForPreviousScene) {
+			data.sceneHistory.push(data.currentScene);
+		}
+
 		data.currentScene = new Scene(scene, config.behaviour.settings.language, scriptObject.scenes[scene]);
 
 		//check if subtitles should be on
@@ -56,24 +76,6 @@ const scriptHandler = (function () {
 		//history.record(data.currentScene); // disabled for now
 	}
 
-	// Constructor function that creates instances of each scene
-	// let Scene = function (title, language, assets) {
-	// 	let that = this;
-	// 	this.title = title;
-	// 	this.shortName = assets.short_name;
-	// 	this.longName = assets.long_name;
-	// 	this.sceneId = cleanString(this.title);
-	// 	this.media = assets.media;
-	// 	this.subtitles = assets.media.subtitles[language];
-	// 	this.events = assets.events;
-	// 	this.container = (function () {
-	// 		let element = document.createElement('div');
-	// 		element.setAttribute('id', that.sceneId);
-	// 		element.media = that.media.type;
-	// 		return element;
-	// 	}());
-	// };
-
 	/**
 	 * Processes the current scene
 	 * Each scene is composed of a 'media' type, which in turn has 'data' and 'parameters'
@@ -83,72 +85,36 @@ const scriptHandler = (function () {
 	 */
 	function process(scene) {
 
-		media.initialise(scene.media, (mediaObject) => {
-			media.play();
-		});
+		media.initialise(scene.media, (status, autoplay) => { // TODO check what's going on here
+			let checkForEvents = Array.isArray(scene.events) && scene.events.length > 0;
 
-		// media.create(scene.container, scene.media, function (playObject) {
-		//
-		// 	media.object = playObject;
-		// 	// check which media needs to play
-		// 	// play video
-		// 	if (scene.media.type === 'video') { // TODO need to allow this to accept and process multiple strings
-		// 		scene.media.video.duration = playObject.duration;
-		//
-		// 		// check if video SHOULD autoplay
-		// 		if (media.object.loomSE_parameters.autoplay === true) {
-		// 			media.play();
-		// 			view.resolution.video.height = media.object.videoHeight;
-		// 			view.resolution.video.height = media.object.videoWidth;
-		// 		}
-		//
-		// 		//if(playObject.loop === false && (scene.data.nextSceneByDefault !== null || scene.data.nextnextSceneByDefault !== '')){
-		// 		//    playObject.onended = function(e){
-		// 		//        readScript.setScene(scene.data.nextSceneByDefault);
-		// 		//    };
-		// 		//}
-		//
-		// 		// video loop logic must stay here
-		//
-		// 		if (media.object.loomSE_parameters.loop === true) {
-		// 			if (media.object.loomSE_parameters.loopIn === 0 && media.object.loomSE_parameters.loopOut === null) {
-		// 				media.object.onended = function (e) {
-		// 					report('Looping from end to beginning');
-		// 					view.reset();
-		// 					events.reset();
-		// 					media.play(0);
-		// 				};
-		// 			} else {
-		// 				report('Im going to loop the video from the in and out points defined');
-		// 				// add loop point as event
-		// 				// for the purposes of our system, in / out points are reversed
-		// 				// (schedule in point is actually loop out point etc)
-		// 				data.currentScene.events.push(
-		// 					{
-		// 						call    : 'loop',
-		// 						schedule: {
-		// 							in : media.object.loomSE_parameters.loopOut,
-		// 							out: media.object.loomSE_parameters.loopIn
-		// 						}
-		// 					}
-		// 				);
-		// 			}
-		// 		}
-		// 	}
-		//
-		// 	if (scene.events !== null) {
-		// 		events.schedule(media.object, scene.events, function () {
-		// 		});
-		// 	} else {
-		// 		report('[Events] No events.js in scene.');
-		// 	}
-		// });
+			if (!status) {
+				report('Unable to initialise media');
+				return false;
+			}
+
+			if (checkForEvents) {
+				events.initialise(scene.events);
+			}
+
+			if (autoplay) {
+				// view.resolution.video.height = media.object.videoHeight;
+				// view.resolution.video.height = media.object.videoWidth;
+				media.play();
+			}
+		});
 	}
 
 	return {
 		initialise: function(script) {
-			setScene(script, config.firstScene);
-			process(data.currentScene);
+			normaliseScript(script, (status, returnedScript) => {
+				if (status) {
+					setScene(returnedScript, config.firstScene);
+					process(data.currentScene);
+				} else {
+					report('Critical error, unable to read script');
+				}
+			});
 		}
 	};
 }());
