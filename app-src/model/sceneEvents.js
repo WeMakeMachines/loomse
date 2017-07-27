@@ -4,36 +4,13 @@
  */
 
 import media from '../view/media';
-import { report } from '../tools/common';
 
 let eventQueue = [],
 	previousMediaTimeIndex;
 
 const MINIMUM_SEEK_RANGE = 1000;
 
-const events = (function () {
-
-	/**
-	 * Initialise our events
-	 * @param {Array} eventArray
-	 */
-	function initialise (eventArray) {
-		schedule(eventArray);
-		setListeners();
-	}
-
-	/**
-	 *
-	 */
-	function setListeners () {
-		media.container.addEventListener('media:state:change', (eventObject) => {
-			let message = eventObject.detail;
-
-			if (message.state === 'seeking') {
-				fixEventStates(message.time);
-			}
-		}, false);
-	}
+const sceneEvents = (function () {
 
 	/**
 	 * Event class
@@ -113,12 +90,44 @@ const events = (function () {
 	}
 
 	/**
+	 * Sets listeners for the HTML5 media object
+	 */
+	function _setListeners () {
+		media.container.addEventListener('media:state:change', (eventObject) => {
+			let message = eventObject.detail;
+
+			if (message.state === 'seeking') {
+				_fixEventStates(message.time);
+			}
+		}, false);
+	}
+
+	/**
+	 * Checks event states against current media time and fixes them
+	 * @param {Number} time - media time index
+	 */
+	function _fixEventStates (time) {
+
+		for (let i = 0; i < eventQueue.length; i += 1) {
+			let event = eventQueue[i];
+
+			if (event.in <= time || event.out < time) {
+				event.state = 'expired';
+			}
+
+			if (event.in >= time && event.out > time) {
+				event.state = 'waiting';
+			}
+		}
+	}
+
+	/**
 	 * Schedules timed events for each media element
 	 *
 	 * @param {Array} array
 	 * @param {Function} callback
 	 */
-	function schedule(array) {
+	function _schedule(array) {
 
 		for (let i = 0; i < array.length; i += 1) {
 			let eventToSchedule = array[i],
@@ -137,21 +146,22 @@ const events = (function () {
 	}
 
 	/**
-	 * Reset all events back to waiting
-	 *
+	 * Initialises the module
+	 * @param {Array} eventArray
 	 */
-	function resetAll() {
-		for (let i = 0; i < eventQueue.length; i += 1) {
-			eventQueue[i].state = 'waiting';
-		}
+	function initialise (eventArray) {
+		_schedule(eventArray);
+		_setListeners();
 	}
 
 	/**
-	 * Report all events
+	 * Reset all events back to waiting
 	 *
 	 */
-	function show() {
-		report(eventQueue);
+	function resetStates() {
+		for (let i = 0; i < eventQueue.length; i += 1) {
+			eventQueue[i].state = 'waiting';
+		}
 	}
 
 	/**
@@ -165,31 +175,11 @@ const events = (function () {
 		}
 	}
 
-	/**
-	 * Checks event states against current media time and fixes them
-	 * @param {Number} time - media time index
-	 */
-	function fixEventStates (time) {
-
-		for (let i = 0; i < eventQueue.length; i += 1) {
-			let event = eventQueue[i];
-
-			if (event.in <= time || event.out < time) {
-				event.state = 'expired';
-			}
-
-			if (event.in >= time && event.out > time) {
-				event.state = 'waiting';
-			}
-		}
-	}
-
 	return {
-		initialise: initialise,
-		resetAll  : resetAll,
-		show      : show,
-		killAll   : killAll
+		initialise : initialise,
+		resetStates: resetStates,
+		killAll    : killAll
 	};
 }());
 
-export default events;
+export default sceneEvents;

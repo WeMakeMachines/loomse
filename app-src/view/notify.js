@@ -2,7 +2,7 @@
 
 import css from '../tools/css';
 import { newObject } from '../tools/common';
-import view from './controller';
+import view from './mainView';
 
 export default (function () {
 	// lowers 'curtain' on screen and pushes notification

@@ -2,9 +2,9 @@
 
 import { clock, newObject } from '../tools/common';
 import css from '../tools/css';
-import view from './controller';
 import media from './media';
 import subtitles from './subtitles';
+import view from './mainView';
 
 export default (function () {
 
@@ -219,7 +219,7 @@ export default (function () {
 
 					if (currentChild.mouseOverEvent) {
 
-						// hover events.js
+						// hover sceneEvents.js
 						currentChild.addEventListener('mouseover', function () {
 							this.mouseOverEvent();
 						});

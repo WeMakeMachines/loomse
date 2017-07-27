@@ -8,7 +8,7 @@ import { data, initialiseDataObject } from './model/data';
 import config from './configs/config';
 import media from './view/media';
 import scriptHandler from './model/scriptHandler';
-import view from './view/controller';
+import view from './view/mainView';
 
 const VERSION = '0.4.0';
 
@@ -19,70 +19,46 @@ export default (function () {
 	 *
 	 */
 	return {
-		// namespace for our external modules
-		Modules: function () {
-		},
-
 		pause: function () {
 			media.pause();
-			return 'Paused';
 		},
 
 		play: function () {
 			media.play();
-			return 'Playing';
 		},
 
+		/**TODO NOT YET IMPLEMENTED
+		 * Scrub to time in media
+		 * @param {Number} time Seconds
+		 */
 		seek: function (time) {
-			// scrub to time in media
-			// time in seconds 4 = 4 seconds
-			media.seek(time);
-			return 'Seeking';
 		},
 
+		/**TODO NOT YET IMPLEMENTED
+		 * Restarts the current scene
+		 */
 		reload: function () {
-			// restarts the current scene
-
-			return 'Reloaded scene';
 		},
 
+		/**TODO NOT YET IMPLEMENTED
+		 * Abandon current scene and load the named scene
+		 * @param {String} sceneName
+		 */
 		skip: function (sceneName) {
-			// abandon current scene and load the named scene
-
-			return 'Skipped to scene' + sceneName;
-		},
-
-		viewportResize: function () {
-
 		},
 
 		fullScreen: fullScreen.toggle,
 
+		/**
+		 * Report media stats
+		 */
 		status: function () {
-			// report stats on media
-			report(config);
-			report('Current time:' + media.getCurrentTime() + ' / Duration: ' + media.getLength());
+			report('Current time:' + clock(media.getCurrentTime()) + ' / Duration: ' + clock(media.getLength()));
 		},
 
-		currentTime: {
-			seconds: function () {
-				return media.getCurrentTime();
-			},
+		version: VERSION,
 
-			object: function () {
-				return clock(media.getCurrentTime());
-			}
-		},
-
-		duration: {
-			seconds: function () {
-				return media.getLength();
-			},
-
-			object: function () {
-				return clock(media.getLength());
-			}
-		},
+		v: VERSION,
 
 		/**
 		 * Our public initialise method, used to initialise our application

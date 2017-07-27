@@ -2,50 +2,12 @@
 
 import { ajaxRequest, newObject } from '../tools/common';
 
-let mediaObject = {};
+let mediaObject = {},
+	container = newObject('div', { id: 'mediaGroup' });
 
 const MILLISECONDS_IN_SECONDS = 1000;
 
 export default (function () {
-
-	let container = newObject('div', { id: 'mediaGroup' });
-
-	/**
-	 * Creates a media object and posts it to the DOM
-	 *
-	 * @param {Object} media
-	 * @param {Function} callback
-	 *
-	 */
-	function initialise(media, callback) {
-
-		let initialised;
-
-		switch (media.type) {
-			case 'video':
-				mediaObject = new Video(media)
-					.setAttributes()
-					.setSources()
-					.setDimensions(800, 800);
-
-				initialised = true;
-				break;
-
-			case 'audio':
-				mediaObject = new Audio(media);
-				initialised = true;
-				break;
-
-			default:
-				initialised = false;
-		}
-
-		container.appendChild(mediaObject.element);
-
-		listenToMediaEvents();
-
-		callback(initialised, media.autoplay);
-	}
 
 	/**
 	 * Media object super class
@@ -190,6 +152,80 @@ export default (function () {
 	}
 
 	/**
+	 * Listen to media events
+	 */
+	function _listenToMediaEvents() {
+		let events = [
+			'playing',
+			'paused',
+			'seeking',
+			'seeked',
+			'timeupdate',
+			'ended'
+		];
+
+		for (let i = 0; i < events.length; i += 1) {
+			let event = events[i];
+
+			mediaObject.element.addEventListener(event, () => {
+				_broadcastMediaState(event);
+			});
+		}
+	}
+
+	/**
+	 * Sends a custom event message with the media state
+	 * @param {String} state
+	 */
+	function _broadcastMediaState(state) {
+		let event = new CustomEvent('media:state:change', { detail:
+			{
+				state: state,
+				time : getCurrentTime()
+			}
+		});
+
+		container.dispatchEvent(event);
+	}
+
+	/**
+	 * Creates a media object and posts it to the DOM
+	 *
+	 * @param {Object} media
+	 * @param {Function} callback
+	 *
+	 */
+	function initialise(media, callback) {
+
+		let initialised;
+
+		switch (media.type) {
+			case 'video':
+				mediaObject = new Video(media)
+					.setAttributes()
+					.setSources()
+					.setDimensions(800, 800);
+
+				initialised = true;
+				break;
+
+			case 'audio':
+				mediaObject = new Audio(media);
+				initialised = true;
+				break;
+
+			default:
+				initialised = false;
+		}
+
+		container.appendChild(mediaObject.element);
+
+		_listenToMediaEvents();
+
+		callback(initialised, media.autoplay);
+	}
+
+	/**
 	 * Returns current play position of media object
 	 *
 	 * @returns {Number}
@@ -205,15 +241,6 @@ export default (function () {
 	 */
 	function getLength() {
 		return mediaObject.element.duration;
-	}
-
-	/**
-	 * Returns length of media object
-	 *
-	 * @returns {Number}
-	 */
-	function getState() {
-		return mediaObject.state;
 	}
 
 	/**
@@ -233,48 +260,19 @@ export default (function () {
 	}
 
 	/**
+	 * Seek to the media time
+	 * @param {Number} time
+	 */
+	function seek(time) {
+
+	}
+
+	/**
 	 * Calculates the best size for the media
 	 *
 	 */
 	function calculateDimensions() {
 
-	}
-
-	/**
-	 *
-	 */
-	function listenToMediaEvents() {
-		let events = [
-			'playing',
-			'paused',
-			'seeking',
-			'seeked',
-			'timeupdate',
-			'ended'
-		];
-
-		for (let i = 0; i < events.length; i += 1) {
-			let event = events[i];
-
-			mediaObject.element.addEventListener(event, () => {
-				broadcastMediaState(event);
-			});
-		}
-	}
-
-	/**
-	 * Sends a custom event message with the media state
-	 * @param {String} state
-	 */
-	function broadcastMediaState(state) {
-		let event = new CustomEvent('media:state:change', { detail:
-			{
-				state: state,
-				time : getCurrentTime()
-			}
-		});
-
-		container.dispatchEvent(event);
 	}
 
 	return {
@@ -283,7 +281,6 @@ export default (function () {
 		play          : play,
 		pause         : pause,
 		getCurrentTime: getCurrentTime,
-		getLength     : getLength,
-		getState      : getState
+		getLength     : getLength
 	};
 }());
