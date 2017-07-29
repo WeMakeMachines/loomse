@@ -3,183 +3,199 @@
  *
  */
 
+import config from '../configs/config';
 import media from '../view/media';
+import userDefinedModules from '../user/extensions';
 
-let eventQueue = [],
-	previousMediaTimeIndex;
+const MINIMUM_SEEK_RANGE = config.behaviour.media.minimum_seek_range;
 
-const MINIMUM_SEEK_RANGE = 1000;
-
-const sceneEvents = (function () {
-
-	/**
-	 * Event class
-	 */
-	class Event {
-
-		/**
-		 * Constructor event
-		 * @param {String} id
-		 * @param {String} call
-		 * @param {Boolean} ignored
-		 * @param {Object} schedule
-		 * @param {Object} parameters
-		 */
-		constructor (id, call, ignored, schedule, parameters) {
-			this.id = id; // event id
-			this.call = call;
-			this.state = 'waiting'; // waiting, fired, expired
-			this.in = schedule.in;
-			this.out = schedule.out;
-			this.parameters = parameters;
-			this.class = parameters.class;
-		}
-
-		/**
-		 * Schedules the event to be fired
-		 *
-		 * Because of a discrepency between the way Firefox and Chromium fire media events,
-		 * we can not rely on the browser (Chromium sends a 'timeupdate' event before the 'seeking' event,
-		 * but Firefox handles this correctly, i.e, no 'timeupdate' event).
-		 *
-		 */
-		schedule () {
-
-			media.container.addEventListener('media:state:change', (eventObject) => {
-				let message = eventObject.detail,
-					isSameTime = previousMediaTimeIndex && message.time - previousMediaTimeIndex === 0,
-					isSeeking = previousMediaTimeIndex && message.time - previousMediaTimeIndex >= MINIMUM_SEEK_RANGE;
-
-				if (!isSeeking && !isSameTime && (message.state === 'playing' || message.state === 'timeupdate')) {
-
-					switch (this.state) {
-						case 'waiting':
-							if (message.time >= this.in) {
-								this.run();
-								this.state = 'fired';
-							}
-							break;
-						case 'fired':
-							if (message.time >= this.out) {
-								this.kill();
-								this.state = 'expired';
-							}
-							break;
-						default:
-							previousMediaTimeIndex = message.time;
-							break;
-					}
-				}
-
-			}, false);
-		}
-
-		/**
-		 * Runs the event
-		 */
-		run () {
-			console.log('firing!', this.id);
-		}
-
-		/**
-		 * Stops the event and removes any performed actions
-		 */
-		kill () {
-			console.log('closing!', this.id);
-		}
-	}
-
-	/**
-	 * Sets listeners for the HTML5 media object
-	 */
-	function _setListeners () {
-		media.container.addEventListener('media:state:change', (eventObject) => {
-			let message = eventObject.detail;
-
-			if (message.state === 'seeking') {
-				_fixEventStates(message.time);
+let events = {
+		queue : [],
+		update: function(callback) {
+			for (let i = 0; i < this.queue.length; i += 1) {
+				callback(this.queue[i]);
 			}
-		}, false);
-	}
-
-	/**
-	 * Checks event states against current media time and fixes them
-	 * @param {Number} time - media time index
-	 */
-	function _fixEventStates (time) {
-
-		for (let i = 0; i < eventQueue.length; i += 1) {
-			let event = eventQueue[i];
-
-			if (event.in <= time || event.out < time) {
-				event.state = 'expired';
-			}
-
-			if (event.in >= time && event.out > time) {
+		},
+		killAll: function() {
+			this.update((event) => {
+				event.kill();
+			});
+		},
+		resetStates: function() {
+			this.update((event) => {
 				event.state = 'waiting';
-			}
+			});
+		},
+		fixStates: function(time) {
+			this.update((event) => {
+				event.fixState(time);
+			});
+		}
+	},
+	previousMediaTimeIndex = 0;
+
+/**
+ * Event class
+ */
+class Event {
+
+	/**
+	 * Constructor event
+	 * @param {String} id
+	 * @param {String} call
+	 * @param {Boolean} ignored
+	 * @param {Object} schedule
+	 * @param {Object} parameters
+	 */
+	constructor(id, call, ignored, schedule, parameters) {
+		this.id = id; // event id
+		this.call = call;
+		this.state = 'waiting'; // waiting, fired, expired
+		this.in = schedule.in;
+		this.out = schedule.out;
+		this.parameters = parameters;
+		this.class = parameters.class;
+	}
+
+	/**
+	 * Checks if the event is ready to fire
+	 * @param {Number} time
+	 * @returns {boolean}
+	 */
+	checkShouldFire(time) {
+		if (time >= this.in && this.state === 'waiting') {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if the event should expire
+	 * @param {Number} time
+	 * @returns {boolean}
+	 */
+	checkShouldExpire(time) {
+		if (time >= this.out && this.state === 'fired') {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if the event should perform an action
+	 * @param {Number} time
+	 * @returns {Boolean}
+	 */
+	checkSchedule(time) {
+		if (this.state === 'expired') {
+			return false;
+		}
+
+		if (this.checkShouldFire(time)) {
+			this.run();
+			this.state = 'fired';
+		}
+
+		if (this.checkShouldExpire(time)) {
+			this.kill();
+			this.state = 'expired';
 		}
 	}
 
 	/**
-	 * Schedules timed events for each media element
-	 *
-	 * @param {Array} array
-	 * @param {Function} callback
+	 * Fixes the current state after time index has jumped, say after seeking
+	 * @param {Number} time
 	 */
-	function _schedule(array) {
+	fixState(time) {
+		if (time >= this.out || this.state === 'fired') {
+			this.state = 'expired';
+		}
 
-		for (let i = 0; i < array.length; i += 1) {
-			let eventToSchedule = array[i],
-				id = eventToSchedule.call + '_' + i,
-				event = new Event(
-					id,
-					eventToSchedule.call,
-					eventToSchedule.ignored,
-					eventToSchedule.schedule,
-					eventToSchedule.parameters
-				);
-
-			eventQueue.push(event);
-			event.schedule();
+		if (time <= this.in) {
+			this.state = 'waiting';
 		}
 	}
+
+	/**
+	 * Runs the event
+	 */
+	run() {
+		this.call.run();
+	}
+
+	/**
+	 * Stops the event and removes any performed actions
+	 */
+	kill() {
+		this.call.stop();
+	}
+}
+
+/**
+ * Schedules timed events for each media element
+ *
+ * @param {Array} array
+ * @param {Function} callback
+ */
+function schedule(array) {
+
+	for (let i = 0; i < array.length; i += 1) {
+
+		let eventToSchedule = array[i],
+			call = userDefinedModules[eventToSchedule.call];
+
+		if (typeof call !== 'function') { continue; }
+
+		let id = eventToSchedule.call + '_' + i,
+			event = new Event(
+			id,
+			call(),
+			eventToSchedule.ignored,
+			eventToSchedule.schedule,
+			eventToSchedule.parameters
+		);
+
+		events.queue.push(event);
+	}
+}
+
+/**
+ * Sets listeners for the HTML5 media object
+ */
+function setListeners () {
+	media.element.addEventListener('media:state:change', (eventObject) => {
+		let message = eventObject.detail,
+			isSameTime = message.time - previousMediaTimeIndex === 0,
+			isSeeking = message.time - previousMediaTimeIndex >= MINIMUM_SEEK_RANGE || message.state === 'seeking';
+
+		if (isSameTime) { return false; }
+
+		if (isSeeking) {
+			events.fixStates(message.time);
+			previousMediaTimeIndex = message.time;
+			return false;
+		}
+
+		events.update((event) => {
+			event.checkSchedule(message.time);
+		});
+
+		previousMediaTimeIndex = message.time;
+	}, false);
+}
+
+const sceneEvents = {
 
 	/**
 	 * Initialises the module
 	 * @param {Array} eventArray
 	 */
-	function initialise (eventArray) {
-		_schedule(eventArray);
-		_setListeners();
+	initialise: (eventArray) => {
+		schedule(eventArray);
+		setListeners();
 	}
+};
 
-	/**
-	 * Reset all events back to waiting
-	 *
-	 */
-	function resetStates() {
-		for (let i = 0; i < eventQueue.length; i += 1) {
-			eventQueue[i].state = 'waiting';
-		}
-	}
-
-	/**
-	 * Kill all scheduled events
-	 *
-	 * @param {Function} callback
-	 */
-	function killAll(callback) {
-		for (let i = 0; i < eventQueue.length; i += 1) {
-			eventQueue[i].kill(callback);
-		}
-	}
-
-	return {
-		initialise : initialise,
-		resetStates: resetStates,
-		killAll    : killAll
-	};
-}());
-
-export default sceneEvents;
+export { sceneEvents as default };

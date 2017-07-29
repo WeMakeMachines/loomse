@@ -1,5 +1,5 @@
 import config from '../configs/config';
-import cssLib from './css';
+import { style } from './css';
 
 /**
  * Simplified AJAX call
@@ -8,7 +8,7 @@ import cssLib from './css';
  *
  * @returns {Promise}
  */
-const ajaxRequest = function (url, type) {
+function ajaxRequest(url, type) {
 
 	return new Promise((resolve, reject) => {
 
@@ -17,7 +17,7 @@ const ajaxRequest = function (url, type) {
 		xmlHTTP.open('GET', url);
 		xmlHTTP.send();
 
-		xmlHTTP.onload = function() {
+		xmlHTTP.onload = function () {
 
 			if (xmlHTTP.status === 200) {
 				switch (type) {
@@ -34,13 +34,12 @@ const ajaxRequest = function (url, type) {
 
 		};
 
-		xmlHTTP.onerror = function() {
+		xmlHTTP.onerror = function () {
 			reject(report('File or network error'));
 		};
 
 	});
-
-};
+}
 
 /**
  * Removes whitespace from a string, and converts to lowercase
@@ -48,10 +47,11 @@ const ajaxRequest = function (url, type) {
  *
  * @returns {String}
  */
-const cleanString = function (string) {
+function cleanString(string) {
 
 	return string.replace(/\s+/g, '').toLowerCase();
-};
+
+}
 
 /**
  * Turns seconds into hours, minutes, seconds
@@ -59,7 +59,7 @@ const cleanString = function (string) {
  *
  * @returns {Object}
  */
-const clock = function (timeInSeconds) {
+function clock(timeInSeconds) {
 	let remainder = timeInSeconds,
 		hours,
 		minutes,
@@ -121,7 +121,7 @@ const clock = function (timeInSeconds) {
 		seconds: addLeadingZero(seconds),
 		split  : split
 	};
-};
+}
 
 /**
  * Creates a DOM object
@@ -131,7 +131,7 @@ const clock = function (timeInSeconds) {
  *
  * @returns {Object}
  */
-const newObject = function (type, options, css) {
+function newObject(type, options, css) {
 	let newObject,
 		id = config.appRoot;
 
@@ -166,11 +166,11 @@ const newObject = function (type, options, css) {
 	}
 
 	if (css) {
-		cssLib.style(newObject, css); // test for bug here with the reference
+		style(newObject, css); // test for bug here with the reference
 	}
 
 	return newObject;
-};
+}
 
 /**
  * Returns a random number between minRange and maxRange
@@ -179,7 +179,7 @@ const newObject = function (type, options, css) {
  *
  * @returns {Number}
  */
-const random = function (minRange, maxRange) {
+function random(minRange, maxRange) {
 	let range = maxRange - minRange;
 
 	if (typeof minRange === 'undefined') {
@@ -191,18 +191,18 @@ const random = function (minRange, maxRange) {
 	}
 
 	return Math.floor(Math.random() * range) + minRange;
-};
+}
 
 /**
  * Outputs debugging information
  * @param {String} message
  *
  */
-const report = function (message) {
+function report(message) {
 	if (ENV === 'development') {
 		// eslint-disable-next-line
 		console.log(message);
 	}
-};
+}
 
 export { ajaxRequest, cleanString, clock, newObject, random, report };

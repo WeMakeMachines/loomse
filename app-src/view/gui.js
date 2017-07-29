@@ -1,10 +1,10 @@
 // Generates and handles the graphical user interface for our media player
 
 import { clock, newObject } from '../tools/common';
-import css from '../tools/css';
 import media from './media';
+import style from '../tools/css';
 import subtitles from './subtitles';
-import view from './mainView';
+import view from './viewController';
 
 export default (function () {
 
@@ -194,7 +194,7 @@ export default (function () {
 		timeElapsed.appendChild(formatTime(currentTime));
 		timeDuration.appendChild(formatTime(duration));
 
-		css.style(timeSlider, {
+		style(timeSlider, {
 			width: progressWidth
 		});
 	}

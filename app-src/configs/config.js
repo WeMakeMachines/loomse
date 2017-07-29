@@ -14,7 +14,8 @@ const config = {
 			minimum_resolution  : {
 				width : 640,
 				height: 480
-			}
+			},
+			minimum_seek_range: 1000
 		},
 		settings: {
 			url      : 'http://localhost/',

@@ -5,7 +5,7 @@
 import { ajaxRequest, report } from '../tools/common';
 import config from '../configs/config';
 import media from './media';
-import view from './mainView';
+import view from './viewController';
 
 export default (function () {
 	let id = 'subtitle',

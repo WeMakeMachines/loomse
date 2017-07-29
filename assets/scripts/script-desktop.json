@@ -37,7 +37,7 @@
 			},
 			"events": [
 				{
-					"call": "mediaTime",
+					"call": "test",
 					"ignored": false,
 					"schedule": {
 						"in": 0,
@@ -50,7 +50,7 @@
 					}
 				},
 				{
-					"call": "mediaTime",
+					"call": "test",
 					"ignored": false,
 					"schedule": {
 						"in": 5000,
@@ -63,7 +63,7 @@
 					}
 				},
 				{
-					"call": "mediaTime",
+					"call": "test",
 					"ignored": false,
 					"schedule": {
 						"in": 10000,
@@ -76,7 +76,7 @@
 					}
 				},
 				{
-					"call": "mediaTime",
+					"call": "test",
 					"ignored": false,
 					"schedule": {
 						"in": 15000,

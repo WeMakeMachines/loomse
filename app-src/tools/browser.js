@@ -67,11 +67,11 @@ const browser = {
 	/**
 	 * Checks which device is currently being used
 	 *
-	 * @returns {String / Boolean}
+	 * @returns {String}
 	 */
 	check: function() {
 		return 'desktop';
-	},
+	}
 
 };
 

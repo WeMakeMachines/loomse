@@ -10,4 +10,4 @@ const initialiseDataObject = function() {
 	};
 };
 
-export { data, initialiseDataObject };
+export { data as default, initialiseDataObject };
