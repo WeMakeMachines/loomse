@@ -11,6 +11,7 @@ const userDefinedModules = {
 		return {
 			run: function() {
 				console.log('firing!');
+				console.log(loomSE.currentTime());
 			},
 			stop: function() {
 				console.log('closing!');

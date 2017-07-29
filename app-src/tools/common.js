@@ -55,12 +55,16 @@ function cleanString(string) {
 
 /**
  * Turns seconds into hours, minutes, seconds
- * @param {Number} timeInSeconds
+ * @param {Number} timeInMilliseconds
  *
  * @returns {Object}
  */
-function clock(timeInSeconds) {
-	let remainder = timeInSeconds,
+function clock(timeInMilliseconds) {
+	const SECONDS_IN_MINUTES = 60;
+	const SECONDS_IN_HOURS = 60 * SECONDS_IN_MINUTES;
+	const MILLISECONDS_IN_SECONDS = 1000;
+
+	let remainder = timeInMilliseconds / MILLISECONDS_IN_SECONDS,
 		hours,
 		minutes,
 		seconds,
@@ -83,17 +87,17 @@ function clock(timeInSeconds) {
 	}
 
 	// find how many hours there are
-	if (remainder >= 3600) {
-		hours = Math.floor(remainder / 3600);
-		remainder = remainder - hours * 3600;
+	if (remainder >= SECONDS_IN_HOURS) {
+		hours = Math.floor(remainder / SECONDS_IN_HOURS);
+		remainder = remainder - hours * SECONDS_IN_HOURS;
 	} else {
 		hours = 0;
 	}
 
 	// find how many minutes there are
-	if (remainder >= 60) {
-		minutes = Math.floor(remainder / 60);
-		remainder = remainder - minutes * 60;
+	if (remainder >= SECONDS_IN_MINUTES) {
+		minutes = Math.floor(remainder / SECONDS_IN_MINUTES);
+		remainder = remainder - minutes * SECONDS_IN_MINUTES;
 	} else {
 		minutes = 0;
 	}
