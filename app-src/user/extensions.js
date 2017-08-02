@@ -6,14 +6,14 @@ import loomSE from '../base';
 
 const userDefinedModules = {
 
-	test: function() {
+	test: () => {
 
 		return {
-			run: function() {
+			run: (element) => {
 				console.log('firing!');
 				console.log(loomSE.currentTime());
 			},
-			stop: function() {
+			stop: () => {
 				console.log('closing!');
 			}
 		};

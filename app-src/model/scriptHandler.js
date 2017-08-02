@@ -9,7 +9,7 @@ import { cleanString, report } from '../tools/common';
 import config from '../configs/config';
 import data from './data';
 import media from '../view/media';
-import sceneEvents from './sceneEvents';
+import sceneEventsModel from './sceneEvents';
 
 /**
  * Scene class
@@ -70,7 +70,7 @@ function process(scene) {
 		}
 
 		if (checkForEvents) {
-			sceneEvents.initialise(scene.events);
+			sceneEventsModel.initialise(scene.events);
 		}
 
 		if (autoplay) {

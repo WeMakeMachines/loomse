@@ -1,10 +1,13 @@
 import config from '../configs/config';
+import loading from './loading';
 import media from './media';
 import { newObject } from '../tools/common';
+import sceneEventsView from './sceneEvents';
 import { style } from '../tools/css';
+import subtitles from './subtitles';
 
 let elements = {
-		root   : null,
+		parent : null,
 		stage  : newObject('div', { id: 'stage' }),
 		overlay: newObject('div', { id: 'overlay' })
 	},
@@ -14,8 +17,45 @@ let elements = {
 	};
 
 /**
+ * Creates all DOM elements needed for each view
+ * @returns {Boolean}
+ */
+function prepareDOM() {
+	if (config.appRoot) {
+		elements.parent = document.getElementById(config.appRoot);
+	} else {
+		return false;
+	}
+
+	// if ID can't be found, create rootElement
+	if (elements.rootElement !== null || elements.rootElement !== undefined) {
+		elements.rootElement = newObject('div', { rootElement: true });
+		document.body.appendChild(elements.rootElement);
+	}
+
+	elements.rootElement
+		.appendChild(elements.stage);
+
+	elements.rootElement
+		.appendChild(elements.overlay);
+
+	elements.rootElement
+		.appendChild(loading.parentElement);
+
+	elements.overlay
+		.appendChild(sceneEventsView.parentElement);
+
+	elements.overlay
+		.appendChild(subtitles.parentElement);
+
+	elements.stage
+		.appendChild(media.parentElement);
+
+	return true;
+}
+
+/**
  * Gets the current client dimensions
- *
  */
 function getClientDimensions() {
 	resolution.width = document.documentElement.clientWidth;
@@ -23,7 +63,9 @@ function getClientDimensions() {
 }
 
 /**
- * Resizes all parent elements to be of same resolution
+ * Resizes all rootElement elements to be of same resolution
+ * @param {Number} width
+ * @param {Number} height
  */
 function resizeContainers(width, height) {
 	for (let element in elements) {
@@ -45,31 +87,7 @@ const viewController = {
 	 */
 	initialise: function() {
 
-		if (config.appRoot) {
-			elements.root = document.getElementById(config.appRoot);
-		} else {
-			return false;
-		}
-
-		// if ID can't be found, create root
-		if (elements.root !== null || elements.root !== undefined) {
-			elements.root = newObject('div', { root: true });
-			document.body.appendChild(elements.root);
-		}
-
-		elements.root
-			.appendChild(elements.stage);
-
-		elements.root
-			.appendChild(elements.overlay);
-
-		elements.stage
-			.appendChild(media.element);
-
-		//elements.events = newObject('div', { id: 'events', parent: elements.overlay });
-		//elements.subtitles = newObject('div', { id: 'subtitles', parent: elements.overlay });
-
-		return true;
+		return prepareDOM();
 	},
 
 	elements  : elements,

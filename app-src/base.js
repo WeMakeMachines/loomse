@@ -10,48 +10,37 @@ import media from './view/media';
 import scriptHandler from './model/scriptHandler';
 import view from './view/viewController';
 
-const VERSION = '0.4.0';
+const VERSION = config.version;
 
 export default {
 
+	pause: () => { media.pause(); },
+
+	play: () =>	{ media.play(); },
+
 	/**
-	 * The public interface
-	 *
-	 */
-	pause: function() {
-		media.pause();
-	},
-
-	play: function () {
-		media.play();
-	},
-
-	/**TODO NOT YET IMPLEMENTED
 	 * Scrub to time in media
-	 * @param {Number} time Seconds
+	 * @param {Number} time in seconds
 	 */
-	seek: function(time) {
-	},
+	seek: (time) => { media.seek(time); },
 
 	/**TODO NOT YET IMPLEMENTED
 	 * Restarts the current scene
 	 */
-	reload: function() {
-	},
+	reload: () => {},
 
 	/**TODO NOT YET IMPLEMENTED
 	 * Abandon current scene and load the named scene
 	 * @param {String} sceneName
 	 */
-	skip: function(sceneName) {
-	},
+	skip: (sceneName) => {},
 
 	fullScreen: fullScreen.toggle,
 
 	/**
 	 * Report media stats
 	 */
-	status: function() {
+	status: () => {
 		report('Current time:' + clock(media.getCurrentTime()) + ' / Duration: ' + clock(media.getLength()));
 	},
 
@@ -69,7 +58,7 @@ export default {
 	 *
 	 * @returns {Boolean} returns false and halts script if conditions are not met
 	 */
-	initialise: function (callback) {
+	initialise: (callback) => {
 
 		let scriptSrc,
 			deviceType = browser.check(),
@@ -88,7 +77,7 @@ export default {
 				return false;
 		}
 
-		checkDOM = new Promise(function (resolve) {
+		checkDOM = new Promise((resolve) => {
 			resolve(view.initialise());
 		});
 		receiveScript = ajaxRequest(scriptSrc, 'JSON');

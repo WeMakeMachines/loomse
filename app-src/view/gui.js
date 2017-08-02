@@ -2,7 +2,7 @@
 
 import { clock, newObject } from '../tools/common';
 import media from './media';
-import style from '../tools/css';
+import { style } from '../tools/css';
 import subtitles from './subtitles';
 import view from './viewController';
 
@@ -202,11 +202,11 @@ export default (function () {
 	function load() {
 		appendButtonComponents();
 		updateProgressBar();
-		view.containers.root.appendChild(container);
+		view.containers.rootElement.appendChild(container);
 	}
 
 	function unload() {
-		view.containers.root.removeChild(container);
+		view.containers.rootElement.removeChild(container);
 	}
 
 	function listenForEvents() {

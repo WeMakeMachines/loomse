@@ -2,8 +2,8 @@
 
 import { ajaxRequest, newObject } from '../tools/common';
 
-let mediaObject = {},
-	element = newObject('div', { id: 'mediaGroup' });
+let parentElement = newObject('div', { id: 'mediaGroup' }),
+	mediaObject = {};
 
 const MILLISECONDS_IN_SECONDS = 1000;
 
@@ -161,7 +161,7 @@ function broadcastMediaState(state) {
 		}
 	});
 
-	element.dispatchEvent(event);
+	parentElement.dispatchEvent(event);
 }
 
 /**
@@ -222,10 +222,10 @@ function pause() {
 
 /**
  * Seek to the media time
- * @param {Number} time
+ * @param {Number} time (seconds)
  */
 function seek(time) {
-
+	mediaObject.element.currentTime = time;
 }
 
 const media = {
@@ -260,14 +260,14 @@ const media = {
 				initialised = false;
 		}
 
-		element.appendChild(mediaObject.element);
+		parentElement.appendChild(mediaObject.element);
 
 		listenToMediaEvents();
 
 		callback(initialised, media.autoplay);
 	},
 
-	element       : element,
+	parentElement : parentElement,
 	getCurrentTime: getCurrentTime,
 	getLength     : getLength,
 	play          : play,

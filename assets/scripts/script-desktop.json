@@ -38,7 +38,7 @@
 			"events": [
 				{
 					"call": "test",
-					"ignored": false,
+					"disabled": false,
 					"schedule": {
 						"in": 0,
 						"out": 5000
@@ -51,7 +51,7 @@
 				},
 				{
 					"call": "test",
-					"ignored": false,
+					"disabled": false,
 					"schedule": {
 						"in": 5000,
 						"out": 10000
@@ -64,7 +64,7 @@
 				},
 				{
 					"call": "test",
-					"ignored": false,
+					"disabled": false,
 					"schedule": {
 						"in": 10000,
 						"out": 15000
@@ -77,7 +77,7 @@
 				},
 				{
 					"call": "test",
-					"ignored": false,
+					"disabled": false,
 					"schedule": {
 						"in": 15000,
 						"out": 20000

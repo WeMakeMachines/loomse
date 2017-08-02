@@ -5,6 +5,7 @@
 
 import config from '../configs/config';
 import media from '../view/media';
+import sceneEventsView from '../view/sceneEvents';
 import userDefinedModules from '../user/extensions';
 
 const MINIMUM_SEEK_RANGE = config.behaviour.media.minimum_seek_range;
@@ -43,11 +44,10 @@ class Event {
 	 * Constructor event
 	 * @param {String} id
 	 * @param {String} call
-	 * @param {Boolean} ignored
 	 * @param {Object} schedule
 	 * @param {Object} parameters
 	 */
-	constructor(id, call, ignored, schedule, parameters) {
+	constructor(id, call, schedule, parameters, element) {
 		this.id = id; // event id
 		this.call = call;
 		this.state = 'waiting'; // waiting, fired, expired
@@ -55,6 +55,7 @@ class Event {
 		this.out = schedule.out;
 		this.parameters = parameters;
 		this.class = parameters.class;
+		this.element = element;
 	}
 
 	/**
@@ -63,11 +64,7 @@ class Event {
 	 * @returns {boolean}
 	 */
 	checkShouldFire(time) {
-		if (time >= this.in && this.state === 'waiting') {
-			return true;
-		}
-
-		return false;
+		return time >= this.in && this.state === 'waiting';
 	}
 
 	/**
@@ -76,11 +73,7 @@ class Event {
 	 * @returns {boolean}
 	 */
 	checkShouldExpire(time) {
-		if (time >= this.out && this.state === 'fired') {
-			return true;
-		}
-
-		return false;
+		return time >= this.out && this.state === 'fired';
 	}
 
 	/**
@@ -122,7 +115,7 @@ class Event {
 	 * Runs the event
 	 */
 	run() {
-		this.call.run();
+		this.call.run(this.element);
 	}
 
 	/**
@@ -134,28 +127,49 @@ class Event {
 }
 
 /**
+ * Checks for a valid API of the event  extension
+ * @param {Function} ext
+ * @param {Array} API - array of strings which map to API calls
+ * @returns {*}
+ */
+function checkEventExtensionAPI(ext, API) {
+
+	if (typeof ext !== 'function') { return false; }
+
+	for (let i = 0; i < API.length; i += 1) {
+		let apiCall = API[i];
+
+		if (typeof ext()[apiCall] !== 'function') {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
  * Schedules timed events for each media element
  *
  * @param {Array} array
- * @param {Function} callback
  */
 function schedule(array) {
 
 	for (let i = 0; i < array.length; i += 1) {
 
 		let eventToSchedule = array[i],
-			call = userDefinedModules[eventToSchedule.call];
+			extensionCalls = userDefinedModules[eventToSchedule.call],
+			checkExtensionAPI = checkEventExtensionAPI(extensionCalls, ['run', 'stop']);
 
-		if (typeof call !== 'function') { continue; }
+		if (!checkExtensionAPI || eventToSchedule.disabled) { continue; }
 
 		let id = eventToSchedule.call + '_' + i,
 			event = new Event(
-			id,
-			call(),
-			eventToSchedule.ignored,
-			eventToSchedule.schedule,
-			eventToSchedule.parameters
-		);
+				id,
+				extensionCalls(),
+				eventToSchedule.schedule,
+				eventToSchedule.parameters,
+				sceneEventsView.createEventElement(id)
+			);
 
 		events.queue.push(event);
 	}
@@ -165,7 +179,7 @@ function schedule(array) {
  * Sets listeners for the HTML5 media object
  */
 function setListeners () {
-	media.element.addEventListener('media:state:change', (eventObject) => {
+	media.parentElement.addEventListener('media:state:change', (eventObject) => {
 		let message = eventObject.detail,
 			isSameTime = message.time - previousMediaTimeIndex === 0,
 			isSeeking = message.time - previousMediaTimeIndex >= MINIMUM_SEEK_RANGE || message.state === 'seeking';
@@ -186,7 +200,7 @@ function setListeners () {
 	}, false);
 }
 
-const sceneEvents = {
+const sceneEventsModel = {
 
 	/**
 	 * Initialises the module
@@ -198,4 +212,4 @@ const sceneEvents = {
 	}
 };
 
-export { sceneEvents as default };
+export { sceneEventsModel as default };
