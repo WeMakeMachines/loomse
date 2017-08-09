@@ -7,7 +7,7 @@ import { style } from '../tools/css';
 import subtitles from './subtitles';
 
 let elements = {
-		parent : null,
+		root   : null,
 		stage  : newObject('div', { id: 'stage' }),
 		overlay: newObject('div', { id: 'overlay' })
 	},
@@ -22,17 +22,17 @@ let elements = {
  */
 function prepareDOM() {
 
-	elements.parent = document.getElementById(config.elementRoot);
+	elements.root = document.getElementById(config.elementRoot);
 
-	if (typeof elements.parent !== 'object') { return false; }
+	if (typeof elements.root !== 'object') { return false; }
 
-	elements.rootElement
+	elements.root
 		.appendChild(elements.stage);
 
-	elements.rootElement
+	elements.root
 		.appendChild(elements.overlay);
 
-	elements.rootElement
+	elements.root
 		.appendChild(loading.parentElement);
 
 	elements.overlay
@@ -78,10 +78,7 @@ const viewController = {
 	 * Sets up the DOM in browser
 	 * @returns {Boolean}
 	 */
-	initialise: function() {
-
-		return prepareDOM();
-	},
+	initialise: () => prepareDOM(),
 
 	elements  : elements,
 	resolution: resolution
