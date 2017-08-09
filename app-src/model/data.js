@@ -5,8 +5,7 @@ const initialiseDataObject = function() {
 	data = {
 		script      : null,
 		currentScene: null,
-		sceneHistory: [],
-		modules     : null
+		sceneHistory: []
 	};
 };
 

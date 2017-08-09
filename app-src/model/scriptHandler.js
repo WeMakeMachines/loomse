@@ -39,17 +39,16 @@ class Scene {
  * Pulls the relevant scene details from the object,
  * resets parameters and launches the process() method.
  *
- * @param {Object} scriptObject
  * @param {Object} scene
  */
-function setScene(scriptObject, scene) {
+function setScene(scene) {
 	let checkForPreviousScene = !data.currentScene === null;
 
 	if (checkForPreviousScene) {
 		data.sceneHistory.push(data.currentScene);
 	}
 
-	data.currentScene = new Scene(scene, config.behaviour.settings.language, scriptObject.scenes[scene]);
+	data.currentScene = new Scene(scene, config.behaviour.settings.language, data.script.scenes[scene]);
 }
 
 /**
@@ -84,11 +83,11 @@ function process(scene) {
 const scriptHandler = {
 
 	/**
-	 * Initialises module
-	 * @param {Object} script
+	 * Initialises scene
+	 * @param {String} scene - named scene
 	 */
-	initialise: function(script) {
-		setScene(script, config.firstScene);
+	initialise: function(scene) {
+		setScene(scene);
 		process(data.currentScene);
 	}
 };

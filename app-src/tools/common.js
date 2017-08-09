@@ -137,7 +137,7 @@ function clock(timeInMilliseconds) {
  */
 function newObject(type, options, css) {
 	let newObject,
-		id = config.appRoot;
+		id = config.elementRoot;
 
 	if (!type) { type = 'div'; }
 

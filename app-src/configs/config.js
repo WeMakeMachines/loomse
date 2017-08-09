@@ -1,6 +1,6 @@
 const config = {
 	appName: 'loomSE',
-	appRoot: 'loomSE',
+	elementRoot: 'loomSE',
 	version: '0.4.0',
 	scripts: {
 		mobile : 'assets/scripts/script-mobile.json',

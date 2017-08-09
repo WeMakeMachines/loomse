@@ -21,17 +21,10 @@ let elements = {
  * @returns {Boolean}
  */
 function prepareDOM() {
-	if (config.appRoot) {
-		elements.parent = document.getElementById(config.appRoot);
-	} else {
-		return false;
-	}
 
-	// if ID can't be found, create rootElement
-	if (elements.rootElement !== null || elements.rootElement !== undefined) {
-		elements.rootElement = newObject('div', { rootElement: true });
-		document.body.appendChild(elements.rootElement);
-	}
+	elements.parent = document.getElementById(config.elementRoot);
+
+	if (typeof elements.parent !== 'object') { return false; }
 
 	elements.rootElement
 		.appendChild(elements.stage);

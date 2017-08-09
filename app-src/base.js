@@ -4,7 +4,7 @@
  */
 import { ajaxRequest, clock, report } from './tools/common';
 import { browser, fullScreen } from './tools/browser';
-import data, {initialiseDataObject } from './model/data';
+import data, { initialiseDataObject } from './model/data';
 import config from './configs/config';
 import media from './view/media';
 import scriptHandler from './model/scriptHandler';
@@ -24,16 +24,20 @@ export default {
 	 */
 	seek: (time) => { media.seek(time); },
 
-	/**TODO NOT YET IMPLEMENTED
+	/**
 	 * Restarts the current scene
 	 */
-	reload: () => {},
+	reload: () => {
+		media.seek(0);
+	},
 
-	/**TODO NOT YET IMPLEMENTED
+	/**
 	 * Abandon current scene and load the named scene
 	 * @param {String} sceneName
 	 */
-	skip: (sceneName) => {},
+	skip: (sceneName) => {
+		scriptHandler.initialise(sceneName);
+	},
 
 	fullScreen: fullScreen.toggle,
 
@@ -87,8 +91,7 @@ export default {
 		Promise.all([checkDOM, receiveScript])
 			.then((values) => {
 				data.script = values[1];
-				//data.modules.js = new loomSE.Modules();
-				scriptHandler.initialise(data.script);
+				scriptHandler.initialise(config.firstScene);
 				//gui.load();
 				if (callback) {
 					callback();
