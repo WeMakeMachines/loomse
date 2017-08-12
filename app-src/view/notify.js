@@ -1,70 +1,14 @@
-// Handles all user friendly notifications
+/**
+ * Handles all user friendly notifications
+ *
+ */
 
-import { animate, style } from '../tools/css';
-import newObject from '../tools/common';
-import view from './viewController';
+import { element } from '../tools/common';
 
-export default (function () {
-	// lowers 'curtain' on screen and pushes notification
-	let id = 'notify',
-		container = newObject('div', { id: id }),
-		child = document.createElement('div'),
-		child2 = document.createElement('p'),
-		isActive = false;
+let parentElement = element.create({ id: 'loading' });
 
-	function position(object) {
-		let availableWidth = view.resolution.width,
-			availableHeight = view.resolution.height;
+const loading = {
+	parentElement
+};
 
-		style(object, {
-			opacity: 0
-		});
-
-		let objWidth = object.offsetWidth,
-			objHeight = object.offsetHeight,
-			x = availableWidth / 2,
-			y = (availableHeight - objHeight) / 2;
-
-		style(object, {
-			position: 'absolute',
-			display : 'block',
-			left    : x,
-			top     : y,
-			opacity : 1
-		});
-	}
-
-	return {
-		resize: function () {
-			position(child);
-		},
-
-		push: function (message, cssClass) {
-			if (isActive === false) {
-				isActive = true;
-				// animate the 'curtain falling' on theatre
-
-				animate(view.containers.stage, 'opacity', 1, 0.2, 200);
-				view.containers.root.appendChild(container);
-				if (cssClass) {
-					child2.setAttribute('class', cssClass);
-				}
-				container.appendChild(child);
-				child.appendChild(child2);
-			}
-
-			// push notification to screen
-
-			child2.innerHTML = message;
-			position(child);
-		},
-
-		dismiss: function () {
-			if (isActive !== false) {
-				isActive = false; // reset activity flag
-				view.containers.root.removeChild(container);
-				animate(view.containers.stage, 'opacity', 0.2, 1, 200);
-			}
-		}
-	};
-}());
+export { loading as default };

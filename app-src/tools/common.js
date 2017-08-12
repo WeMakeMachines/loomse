@@ -1,5 +1,63 @@
-import config from '../configs/config';
-import { style } from './css';
+/**
+ * Common tools
+ *
+ */
+
+const element = {
+
+	create: (options) => {
+		let newElement;
+
+		if (!options) { options = {}; }
+
+		if (!options.type) { options.type = 'div'; }
+
+		newElement = document.createElement(options.type);
+
+		if (options.id) {
+			newElement.setAttribute('id', options.id);
+		}
+
+		if (options.class) {
+			newElement.setAttribute('class', options.class);
+		}
+
+		return newElement;
+	},
+
+	attributes: (element, attributes) => {
+		if (attributes && Array.isArray(attributes)) {
+			for (let i = 0; i < attributes.length; i += 1) {
+				let property = attributes[i][0],
+					value = attributes[i][1];
+				element.setAttribute(property, value);
+			}
+		}
+	},
+
+	style: (element, cssProperties) => {
+		for (let attribute in cssProperties) {
+			if (cssProperties.hasOwnProperty(attribute)) {
+				let value = cssProperties[attribute];
+
+				switch (attribute) {
+					case 'width':
+					case 'height':
+					case 'top':
+					case 'left':
+					case 'right':
+					case 'bottom':
+						value += 'px';
+						break;
+					default:
+						break;
+				}
+
+				element.style[attribute] = value;
+			}
+		}
+	}
+};
 
 /**
  * Simplified AJAX call
@@ -9,17 +67,17 @@ import { style } from './css';
  * @returns {Promise}
  */
 function ajaxRequest(url, type) {
+	const SUCCESS = 200;
 
 	return new Promise((resolve, reject) => {
-
 		let xmlHTTP = new XMLHttpRequest();
 
 		xmlHTTP.open('GET', url);
 		xmlHTTP.send();
 
-		xmlHTTP.onload = function () {
+		xmlHTTP.onload = () => {
 
-			if (xmlHTTP.status === 200) {
+			if (xmlHTTP.status === SUCCESS) {
 				switch (type) {
 					case 'JSON':
 						resolve(JSON.parse(xmlHTTP.responseText));
@@ -34,7 +92,7 @@ function ajaxRequest(url, type) {
 
 		};
 
-		xmlHTTP.onerror = function () {
+		xmlHTTP.onerror = () => {
 			reject(report('File or network error'));
 		};
 
@@ -61,7 +119,8 @@ function cleanString(string) {
  */
 function clock(timeInMilliseconds) {
 	const SECONDS_IN_MINUTES = 60;
-	const SECONDS_IN_HOURS = 60 * SECONDS_IN_MINUTES;
+	const MINUTES_IN_HOURS = 60;
+	const SECONDS_IN_HOURS = MINUTES_IN_HOURS * SECONDS_IN_MINUTES;
 	const MILLISECONDS_IN_SECONDS = 1000;
 
 	let remainder = timeInMilliseconds / MILLISECONDS_IN_SECONDS,
@@ -80,7 +139,7 @@ function clock(timeInMilliseconds) {
 		let string = number.toString();
 
 		if (number < 10) {
-			string = '0' + string;
+			string = `0${string}`;
 		}
 
 		return string;
@@ -89,7 +148,7 @@ function clock(timeInMilliseconds) {
 	// find how many hours there are
 	if (remainder >= SECONDS_IN_HOURS) {
 		hours = Math.floor(remainder / SECONDS_IN_HOURS);
-		remainder = remainder - hours * SECONDS_IN_HOURS;
+		remainder -= hours * SECONDS_IN_HOURS;
 	} else {
 		hours = 0;
 	}
@@ -97,7 +156,7 @@ function clock(timeInMilliseconds) {
 	// find how many minutes there are
 	if (remainder >= SECONDS_IN_MINUTES) {
 		minutes = Math.floor(remainder / SECONDS_IN_MINUTES);
-		remainder = remainder - minutes * SECONDS_IN_MINUTES;
+		remainder -= minutes * SECONDS_IN_MINUTES;
 	} else {
 		minutes = 0;
 	}
@@ -105,7 +164,7 @@ function clock(timeInMilliseconds) {
 	// find how many seconds
 	if (remainder >= 1) {
 		seconds = Math.floor(remainder);
-		remainder = remainder - seconds;
+		remainder -= seconds;
 	} else {
 		seconds = 0;
 	}
@@ -123,57 +182,8 @@ function clock(timeInMilliseconds) {
 		hours  : addLeadingZero(hours),
 		minutes: addLeadingZero(minutes),
 		seconds: addLeadingZero(seconds),
-		split  : split
+		split
 	};
-}
-
-/**
- * Creates a DOM object
- * @param {String} type
- * @param {Object} options
- * @param {Object} css
- *
- * @returns {Object}
- */
-function newObject(type, options, css) {
-	let newObject,
-		id = config.elementRoot;
-
-	if (!type) { type = 'div'; }
-
-	newObject = document.createElement(type);
-
-	if (options) {
-		if (options.id) {
-			id = id + '_' + options.id;
-		}
-
-		if (options.id || options.root) {
-			newObject.setAttribute('id', id);
-		}
-
-		if (options.class) {
-			newObject.setAttribute('class', options.class);
-		}
-
-		if (options.parent) {
-			options.parent.appendChild(newObject);
-		}
-
-		if (options.attributes && Array.isArray(options.attributes)) {
-			for (let i = 0; i < options.attributes.length; i += 1) {
-				let property = options.attributes[i][0],
-					value = options.attributes[i][1];
-				newObject.setAttribute(property, value);
-			}
-		}
-	}
-
-	if (css) {
-		style(newObject, css); // test for bug here with the reference
-	}
-
-	return newObject;
 }
 
 /**
@@ -209,4 +219,4 @@ function report(message) {
 	}
 }
 
-export { ajaxRequest, cleanString, clock, newObject, random, report };
+export { ajaxRequest, cleanString, clock, element, random, report };

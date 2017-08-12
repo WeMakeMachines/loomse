@@ -1,9 +1,14 @@
-import {newObject} from '../tools/common';
+/**
+ * Progress loading bar
+ *
+ */
 
-let parentElement = newObject('div', { id: 'loading' });
+import { element } from '../tools/common';
+
+let parentElement = element.create({ id: 'loading' });
 
 const loading = {
-	parentElement: parentElement
+	parentElement
 };
 
 export { loading as default };

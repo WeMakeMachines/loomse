@@ -1,15 +1,16 @@
 /**
  * Subtitles handling and rendering
  * Since subtitles appear in a linear fashion (the next one always follows the previous one),
- * we always keep on record the current subtitle to be displayed
+ * -> we always keep on record the current subtitle to be displayed
+ *
  */
 
-import { ajaxRequest, newObject, report } from '../tools/common';
+import { ajaxRequest, element, report } from '../tools/common';
 import config from '../configs/config';
 import media from './media';
 
-let parentElement = newObject('div', { id: 'subtitles '}),
-	element = document.createElement('p'),
+let parentElement = element.create({ id: 'subtitles '}),
+	subtitle = element.create({type: 'p'}),
 	isActive, // boolean which determines whether subtitles are on or off
 	subtitlesArray = [], // our array which holds all of the subtitles
 	arrayPosition = 0,
@@ -63,25 +64,25 @@ function parse(url) {
 				}
 				// skip to next line, we're expecting the times now
 				times = array[i + 1];
-				timeIn = (function () {
+				timeIn = (() => {
 					let string = times.slice(0, 12);
 
 					return convertToInternalTime(string, [0, 2], [3, 5], [6, 8], [9, 12]);
-				}());
-				timeOut = (function () {
+				})();
+				timeOut = (() => {
 					let string = times.slice(17, 29);
 
 					return convertToInternalTime(string, [0, 2], [3, 5], [6, 8], [9, 12]);
-				}());
+				})();
 				i += 1;
 			} else {
-				string = string + ' ' + currentRecord;
+				string = `${string} ${currentRecord}`;
 			}
 		}
 	}
 
 	// Pull the data from the subtitles file, and also determine what type of file we need to parse
-	ajaxRequest(url, null, true, function (data) {
+	ajaxRequest(url, null, true, (data) => {
 		if (data !== false) {
 			rawSubs = data.match(/[^\r\n]+/g);
 			// check the ending characters of the url to determine the type of file
@@ -128,7 +129,7 @@ function check(time) {
 }
 
 /**
- * Append our subtitle to the DOM
+ * Append our subtitle to the DOM (show the subtitle)
  * @param {String} phrase
  */
 function display(phrase) {
@@ -136,8 +137,8 @@ function display(phrase) {
 		if (config.behaviour.developer.verbose === 'subtitles') {
 			report('[Subtitle] ' + phrase);
 		}
-		element.innerHTML = phrase;
-		parentElement.appendChild(element);
+		subtitle.innerHTML = phrase;
+		parentElement.appendChild(subtitle);
 	}
 }
 
@@ -147,6 +148,10 @@ function display(phrase) {
  * @param {Number} time
  */
 function remove(time) {
+
+	/**
+	 * Destroys the subtitle
+	 */
 	function destroy() {
 		if (activeTitle[3] === true) {
 			activeTitle[3] = false;
@@ -188,17 +193,17 @@ function reset(time) {
 }
 
 const subtitles = {
-	parentElement: parentElement,
-	parse  : parse, // parse subtitle file
-	check  : check, // check if next subtitle is ready to be displayed
-	display: display, // show the subtitle
-	remove : remove, // remove existing subtitle
-	reset  : reset, // reset subtitles (fixes to current time index)
-	on     : function () {
+	parentElement,
+	parse,
+	check,
+	display,
+	remove,
+	reset,
+	on: () => {
 		reset(media.object.currentTime);
 		isActive = true;
 	},
-	off: function () {
+	off: () => {
 		remove();
 		isActive = false;
 	}

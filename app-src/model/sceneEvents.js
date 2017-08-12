@@ -12,22 +12,22 @@ const MINIMUM_SEEK_RANGE = config.behaviour.media.minimum_seek_range;
 
 let events = {
 		queue : [],
-		update: function(callback) {
+		update: (callback) => {
 			for (let i = 0; i < this.queue.length; i += 1) {
 				callback(this.queue[i]);
 			}
 		},
-		killAll: function() {
+		killAll: () => {
 			this.update((event) => {
 				event.kill();
 			});
 		},
-		resetStates: function() {
+		resetStates: () => {
 			this.update((event) => {
 				event.state = 'waiting';
 			});
 		},
-		fixStates: function(time) {
+		fixStates: (time) => {
 			this.update((event) => {
 				event.fixState(time);
 			});
@@ -46,6 +46,7 @@ class Event {
 	 * @param {String} call
 	 * @param {Object} schedule
 	 * @param {Object} parameters
+	 * @param {Object} element
 	 */
 	constructor(id, call, schedule, parameters, element) {
 		this.id = id; // event id
@@ -162,7 +163,7 @@ function schedule(array) {
 
 		if (!checkExtensionAPI || eventToSchedule.disabled) { continue; }
 
-		let id = eventToSchedule.call + '_' + i,
+		let id = `${eventToSchedule.call}_${i}`,
 			event = new Event(
 				id,
 				extensionCalls(),

@@ -1,8 +1,11 @@
-// Handles all our media object and requests
+/**
+ * Handles all our media object and requests
+ *
+ */
 
-import { ajaxRequest, newObject } from '../tools/common';
+import { ajaxRequest, element } from '../tools/common';
 
-let parentElement = newObject('div', { id: 'mediaGroup' }),
+let parentElement = element.create({ id: 'mediaGroup' }),
 	mediaObject = {};
 
 const MILLISECONDS_IN_SECONDS = 1000;
@@ -67,7 +70,7 @@ class Video extends MediaObject {
 	 */
 	constructor (object) {
 		super(object);
-		this.element = newObject('video', { id: 'video' });
+		this.element = element.create({ type: 'video', id: 'video' });
 		this.sources = {
 			ogg: object.video.ogg || false,
 			mp4: object.video.mp4 || false
@@ -83,12 +86,13 @@ class Video extends MediaObject {
 		if (typeof this.sources.ogg === 'string' && this.sources.ogg !== '') {
 			ajaxRequest(this.sources.ogg)
 				.then(() => {
-					this.sources.ogg = newObject('source', {
-						attributes: [
-							['src', this.sources.ogg],
-							['type', 'video/ogg']
-						]
-					});
+					let source = this.sources.ogg;
+
+					this.sources.ogg = element.create({ type: 'source'});
+					element.attributes(this.sources.ogg, [
+						['src', source],
+						['type', 'video/ogg']
+					]);
 					this.element.appendChild(this.sources.ogg);
 				})
 				.catch(() => {
@@ -99,12 +103,13 @@ class Video extends MediaObject {
 		if (typeof this.sources.mp4 === 'string' && this.sources.mp4 !== '') {
 			ajaxRequest(this.sources.mp4)
 				.then(() => {
-					this.sources.mp4 = newObject('source', {
-						attributes: [
-							['src', this.sources.mp4],
-							['type', 'video/mp4']
-						]
-					});
+					let source = this.sources.ogg;
+
+					this.sources.mp4 = element.create('source');
+					element.attributes(this.sources.mp4, [
+						['src', source],
+						['type', 'video/mp4']
+					]);
 					this.element.appendChild(this.sources.mp4);
 				})
 				.catch(() => {
@@ -145,7 +150,7 @@ class Audio extends MediaObject {
 	 */
 	constructor (object) {
 		super(object);
-		this.element = newObject('audio', { id: 'audio' });
+		this.element = element.create({ type: 'audio', id: 'audio' });
 	}
 }
 
@@ -154,10 +159,10 @@ class Audio extends MediaObject {
  * @param {String} state
  */
 function broadcastMediaState(state) {
-	let event = new CustomEvent('media:state:change', { detail:
-		{
-			state: state,
-			time : getCurrentTime()
+	let event = new CustomEvent('media:state:change', {
+		detail: {
+			state,
+			time: getCurrentTime()
 		}
 	});
 
@@ -237,7 +242,7 @@ const media = {
 	 * @param {Function} callback
 	 *
 	 */
-	initialise: function(media, callback) {
+	initialise: (media, callback) => {
 
 		let initialised;
 
@@ -267,12 +272,12 @@ const media = {
 		callback(initialised, media.autoplay);
 	},
 
-	parentElement : parentElement,
-	getCurrentTime: getCurrentTime,
-	getLength     : getLength,
-	play          : play,
-	pause         : pause,
-	seek          : seek
+	parentElement,
+	getCurrentTime,
+	getLength,
+	play,
+	pause,
+	seek
 };
 
 export { media as default };

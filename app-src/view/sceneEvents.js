@@ -2,9 +2,10 @@
  * Handles the view component for the sceneEvents
  *
  */
-import { newObject } from '../tools/common';
 
-let parentElement = newObject('div', { id: 'events' });
+import { element } from '../tools/common';
+
+let parentElement = element.create({ id: 'events' });
 
 /**
  * Creates an element for the event
@@ -12,7 +13,7 @@ let parentElement = newObject('div', { id: 'events' });
  * @returns {Object}
  */
 function createEventElement(id) {
-	let eventElement = newObject('div', { id: id});
+	let eventElement = element.create({ id });
 
 	// apply class hidden
 	parentElement.appendChild(eventElement);
@@ -21,8 +22,8 @@ function createEventElement(id) {
 }
 
 const sceneEventsView = {
-	parentElement     : parentElement,
-	createEventElement: createEventElement
+	parentElement,
+	createEventElement
 };
 
 export { sceneEventsView as default };

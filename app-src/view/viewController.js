@@ -1,15 +1,19 @@
+/**
+ * Handles all the main view arrangements
+ *
+ */
+
 import config from '../configs/config';
+import { element } from '../tools/common';
 import loading from './loading';
 import media from './media';
-import { newObject } from '../tools/common';
 import sceneEventsView from './sceneEvents';
-import { style } from '../tools/css';
 import subtitles from './subtitles';
 
-let elements = {
+let appNodes = {
 		root   : null,
-		stage  : newObject('div', { id: 'stage' }),
-		overlay: newObject('div', { id: 'overlay' })
+		stage  : element.create({ id: 'stage' }),
+		overlay: element.create({ id: 'overlay' })
 	},
 	resolution = {
 		width : null,
@@ -17,32 +21,46 @@ let elements = {
 	};
 
 /**
+ * Appends multiple elements to a single node
+ * @param {Object} parent
+ * @param {Array} children
+ */
+function appendToParent(parent, children) {
+	let fragment = document.createDocumentFragment();
+
+	for (let i = 0; i < children.length; i += 1) {
+		let child = children[i];
+
+		fragment.appendChild(child);
+	}
+
+	parent.appendChild(fragment);
+}
+
+/**
  * Creates all DOM elements needed for each view
  * @returns {Boolean}
  */
 function prepareDOM() {
 
-	elements.root = document.getElementById(config.elementRoot);
+	appNodes.root = document.getElementById(config.elementRoot);
 
-	if (typeof elements.root !== 'object') { return false; }
+	if (typeof appNodes.root !== 'object') { return false; }
 
-	elements.root
-		.appendChild(elements.stage);
+	appendToParent(appNodes.root, [
+		appNodes.stage,
+		appNodes.overlay,
+		loading.parentElement
+	]);
 
-	elements.root
-		.appendChild(elements.overlay);
+	appendToParent(appNodes.overlay, [
+		sceneEventsView.parentElement,
+		subtitles.parentElement
+	]);
 
-	elements.root
-		.appendChild(loading.parentElement);
-
-	elements.overlay
-		.appendChild(sceneEventsView.parentElement);
-
-	elements.overlay
-		.appendChild(subtitles.parentElement);
-
-	elements.stage
-		.appendChild(media.parentElement);
+	appendToParent(appNodes.stage, [
+		media.parentElement
+	]);
 
 	return true;
 }
@@ -61,12 +79,12 @@ function getClientDimensions() {
  * @param {Number} height
  */
 function resizeContainers(width, height) {
-	for (let element in elements) {
-		if (elements.hasOwnProperty(element)) {
+	for (let child in appNodes) {
+		if (appNodes.hasOwnProperty(child)) {
 
-			style(elements[element], {
-				width : width,
-				height: height
+			element.style(appNodes[child], {
+				width,
+				height
 			});
 		}
 	}
@@ -80,8 +98,8 @@ const viewController = {
 	 */
 	initialise: () => prepareDOM(),
 
-	elements  : elements,
-	resolution: resolution
+	appNodes,
+	resolution
 };
 
 export { viewController as default };
