@@ -8,12 +8,17 @@ import { element } from '../tools/common';
 import loading from './loading';
 import media from './media';
 import sceneEventsView from './sceneEvents';
-import subtitles from './subtitles';
+import subtitlesView from './subtitles';
+
+const SETUP = {
+	stageID  : 'stage',
+	overlayID: 'overlay'
+};
 
 let appNodes = {
 		root   : null,
-		stage  : element.create({ id: 'stage' }),
-		overlay: element.create({ id: 'overlay' })
+		stage  : element.create({ id: SETUP.stageID }),
+		overlay: element.create({ id: SETUP.overlayID })
 	},
 	resolution = {
 		width : null,
@@ -43,7 +48,7 @@ function appendToParent(parent, children) {
  */
 function prepareDOM() {
 
-	appNodes.root = document.getElementById(config.elementRoot);
+	appNodes.root = document.getElementById(config.appRoot);
 
 	if (typeof appNodes.root !== 'object') { return false; }
 
@@ -55,7 +60,7 @@ function prepareDOM() {
 
 	appendToParent(appNodes.overlay, [
 		sceneEventsView.parentElement,
-		subtitles.parentElement
+		subtitlesView.parentElement
 	]);
 
 	appendToParent(appNodes.stage, [

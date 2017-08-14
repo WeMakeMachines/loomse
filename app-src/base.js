@@ -2,17 +2,99 @@
  * Loom Story Engine
  *
  */
+import config from './configs/config';
+import scriptBehaviour from './configs/scriptBehaviour';
+
 import { ajaxRequest, clock, report } from './tools/common';
 import { browser, fullScreen } from './tools/browser';
+
 import data, { initialiseDataObject } from './model/data';
-import config from './configs/config';
-import media from './view/media';
+import sceneEventsModel from './model/sceneEvents';
 import scriptHandler from './model/scriptHandler';
+import subtitlesModel from './model/subtitles';
+
+import media from './view/media';
 import view from './view/viewController';
 
 const VERSION = config.version;
 
+/**
+ * Determines the appropriate source of the script (mobile or desktop)
+ * @returns {Object}
+ */
+function getScriptSource() {
+	let deviceType = browser.check(),
+		source;
+
+	switch (deviceType) {
+		case 'mobile':
+			source = config.scripts.mobile;
+			break;
+		case 'desktop':
+			source = config.scripts.desktop;
+			break;
+		default:
+			break;
+	}
+
+	return source;
+}
+
+/**
+ * Sets the wheels in motion
+ * @param {String} scene
+ */
+function prepareAllParts(scene) {
+
+	scriptHandler.initialise(scene);
+
+	let checkForEvents = Array.isArray(data.currentScene.events) && data.currentScene.events.length > 0,
+		checkSubtitles,
+		subtitlesSrc;
+
+	/**
+	 * Plays media if autoplay is on
+	 */
+	function ready() {
+		if (data.currentScene.media.autoplay) {
+			media.play();
+		}
+	}
+
+	media.initialise(data.currentScene.media);
+
+	if (checkForEvents) {
+		sceneEventsModel.initialise(data.currentScene.events);
+	}
+
+	if (scriptBehaviour.subtitles.active) {
+		subtitlesSrc = data.currentScene.media.subtitles[scriptBehaviour.subtitles.language];
+
+		checkSubtitles = subtitlesModel.initialise(subtitlesSrc);
+
+		checkSubtitles.then(() => {
+			subtitlesModel.on();
+			ready();
+		});
+
+		checkSubtitles.catch(() => {
+			report('Error');
+		});
+	} else {
+		ready();
+	}
+}
+
 export default {
+
+	fullScreen: fullScreen.toggle,
+
+	/**
+	 * Restarts the current scene
+	 */
+	reload: () => {
+		media.seek(0);
+	},
 
 	pause: () => { media.pause(); },
 
@@ -25,27 +107,21 @@ export default {
 	seek: (time) => { media.seek(time); },
 
 	/**
-	 * Restarts the current scene
-	 */
-	reload: () => {
-		media.seek(0);
-	},
-
-	/**
 	 * Abandon current scene and load the named scene
 	 * @param {String} sceneName
 	 */
 	skip: (sceneName) => {
-		scriptHandler.initialise(sceneName);
+		prepareAllParts(sceneName);
 	},
-
-	fullScreen: fullScreen.toggle,
 
 	/**
 	 * Report media stats
 	 */
 	status: () => {
-		report('Current time:' + clock(media.getCurrentTime()) + ' / Duration: ' + clock(media.getLength()));
+		let time = clock(media.getCurrentTime()),
+			duration = clock(media.getLength());
+
+		report(`Current time: ${time}\nDuration: ${duration}`);
 	},
 
 	currentTime: () => clock(media.getCurrentTime()),
@@ -58,50 +134,24 @@ export default {
 
 	/**
 	 * Our public initialise method, used to initialise our application
-	 * @param {Function} callback - callback to run after script processing
 	 *
-	 * @returns {Boolean} returns false and halts script if conditions are not met
 	 */
-	initialise: (callback) => {
-
-		let scriptSrc,
-			deviceType = browser.check(),
-			checkDOM,
-			receiveScript;
-
-		switch (deviceType) {
-			case 'mobile':
-				scriptSrc = config.scripts.mobile;
-				break;
-			case 'desktop':
-				scriptSrc = config.scripts.desktop;
-				break;
-			default:
-				report('Your browser is not supported.');
-				return false;
-		}
-
-		checkDOM = new Promise((resolve) => {
-			resolve(view.initialise());
-		});
-		receiveScript = ajaxRequest(scriptSrc, 'JSON');
+	initialise: () => {
+		let firstScene = scriptBehaviour.firstScene,
+			scriptSrc = getScriptSource(),
+			checkScript = ajaxRequest(scriptSrc, 'JSON');
 
 		initialiseDataObject();
+		view.initialise();
 
-		Promise.all([checkDOM, receiveScript])
-			.then((values) => {
-				data.script = values[1];
-				scriptHandler.initialise(config.firstScene);
-				//gui.load();
-				if (callback) {
-					callback();
-				}
-			})
-			.catch((reason) => {
-				report('Oops! Something went wrong. This experience will not work correctly.');
-				report(reason);
-				return false;
-			});
+		checkScript.then((values) => {
+			data.script = values;
+
+			prepareAllParts(firstScene);
+		});
+
+		checkScript.catch(() => {
+			report('Oops, something went wrong with the script :(');
+		});
 	}
-
 };

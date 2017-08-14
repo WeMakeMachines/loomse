@@ -3,31 +3,31 @@
  *
  */
 
-import config from '../configs/config';
 import media from '../view/media';
 import sceneEventsView from '../view/sceneEvents';
+import scriptBehaviour from '../configs/scriptBehaviour';
 import userDefinedModules from '../user/extensions';
 
-const MINIMUM_SEEK_RANGE = config.behaviour.media.minimum_seek_range;
+const MINIMUM_SEEK_RANGE = scriptBehaviour.media.minimum_seek_range;
 
 let events = {
 		queue : [],
-		update: (callback) => {
+		update: function(callback) {
 			for (let i = 0; i < this.queue.length; i += 1) {
 				callback(this.queue[i]);
 			}
 		},
-		killAll: () => {
+		killAll: function() {
 			this.update((event) => {
 				event.kill();
 			});
 		},
-		resetStates: () => {
+		resetStates: function() {
 			this.update((event) => {
 				event.state = 'waiting';
 			});
 		},
-		fixStates: (time) => {
+		fixStates: function(time) {
 			this.update((event) => {
 				event.fixState(time);
 			});
@@ -179,26 +179,40 @@ function schedule(array) {
 /**
  * Sets listeners for the HTML5 media object
  */
-function setListeners () {
-	media.parentElement.addEventListener('media:state:change', (eventObject) => {
-		let message = eventObject.detail,
-			isSameTime = message.time - previousMediaTimeIndex === 0,
-			isSeeking = message.time - previousMediaTimeIndex >= MINIMUM_SEEK_RANGE || message.state === 'seeking';
+function addMediaListener() {
+	media.parentElement.addEventListener('media:state:change', mediaListener, false);
+}
 
-		if (isSameTime) { return false; }
+/**
+ * Removes the media listener
+ */
+function removeMediaListener() {
+	media.parentElement.removeEventListener('media:state:change', mediaListener, false);
+}
 
-		if (isSeeking) {
-			events.fixStates(message.time);
-			previousMediaTimeIndex = message.time;
-			return false;
-		}
+/**
+ * Function which is triggered by the listener
+ * @param {Object} eventObject
+ * @returns {Boolean}
+ */
+function mediaListener(eventObject) {
+	let message = eventObject.detail,
+		isSameTime = message.time - previousMediaTimeIndex === 0,
+		isSeeking = message.time - previousMediaTimeIndex >= MINIMUM_SEEK_RANGE || message.state === 'seeking';
 
-		events.update((event) => {
-			event.checkSchedule(message.time);
-		});
+	if (isSameTime) { return false; }
 
+	if (isSeeking) {
+		events.fixStates(message.time);
 		previousMediaTimeIndex = message.time;
-	}, false);
+		return false;
+	}
+
+	events.update((event) => {
+		event.checkSchedule(message.time);
+	});
+
+	previousMediaTimeIndex = message.time;
 }
 
 const sceneEventsModel = {
@@ -206,10 +220,13 @@ const sceneEventsModel = {
 	/**
 	 * Initialises the module
 	 * @param {Array} eventArray
+	 * @returns {Boolean}
 	 */
 	initialise: (eventArray) => {
 		schedule(eventArray);
-		setListeners();
+		addMediaListener();
+
+		return true;
 	}
 };
 

@@ -5,10 +5,13 @@
 
 import { ajaxRequest, element } from '../tools/common';
 
-let parentElement = element.create({ id: 'mediaGroup' }),
-	mediaObject = {};
-
+const SETUP = {
+	id: 'mediaGroup'
+};
 const MILLISECONDS_IN_SECONDS = 1000;
+
+let parentElement = element.create({ id: SETUP.id }),
+	mediaObject = {};
 
 /**
  * Media object super class
@@ -239,12 +242,10 @@ const media = {
 	 * Creates a media object and posts it to the DOM
 	 *
 	 * @param {Object} media
-	 * @param {Function} callback
+	 * @returns {Boolean}
 	 *
 	 */
-	initialise: (media, callback) => {
-
-		let initialised;
+	initialise: (media) => {
 
 		switch (media.type) {
 			case 'video':
@@ -252,24 +253,21 @@ const media = {
 					.setAttributes()
 					.setSources()
 					.setDimensions(800, 800);
-
-				initialised = true;
 				break;
 
 			case 'audio':
 				mediaObject = new Audio(media);
-				initialised = true;
 				break;
 
 			default:
-				initialised = false;
+				return false;
 		}
 
 		parentElement.appendChild(mediaObject.element);
 
 		listenToMediaEvents();
 
-		callback(initialised, media.autoplay);
+		return true;
 	},
 
 	parentElement,

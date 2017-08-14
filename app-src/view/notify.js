@@ -5,7 +5,11 @@
 
 import { element } from '../tools/common';
 
-let parentElement = element.create({ id: 'loading' });
+const SETUP = {
+	id: 'notify'
+};
+
+let parentElement = element.create({ id: SETUP.id });
 
 const loading = {
 	parentElement

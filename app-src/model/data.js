@@ -1,6 +1,6 @@
 let data = {};
 
-const initialiseDataObject = function() {
+const initialiseDataObject = () => {
 
 	data = {
 		script      : null,

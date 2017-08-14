@@ -27,9 +27,7 @@
 				"video": {
 					"ogg": "assets/videos/TvTestCard.ogv",
 					"mp4": "assets/videos/TvTestCard_512kb.mp4",
-					"duration": null,
-					"width": 400,
-					"height": 304
+					"duration": null
 				},
 				"subtitles": {
 					"english": "assets/subtitles/english.srt"

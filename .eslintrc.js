@@ -51,7 +51,7 @@ module.exports = {
         ],
         "consistent-this": "error",
         "curly": "error",
-        "default-case": "error",
+        "default-case": "warn",
         "dot-notation": [
             "error",
             {
@@ -234,7 +234,7 @@ module.exports = {
             }
         ],
         "prefer-numeric-literals": "error",
-        "prefer-promise-reject-errors": "error",
+        "prefer-promise-reject-errors": "off",
         "prefer-reflect": "off",
         "prefer-rest-params": "error",
         "prefer-spread": "error",
@@ -265,7 +265,7 @@ module.exports = {
                 "before": false
             }
         ],
-        "sort-imports": "error",
+        "sort-imports": "warn",
         "sort-keys": "off",
         "sort-vars": "off",
         "space-before-blocks": "error",

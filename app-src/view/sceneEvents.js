@@ -5,7 +5,11 @@
 
 import { element } from '../tools/common';
 
-let parentElement = element.create({ id: 'events' });
+const SETUP = {
+	id: 'events'
+};
+
+let parentElement = element.create({ id: SETUP.id });
 
 /**
  * Creates an element for the event

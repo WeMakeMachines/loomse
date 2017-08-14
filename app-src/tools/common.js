@@ -83,7 +83,7 @@ function ajaxRequest(url, type) {
 						resolve(JSON.parse(xmlHTTP.responseText));
 						break;
 					default:
-						resolve(xmlHTTP.status);
+						resolve(xmlHTTP.responseText);
 						break;
 				}
 			} else {
