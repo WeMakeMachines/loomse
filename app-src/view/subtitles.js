@@ -9,32 +9,42 @@ import { element, report } from '../tools/common';
 import config from '../configs/config';
 
 const SETUP = {
-	id: 'subtitles'
+	parent: {
+		id   : 'subtitles',
+		class: 'subtitle'
+	}
 };
 
-let parentElement = element.create({ id: SETUP.id }),
-	subtitle = element.create({type: 'p'});
-
+let parentElement = element.create({ id: SETUP.parent.id, class: SETUP.parent.class });
 
 /**
  * Append our subtitle to the DOM (show the subtitle)
  * @param {String} phrase
  */
 function display(phrase) {
+	let newSubtitle = element.create({type: 'p'}),
+		text = document.createTextNode(phrase);
+
 	if (config.developer.checkVerbose('subtitles')) {
 		report(`[Subtitle] ${phrase}`);
 	}
-	subtitle.innerHTML = phrase;
-	parentElement.appendChild(subtitle);
+
+	remove();
+
+	newSubtitle.appendChild(text);
+	parentElement.appendChild(newSubtitle);
 }
 
 /**
  * Removes a subtitle
- * If no time is specified, the function defaults to removing the current existing subtitle
- * @param {Number} time
+ *
  */
-function remove(time) {
-	parentElement.innerHTML = '';
+function remove() {
+	let oldSubtitle = parentElement.firstElementChild;
+
+	if (oldSubtitle) {
+		parentElement.removeChild(oldSubtitle);
+	}
 }
 
 const subtitles = {

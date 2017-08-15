@@ -110,9 +110,7 @@ export default {
 	 * Abandon current scene and load the named scene
 	 * @param {String} sceneName
 	 */
-	skip: (sceneName) => {
-		prepareAllParts(sceneName);
-	},
+	skip: (sceneName) => { prepareAllParts(sceneName); },
 
 	/**
 	 * Report media stats

@@ -1,7 +1,5 @@
 /**
  * Subtitles handling and rendering
- * Since subtitles appear in a linear fashion (the next one always follows the previous one),
- * -> we always keep on record the current subtitle to be displayed
  *
  */
 
@@ -31,16 +29,15 @@ const fileTypes = {
 
 		for (let i = 0; i < rawLines.length;) {
 			let currentLine = rawLines[i],
-				isBlockMarker = !isNaN(Number(currentLine)),
-				isNextBlockMarker = !isNaN(Number(rawLines[i + 1])),
+				isBlockIndex = !isNaN(Number(currentLine)),
+				isNextBlockIndex = !isNaN(Number(rawLines[i + 1])),
 				lastRecord = i === rawLines.length - 1,
-				time;
+				times;
 
-			if (isBlockMarker) { // Handle index and times
+			if (isBlockIndex) { // Handle index and times
 				string = '';
-				time = rawLines[i + 1];
-				parsedObject = returnCleanedTimes(time, INTERFACE.splitTimesChar);
-
+				times = rawLines[i + 1];
+				parsedObject = returnCleanedTimes(times, INTERFACE.splitTimesChar);
 				i += 2;
 			} else { // Handle strings
 				if (string === '') {
@@ -49,7 +46,7 @@ const fileTypes = {
 					string += `\n${currentLine}`;
 				}
 
-				if (lastRecord || isNextBlockMarker) {
+				if (lastRecord || isNextBlockIndex) {
 					parsedObject.text = string;
 					subtitlesArray.push(parsedObject);
 					parsedObject = {};
@@ -84,7 +81,7 @@ function returnCleanedTimes(string, splitChar) {
 /**
  * Converts a string into an internal time our application can understand
  * @param {Array} array
- * @returns {number}
+ * @returns {Number}
  */
 function convertToInternalTime(array) {
 	const MINUTES_IN_HOURS = 60;
@@ -108,27 +105,48 @@ function convertToInternalTime(array) {
  * Here we check the current subtitle record against the current media time and
  * determine whether the subtitle is ready to be displayed, or if it ready to be removed
  * @param {Number} time
+ * @returns {Boolean}
  */
 function check(time) {
-	if (!active || subtitleIndex === subtitlesArray.length) { return false; }
+	if (!active || subtitleIndex === subtitlesArray.length || !Boolean(~subtitleIndex)) { return false; }
 
 	let currentSubtitle = subtitlesArray[subtitleIndex];
 
-	if (currentSubtitle.in === time || currentSubtitle.in < time) {
-		console.log(currentSubtitle.text);
+	if (!currentSubtitle.active && (currentSubtitle.in === time || currentSubtitle.in < time)) {
+
+		subtitlesView.display(currentSubtitle.text);
+		currentSubtitle.active = true;
+	}
+
+	if (currentSubtitle.out === time || currentSubtitle.out < time) {
+
+		subtitlesView.remove();
+		currentSubtitle.active = false;
+
 		subtitleIndex += 1;
 	}
 }
 
 /**
- * Sometimes the media player will have been forced to move further ahead
- * or behind than what we are expecting, throwing our subtitles out of sync.
- * If that is the case, this function will rectify the situation by finding where the
- * current position should be in the array.
+ * Restore current position if time index has been forced to change
  * @param {Number} time
  */
-function reset(time) {
+function fix(time) {
+	active = false;
 	subtitlesView.remove();
+	subtitleIndex = -1;
+
+	for (let i = 0; i < subtitlesArray.length; i += 1) {
+		let currentSubtitle = subtitlesArray[i];
+
+		currentSubtitle.active = false;
+
+		if (subtitleIndex === -1 && currentSubtitle.in > time) {
+			subtitleIndex = i;
+		}
+	}
+
+	active = true;
 }
 
 /**
@@ -150,9 +168,16 @@ function removeMediaListener() {
  * @param {Object} eventObject
  */
 function mediaListener(eventObject) {
-	let time = eventObject.detail.time;
+	let time = eventObject.detail.time,
+		state = eventObject.detail.state;
 
-	check(time);
+	if (state === 'playing' || state === 'timeupdate') {
+		check(time);
+	}
+
+	if (state === 'seeking') {
+		fix(time);
+	}
 }
 
 /**
@@ -219,7 +244,7 @@ const subtitles = {
 
 	active,
 	check,
-	reset
+	fix
 };
 
 export { subtitles as default };
