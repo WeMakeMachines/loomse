@@ -187,6 +187,27 @@ function clock(timeInMilliseconds) {
 }
 
 /**
+ * Prevents a function from being called repeatedly
+ * @param {Function} callback
+ * @param {Number} delay
+ * @returns {Function}
+ */
+const debounce = (() => {
+	let delayedFunction;
+
+	return (callback, delay) => {
+
+		if (delayedFunction) {
+			clearTimeout(delayedFunction);
+		}
+
+		delayedFunction = setTimeout(() => {
+			callback();
+		}, delay);
+	};
+})();
+
+/**
  * Returns a random number between minRange and maxRange
  * @param {Number} minRange
  * @param {Number} maxRange
@@ -219,4 +240,4 @@ function report(message) {
 	}
 }
 
-export { ajaxRequest, cleanString, clock, element, random, report };
+export { ajaxRequest, cleanString, clock, debounce, element, random, report };

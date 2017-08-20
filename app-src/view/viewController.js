@@ -3,24 +3,31 @@
  *
  */
 
+import { debounce, element } from '../tools/common';
 import config from '../configs/config';
-import { element } from '../tools/common';
 import loading from './loading';
 import media from './media';
+import notify from './notify';
 import sceneEventsView from './sceneEvents';
 import subtitlesView from './subtitles';
 
-const SETUP = {
-	stageID  : 'stage',
-	overlayID: 'overlay'
-};
 
 let appNodes = {
-		root   : null,
-		stage  : element.create({ id: SETUP.stageID }),
-		overlay: element.create({ id: SETUP.overlayID })
+		root: {
+			element : null,
+			children: [
+				{
+					id      : 'stage',
+					children: [media.parentElement]
+				},
+				{
+					id      : 'overlay',
+					children: [notify.parentElement, sceneEventsView.parentElement, subtitlesView.parentElement]
+				}
+			]
+		}
 	},
-	resolution = {
+	dimensions = {
 		width : null,
 		height: null
 	};
@@ -43,29 +50,39 @@ function appendToParent(parent, children) {
 }
 
 /**
+ * Setup the application nodes
+ * @param {Object} root
+ * @param {Array} children
+ */
+function setupAppNodes(root, children) {
+	for (let i = 0; i < children.length; i += 1) {
+		let currentChild = children[i];
+
+		if (!currentChild.element) {
+			currentChild.element = element.create({ id: currentChild.id });
+		}
+
+		if (currentChild.children && currentChild.children.length) {
+			appendToParent(currentChild.element, currentChild.children);
+		}
+
+		root.appendChild(currentChild.element);
+	}
+}
+
+/**
  * Creates all DOM elements needed for each view
  * @returns {Boolean}
  */
 function prepareDOM() {
 
-	appNodes.root = document.getElementById(config.appRoot);
+	appNodes.root.element = document.getElementById(config.appRoot);
 
-	if (typeof appNodes.root !== 'object') { return false; }
+	if (typeof appNodes.root.element !== 'object') { return false; }
 
-	appendToParent(appNodes.root, [
-		appNodes.stage,
-		appNodes.overlay,
-		loading.parentElement
-	]);
+	setupAppNodes(appNodes.root.element, appNodes.root.children);
 
-	appendToParent(appNodes.overlay, [
-		sceneEventsView.parentElement,
-		subtitlesView.parentElement
-	]);
-
-	appendToParent(appNodes.stage, [
-		media.parentElement
-	]);
+	setListeners();
 
 	return true;
 }
@@ -74,25 +91,46 @@ function prepareDOM() {
  * Gets the current client dimensions
  */
 function getClientDimensions() {
-	resolution.width = document.documentElement.clientWidth;
-	resolution.height = document.documentElement.clientHeight;
+	dimensions.width = document.documentElement.clientWidth;
+	dimensions.height = document.documentElement.clientHeight;
 }
 
 /**
  * Resizes all rootElement elements to be of same resolution
+ * @param {Object} node
  * @param {Number} width
  * @param {Number} height
  */
-function resizeContainers(width, height) {
-	for (let child in appNodes) {
-		if (appNodes.hasOwnProperty(child)) {
+function resizeContainers(node, width, height) {
+	for (let child in node) {
+		if (node.hasOwnProperty(child)) {
 
-			element.style(appNodes[child], {
+			element.style(node[child], {
 				width,
 				height
 			});
 		}
 	}
+}
+
+/**
+ *
+ */
+function handleViewportResizing() {
+	getClientDimensions();
+	//resizeContainers(appNodes.root.element, dimensions.width, dimensions.height);
+}
+
+/**
+ *
+ */
+function setListeners() {
+
+	const DEBOUNCE_DELAY = 300;
+
+	window.addEventListener('resize', () => {
+		debounce(handleViewportResizing, DEBOUNCE_DELAY);
+	});
 }
 
 const viewController = {
@@ -103,8 +141,7 @@ const viewController = {
 	 */
 	initialise: () => prepareDOM(),
 
-	appNodes,
-	resolution
+	appNodes
 };
 
 export { viewController as default };

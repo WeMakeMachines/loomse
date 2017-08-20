@@ -3,7 +3,7 @@
  * Handles the fullscreen API
  *
  */
-const fullScreen = (function () {
+const fullScreen = (() => {
 
 	let state;
 
@@ -19,14 +19,14 @@ const fullScreen = (function () {
 		toggle: toggle,
 		state : state
 	};
-}());
+})();
 
 /**
  * Keeps a record of the scenes passed through by the user,
  * and provides some control over how to navigate the history
  *
  */
-const history = (function () {
+const history = (() => {
 
 	let scenes = [];
 
@@ -60,7 +60,7 @@ const history = (function () {
 			// save to html5 local storage
 		}
 	};
-}());
+})();
 
 const browser = {
 
@@ -69,7 +69,7 @@ const browser = {
 	 *
 	 * @returns {String}
 	 */
-	check: function() {
+	check: () => {
 		return 'desktop';
 	}
 
