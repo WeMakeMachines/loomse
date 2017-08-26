@@ -110,7 +110,7 @@ module.exports = {
                 "max": 2
             }
         ],
-        "multiline-ternary": "error",
+        "multiline-ternary": "off",
         "new-cap": "error",
         "new-parens": "error",
         "newline-after-var": "off",
@@ -188,7 +188,7 @@ module.exports = {
         "no-sync": "error",
         "no-tabs": "off",
         "no-template-curly-in-string": "error",
-        "no-ternary": "error",
+        "no-ternary": "off",
         "no-throw-literal": "off",
         "no-undef-init": "error",
         "no-undefined": "off",

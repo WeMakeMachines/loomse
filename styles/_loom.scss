@@ -1,91 +1,47 @@
-.hide {
-    display: none;
-}
-
 #loomSE {
     position: absolute;
     left: 0;
     top: 0;
-    z-index: 10000;
+    z-index: 0;
+}
 
-    #loomSE_gui {
-        opacity: 0;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        z-index: 300;
-        width: $gui_width;
-        height: $gui_height;
-    }
+#stage {
+    z-index: 100;
 
-    #loomSE_stage {
+    #mediaGroup {
 
-        #loomSE_overlay {
-            position: absolute;
-            left: 0;
-            top: 0;
-            z-index: 100;
-
-            #loomSE_events {
-                position: absolute;
-                left: 0;
-                top: 0;
-                z-index: 100;
-            }
-
-            #loomSE_subtitles {
-                position: absolute;
-                left: 0;
-                top: 0;
-                z-index: 100;
-            }
-        }
-
-        #loomSE_mediaGroup {
-
-        }
-    }
-
-    #loomSE_notify {
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 200;
-
-        div {
-            opacity: 0;
-        }
-
-        p {
+        video {
             display: block;
-            height: $notify_sprite_size;
-            font-size: 78px;
-            line-height: 67px;
-            letter-spacing: 6px;
-            font-weight: 700;
-            color: $colour_white;
-            padding-left: $notify_sprite_size;
-            margin-left: -$notify_sprite_size;
-        }
-
-        p.paused {
-            background: url("/assets/images/app/notify_sprite_paused.png") no-repeat left transparent;
+            margin: 0 auto;
+            object-fit: cover;
         }
     }
-
 }
 
-/* media */
+#overlay {
+    z-index: 110;
 
-#loomSE_video {
-    display: block;
-    margin: 0 auto;
-    object-fit: cover;
+    #events {
+        z-index: 107;
+    }
+
+    #subtitles {
+        z-index: 108;
+    }
+
+    #notify {
+        z-index: 109;
+    }
 }
 
-#loomSE_poster {
-    z-index: 10;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+.hide {
+    display: none;
+}
+
+.scaleToRoot {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
 }

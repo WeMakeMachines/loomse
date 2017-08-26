@@ -5,10 +5,10 @@
 
 import media from '../view/media';
 import sceneEventsView from '../view/sceneEvents';
-import scriptBehaviour from '../configs/scriptBehaviour';
+import storyBehaviour from '../configs/storyBehaviour';
 import userDefinedModules from '../user/extensions';
 
-const MINIMUM_SEEK_RANGE = scriptBehaviour.media.minimum_seek_range;
+const MINIMUM_SEEK_RANGE = storyBehaviour.media.minimumSeekRange;
 
 let events = {
 		queue : [],

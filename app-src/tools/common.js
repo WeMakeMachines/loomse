@@ -18,8 +18,12 @@ const element = {
 			newElement.setAttribute('id', options.id);
 		}
 
-		if (options.class) {
+		if (options.class && typeof options.class === 'string') {
 			newElement.setAttribute('class', options.class);
+		}
+
+		if (options.class && Array.isArray(options.class)) {
+			newElement.setAttribute('class', options.class.join(' '));
 		}
 
 		return newElement;

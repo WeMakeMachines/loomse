@@ -4,13 +4,16 @@
  */
 
 import { ajaxRequest, element } from '../tools/common';
+import storyBehaviour from '../configs/storyBehaviour';
 
 const SETUP = {
-	id: 'mediaGroup'
+	id   : 'mediaGroup',
+	class: 'scaleToRoot'
 };
 const MILLISECONDS_IN_SECONDS = 1000;
+const MEDIA_BEHAVIOUR = storyBehaviour.media;
 
-let parentElement = element.create({ id: SETUP.id }),
+let parentElement = element.create({ id: SETUP.id, class: SETUP.class }),
 	mediaObject = {};
 
 /**
@@ -247,12 +250,15 @@ const media = {
 	 */
 	initialise: (media) => {
 
+		let videoWidth = MEDIA_BEHAVIOUR.scaleVideoToViewport ? '100%' : MEDIA_BEHAVIOUR.defaultVideoWidth,
+			videoHeight = MEDIA_BEHAVIOUR.scaleVideoToViewport ? '100%' : MEDIA_BEHAVIOUR.defaultVideoWidth;
+
 		switch (media.type) {
 			case 'video':
 				mediaObject = new Video(media)
 					.setAttributes()
 					.setSources()
-					.setDimensions(800, 800);
+					.setDimensions(videoWidth, videoHeight);
 				break;
 
 			case 'audio':

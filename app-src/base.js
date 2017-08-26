@@ -3,7 +3,7 @@
  *
  */
 import config from './configs/config';
-import scriptBehaviour from './configs/scriptBehaviour';
+import storyBehaviour from './configs/storyBehaviour';
 
 import { ajaxRequest, clock, report } from './tools/common';
 import { browser, fullScreen } from './tools/browser';
@@ -67,8 +67,8 @@ function prepareAllParts(scene) {
 		sceneEventsModel.initialise(data.currentScene.events);
 	}
 
-	if (scriptBehaviour.subtitles.active) {
-		subtitlesSrc = data.currentScene.media.subtitles[scriptBehaviour.subtitles.language];
+	if (storyBehaviour.subtitles.active) {
+		subtitlesSrc = data.currentScene.media.subtitles[storyBehaviour.subtitles.language];
 
 		checkSubtitles = subtitlesModel.initialise(subtitlesSrc);
 
@@ -135,7 +135,7 @@ export default {
 	 *
 	 */
 	initialise: () => {
-		let firstScene = scriptBehaviour.firstScene,
+		let firstScene = storyBehaviour.firstScene,
 			scriptSrc = getScriptSource(),
 			checkScript = ajaxRequest(scriptSrc, 'JSON');
 

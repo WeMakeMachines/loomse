@@ -11,18 +11,19 @@ import notify from './notify';
 import sceneEventsView from './sceneEvents';
 import subtitlesView from './subtitles';
 
-
 let appNodes = {
 		root: {
 			element : null,
 			children: [
 				{
 					id      : 'stage',
+					class   : 'scaleToRoot',
 					children: [media.parentElement]
 				},
 				{
 					id      : 'overlay',
-					children: [notify.parentElement, sceneEventsView.parentElement, subtitlesView.parentElement]
+					class   : 'scaleToRoot',
+					children: [notify.parentElement, subtitlesView.parentElement, sceneEventsView.parentElement]
 				}
 			]
 		}
@@ -56,17 +57,20 @@ function appendToParent(parent, children) {
  */
 function setupAppNodes(root, children) {
 	for (let i = 0; i < children.length; i += 1) {
-		let currentChild = children[i];
+		let child = children[i];
 
-		if (!currentChild.element) {
-			currentChild.element = element.create({ id: currentChild.id });
+		if (!child.element) {
+			child.element = element.create({
+				id   : child.id,
+				class: child.class
+			});
 		}
 
-		if (currentChild.children && currentChild.children.length) {
-			appendToParent(currentChild.element, currentChild.children);
+		if (child.children && child.children.length) {
+			appendToParent(child.element, child.children);
 		}
 
-		root.appendChild(currentChild.element);
+		root.appendChild(child.element);
 	}
 }
 
@@ -96,21 +100,16 @@ function getClientDimensions() {
 }
 
 /**
- * Resizes all rootElement elements to be of same resolution
+ * Resizes an element
  * @param {Object} node
  * @param {Number} width
  * @param {Number} height
  */
-function resizeContainers(node, width, height) {
-	for (let child in node) {
-		if (node.hasOwnProperty(child)) {
-
-			element.style(node[child], {
-				width,
-				height
-			});
-		}
-	}
+function resize(node, width, height) {
+	element.style(node, {
+		width,
+		height
+	});
 }
 
 /**
@@ -118,7 +117,7 @@ function resizeContainers(node, width, height) {
  */
 function handleViewportResizing() {
 	getClientDimensions();
-	//resizeContainers(appNodes.root.element, dimensions.width, dimensions.height);
+	resize(appNodes.root.element, dimensions.width, dimensions.height);
 }
 
 /**
@@ -126,7 +125,7 @@ function handleViewportResizing() {
  */
 function setListeners() {
 
-	const DEBOUNCE_DELAY = 300;
+	const DEBOUNCE_DELAY = 200;
 
 	window.addEventListener('resize', () => {
 		debounce(handleViewportResizing, DEBOUNCE_DELAY);
@@ -139,7 +138,13 @@ const viewController = {
 	 * Sets up the DOM in browser
 	 * @returns {Boolean}
 	 */
-	initialise: () => prepareDOM(),
+	initialise: () => {
+		if (prepareDOM()) {
+			handleViewportResizing();
+		}
+
+		return true;
+	},
 
 	appNodes
 };

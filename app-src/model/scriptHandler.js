@@ -7,7 +7,6 @@
 
 import { cleanString } from '../tools/common';
 import data from './data';
-import scriptBehaviour from '../configs/scriptBehaviour';
 
 /**
  * Scene class
@@ -17,7 +16,6 @@ class Scene {
 	/**
 	 * Constructor
 	 * @param {String} title
-	 * @param {String} language
 	 * @param {Object} assets
 	 */
 	constructor (title, assets) {
