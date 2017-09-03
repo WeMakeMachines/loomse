@@ -9,10 +9,29 @@ const SETUP = {
 	id: 'notify'
 };
 
-let parentElement = element.create({ id: SETUP.id });
+let parentElement = element.create({ id: SETUP.id }),
+	content = element.create();
 
-const loading = {
-	parentElement
+/**
+ * Adds written content onto display
+ *
+ * @param {Object} content
+ */
+function splash(content) {
+}
+
+/**
+ * Removes written content
+ *
+ */
+function wipe () {
+
+}
+
+const notify = {
+	parentElement,
+	splash,
+	wipe
 };
 
-export { loading as default };
+export { notify as default };

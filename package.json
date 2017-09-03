@@ -4,8 +4,7 @@
   "version": "0.4.0",
   "description": "Interactive storytelling for the modern web",
   "scripts": {
-    "scss": "./node_modules/.bin/node-sass --include-path scss styles/master.scss styles/master.css",
-    "dev": "./node_modules/.bin/rollup -c",
+    "dev": "./node_modules/.bin/rollup -c; ./node_modules/.bin/node-sass --include-path scss styles/master.scss styles/master.css",
     "prod": "NODE_ENV=production ./node_modules/.bin/rollup -c"
   },
   "repository": {

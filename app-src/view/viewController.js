@@ -17,12 +17,12 @@ let appNodes = {
 			children: [
 				{
 					id      : 'stage',
-					class   : 'scaleToRoot',
+					class   : ['stack', 'scaleToParent'],
 					children: [media.parentElement]
 				},
 				{
 					id      : 'overlay',
-					class   : 'scaleToRoot',
+					class   : ['stack', 'scaleToParent'],
 					children: [notify.parentElement, subtitlesView.parentElement, sceneEventsView.parentElement]
 				}
 			]

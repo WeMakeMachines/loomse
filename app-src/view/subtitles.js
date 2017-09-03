@@ -9,13 +9,10 @@ import { element, report } from '../tools/common';
 import config from '../configs/config';
 
 const SETUP = {
-	parent: {
-		id   : 'subtitles',
-		class: 'subtitle'
-	}
+	id: 'subtitles'
 };
 
-let parentElement = element.create({ id: SETUP.parent.id, class: SETUP.parent.class });
+let parentElement = element.create({ id: SETUP.id });
 
 /**
  * Append our subtitle to the DOM (show the subtitle)

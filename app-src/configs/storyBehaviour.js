@@ -4,9 +4,7 @@ const storyBehaviour = {
 		showPosterWhenPaused: false,
 		fastForwardSkip     : 10,
 		minimumSeekRange    : 1000,
-		scaleVideoToViewport: true,
-		defaultVideoWidth   : 800,
-		defaultVideoHeight  : 800
+		videoFillMethod     : 'cover'
 	},
 	subtitles: {
 		active  : true,

@@ -8,7 +8,7 @@ import storyBehaviour from '../configs/storyBehaviour';
 
 const SETUP = {
 	id   : 'mediaGroup',
-	class: 'scaleToRoot'
+	class: 'scaleToParent'
 };
 const MILLISECONDS_IN_SECONDS = 1000;
 const MEDIA_BEHAVIOUR = storyBehaviour.media;
@@ -81,6 +81,28 @@ class Video extends MediaObject {
 			ogg: object.video.ogg || false,
 			mp4: object.video.mp4 || false
 		};
+	}
+
+	/**
+	 * Sets up CSS fill method
+	 *
+	 * @returns {Object} this
+	 */
+	fillMethod () {
+		switch (MEDIA_BEHAVIOUR.videoFillMethod) {
+			case 'cover':
+				element.style(this.element, {
+					'object-fit': 'cover'
+				});
+				break;
+			default:
+				element.style(this.element, {
+					'object-fit': 'contain'
+				});
+				break;
+		}
+
+		return this;
 	}
 
 	/**
@@ -249,16 +271,12 @@ const media = {
 	 *
 	 */
 	initialise: (media) => {
-
-		let videoWidth = MEDIA_BEHAVIOUR.scaleVideoToViewport ? '100%' : MEDIA_BEHAVIOUR.defaultVideoWidth,
-			videoHeight = MEDIA_BEHAVIOUR.scaleVideoToViewport ? '100%' : MEDIA_BEHAVIOUR.defaultVideoWidth;
-
 		switch (media.type) {
 			case 'video':
 				mediaObject = new Video(media)
 					.setAttributes()
 					.setSources()
-					.setDimensions(videoWidth, videoHeight);
+					.fillMethod();
 				break;
 
 			case 'audio':
