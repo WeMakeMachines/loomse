@@ -6,10 +6,11 @@
 import { element } from '../tools/common';
 
 const SETUP = {
-	id: 'notify'
+	id   : 'notify',
+	class: 'scaleToParent'
 };
 
-let parentElement = element.create({ id: SETUP.id }),
+let parentElement = element.create({ id: SETUP.id, class: SETUP.class }),
 	content = element.create();
 
 /**
@@ -18,6 +19,7 @@ let parentElement = element.create({ id: SETUP.id }),
  * @param {Object} content
  */
 function splash(content) {
+
 }
 
 /**

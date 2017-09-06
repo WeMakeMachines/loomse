@@ -2,6 +2,7 @@
 import babel from 'rollup-plugin-babel';
 import config from './app-src/configs/config';
 import eslint from 'rollup-plugin-eslint';
+import html from 'rollup-plugin-html';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
 
@@ -20,6 +21,9 @@ let environment = process.env.NODE_ENV || 'development',
 		replace({
 			exclude: 'node_modules/**',
 			ENV    : JSON.stringify(environment)
+		}),
+		html({
+			include: 'templates/*.html'
 		})
 	]
 };
