@@ -86,8 +86,6 @@ function prepareDOM() {
 
 	setupAppNodes(appNodes.root.element, appNodes.root.children);
 
-	setListeners();
-
 	return true;
 }
 
@@ -140,8 +138,11 @@ const viewController = {
 	 */
 	initialise: () => {
 		if (prepareDOM()) {
+			setListeners();
 			handleViewportResizing();
 		}
+
+		loading.initialise();
 
 		return true;
 	},

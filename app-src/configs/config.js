@@ -6,6 +6,7 @@ const config = {
 		mobile : 'assets/scripts/script-mobile.json',
 		desktop: 'assets/scripts/script-desktop.json'
 	},
+	showLoadingPage: true,
 	developer: {
 		mute              : true,
 		disableCheckScript: false,

@@ -117,10 +117,10 @@ class Video extends MediaObject {
 					let source = this.sources.ogg;
 
 					this.sources.ogg = element.create({ type: 'source'});
-					element.attributes(this.sources.ogg, [
-						['src', source],
-						['type', 'video/ogg']
-					]);
+					element.attributes(this.sources.ogg, {
+						'src' : source,
+						'type': 'video/ogg'
+					});
 					this.element.appendChild(this.sources.ogg);
 				})
 				.catch(() => {
@@ -134,10 +134,10 @@ class Video extends MediaObject {
 					let source = this.sources.ogg;
 
 					this.sources.mp4 = element.create('source');
-					element.attributes(this.sources.mp4, [
-						['src', source],
-						['type', 'video/mp4']
-					]);
+					element.attributes(this.sources.mp4, {
+						'src' : source,
+						'type': 'video/mp4'
+					});
 					this.element.appendChild(this.sources.mp4);
 				})
 				.catch(() => {

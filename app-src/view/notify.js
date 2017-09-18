@@ -11,15 +11,19 @@ const SETUP = {
 };
 
 let parentElement = element.create({ id: SETUP.id, class: SETUP.class }),
-	content = element.create();
+	content;
 
 /**
  * Adds written content onto display
  *
- * @param {Object} content
+ * @param {Object} data
  */
-function splash(content) {
+function splash(data) {
+	if(!typeof data === 'object' && !data.html) { return; }
 
+	content = element.create();
+	content.appendChild(data.html);
+	parentElement.appendChild(content);
 }
 
 /**
@@ -27,7 +31,8 @@ function splash(content) {
  *
  */
 function wipe () {
-
+	parentElement.removeChild(content);
+	content = null;
 }
 
 const notify = {

@@ -30,11 +30,11 @@ const element = {
 	},
 
 	attributes: (element, attributes) => {
-		if (attributes && Array.isArray(attributes)) {
-			for (let i = 0; i < attributes.length; i += 1) {
-				let property = attributes[i][0],
-					value = attributes[i][1];
-				element.setAttribute(property, value);
+		if (typeof attributes !== 'object') { return; }
+
+		for (key in attributes) {
+			if (attributes.hasOwnProperty(key)) {
+				element.setAttribute(key, attributes[key]);
 			}
 		}
 	},
