@@ -5,7 +5,6 @@
 
 import { debounce, element } from '../tools/common';
 import config from '../configs/config';
-import loading from './loading';
 import media from './media';
 import notify from './notify';
 import sceneEventsView from './sceneEvents';
@@ -134,17 +133,13 @@ const viewController = {
 
 	/**
 	 * Sets up the DOM in browser
-	 * @returns {Boolean}
+	 *
 	 */
 	initialise: () => {
 		if (prepareDOM()) {
 			setListeners();
 			handleViewportResizing();
 		}
-
-		loading.initialise();
-
-		return true;
 	},
 
 	appNodes

@@ -14,6 +14,7 @@ import scriptHandler from './model/scriptHandler';
 import subtitlesModel from './model/subtitles';
 
 import media from './view/media';
+import loading from './view/loading';
 import view from './view/viewController';
 
 const VERSION = config.version;
@@ -56,6 +57,8 @@ function prepareAllParts(scene) {
 	 * Plays media if autoplay is on
 	 */
 	function ready() {
+		loading.stop();
+
 		if (data.currentScene.media.autoplay) {
 			media.play();
 		}
@@ -141,6 +144,7 @@ export default {
 
 		initialiseDataObject();
 		view.initialise();
+		loading.initialise();
 
 		checkScript.then((values) => {
 			data.script = values;

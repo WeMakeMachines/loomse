@@ -15,15 +15,15 @@ let environment = process.env.NODE_ENV || 'development',
 	exports   : 'default',
 	moduleName: config.appName,
 	plugins   : [
+		html({
+			include: 'app-src/templates/*.html'
+		}),
 		babel({
 			exclude: 'node_modules/**'
 		}),
 		replace({
 			exclude: 'node_modules/**',
 			ENV    : JSON.stringify(environment)
-		}),
-		html({
-			include: 'templates/*.html'
 		})
 	]
 };

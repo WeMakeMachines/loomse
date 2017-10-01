@@ -1,5 +1,5 @@
 /**
- * Handles all user friendly notifications
+ * Provides an API for handling html based notifications
  *
  */
 
@@ -19,10 +19,14 @@ let parentElement = element.create({ id: SETUP.id, class: SETUP.class }),
  * @param {Object} data
  */
 function splash(data) {
-	if(!typeof data === 'object' && !data.html) { return; }
+	if (typeof data !== 'object' || !data.html) { return; }
+
+	if (content) {
+		wipe();
+	}
 
 	content = element.create();
-	content.appendChild(data.html);
+	content.innerHTML = data.html;
 	parentElement.appendChild(content);
 }
 
