@@ -34,8 +34,8 @@ let appNodes = {
 
 /**
  * Appends multiple elements to a single node
- * @param {Object} parent
- * @param {Array} children
+ * @param {object} parent
+ * @param {array} children
  */
 function appendToParent(parent, children) {
 	let fragment = document.createDocumentFragment();
@@ -51,8 +51,8 @@ function appendToParent(parent, children) {
 
 /**
  * Setup the application nodes
- * @param {Object} root
- * @param {Array} children
+ * @param {object} root
+ * @param {array} children
  */
 function setupAppNodes(root, children) {
 	for (let i = 0; i < children.length; i += 1) {
@@ -75,21 +75,23 @@ function setupAppNodes(root, children) {
 
 /**
  * Creates all DOM elements needed for each view
- * @returns {Boolean}
+ * @param {string} html
  */
-function prepareDOM() {
+function prepareDOM(html) {
+
+	let body = document.getElementsByTagName('body')[0];
+
+	body.innerHTML = html;
 
 	appNodes.root.element = document.getElementById(config.appRoot);
 
-	if (typeof appNodes.root.element !== 'object') { return false; }
-
 	setupAppNodes(appNodes.root.element, appNodes.root.children);
 
-	return true;
 }
 
 /**
  * Gets the current client dimensions
+ *
  */
 function getClientDimensions() {
 	dimensions.width = document.documentElement.clientWidth;
@@ -98,9 +100,9 @@ function getClientDimensions() {
 
 /**
  * Resizes an element
- * @param {Object} node
- * @param {Number} width
- * @param {Number} height
+ * @param {object} node
+ * @param {number} width
+ * @param {number} height
  */
 function resize(node, width, height) {
 	element.style(node, {
@@ -132,14 +134,13 @@ function setListeners() {
 const viewController = {
 
 	/**
-	 * Sets up the DOM in browser
-	 *
+	 * Sets up the DOM in the browser
+	 * @param {string} html
 	 */
-	initialise: () => {
-		if (prepareDOM()) {
-			setListeners();
-			handleViewportResizing();
-		}
+	initialise: (html) => {
+		prepareDOM(html);
+		setListeners();
+		handleViewportResizing();
 	},
 
 	appNodes

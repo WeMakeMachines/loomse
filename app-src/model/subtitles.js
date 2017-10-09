@@ -17,7 +17,7 @@ const fileTypes = {
 
 	/**
 	 * Support for .srt files
-	 * @param {Array} rawLines
+	 * @param {array} rawLines
 	 */
 	srt: (rawLines) => {
 		const INTERFACE = {
@@ -60,9 +60,9 @@ const fileTypes = {
 
 /**
  * Returns a cleaned up time object
- * @param {String} string
- * @param {String} splitChar
- * @returns {Object}
+ * @param {string} string
+ * @param {string} splitChar
+ * @returns {object}
  */
 function returnCleanedTimes(string, splitChar) {
 	let time = {},
@@ -80,8 +80,8 @@ function returnCleanedTimes(string, splitChar) {
 
 /**
  * Converts a string into an internal time our application can understand
- * @param {Array} array
- * @returns {Number}
+ * @param {array} array
+ * @returns {number}
  */
 function convertToInternalTime(array) {
 	const MINUTES_IN_HOURS = 60;
@@ -104,8 +104,8 @@ function convertToInternalTime(array) {
 /**
  * Here we check the current subtitle record against the current media time and
  * determine whether the subtitle is ready to be displayed, or if it ready to be removed
- * @param {Number} time
- * @returns {Boolean}
+ * @param {number} time
+ * @returns {boolean}
  */
 function check(time) {
 	if (!active || subtitleIndex === subtitlesArray.length || !Boolean(~subtitleIndex)) { return false; }
@@ -129,7 +129,7 @@ function check(time) {
 
 /**
  * Restore current position if time index has been forced to change
- * @param {Number} time
+ * @param {number} time
  */
 function fix(time) {
 	active = false;
@@ -151,6 +151,7 @@ function fix(time) {
 
 /**
  * Sets listeners for the HTML5 media object
+ *
  */
 function addMediaListener() {
 	media.parentElement.addEventListener('media:state:change', mediaListener, false);
@@ -158,6 +159,7 @@ function addMediaListener() {
 
 /**
  * Removes the media listener
+ *
  */
 function removeMediaListener() {
 	media.parentElement.removeEventListener('media:state:change', mediaListener, false);
@@ -165,7 +167,7 @@ function removeMediaListener() {
 
 /**
  * Function which is triggered by the listener
- * @param {Object} eventObject
+ * @param {object} eventObject
  */
 function mediaListener(eventObject) {
 	let time = eventObject.detail.time,
@@ -182,7 +184,7 @@ function mediaListener(eventObject) {
 
 /**
  * Checks the validity of the file format
- * @param {String} format
+ * @param {string} format
  * @returns {boolean}
  */
 function checkValidFormats(format) {
@@ -191,9 +193,9 @@ function checkValidFormats(format) {
 
 /**
  * Parses the file into an array
- * @param {String} url
- * @param {String} fileType
- * @returns {Object}
+ * @param {string} url
+ * @param {string} fileType
+ * @returns {object}
  */
 function parseFile(url, fileType) {
 	let checkSubtitles = ajaxRequest(url),
@@ -220,8 +222,8 @@ const subtitles = {
 
 	/**
 	 * Initialises subtitling
-	 * @param {String} url
-	 * @returns {Object}
+	 * @param {string} url
+	 * @returns {object}
 	 */
 	initialise: (url) => {
 		let fileType = url.slice(-3);

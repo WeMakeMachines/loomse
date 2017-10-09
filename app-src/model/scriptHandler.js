@@ -15,8 +15,8 @@ class Scene {
 
 	/**
 	 * Constructor
-	 * @param {String} title
-	 * @param {Object} assets
+	 * @param {string} title
+	 * @param {object} assets
 	 */
 	constructor (title, assets) {
 		this.title = title;
@@ -34,7 +34,7 @@ class Scene {
  * Pulls the relevant scene details from the object,
  * resets parameters and launches the process() method.
  *
- * @param {Object} scene
+ * @param {object} scene
  */
 function setScene(scene) {
 	let checkForPreviousScene = !(data.currentScene === null);
@@ -50,7 +50,7 @@ const scriptHandler = {
 
 	/**
 	 * Initialises scene
-	 * @param {String} scene - named scene
+	 * @param {string} scene - named scene
 	 */
 	initialise: (scene) => {
 		setScene(scene);

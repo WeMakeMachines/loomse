@@ -66,8 +66,7 @@ const browser = {
 
 	/**
 	 * Checks which device is currently being used
-	 *
-	 * @returns {String}
+	 * @returns {string}
 	 */
 	check: () => {
 		return 'desktop';

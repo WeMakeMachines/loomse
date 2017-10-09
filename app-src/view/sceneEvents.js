@@ -13,8 +13,8 @@ let parentElement = element.create({ id: SETUP.id });
 
 /**
  * Creates an element for the event
- * @param {String} id
- * @returns {Object}
+ * @param {string} id
+ * @returns {object}
  */
 function createEventElement(id) {
 	let eventElement = element.create({ id });

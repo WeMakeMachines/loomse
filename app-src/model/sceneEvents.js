@@ -37,16 +37,17 @@ let events = {
 
 /**
  * Event class
+ *
  */
 class Event {
 
 	/**
 	 * Constructor event
-	 * @param {String} id
-	 * @param {String} call
-	 * @param {Object} schedule
-	 * @param {Object} parameters
-	 * @param {Object} element
+	 * @param {string} id
+	 * @param {string} call
+	 * @param {object} schedule
+	 * @param {object} parameters
+	 * @param {object} element
 	 */
 	constructor(id, call, schedule, parameters, element) {
 		this.id = id; // event id
@@ -61,7 +62,7 @@ class Event {
 
 	/**
 	 * Checks if the event is ready to fire
-	 * @param {Number} time
+	 * @param {number} time
 	 * @returns {boolean}
 	 */
 	checkShouldFire(time) {
@@ -70,7 +71,7 @@ class Event {
 
 	/**
 	 * Checks if the event should expire
-	 * @param {Number} time
+	 * @param {number} time
 	 * @returns {boolean}
 	 */
 	checkShouldExpire(time) {
@@ -79,8 +80,8 @@ class Event {
 
 	/**
 	 * Checks if the event should perform an action
-	 * @param {Number} time
-	 * @returns {Boolean}
+	 * @param {number} time
+	 * @returns {boolean}
 	 */
 	checkSchedule(time) {
 		if (this.state === 'expired') {
@@ -100,7 +101,7 @@ class Event {
 
 	/**
 	 * Fixes the current state after time index has jumped, say after seeking
-	 * @param {Number} time
+	 * @param {number} time
 	 */
 	fixState(time) {
 		if (time >= this.out || this.state === 'fired') {
@@ -114,6 +115,7 @@ class Event {
 
 	/**
 	 * Runs the event
+	 *
 	 */
 	run() {
 		this.call.run(this.element);
@@ -121,6 +123,7 @@ class Event {
 
 	/**
 	 * Stops the event and removes any performed actions
+	 *
 	 */
 	kill() {
 		this.call.stop();
@@ -129,9 +132,9 @@ class Event {
 
 /**
  * Checks for a valid API of the event  extension
- * @param {Function} ext
- * @param {Array} API - array of strings which map to API calls
- * @returns {*}
+ * @param {function} ext
+ * @param {array} API - array of strings which map to API calls
+ * @returns {boolean}
  */
 function checkEventExtensionAPI(ext, API) {
 
@@ -150,8 +153,7 @@ function checkEventExtensionAPI(ext, API) {
 
 /**
  * Schedules timed events for each media element
- *
- * @param {Array} array
+ * @param {array} array
  */
 function schedule(array) {
 
@@ -178,6 +180,7 @@ function schedule(array) {
 
 /**
  * Sets listeners for the HTML5 media object
+ *
  */
 function addMediaListener() {
 	media.parentElement.addEventListener('media:state:change', mediaListener, false);
@@ -185,6 +188,7 @@ function addMediaListener() {
 
 /**
  * Removes the media listener
+ *
  */
 function removeMediaListener() {
 	media.parentElement.removeEventListener('media:state:change', mediaListener, false);
@@ -192,8 +196,8 @@ function removeMediaListener() {
 
 /**
  * Function which is triggered by the listener
- * @param {Object} eventObject
- * @returns {Boolean}
+ * @param {object} eventObject
+ * @returns {boolean}
  */
 function mediaListener(eventObject) {
 	let message = eventObject.detail,
@@ -219,8 +223,8 @@ const sceneEventsModel = {
 
 	/**
 	 * Initialises the module
-	 * @param {Array} eventArray
-	 * @returns {Boolean}
+	 * @param {array} eventArray
+	 * @returns {boolean}
 	 */
 	initialise: (eventArray) => {
 		schedule(eventArray);

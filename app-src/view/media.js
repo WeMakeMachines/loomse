@@ -24,8 +24,7 @@ class MediaObject {
 
 	/**
 	 * Constructor function
-	 *
-	 * @param {Object} object
+	 * @param {object} object
 	 */
 	constructor (object) {
 		this.loop = object.loop;
@@ -38,8 +37,7 @@ class MediaObject {
 	/**
 	 * Sets attribute for the element
 	 * poster / muted / controls
-	 *
-	 * @returns {Object} this
+	 * @returns {object} this
 	 */
 	setAttributes () {
 		// check if poster exists and set
@@ -71,8 +69,7 @@ class Video extends MediaObject {
 
 	/**
 	 * Constructor function
-	 *
-	 * @param {Object} object
+	 * @param {object} object
 	 */
 	constructor (object) {
 		super(object);
@@ -85,8 +82,7 @@ class Video extends MediaObject {
 
 	/**
 	 * Sets up CSS fill method
-	 *
-	 * @returns {Object} this
+	 * @returns {object} this
 	 */
 	fillMethod () {
 		switch (MEDIA_BEHAVIOUR.videoFillMethod) {
@@ -107,8 +103,7 @@ class Video extends MediaObject {
 
 	/**
 	 * Check if exists and set the video element sources
-	 *
-	 * @returns {Object} this
+	 * @returns {object} this
 	 */
 	setSources () {
 		if (typeof this.sources.ogg === 'string' && this.sources.ogg !== '') {
@@ -150,11 +145,9 @@ class Video extends MediaObject {
 
 	/**
 	 * Sets the width and height attribute of the media object
-	 *
-	 * @param {Number} width
-	 * @param {Number} height
-	 *
-	 * @returns {Object} this
+	 * @param {number} width
+	 * @param {number} height
+	 * @returns {object} this
 	 */
 	setDimensions (width, height) {
 
@@ -173,8 +166,7 @@ class Audio extends MediaObject {
 
 	/**
 	 * Constructor function
-	 *
-	 * @param {Object} object
+	 * @param {object} object
 	 */
 	constructor (object) {
 		super(object);
@@ -184,7 +176,7 @@ class Audio extends MediaObject {
 
 /**
  * Sends a custom event message with the media state
- * @param {String} state
+ * @param {string} state
  */
 function broadcastMediaState(state) {
 	let event = new CustomEvent('media:state:change', {
@@ -199,6 +191,7 @@ function broadcastMediaState(state) {
 
 /**
  * Listen to media events
+ *
  */
 function listenToMediaEvents() {
 	let events = [
@@ -221,8 +214,7 @@ function listenToMediaEvents() {
 
 /**
  * Returns current play position of media object
- *
- * @returns {Number}
+ * @returns {number}
  */
 function getCurrentTime() {
 	return mediaObject.element.currentTime * MILLISECONDS_IN_SECONDS;
@@ -230,8 +222,7 @@ function getCurrentTime() {
 
 /**
  * Returns length of media object
- *
- * @returns {Number}
+ * @returns {number}
  */
 function getLength() {
 	return mediaObject.element.duration;
@@ -255,7 +246,7 @@ function pause() {
 
 /**
  * Seek to the media time
- * @param {Number} time (seconds)
+ * @param {number} time (seconds)
  */
 function seek(time) {
 	mediaObject.element.currentTime = time;
@@ -265,10 +256,8 @@ const media = {
 
 	/**
 	 * Creates a media object and posts it to the DOM
-	 *
-	 * @param {Object} media
-	 * @returns {Boolean}
-	 *
+	 * @param {object} media
+	 * @returns {boolean}
 	 */
 	initialise: (media) => {
 		switch (media.type) {

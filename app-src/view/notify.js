@@ -15,8 +15,7 @@ let parentElement = element.create({ id: SETUP.id, class: SETUP.class }),
 
 /**
  * Adds written content onto display
- *
- * @param {Object} data
+ * @param {object} data
  */
 function splash(data) {
 	if (typeof data !== 'object' || !data.html) { return; }

@@ -32,7 +32,7 @@ const element = {
 	attributes: (element, attributes) => {
 		if (typeof attributes !== 'object') { return; }
 
-		for (key in attributes) {
+		for (let key in attributes) {
 			if (attributes.hasOwnProperty(key)) {
 				element.setAttribute(key, attributes[key]);
 			}
@@ -65,9 +65,8 @@ const element = {
 
 /**
  * Simplified AJAX call
- * @param {String} url
- * @param {String} type
- *
+ * @param {string} url
+ * @param {string} type
  * @returns {Promise}
  */
 function ajaxRequest(url, type) {
@@ -105,9 +104,8 @@ function ajaxRequest(url, type) {
 
 /**
  * Removes whitespace from a string, and converts to lowercase
- * @param {String} string
- *
- * @returns {String}
+ * @param {string} string
+ * @returns {string}
  */
 function cleanString(string) {
 
@@ -117,9 +115,8 @@ function cleanString(string) {
 
 /**
  * Turns seconds into hours, minutes, seconds
- * @param {Number} timeInMilliseconds
- *
- * @returns {Object}
+ * @param {number} timeInMilliseconds
+ * @returns {object}
  */
 function clock(timeInMilliseconds) {
 	const SECONDS_IN_MINUTES = 60;
@@ -135,9 +132,8 @@ function clock(timeInMilliseconds) {
 
 	/**
 	 * Normalises time display by adding a leading zero
-	 * @param {Number} number
-	 *
-	 * @returns {String}
+	 * @param {number} number
+	 * @returns {string}
 	 */
 	function addLeadingZero(number) {
 		let string = number.toString();
@@ -192,9 +188,9 @@ function clock(timeInMilliseconds) {
 
 /**
  * Prevents a function from being called repeatedly
- * @param {Function} callback
- * @param {Number} delay
- * @returns {Function}
+ * @param {function} callback
+ * @param {number} delay
+ * @returns {function}
  */
 const debounce = (() => {
 	let delayedFunction;
@@ -213,10 +209,9 @@ const debounce = (() => {
 
 /**
  * Returns a random number between minRange and maxRange
- * @param {Number} minRange
- * @param {Number} maxRange
- *
- * @returns {Number}
+ * @param {number} minRange
+ * @param {number} maxRange
+ * @returns {number}
  */
 function random(minRange, maxRange) {
 	let range = maxRange - minRange;
@@ -234,8 +229,7 @@ function random(minRange, maxRange) {
 
 /**
  * Outputs debugging information
- * @param {String} message
- *
+ * @param {string} message
  */
 function report(message) {
 	if (ENV === 'development') {

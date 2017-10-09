@@ -16,7 +16,7 @@ let parentElement = element.create({ id: SETUP.id });
 
 /**
  * Append our subtitle to the DOM (show the subtitle)
- * @param {String} phrase
+ * @param {string} phrase
  */
 function display(phrase) {
 	let newSubtitle = element.create({type: 'p'}),

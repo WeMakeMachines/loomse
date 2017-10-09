@@ -17,11 +17,13 @@ import media from './view/media';
 import loading from './view/loading';
 import view from './view/viewController';
 
+import baseHtml from './templates/base.html';
+
 const VERSION = config.version;
 
 /**
  * Determines the appropriate source of the script (mobile or desktop)
- * @returns {Object}
+ * @returns {object}
  */
 function getScriptSource() {
 	let deviceType = browser.check(),
@@ -43,7 +45,7 @@ function getScriptSource() {
 
 /**
  * Sets the wheels in motion
- * @param {String} scene
+ * @param {string} scene
  */
 function prepareAllParts(scene) {
 
@@ -94,6 +96,7 @@ export default {
 
 	/**
 	 * Restarts the current scene
+	 *
 	 */
 	reload: () => {
 		media.seek(0);
@@ -105,18 +108,19 @@ export default {
 
 	/**
 	 * Scrub to time in media
-	 * @param {Number} time in seconds
+	 * @param {number} time in seconds
 	 */
 	seek: (time) => { media.seek(time); },
 
 	/**
 	 * Abandon current scene and load the named scene
-	 * @param {String} sceneName
+	 * @param {string} sceneName
 	 */
 	skip: (sceneName) => { prepareAllParts(sceneName); },
 
 	/**
 	 * Report media stats
+	 *
 	 */
 	status: () => {
 		let time = clock(media.getCurrentTime()),
@@ -143,7 +147,7 @@ export default {
 			checkScript = ajaxRequest(scriptSrc, 'JSON');
 
 		initialiseDataObject();
-		view.initialise();
+		view.initialise(baseHtml);
 		loading.initialise();
 
 		checkScript.then((values) => {
