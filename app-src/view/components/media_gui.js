@@ -1,5 +1,5 @@
 /**
- * Progress loading bar
+ * On screen media controls
  *
  */
 
