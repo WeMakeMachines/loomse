@@ -4,6 +4,7 @@
  */
 
 import { ajaxRequest, element } from '../tools/common';
+import gui from './components/media_gui';
 import storyBehaviour from '../configs/storyBehaviour';
 
 const SETUP = {
@@ -55,7 +56,7 @@ class MediaObject {
 		this.element.muted = this.muted;
 
 		// set controls
-		this.element.controls = this.controls;
+		this.element.controls = false;
 
 		return this;
 	}
@@ -279,6 +280,7 @@ const media = {
 		parentElement.appendChild(mediaObject.element);
 
 		listenToMediaEvents();
+		gui.initialise();
 
 		return true;
 	},

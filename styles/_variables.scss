@@ -2,22 +2,4 @@
 
 $colour_white: #fafde1;
 $colour_black: #170508;
-
-// notification sprites
-
-$notify_sprite_size: 61px;
-
-// gui dimensions
-// export page at 60.21 dpi for 41h 44w
-// export page at 89.58 dpi for 65w 61h
-
-$gui_sprite_height: 30px;
-$gui_sprite_width: 32.5px;
-
-$gui_timeGroup_height: 35px;
-
-$gui_buttonGroup_padding: 5px;
-$gui_buttonGroup_height: $gui_sprite_height + ($gui_buttonGroup_padding * 2);
-
-$gui_width: 100%;
-$gui_height: ($gui_buttonGroup_height + $gui_timeGroup_height);
+$colour_dark_grey: darkslategray;

@@ -1,0 +1,23 @@
+#mediaGui {
+
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+    button {
+        background: none;
+        border: 0;
+        cursor: pointer;
+    }
+
+    svg {
+        fill: $colour_white;
+    }
+
+    .bar {
+        height: 36px;
+        width: 100%;
+        padding: 6px;
+        background-color: $colour_dark_grey;
+    }
+}

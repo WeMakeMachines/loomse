@@ -6,6 +6,7 @@
 import { debounce, element } from '../tools/common';
 import config from '../configs/config';
 import media from './media';
+import mediaGui from './components/media_gui';
 import notify from './notify';
 import sceneEventsView from './sceneEvents';
 import subtitlesView from './subtitles';
@@ -23,6 +24,11 @@ let appNodes = {
 					id      : 'overlay',
 					class   : ['stack', 'scaleToParent'],
 					children: [notify.parentElement, subtitlesView.parentElement, sceneEventsView.parentElement]
+				},
+				{
+					id      : 'gui',
+					class   : ['stack', 'scaleToParent'],
+					children: [mediaGui.parentElement]
 				}
 			]
 		}

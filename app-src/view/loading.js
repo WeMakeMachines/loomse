@@ -3,13 +3,13 @@
  *
  */
 
-import loadingHtml from '../templates/loading.html';
+import html from '../templates/loading.html';
 import notify from './notify';
 
 const loading = {
 	initialise: () => {
 		notify.splash({
-			html: loadingHtml
+			html
 		});
 	},
 

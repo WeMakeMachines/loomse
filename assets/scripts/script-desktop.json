@@ -21,7 +21,6 @@
 					}
 				],
 				"autoplay": false,
-				"controls": true,
 				"muted": true,
 				"poster": "assets/images/app/default-poster.png",
 				"video": {

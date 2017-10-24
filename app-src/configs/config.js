@@ -7,7 +7,7 @@ const config = {
 		desktop: 'assets/scripts/script-desktop.json'
 	},
 	showLoadingPage: true,
-	developer: {
+	developer      : {
 		mute              : true,
 		disableCheckScript: false,
 		disableScrubScreen: false,
