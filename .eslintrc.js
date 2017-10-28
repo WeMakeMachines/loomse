@@ -17,7 +17,7 @@ module.exports = {
             "never"
         ],
         "array-callback-return": "error",
-        "arrow-body-style": "error",
+        "arrow-body-style": ["error", "as-needed", { "requireReturnForObjectLiteral": true }],
         "arrow-parens": "error",
         "arrow-spacing": "error",
         "block-scoped-var": "error",

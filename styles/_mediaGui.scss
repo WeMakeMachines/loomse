@@ -4,12 +4,6 @@
     bottom: 0;
     width: 100%;
 
-    button {
-        background: none;
-        border: 0;
-        cursor: pointer;
-    }
-
     svg {
         fill: $colour_white;
     }
@@ -20,4 +14,10 @@
         padding: 6px;
         background-color: $colour_dark_grey;
     }
+}
+
+.gui_button {
+    background: none;
+    border: 0;
+    cursor: pointer;
 }

@@ -178,12 +178,13 @@ class Audio extends MediaObject {
 /**
  * Sends a custom event message with the media state
  * @param {string} state
+ * @private
  */
-function broadcastMediaState(state) {
+function _broadcastMediaState(state) {
 	let event = new CustomEvent('media:state:change', {
 		detail: {
 			state,
-			time: getCurrentTime()
+			time: _getCurrentTime()
 		}
 	});
 
@@ -192,9 +193,9 @@ function broadcastMediaState(state) {
 
 /**
  * Listen to media events
- *
+ * @private
  */
-function listenToMediaEvents() {
+function _listenToMediaEvents() {
 	let events = [
 		'playing',
 		'paused',
@@ -208,7 +209,7 @@ function listenToMediaEvents() {
 		let event = events[i];
 
 		mediaObject.element.addEventListener(event, () => {
-			broadcastMediaState(event);
+			_broadcastMediaState(event);
 		});
 	}
 }
@@ -217,7 +218,7 @@ function listenToMediaEvents() {
  * Returns current play position of media object
  * @returns {number}
  */
-function getCurrentTime() {
+function _getCurrentTime() {
 	return mediaObject.element.currentTime * MILLISECONDS_IN_SECONDS;
 }
 
@@ -225,7 +226,7 @@ function getCurrentTime() {
  * Returns length of media object
  * @returns {number}
  */
-function getLength() {
+function _getLength() {
 	return mediaObject.element.duration;
 }
 
@@ -233,7 +234,7 @@ function getLength() {
  * Plays the current media object
  *
  */
-function play() {
+function _play() {
 	mediaObject.element.play();
 }
 
@@ -241,15 +242,30 @@ function play() {
  * Pauses the current media object
  *
  */
-function pause() {
+function _pause() {
 	mediaObject.element.pause();
+}
+
+/**
+ * Toggles between media play and pause state and returns the new state
+ * @returns {boolean}
+ */
+function _playPause() {
+
+	if (mediaObject.element.paused) {
+		mediaObject.element.play();
+		return true;
+	}
+
+	mediaObject.element.pause();
+	return false;
 }
 
 /**
  * Seek to the media time
  * @param {number} time (seconds)
  */
-function seek(time) {
+function _seek(time) {
 	mediaObject.element.currentTime = time;
 }
 
@@ -279,18 +295,19 @@ const media = {
 
 		parentElement.appendChild(mediaObject.element);
 
-		listenToMediaEvents();
+		_listenToMediaEvents();
 		gui.initialise();
 
 		return true;
 	},
 
 	parentElement,
-	getCurrentTime,
-	getLength,
-	play,
-	pause,
-	seek
+	getCurrentTime: _getCurrentTime,
+	getLength     : _getLength,
+	play          : _play,
+	pause         : _pause,
+	playPause     : _playPause,
+	seek          : _seek
 };
 
 export { media as default };

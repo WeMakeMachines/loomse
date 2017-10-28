@@ -1,20 +1,28 @@
 <div class="bar">
-	<button name="play_toggle" type="button">
-		<svg width="20" height="20">
-			<path
-					style="stroke-width:0.2121416"
-					d="M 0.04724704,0.04724701 14.835565,10.110863 C 9.906126,13.355159 4.9766865,16.599454 0.04724704,19.84375 Z"
+	<button class="play_toggle gui_button" type="button">
+		<svg class="on" width="20" height="20">
+			<path d="M 0.04724704,0.04724701 14.835565,10.110863 C 9.906126,13.355159 4.9766865,16.599454 0.04724704,19.84375 Z"
 			/>
 		</svg>
+		<svg class="off hide" width="20" height="20">
+			<rect width="4.5357141"
+			      height="19.796503"
+			      x="3.8742559"
+			      y="0.019570349" />
+			<rect width="4.5357141"
+			      height="19.796503"
+			      x="11.764509"
+			      y="0.012651104" />
+		</svg>
 	</button>
-	<button name="fullscreen_toggle" type="button">
-		<svg width="20" height="20">
-			<path
-					d="M 0.0849708,0.06164258 V 4.4136212 15.382016 H 4.4376402 V 4.4136212 H 15.406036 V 0.06164258 H 4.4376402 Z"
-			/>
-			<path
-					d="M 19.758705,19.733994 V 15.382016 4.4136212 H 15.406036 V 15.382016 H 4.4376403 v 4.351978 H 15.406036 Z"
-			/>
+	<button class="fullscreen_toggle gui_button" type="button">
+		<svg class="on" width="20" height="20">
+			<path d="M 0.0849708,0.06164258 V 4.4136212 15.382016 H 4.4376402 V 4.4136212 H 15.406036 V 0.06164258 H 4.4376402 Z" />
+			<path d="M 19.758705,19.733994 V 15.382016 4.4136212 H 15.406036 V 15.382016 H 4.4376403 v 4.351978 H 15.406036 Z" />
+		</svg>
+		<svg class="off hide" width="20" height="20">
+			<path d="M 10.640029,10.473578 V 6.1215999 0.63385929 H 6.2873602 V 6.1215999 H 0.70512535 V 10.473578 H 6.2873602 Z" />
+			<path d="m 9.3572733,9.4270571 v 4.3519779 5.487741 h 4.3526687 v -5.487741 h 5.582235 V 9.4270571 h -5.582235 z" />
 		</svg>
 	</button>
 </div>

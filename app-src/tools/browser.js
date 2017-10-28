@@ -12,7 +12,7 @@ const fullScreen = (() => {
 	 *
 	 */
 	function toggle() {
-		//report('Not implemented yet');
+		console.log('Not implemented yet');
 	}
 
 	return {
