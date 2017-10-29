@@ -17,7 +17,7 @@ let parentElement = element.create({ id: SETUP.id }),
 	fullScreenButton = '.fullscreen_toggle';
 
 /**
- * Button class
+ * Button super class
  *
  */
 class Button {
@@ -32,6 +32,23 @@ class Button {
 		this.onElement = this.node.querySelector('.on');
 		this.offElement = this.node.querySelector('.off');
 		this.action = object.action;
+		this.node.onclick = () => {
+			this.action();
+		};
+	}
+}
+
+/**
+ * Button extension which allows for toggling behaviours
+ */
+class ToggleButton extends Button {
+
+	/**
+	 * Constructor function
+	 * @param {object} object
+	 */
+	constructor (object) {
+		super(object);
 		this.node.onclick = () => {
 			let state = this.action();
 
@@ -58,6 +75,7 @@ class Button {
 		this.onElement.classList.remove('hide');
 		this.offElement.classList.add('hide');
 	}
+
 }
 
 /**
@@ -67,13 +85,13 @@ class Button {
  */
 function _prepareButtons(fragment) {
 
-	playButton = new Button({
+	playButton = new ToggleButton({
 		toggle: true,
 		node  : fragment.querySelector(`${playButton}`),
 		action: () => media.playPause()
 	});
 
-	fullScreenButton = new Button({
+	fullScreenButton = new ToggleButton({
 		node  : fragment.querySelector(`${fullScreenButton}`),
 		action: () => fullScreen.toggle()
 	});
