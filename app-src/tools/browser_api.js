@@ -61,23 +61,6 @@ class FullscreenAPI {
 	}
 
 	/**
-	 * Sends a fullscreen request
-	 * @param {object} element
-	 */
-	request(element) {
-		element[this.api.request]();
-		this.state = true;
-	}
-
-	/**
-	 * Sends an exit fullscreen request
-	 */
-	exit() {
-		this.root[this.api.exit]();
-		this.state = false;
-	}
-
-	/**
 	 * @param {object} element
 	 */
 	constructor(element) {
@@ -103,6 +86,23 @@ class FullscreenAPI {
 		}
 
 		this.request(this.element);
+	}
+
+	/**
+	 * Sends a fullscreen request
+	 * @param {object} element
+	 */
+	request(element) {
+		element[this.api.request]();
+		this.state = true;
+	}
+
+	/**
+	 * Sends an exit fullscreen request
+	 */
+	exit() {
+		this.root[this.api.exit]();
+		this.state = false;
 	}
 
 	/**
