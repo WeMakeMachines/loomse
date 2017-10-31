@@ -2,9 +2,7 @@
  * Handles the script logic;
  * a collection of methods that set and process
  * the media elements in the Script
- *
  */
-
 import { cleanString } from '../tools/common';
 import data from './data';
 
@@ -14,7 +12,6 @@ import data from './data';
 class Scene {
 
 	/**
-	 * Constructor
 	 * @param {string} title
 	 * @param {object} assets
 	 */

@@ -1,8 +1,6 @@
 /**
  * Handles all our media object and requests
- *
  */
-
 import { ajaxRequest, element } from '../tools/common';
 import gui from './components/media_gui';
 import storyBehaviour from '../configs/storyBehaviour';
@@ -24,7 +22,6 @@ let parentElement = element.create({ id: SETUP.id, class: SETUP.class }),
 class MediaObject {
 
 	/**
-	 * Constructor function
 	 * @param {object} object
 	 */
 	constructor (object) {
@@ -69,7 +66,6 @@ class MediaObject {
 class Video extends MediaObject {
 
 	/**
-	 * Constructor function
 	 * @param {object} object
 	 */
 	constructor (object) {
@@ -166,7 +162,6 @@ class Video extends MediaObject {
 class Audio extends MediaObject {
 
 	/**
-	 * Constructor function
 	 * @param {object} object
 	 */
 	constructor (object) {
@@ -271,6 +266,14 @@ function _seek(time) {
 
 const media = {
 
+	parentElement,
+	getCurrentTime: _getCurrentTime,
+	getLength     : _getLength,
+	play          : _play,
+	pause         : _pause,
+	playPause     : _playPause,
+	seek          : _seek,
+
 	/**
 	 * Creates a media object and posts it to the DOM
 	 * @param {object} media
@@ -299,15 +302,7 @@ const media = {
 		gui.initialise();
 
 		return true;
-	},
-
-	parentElement,
-	getCurrentTime: _getCurrentTime,
-	getLength     : _getLength,
-	play          : _play,
-	pause         : _pause,
-	playPause     : _playPause,
-	seek          : _seek
+	}
 };
 
 export { media as default };

@@ -1,10 +1,8 @@
 /**
  * On screen media controls
- *
  */
-
+import { browser } from '../../tools/browser';
 import { element } from '../../tools/common';
-import { fullScreen } from '../../tools/browser';
 import html from '../../templates/media_gui.html';
 import media from '../media';
 
@@ -23,7 +21,6 @@ let parentElement = element.create({ id: SETUP.id }),
 class Button {
 
 	/**
-	 * Constructor function
 	 * @param {object} object
 	 */
 	constructor (object) {
@@ -44,7 +41,6 @@ class Button {
 class ToggleButton extends Button {
 
 	/**
-	 * Constructor function
 	 * @param {object} object
 	 */
 	constructor (object) {
@@ -93,12 +89,14 @@ function _prepareButtons(fragment) {
 
 	fullScreenButton = new ToggleButton({
 		node  : fragment.querySelector(`${fullScreenButton}`),
-		action: () => fullScreen.toggle()
+		action: () => browser.fullscreen.toggle()
 	});
-
 }
 
 const mediaGui = {
+
+	parentElement,
+
 	initialise: () => {
 		let fragment = document.createDocumentFragment(),
 			guiContainer = document.createElement('div');
@@ -110,8 +108,7 @@ const mediaGui = {
 		_prepareButtons(fragment);
 
 		parentElement.appendChild(fragment);
-	},
-	parentElement
+	}
 };
 
 export { mediaGui as default };

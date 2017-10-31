@@ -2,9 +2,7 @@
  * Subtitles handling and rendering
  * Since subtitles appear in a linear fashion (the next one always follows the previous one),
  * -> we always keep on record the current subtitle to be displayed
- *
  */
-
 import { element, report } from '../tools/common';
 import config from '../configs/config';
 
@@ -34,7 +32,6 @@ function display(phrase) {
 
 /**
  * Removes a subtitle
- *
  */
 function remove() {
 	let oldSubtitle = parentElement.firstElementChild;
@@ -45,7 +42,6 @@ function remove() {
 }
 
 const subtitles = {
-
 	parentElement,
 	display,
 	remove

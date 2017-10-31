@@ -1,8 +1,6 @@
 /**
  * Handles the view component for the sceneEvents
- *
  */
-
 import { element } from '../tools/common';
 
 const SETUP = {
@@ -19,7 +17,8 @@ let parentElement = element.create({ id: SETUP.id });
 function createEventElement(id) {
 	let eventElement = element.create({ id });
 
-	// apply class hidden
+	// TODO apply class hidden
+
 	parentElement.appendChild(eventElement);
 
 	return eventElement;

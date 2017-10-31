@@ -1,12 +1,11 @@
 /**
  * Loom Story Engine
- *
  */
 import config from './configs/config';
 import storyBehaviour from './configs/storyBehaviour';
 
 import { ajaxRequest, clock, report } from './tools/common';
-import { browser, fullScreen } from './tools/browser';
+import { browser } from './tools/browser';
 
 import data, { initialiseDataObject } from './model/data';
 import sceneEventsModel from './model/sceneEvents';
@@ -92,11 +91,8 @@ function prepareAllParts(scene) {
 
 export default {
 
-	fullScreen: fullScreen.toggle,
-
 	/**
 	 * Restarts the current scene
-	 *
 	 */
 	reload: () => {
 		media.seek(0);
@@ -120,7 +116,6 @@ export default {
 
 	/**
 	 * Report media stats
-	 *
 	 */
 	status: () => {
 		let time = clock(media.getCurrentTime()),
@@ -139,7 +134,6 @@ export default {
 
 	/**
 	 * Our public initialise method, used to initialise our application
-	 *
 	 */
 	initialise: () => {
 		let firstScene = storyBehaviour.firstScene,

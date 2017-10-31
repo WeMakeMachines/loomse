@@ -1,9 +1,9 @@
 /**
  * Handles all the main view arrangements
- *
  */
-
 import { debounce, element } from '../tools/common';
+import { browser } from '../tools/browser';
+
 import config from '../configs/config';
 import media from './media';
 import mediaGui from './components/media_gui';
@@ -97,7 +97,6 @@ function prepareDOM(html) {
 
 /**
  * Gets the current client dimensions
- *
  */
 function getClientDimensions() {
 	dimensions.width = document.documentElement.clientWidth;
@@ -118,7 +117,7 @@ function resize(node, width, height) {
 }
 
 /**
- *
+ * Resize handler
  */
 function handleViewportResizing() {
 	getClientDimensions();
@@ -126,18 +125,29 @@ function handleViewportResizing() {
 }
 
 /**
- *
+ * Sets the application listeners
  */
 function setListeners() {
 
 	const DEBOUNCE_DELAY = 200;
 
+	let fullscreenListener = browser.fullscreen.returnListener();
+
 	window.addEventListener('resize', () => {
 		debounce(handleViewportResizing, DEBOUNCE_DELAY);
 	});
+
+	if (fullscreenListener) {
+
+		document.addEventListener(fullscreenListener, () => {
+			handleViewportResizing();
+		});
+	}
 }
 
 const viewController = {
+
+	appNodes,
 
 	/**
 	 * Sets up the DOM in the browser
@@ -145,11 +155,10 @@ const viewController = {
 	 */
 	initialise: (html) => {
 		prepareDOM(html);
+		browser.fullscreen(appNodes.root.element);
 		setListeners();
 		handleViewportResizing();
-	},
-
-	appNodes
+	}
 };
 
 export { viewController as default };

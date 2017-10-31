@@ -1,8 +1,6 @@
 /**
  * Provides an API for handling html based notifications
- *
  */
-
 import { element } from '../tools/common';
 
 const SETUP = {
@@ -31,7 +29,6 @@ function splash(data) {
 
 /**
  * Removes written content
- *
  */
 function wipe () {
 	parentElement.removeChild(content);

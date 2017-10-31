@@ -1,30 +1,8 @@
-
-/**
- * Handles the fullscreen API
- *
- */
-const fullScreen = (() => {
-
-	let state;
-
-	/**
-	 * Toggle fullscreen state
-	 *
-	 */
-	function toggle() {
-		console.log('Not implemented yet');
-	}
-
-	return {
-		toggle: toggle,
-		state : state
-	};
-})();
+import { FullscreenAPI } from './browser_api';
 
 /**
  * Keeps a record of the scenes passed through by the user,
  * and provides some control over how to navigate the history
- *
  */
 const history = (() => {
 
@@ -68,10 +46,11 @@ const browser = {
 	 * Checks which device is currently being used
 	 * @returns {string}
 	 */
-	check: () => {
-		return 'desktop';
-	}
+	check: () => 'desktop',
 
+	fullscreen: function(element) {
+		this.fullscreen = new FullscreenAPI(element);
+	}
 };
 
-export { fullScreen, history, browser };
+export { history, browser };

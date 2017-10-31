@@ -1,8 +1,6 @@
 /**
  * Common tools
- *
  */
-
 const element = {
 
 	create: (options) => {

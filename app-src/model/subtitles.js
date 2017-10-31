@@ -1,8 +1,6 @@
 /**
  * Subtitles handling and rendering
- *
  */
-
 import { ajaxRequest, report } from '../tools/common';
 import media from '../view/media';
 import subtitlesView from '../view/subtitles';
@@ -151,7 +149,6 @@ function fix(time) {
 
 /**
  * Sets listeners for the HTML5 media object
- *
  */
 function addMediaListener() {
 	media.parentElement.addEventListener('media:state:change', mediaListener, false);
@@ -159,7 +156,6 @@ function addMediaListener() {
 
 /**
  * Removes the media listener
- *
  */
 function removeMediaListener() {
 	media.parentElement.removeEventListener('media:state:change', mediaListener, false);
@@ -220,6 +216,20 @@ function parseFile(url, fileType) {
 
 const subtitles = {
 
+	active,
+	check,
+	fix,
+
+	on: () => {
+		active = true;
+		addMediaListener();
+	},
+
+	off: () => {
+		active = false;
+		removeMediaListener();
+	},
+
 	/**
 	 * Initialises subtitling
 	 * @param {string} url
@@ -232,21 +242,7 @@ const subtitles = {
 		subtitlesArray = [];
 
 		return parseFile(url, fileType);
-	},
-
-	on: () => {
-		active = true;
-		addMediaListener();
-	},
-
-	off: () => {
-		active = false;
-		removeMediaListener();
-	},
-
-	active,
-	check,
-	fix
+	}
 };
 
 export { subtitles as default };

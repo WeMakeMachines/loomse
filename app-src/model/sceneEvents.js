@@ -1,8 +1,6 @@
 /**
  * Handles all the logic for the scene events
- *
  */
-
 import media from '../view/media';
 import sceneEventsView from '../view/sceneEvents';
 import storyBehaviour from '../configs/storyBehaviour';
@@ -37,12 +35,10 @@ let events = {
 
 /**
  * Event class
- *
  */
 class Event {
 
 	/**
-	 * Constructor event
 	 * @param {string} id
 	 * @param {string} call
 	 * @param {object} schedule
@@ -115,7 +111,6 @@ class Event {
 
 	/**
 	 * Runs the event
-	 *
 	 */
 	run() {
 		this.call.run(this.element);
@@ -123,7 +118,6 @@ class Event {
 
 	/**
 	 * Stops the event and removes any performed actions
-	 *
 	 */
 	kill() {
 		this.call.stop();
@@ -180,7 +174,6 @@ function schedule(array) {
 
 /**
  * Sets listeners for the HTML5 media object
- *
  */
 function addMediaListener() {
 	media.parentElement.addEventListener('media:state:change', mediaListener, false);
@@ -188,7 +181,6 @@ function addMediaListener() {
 
 /**
  * Removes the media listener
- *
  */
 function removeMediaListener() {
 	media.parentElement.removeEventListener('media:state:change', mediaListener, false);

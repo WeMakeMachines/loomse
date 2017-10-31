@@ -1,7 +1,6 @@
 /**
  * User defined function space
  */
-
 import loomSE from '../base';
 
 const userDefinedModules = {
