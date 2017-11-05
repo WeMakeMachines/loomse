@@ -1,88 +1,99 @@
-# Loom Story Engine
+# Loom Story Engine 0.4.0
 *Interactive storytelling for the modern web*
+
+## Dependencies
+
+Developing Loom requires npm, babel (for compiling ES6), sass and rollup for building.
+
+A bult Loom project has no external dependencies.
 
 ## Installation
 
-Extract and deploy Loom to your web server, following the current file structure. If you wish to embed Loom into an existing webpage, you need to assign a container for it with a unique ID. Below is the default HTML structure.
+Download and run:
 
 ```
-<div id="loomSE">
-</div>
+npm install
 
 ```
+To build in development mode, run:
+
+```
+npm run dev
+
+```
+
+To build in production mode, run:
+
+```
+npm run prod
+
+```
+
+Built files are stored in the `app-build` directory.
 
 ## Configuration & Behaviours
 
-Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with custom modules.
+Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with extensions.
 
 #### Application Behaviour
 
-The behaviours file can be found and edited in `js/behaviour.json`. This file is in JSON format. Certain behaviours within the application can be controlled from here.
+These files are in JSON format.
 
-##### Configurable Behaviours
-
-{
-  "media": {
-    "timeEventResolution": 0.4,
-    "showPosterWhenPaused": false,
-    "fastForwardSkip": 10,
-    "minimum_resolution": {
-      "width": 640,
-      "height": 480
-    }
-  },
-  "subtitles": false,
-  "developer": {
-    "mute": true,
-    "verbose": "subtitles",
-    "disableCheckScript": false,
-    "disableScrubScreen": false
-  }
-}
+The configuration file `app-src/configs/config.json` controls some aspects of the application.
+The behaviours file `app-src/configs/storyBehaviour.json` controls some of the finer aspects of the script.
 
 #### The Script
 
-All the power for developing your non-linear narrative rests inside a JSON based script file. The default location for this is `assets/scripts/script-desktop.json`.
+All the power for developing your non-linear narrative rests inside a JSON based script file. The default location for this is `assets/scripts/`.
+
+You can define separate scripts for mobile and desktop.
 
 ## Running the application
 
-The function `loomSE.initialise()` must be called to start the Loom application. By default this sites inside `index.html`. Check the initialisation arguments are set correctly, using the following syntax:
+The function `loomSE.initialise()` must be called to start the Loom application. By default this sites inside `index.html`.
 
-`loomSE.initialise([*target*], [*script_url*], [*first_scene*], [*callback*], [*resolution*])`
+## Writing your own extensions
 
-target - the node ID for which Loom will attach itself
-script_url - the URL location of the script file
-first_scene - the name of the first scene in the script to launch
-callback - *optional* the function to run once Loom has prepared it's environment
-resolution - *optional* a fixed resolution for all media playback
+Extensions can be written in `app-src/user/extensions.js`, inside the `userDefinedModules` namespace.
 
-The default arguments are as follows;
+They must be written with 2 exposed return functions, `run(element, render)` and `stop()`. These are each called respectively during media playback at the in and out times set by the script.
 
-```
-loomSE.initialise('loomSE', 'assets/scripts/script-desktop.json', 'intro', function() {
-    // callback
-});
-```
+run() is called with 2 arguments - `element` and `render`.
 
-## Writing your own modules
+element - object reference to the the container in which the module will be posted
+render - callback function which posts your event into the DOM
 
-Modules must be constructed under the Loom namespace `loomSE`, and as a prototype of the `Modules` constructor. They are written with 2 exposed return functions, `run()` and `stop()`. These are each called respectively during media playback at the in and out times set by the script. When `run()` is called, an object reference to the the container in which the module will be posted is passed via the argument `container`. You can append any custom elements to this container with vanilla JavaScript as follows `container.appendChild(yourElement)`. After `stop()` is run by the engine, the container for your module will also be removed from screen.
+After `stop()` is run by the engine, the container for your module will also be removed from the DOM.
 
 #### Example module
 
-You can use the following structure to create your own modules, or see the live examples included inside `js/loomSE-modules.js`.
+You can use the following structure to create your own modules:
 
 ```
-loomSE.Modules.prototype.myModule = function() {
+const userDefinedModules = {
 
-    return {
-        run: function(container) {
-            
-        },
-        stop: function() {
+	myModule() {
 
-        }
-    }
+		return {
+
+			run(element, render) {
+
+			    console.log('event begins!');
+
+				// do some stuff
+
+				render();
+			},
+
+			stop() {
+
+				console.log('closing!');
+
+			}
+
+		};
+	}
+
 };
 ```
 
@@ -98,4 +109,6 @@ Current API commands:
 - `loomSE.play(time)` - play current media
 - `loomSE.duration()` - duration of current media
 - `loomSE.seek(time)` - seek to time (in seconds) in media
+- `loomSE.skip(scneName)` - skip to name of scene
 - `loomSE.reload()` - reload current scene
+- `loomSE.version` - show current version
