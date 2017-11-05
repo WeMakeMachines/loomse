@@ -5,7 +5,7 @@ import loomSE from '../base';
 
 const userDefinedModules = {
 
-	test: () => {
+	test() {
 
 		return {
 			run(element, render) {
