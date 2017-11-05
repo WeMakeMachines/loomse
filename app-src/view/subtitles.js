@@ -23,16 +23,14 @@ function display(phrase) {
 
 	remove();
 
-	let newSubtitle = element({type: 'p'})
-		.setClass('subtitle')
-		.setText(phrase)
-		.getDimensions()
-		.calculatePosition(data.dimensions, storyBehaviour.subtitles.x, storyBehaviour.subtitles.y)
-		.setPosition();
-
 	if (config.developer.checkVerbose('subtitles')) {
 		report(`[Subtitle] ${phrase}`);
 	}
+
+	let newSubtitle = element({type: 'p'})
+		.setClass('subtitle')
+		.setText(phrase)
+		.setPosition(data.dimensions, storyBehaviour.subtitles.x, storyBehaviour.subtitles.y);
 
 	parentElement.attach(newSubtitle);
 }

@@ -17,8 +17,6 @@ let parentElement = element({ id: SETUP.id });
 function createEventElement(id) {
 	let eventElement = element({ id });
 
-	// TODO apply class hidden
-
 	parentElement.attach(eventElement);
 
 	return eventElement;

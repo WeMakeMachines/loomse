@@ -200,11 +200,7 @@ function parseFile(url, fileType) {
 	checkSubtitles.then((subtitles) => {
 		subtitles = subtitles.match(linesToArray);
 
-		switch (fileType) {
-			case 'srt':
-				fileTypes.srt(subtitles);
-				break;
-		}
+		fileTypes[fileType](subtitles);
 	});
 
 	checkSubtitles.catch((reason) => {

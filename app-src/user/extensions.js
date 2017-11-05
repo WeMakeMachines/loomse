@@ -8,11 +8,16 @@ const userDefinedModules = {
 	test: () => {
 
 		return {
-			run: (element) => {
+			run(element, render) {
+				console.log('element', element);
+				console.log('this', this);
 				console.log('firing!');
 				console.log(loomSE.currentTime());
+
+				render();
 			},
-			stop: () => {
+
+			stop() {
 				console.log('closing!');
 			}
 		};

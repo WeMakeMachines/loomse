@@ -11,7 +11,7 @@ const config = {
 		mute              : true,
 		disableCheckScript: false,
 		disableScrubScreen: false,
-		verbose           : ['subtitles'],
+		verbose           : [], // 'subtitles'
 		checkVerbose      : function(string) {
 			return Boolean(this.verbose.find((arrayItem) => arrayItem === string));
 		}

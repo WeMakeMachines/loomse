@@ -179,10 +179,16 @@ class Element {
 	}
 
 	/**
-	 * Proxy to setStyle, sets absolute position of element
+	 * Sets absolute position of element
+	 * @param {object} containerDimensions
+	 * @param {number} x
+	 * @param {number} y
 	 * @returns {Element}
 	 */
-	setPosition() {
+	setPosition(containerDimensions, x, y) {
+
+		this.getDimensions()
+			.calculatePosition(containerDimensions, x, y);
 
 		if (!this.coordinates) { throw '[Element] invalid dimensions'; }
 
@@ -250,7 +256,6 @@ class Element {
 
 		return this;
 	}
-
 }
 
 const element = (options) => new Element(options);

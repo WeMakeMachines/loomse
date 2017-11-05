@@ -41,8 +41,8 @@
 						"out": 5000
 					},
 					"parameters": {
-						"x": 11,
-						"y": 10,
+						"x": 0.1,
+						"y": 0.1,
 						"class": "mediaTime"
 					}
 				},
@@ -54,8 +54,8 @@
 						"out": 10000
 					},
 					"parameters": {
-						"x": 20,
-						"y": 20,
+						"x": 0.2,
+						"y": 0.2,
 						"class": "mediaTime"
 					}
 				},
@@ -67,8 +67,8 @@
 						"out": 15000
 					},
 					"parameters": {
-						"x": 30,
-						"y": 30,
+						"x": 0.3,
+						"y": 0.3,
 						"class": "mediaTime"
 					}
 				},
@@ -80,8 +80,8 @@
 						"out": 20000
 					},
 					"parameters": {
-						"x": 80,
-						"y": 80,
+						"x": 0.8,
+						"y": 0.8,
 						"class": "mediaTime"
 					}
 				}

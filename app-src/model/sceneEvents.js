@@ -1,6 +1,7 @@
 /**
  * Handles all the logic for the scene events
  */
+import data from '../model/data';
 import media from '../view/media';
 import sceneEventsView from '../view/sceneEvents';
 import storyBehaviour from '../configs/storyBehaviour';
@@ -40,14 +41,14 @@ class Event {
 
 	/**
 	 * @param {string} id
-	 * @param {string} call
+	 * @param {string} extension
 	 * @param {object} schedule
 	 * @param {object} parameters
 	 * @param {object} element
 	 */
-	constructor(id, call, schedule, parameters, element) {
+	constructor(id, extension, schedule, parameters, element) {
 		this.id = id; // event id
-		this.call = call;
+		this.extension = extension;
 		this.state = 'waiting'; // waiting, fired, expired
 		this.in = schedule.in;
 		this.out = schedule.out;
@@ -113,14 +114,23 @@ class Event {
 	 * Runs the event
 	 */
 	run() {
-		this.call.run(this.element);
+		this.extension.run.call(this, this.element.node, () => {
+			this.render();
+		});
 	}
 
 	/**
 	 * Stops the event and removes any performed actions
 	 */
 	kill() {
-		this.call.stop();
+		this.extension.stop();
+	}
+
+	/**
+	 * Renders the event into the DOM
+	 */
+	render() {
+		this.element.setPosition(data.dimensions, this.parameters.x, this.parameters.y);
 	}
 }
 
@@ -189,19 +199,19 @@ function removeMediaListener() {
 /**
  * Function which is triggered by the listener
  * @param {object} eventObject
- * @returns {boolean}
  */
 function mediaListener(eventObject) {
+
 	let message = eventObject.detail,
 		isSameTime = message.time - previousMediaTimeIndex === 0,
 		isSeeking = message.time - previousMediaTimeIndex >= MINIMUM_SEEK_RANGE || message.state === 'seeking';
 
-	if (isSameTime) { return false; }
+	if (isSameTime) { return; }
 
 	if (isSeeking) {
 		events.fixStates(message.time);
 		previousMediaTimeIndex = message.time;
-		return false;
+		return;
 	}
 
 	events.update((event) => {
