@@ -13,6 +13,7 @@ const userDefinedModules = {
 				console.log('this', this);
 				console.log('firing!');
 				console.log(loomSE.currentTime());
+				element.innerHTML = '<p>It works!</p>';
 
 				render();
 			},

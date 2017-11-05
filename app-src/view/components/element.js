@@ -60,6 +60,19 @@ class Element {
 	}
 
 	/**
+	 * @returns {Element}
+	 */
+	attachToParent() {
+
+		if (!this.parent) { throw '[Element] unable to attach node'; }
+
+		this.parent.attach(this.node);
+
+		return this;
+
+	}
+
+	/**
 	 * @param {object} child
 	 * @returns {Element}
 	 */
@@ -72,6 +85,19 @@ class Element {
 		} else {
 			this.node.removeChild(child);
 		}
+
+		return this;
+
+	}
+
+	/**
+	 * @returns {Element}
+	 */
+	detachFromParent() {
+
+		if (!this.parent) { throw '[Element] unable to remove node'; }
+
+		this.parent.detach(this.node);
 
 		return this;
 
@@ -189,6 +215,8 @@ class Element {
 
 		this.getDimensions()
 			.calculatePosition(containerDimensions, x, y);
+
+		console.log('dimensions', this.dimensions, this.node);
 
 		if (!this.coordinates) { throw '[Element] invalid dimensions'; }
 

@@ -2,7 +2,7 @@
  * Handles all our media object and requests
  */
 import { ajaxRequest } from '../tools/common';
-import element from '../tools/element';
+import element from './components/element';
 import gui from './components/media_gui';
 import storyBehaviour from '../configs/storyBehaviour';
 

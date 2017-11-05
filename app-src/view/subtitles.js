@@ -3,7 +3,7 @@
  * Since subtitles appear in a linear fashion (the next one always follows the previous one),
  * -> we always keep on record the current subtitle to be displayed
  */
-import element from '../tools/element';
+import element from './components/element';
 import config from '../configs/config';
 import data from '../model/data';
 import { report } from '../tools/common';

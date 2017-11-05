@@ -1,7 +1,7 @@
 /**
  * Handles all the main view arrangements
  */
-import element from '../tools/element';
+import element from './components/element';
 import { browser } from '../tools/browser';
 import { debounce } from '../tools/common';
 

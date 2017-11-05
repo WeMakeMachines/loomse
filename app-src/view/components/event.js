@@ -89,13 +89,15 @@ class Event {
 	 */
 	kill() {
 		this.extension.stop();
+		this.element.detachFromParent();
 	}
 
 	/**
 	 * Renders the event into the DOM
 	 */
 	render() {
-		this.element.setPosition(data.dimensions, this.parameters.x, this.parameters.y);
+		this.element.setPosition(data.dimensions, this.parameters.x, this.parameters.y)
+			.attachToParent();
 	}
 }
 

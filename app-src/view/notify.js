@@ -1,7 +1,7 @@
 /**
  * Provides an API for handling html based notifications
  */
-import element from '../tools/element';
+import element from './components/element';
 
 const SETUP = {
 	id: 'notify'

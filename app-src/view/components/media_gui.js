@@ -2,7 +2,7 @@
  * On screen media controls
  */
 import { browser } from '../../tools/browser';
-import element from '../../tools/element';
+import element from './element';
 import html from '../../templates/media_gui.html';
 import media from '../media';
 
