@@ -218,7 +218,7 @@ const sceneEventsModel = {
 	 * @param {array} eventArray
 	 * @returns {boolean}
 	 */
-	initialise: (eventArray) => {
+	initialise(eventArray) {
 		schedule(eventArray);
 		addMediaListener();
 

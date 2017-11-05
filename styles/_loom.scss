@@ -5,6 +5,14 @@
 #stage {
     z-index: 100;
 
+    > div {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
     #mediaGroup {
 
         video {
@@ -18,6 +26,14 @@
 
 #overlay {
     z-index: 110;
+
+    > div {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
 
     #events {
         z-index: 107;
@@ -38,6 +54,14 @@
 
 .hide {
     display: none;
+}
+
+.subtitle {
+    position: absolute;
+    font-size: 24px;
+    color: black;
+    padding: 4px;
+    background-color: aqua;
 }
 
 .stack {

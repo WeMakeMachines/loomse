@@ -8,7 +8,9 @@ const storyBehaviour = {
 	},
 	subtitles: {
 		active  : true,
-		language: 'english'
+		language: 'english',
+		x       : 0.5,
+		y       : 0.9
 	}
 };
 

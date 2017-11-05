@@ -49,7 +49,7 @@ const scriptHandler = {
 	 * Initialises scene
 	 * @param {string} scene - named scene
 	 */
-	initialise: (scene) => {
+	initialise(scene) {
 		setScene(scene);
 		//process(data.currentScene);
 	}

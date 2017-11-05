@@ -1,8 +1,8 @@
 /**
  * On screen media controls
  */
+import Element from '../../tools/element';
 import { browser } from '../../tools/browser';
-import { element } from '../../tools/common';
 import html from '../../templates/media_gui.html';
 import media from '../media';
 
@@ -10,7 +10,7 @@ const SETUP = {
 	id: 'mediaGui'
 };
 
-let parentElement = element.create({ id: SETUP.id }),
+let parentElement = new Element({ id: SETUP.id }).node,
 	playButton = '.play_toggle',
 	fullScreenButton = '.fullscreen_toggle';
 
@@ -97,7 +97,7 @@ const mediaGui = {
 
 	parentElement,
 
-	initialise: () => {
+	initialise() {
 		let fragment = document.createDocumentFragment(),
 			guiContainer = document.createElement('div');
 

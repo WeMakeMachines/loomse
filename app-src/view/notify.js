@@ -1,14 +1,13 @@
 /**
  * Provides an API for handling html based notifications
  */
-import { element } from '../tools/common';
+import Element from '../tools/element';
 
 const SETUP = {
-	id   : 'notify',
-	class: 'scaleToParent'
+	id: 'notify'
 };
 
-let parentElement = element.create({ id: SETUP.id, class: SETUP.class }),
+let parentElement = new Element({ id: SETUP.id }).node,
 	content;
 
 /**
@@ -22,16 +21,16 @@ function splash(data) {
 		wipe();
 	}
 
-	content = element.create();
-	content.innerHTML = data.html;
-	parentElement.appendChild(content);
+	content = new Element();
+	content.node.innerHTML = data.html;
+	parentElement.appendChild(content.node);
 }
 
 /**
  * Removes written content
  */
 function wipe () {
-	parentElement.removeChild(content);
+	parentElement.removeChild(content.node);
 	content = null;
 }
 

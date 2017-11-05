@@ -3,31 +3,40 @@
  * Since subtitles appear in a linear fashion (the next one always follows the previous one),
  * -> we always keep on record the current subtitle to be displayed
  */
-import { element, report } from '../tools/common';
+import Element from '../tools/element';
 import config from '../configs/config';
+import data from '../model/data';
+import { report } from '../tools/common';
+import storyBehaviour from '../configs/storyBehaviour';
 
 const SETUP = {
 	id: 'subtitles'
 };
 
-let parentElement = element.create({ id: SETUP.id });
+let parentElement = new Element({ id: SETUP.id }).node;
 
 /**
  * Append our subtitle to the DOM (show the subtitle)
  * @param {string} phrase
  */
 function display(phrase) {
-	let newSubtitle = element.create({type: 'p'}),
+
+	remove();
+
+	let newSubtitle = new Element({type: 'p', classList: 'subtitle' }),
 		text = document.createTextNode(phrase);
 
 	if (config.developer.checkVerbose('subtitles')) {
 		report(`[Subtitle] ${phrase}`);
 	}
 
-	remove();
+	newSubtitle.node.appendChild(text);
 
-	newSubtitle.appendChild(text);
-	parentElement.appendChild(newSubtitle);
+	newSubtitle.getDimensions()
+		.calculatePosition(data.dimensions, storyBehaviour.subtitles.x, storyBehaviour.subtitles.y)
+		.setPosition();
+
+	parentElement.appendChild(newSubtitle.node);
 }
 
 /**

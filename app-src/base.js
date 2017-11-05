@@ -94,39 +94,39 @@ export default {
 	/**
 	 * Restarts the current scene
 	 */
-	reload: () => {
+	reload() {
 		media.seek(0);
 	},
 
-	pause: () => { media.pause(); },
+	pause() { media.pause(); },
 
-	play: () =>	{ media.play(); },
+	play() { media.play(); },
 
 	/**
 	 * Scrub to time in media
 	 * @param {number} time in seconds
 	 */
-	seek: (time) => { media.seek(time); },
+	seek(time) { media.seek(time); },
 
 	/**
 	 * Abandon current scene and load the named scene
 	 * @param {string} sceneName
 	 */
-	skip: (sceneName) => { prepareAllParts(sceneName); },
+	skip(sceneName) { prepareAllParts(sceneName); },
 
 	/**
 	 * Report media stats
 	 */
-	status: () => {
+	status() {
 		let time = clock(media.getCurrentTime()),
 			duration = clock(media.getLength());
 
 		report(`Current time: ${time}\nDuration: ${duration}`);
 	},
 
-	currentTime: () => clock(media.getCurrentTime()),
+	currentTime() { clock(media.getCurrentTime()); },
 
-	duration: () => clock(media.getLength()),
+	duration() { clock(media.getLength()); },
 
 	version: VERSION,
 
@@ -135,7 +135,7 @@ export default {
 	/**
 	 * Our public initialise method, used to initialise our application
 	 */
-	initialise: () => {
+	initialise() {
 		let firstScene = storyBehaviour.firstScene,
 			scriptSrc = getScriptSource(),
 			checkScript = ajaxRequest(scriptSrc, 'JSON');

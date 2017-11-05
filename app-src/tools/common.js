@@ -1,65 +1,6 @@
 /**
  * Common tools
  */
-const element = {
-
-	create: (options) => {
-		let newElement;
-
-		if (!options) { options = {}; }
-
-		if (!options.type) { options.type = 'div'; }
-
-		newElement = document.createElement(options.type);
-
-		if (options.id) {
-			newElement.setAttribute('id', options.id);
-		}
-
-		if (options.class && typeof options.class === 'string') {
-			newElement.setAttribute('class', options.class);
-		}
-
-		if (options.class && Array.isArray(options.class)) {
-			newElement.setAttribute('class', options.class.join(' '));
-		}
-
-		return newElement;
-	},
-
-	attributes: (element, attributes) => {
-		if (typeof attributes !== 'object') { return; }
-
-		for (let key in attributes) {
-			if (attributes.hasOwnProperty(key)) {
-				element.setAttribute(key, attributes[key]);
-			}
-		}
-	},
-
-	style: (element, cssProperties) => {
-		for (let attribute in cssProperties) {
-			if (cssProperties.hasOwnProperty(attribute)) {
-				let value = cssProperties[attribute];
-
-				switch (attribute) {
-					case 'width':
-					case 'height':
-					case 'top':
-					case 'left':
-					case 'right':
-					case 'bottom':
-						value += 'px';
-						break;
-					default:
-						break;
-				}
-
-				element.style[attribute] = value;
-			}
-		}
-	}
-};
 
 /**
  * Simplified AJAX call
@@ -236,4 +177,4 @@ function report(message) {
 	}
 }
 
-export { ajaxRequest, cleanString, clock, debounce, element, random, report };
+export { ajaxRequest, cleanString, clock, debounce, random, report };

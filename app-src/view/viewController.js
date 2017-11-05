@@ -1,10 +1,12 @@
 /**
  * Handles all the main view arrangements
  */
-import { debounce, element } from '../tools/common';
+import Element from '../tools/element';
+import { debounce } from '../tools/common';
 import { browser } from '../tools/browser';
 
 import config from '../configs/config';
+import data from '../model/data';
 import media from './media';
 import mediaGui from './components/media_gui';
 import notify from './notify';
@@ -12,31 +14,27 @@ import sceneEventsView from './sceneEvents';
 import subtitlesView from './subtitles';
 
 let appNodes = {
-		root: {
-			element : null,
-			children: [
-				{
-					id      : 'stage',
-					class   : ['stack', 'scaleToParent'],
-					children: [media.parentElement]
-				},
-				{
-					id      : 'overlay',
-					class   : ['stack', 'scaleToParent'],
-					children: [notify.parentElement, subtitlesView.parentElement, sceneEventsView.parentElement]
-				},
-				{
-					id      : 'gui',
-					class   : ['stack', 'scaleToParent'],
-					children: [mediaGui.parentElement]
-				}
-			]
-		}
-	},
-	dimensions = {
-		width : null,
-		height: null
-	};
+	root: {
+		element : null,
+		children: [
+			{
+				id      : 'stage',
+				class   : ['stack', 'scaleToParent'],
+				children: [media.parentElement]
+			},
+			{
+				id      : 'overlay',
+				class   : ['stack', 'scaleToParent'],
+				children: [notify.parentElement, subtitlesView.parentElement, sceneEventsView.parentElement]
+			},
+			{
+				id      : 'gui',
+				class   : ['stack', 'scaleToParent'],
+				children: [mediaGui.parentElement]
+			}
+		]
+	}
+};
 
 /**
  * Appends multiple elements to a single node
@@ -65,17 +63,17 @@ function setupAppNodes(root, children) {
 		let child = children[i];
 
 		if (!child.element) {
-			child.element = element.create({
-				id   : child.id,
-				class: child.class
+			child.element = new Element({
+				id       : child.id,
+				classList: child.class
 			});
 		}
 
 		if (child.children && child.children.length) {
-			appendToParent(child.element, child.children);
+			appendToParent(child.element.node, child.children);
 		}
 
-		root.appendChild(child.element);
+		root.node.appendChild(child.element.node);
 	}
 }
 
@@ -89,7 +87,7 @@ function prepareDOM(html) {
 
 	body.innerHTML = html;
 
-	appNodes.root.element = document.getElementById(config.appRoot);
+	appNodes.root.element = new Element({ id: config.appRoot });
 
 	setupAppNodes(appNodes.root.element, appNodes.root.children);
 
@@ -99,8 +97,8 @@ function prepareDOM(html) {
  * Gets the current client dimensions
  */
 function getClientDimensions() {
-	dimensions.width = document.documentElement.clientWidth;
-	dimensions.height = document.documentElement.clientHeight;
+	data.dimensions.width = document.documentElement.clientWidth;
+	data.dimensions.height = document.documentElement.clientHeight;
 }
 
 /**
@@ -110,7 +108,7 @@ function getClientDimensions() {
  * @param {number} height
  */
 function resize(node, width, height) {
-	element.style(node, {
+	node.setStyle({
 		width,
 		height
 	});
@@ -121,7 +119,7 @@ function resize(node, width, height) {
  */
 function handleViewportResizing() {
 	getClientDimensions();
-	resize(appNodes.root.element, dimensions.width, dimensions.height);
+	resize(appNodes.root.element, data.dimensions.width, data.dimensions.height);
 }
 
 /**
@@ -153,9 +151,9 @@ const viewController = {
 	 * Sets up the DOM in the browser
 	 * @param {string} html
 	 */
-	initialise: (html) => {
+	initialise(html) {
 		prepareDOM(html);
-		browser.fullscreen(appNodes.root.element);
+		browser.fullscreen(appNodes.root.element.node);
 		setListeners();
 		handleViewportResizing();
 	}

@@ -6,13 +6,13 @@ import notify from './notify';
 
 const loading = {
 
-	initialise: () => {
+	initialise() {
 		notify.splash({
 			html
 		});
 	},
 
-	stop: () => {
+	stop() {
 		notify.wipe();
 	}
 };

@@ -235,7 +235,7 @@ const subtitles = {
 	 * @param {string} url
 	 * @returns {object}
 	 */
-	initialise: (url) => {
+	initialise(url) {
 		let fileType = url.slice(-3);
 
 		if (!checkValidFormats(fileType)) { return false; }

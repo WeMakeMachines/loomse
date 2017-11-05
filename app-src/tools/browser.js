@@ -46,9 +46,11 @@ const browser = {
 	 * Checks which device is currently being used
 	 * @returns {string}
 	 */
-	check: () => 'desktop',
+	check() {
+		return 'desktop';
+	},
 
-	fullscreen: function(element) {
+	fullscreen(element) {
 		this.fullscreen = new FullscreenAPI(element);
 	}
 };

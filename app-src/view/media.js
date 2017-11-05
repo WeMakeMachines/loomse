@@ -1,7 +1,8 @@
 /**
  * Handles all our media object and requests
  */
-import { ajaxRequest, element } from '../tools/common';
+import Element from '../tools/element';
+import { ajaxRequest } from '../tools/common';
 import gui from './components/media_gui';
 import storyBehaviour from '../configs/storyBehaviour';
 
@@ -12,7 +13,7 @@ const SETUP = {
 const MILLISECONDS_IN_SECONDS = 1000;
 const MEDIA_BEHAVIOUR = storyBehaviour.media;
 
-let parentElement = element.create({ id: SETUP.id, class: SETUP.class }),
+let parentElement = new Element({ id: SETUP.id, class: SETUP.class }).node,
 	mediaObject = {};
 
 /**
@@ -42,7 +43,7 @@ class MediaObject {
 		if (typeof this.poster === 'string' && this.poster !== '') {
 			ajaxRequest(this.poster)
 				.then(() => {
-					this.element.setAttribute('poster', this.poster);
+					this.element.node.setAttribute('poster', this.poster);
 				})
 				.catch(() => {
 					this.poster = false;
@@ -50,10 +51,10 @@ class MediaObject {
 		}
 
 		// set muted
-		this.element.muted = this.muted;
+		this.element.node.muted = this.muted;
 
 		// set controls
-		this.element.controls = false;
+		this.element.node.controls = false;
 
 		return this;
 	}
@@ -70,7 +71,7 @@ class Video extends MediaObject {
 	 */
 	constructor (object) {
 		super(object);
-		this.element = element.create({ type: 'video', id: 'video' });
+		this.element = new Element({ type: 'video', id: 'video' });
 		this.sources = {
 			ogg: object.video.ogg || false,
 			mp4: object.video.mp4 || false
@@ -84,12 +85,12 @@ class Video extends MediaObject {
 	fillMethod () {
 		switch (MEDIA_BEHAVIOUR.videoFillMethod) {
 			case 'cover':
-				element.style(this.element, {
+				this.element.setStyle({
 					'object-fit': 'cover'
 				});
 				break;
 			default:
-				element.style(this.element, {
+				this.element.setStyle({
 					'object-fit': 'contain'
 				});
 				break;
@@ -104,16 +105,18 @@ class Video extends MediaObject {
 	 */
 	setSources () {
 		if (typeof this.sources.ogg === 'string' && this.sources.ogg !== '') {
+
 			ajaxRequest(this.sources.ogg)
 				.then(() => {
 					let source = this.sources.ogg;
 
-					this.sources.ogg = element.create({ type: 'source'});
-					element.attributes(this.sources.ogg, {
-						'src' : source,
-						'type': 'video/ogg'
-					});
-					this.element.appendChild(this.sources.ogg);
+					this.sources.ogg = new Element({ type: 'source'})
+						.setAttributes({
+							'src' : source,
+							'type': 'video/ogg'
+						});
+
+					this.element.node.appendChild(this.sources.ogg.node);
 				})
 				.catch(() => {
 					this.sources.ogg = false;
@@ -123,14 +126,15 @@ class Video extends MediaObject {
 		if (typeof this.sources.mp4 === 'string' && this.sources.mp4 !== '') {
 			ajaxRequest(this.sources.mp4)
 				.then(() => {
-					let source = this.sources.ogg;
+					let source = this.sources.mp4;
 
-					this.sources.mp4 = element.create('source');
-					element.attributes(this.sources.mp4, {
-						'src' : source,
-						'type': 'video/mp4'
-					});
-					this.element.appendChild(this.sources.mp4);
+					this.sources.mp4 = new Element('source')
+						.setAttributes({
+							'src' : source,
+							'type': 'video/mp4'
+						});
+
+					this.element.node.appendChild(this.sources.mp4.node);
 				})
 				.catch(() => {
 					this.sources.mp4 = false;
@@ -148,8 +152,10 @@ class Video extends MediaObject {
 	 */
 	setDimensions (width, height) {
 
-		this.element.setAttribute('width', width);
-		this.element.setAttribute('height', height);
+		this.element.setAttributes({
+			width,
+			height
+		});
 
 		return this;
 	}
@@ -166,7 +172,7 @@ class Audio extends MediaObject {
 	 */
 	constructor (object) {
 		super(object);
-		this.element = element.create({ type: 'audio', id: 'audio' });
+		this.element = new Element({ type: 'audio', id: 'audio' });
 	}
 }
 
@@ -203,7 +209,7 @@ function _listenToMediaEvents() {
 	for (let i = 0; i < events.length; i += 1) {
 		let event = events[i];
 
-		mediaObject.element.addEventListener(event, () => {
+		mediaObject.element.node.addEventListener(event, () => {
 			_broadcastMediaState(event);
 		});
 	}
@@ -214,7 +220,7 @@ function _listenToMediaEvents() {
  * @returns {number}
  */
 function _getCurrentTime() {
-	return mediaObject.element.currentTime * MILLISECONDS_IN_SECONDS;
+	return mediaObject.element.node.currentTime * MILLISECONDS_IN_SECONDS;
 }
 
 /**
@@ -222,7 +228,7 @@ function _getCurrentTime() {
  * @returns {number}
  */
 function _getLength() {
-	return mediaObject.element.duration;
+	return mediaObject.element.node.duration;
 }
 
 /**
@@ -230,7 +236,7 @@ function _getLength() {
  *
  */
 function _play() {
-	mediaObject.element.play();
+	mediaObject.element.node.play();
 }
 
 /**
@@ -238,7 +244,7 @@ function _play() {
  *
  */
 function _pause() {
-	mediaObject.element.pause();
+	mediaObject.element.node.pause();
 }
 
 /**
@@ -247,12 +253,12 @@ function _pause() {
  */
 function _playPause() {
 
-	if (mediaObject.element.paused) {
-		mediaObject.element.play();
+	if (mediaObject.element.node.paused) {
+		mediaObject.element.node.play();
 		return true;
 	}
 
-	mediaObject.element.pause();
+	mediaObject.element.node.pause();
 	return false;
 }
 
@@ -261,7 +267,7 @@ function _playPause() {
  * @param {number} time (seconds)
  */
 function _seek(time) {
-	mediaObject.element.currentTime = time;
+	mediaObject.element.node.currentTime = time;
 }
 
 const media = {
@@ -279,7 +285,7 @@ const media = {
 	 * @param {object} media
 	 * @returns {boolean}
 	 */
-	initialise: (media) => {
+	initialise(media) {
 		switch (media.type) {
 			case 'video':
 				mediaObject = new Video(media)
@@ -296,7 +302,7 @@ const media = {
 				return false;
 		}
 
-		parentElement.appendChild(mediaObject.element);
+		parentElement.appendChild(mediaObject.element.node);
 
 		_listenToMediaEvents();
 		gui.initialise();
