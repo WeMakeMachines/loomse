@@ -124,9 +124,9 @@ export default {
 		report(`Current time: ${time}\nDuration: ${duration}`);
 	},
 
-	currentTime() { clock(media.getCurrentTime()); },
+	currentTime() { return clock(media.getCurrentTime()); },
 
-	duration() { clock(media.getLength()); },
+	duration() { return clock(media.getLength()); },
 
 	version: VERSION,
 

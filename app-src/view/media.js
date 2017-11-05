@@ -1,8 +1,8 @@
 /**
  * Handles all our media object and requests
  */
-import Element from '../tools/element';
 import { ajaxRequest } from '../tools/common';
+import element from '../tools/element';
 import gui from './components/media_gui';
 import storyBehaviour from '../configs/storyBehaviour';
 
@@ -13,7 +13,8 @@ const SETUP = {
 const MILLISECONDS_IN_SECONDS = 1000;
 const MEDIA_BEHAVIOUR = storyBehaviour.media;
 
-let parentElement = new Element({ id: SETUP.id, class: SETUP.class }).node,
+let parentElement = element({ id: SETUP.id })
+		.setClass(SETUP.class),
 	mediaObject = {};
 
 /**
@@ -71,7 +72,7 @@ class Video extends MediaObject {
 	 */
 	constructor (object) {
 		super(object);
-		this.element = new Element({ type: 'video', id: 'video' });
+		this.element = element({ type: 'video', id: 'video' });
 		this.sources = {
 			ogg: object.video.ogg || false,
 			mp4: object.video.mp4 || false
@@ -110,13 +111,13 @@ class Video extends MediaObject {
 				.then(() => {
 					let source = this.sources.ogg;
 
-					this.sources.ogg = new Element({ type: 'source'})
+					this.sources.ogg = element({ type: 'source'})
 						.setAttributes({
 							'src' : source,
 							'type': 'video/ogg'
 						});
 
-					this.element.node.appendChild(this.sources.ogg.node);
+					this.element.attach(this.sources.ogg);
 				})
 				.catch(() => {
 					this.sources.ogg = false;
@@ -128,13 +129,13 @@ class Video extends MediaObject {
 				.then(() => {
 					let source = this.sources.mp4;
 
-					this.sources.mp4 = new Element('source')
+					this.sources.mp4 = element('source')
 						.setAttributes({
 							'src' : source,
 							'type': 'video/mp4'
 						});
 
-					this.element.node.appendChild(this.sources.mp4.node);
+					this.element.attach(this.sources.mp4);
 				})
 				.catch(() => {
 					this.sources.mp4 = false;
@@ -172,7 +173,7 @@ class Audio extends MediaObject {
 	 */
 	constructor (object) {
 		super(object);
-		this.element = new Element({ type: 'audio', id: 'audio' });
+		this.element = element({ type: 'audio', id: 'audio' });
 	}
 }
 
@@ -189,7 +190,7 @@ function _broadcastMediaState(state) {
 		}
 	});
 
-	parentElement.dispatchEvent(event);
+	parentElement.node.dispatchEvent(event);
 }
 
 /**
@@ -302,7 +303,7 @@ const media = {
 				return false;
 		}
 
-		parentElement.appendChild(mediaObject.element.node);
+		parentElement.attach(mediaObject.element);
 
 		_listenToMediaEvents();
 		gui.initialise();

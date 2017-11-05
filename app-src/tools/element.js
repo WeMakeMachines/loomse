@@ -1,47 +1,108 @@
+/**
+ * Creates a new DOM element or returns an existing DOM element
+ */
 class Element {
 
+	/**
+	 * Returns a valid DOM element
+	 * @param {object} options
+	 * @returns {object}
+	 */
+	static createNode(options) {
+
+		let node = document.createElement(options.type);
+
+		if (options.id) {
+
+			let getElementById = document.getElementById(options.id);
+
+			node = getElementById || node;
+
+			node.setAttribute('id', options.id);
+
+		}
+
+		return node;
+	}
+
+	/**
+	 * @param {object} options
+	 */
 	constructor(options) {
 
 		options = options || {};
 
+		if (typeof options !== 'object') { throw '[Element] instantiation error'; }
+
 		options.type = options.type || 'div';
 
-		this.node = document.getElementById(options.id) || document.createElement(options.type);
-
-		if (options.id) {
-			this.node.setAttribute('id', options.id);
-		}
-
-		if (options.classList) {
-			this.classList = options.classList;
-			this.setCss();
-		}
+		this.parent = options.parent;
+		this.node = this.constructor.createNode(options);
 
 	}
 
-	setCss(cssClass) {
+	/**
+	 * @param {object} child
+	 * @returns {Element}
+	 */
+	attach(child) {
 
-		if (cssClass) {
-			this.classList = cssClass;
-		}
+		if (!child || typeof child !== 'object') { throw '[Element] unable to attach node'; }
 
-		if (typeof this.classList === 'string') {
-			this.classList = [this.classList];
-		}
-
-		if (Array.isArray(this.classList)) {
-			this.classList.forEach((cssClass) => {
-				this.node.classList.add(cssClass);
-			});
+		if (child.node) {
+			this.node.appendChild(child.node);
+		} else {
+			this.node.appendChild(child);
 		}
 
 		return this;
 
 	}
 
-	setAttributes(attributes) {
+	/**
+	 * @param {object} child
+	 * @returns {Element}
+	 */
+	detach(child) {
 
-		if (typeof attributes !== 'object') { return; }
+		if (!child || typeof child !== 'object') { throw '[Element] unable to remove node'; }
+
+		if (child.node) {
+			this.node.removeChild(child.node);
+		} else {
+			this.node.removeChild(child);
+		}
+
+		return this;
+
+	}
+
+	/**
+	 * Attaches a list of css classes to element
+	 * @param {string | array} classList
+	 * @returns {Element}
+	 */
+	setClass(classList) {
+
+		if (!classList || !(typeof classList === 'string' || Array.isArray(classList))) {
+			throw '[Element] invalid parameters';
+		}
+
+		classList = typeof classList === 'string' ? [classList] : classList;
+
+		classList.forEach((cssClass) => {
+			this.node.classList.add(cssClass);
+		});
+
+		return this;
+	}
+
+	/**
+	 * @param {object} attributes
+	 * @returns {Element}
+	 */
+	setAttributes(attributes) {
+		if (typeof attributes !== 'object') { throw '[Element] invalid parameters'; }
 
 		for (let key in attributes) {
 			if (attributes.hasOwnProperty(key)) {
@@ -50,15 +111,22 @@ class Element {
 		}
 
 		return this;
-
 	}
 
-	setStyle(styleProperties) {
-		for (let attribute in styleProperties) {
-			if (styleProperties.hasOwnProperty(attribute)) {
-				let value = styleProperties[attribute];
+	/**
+	 * Method for setting style properties
+	 * @param {object} properties
+	 * @returns {Element}
+	 */
+	setStyle(properties) {
 
-				switch (attribute) {
+		if (typeof properties !== 'object') { throw '[Element] invalid parameters'; }
+
+		for (let property in properties) {
+			if (properties.hasOwnProperty(property)) {
+				let value = properties[property];
+
+				switch (property) {
 					case 'width':
 					case 'height':
 					case 'top':
@@ -71,17 +139,52 @@ class Element {
 						break;
 				}
 
-				this.node.style[attribute] = value;
+				this.node.style[property] = value;
 			}
 		}
+
+		return this;
+	}
+
+	/**
+	 * Creates an inner text node
+	 * @param {string} text
+	 * @returns {Element}
+	 */
+	setText(text) {
+
+		if (!text || typeof text !== 'string') { throw '[Element] invalid text'; }
+
+		let textNode = document.createTextNode(text);
+
+		this.node.appendChild(textNode);
 
 		return this;
 
 	}
 
+	/**
+	 * Sets inner HTML content
+	 * @param {string} htmlString
+	 * @returns {Element}
+	 */
+	setHtml(htmlString) {
+
+		if (!htmlString || typeof htmlString !== 'string') { throw '[Element] invalid html'; }
+
+		this.node.innerHTML = htmlString;
+
+		return this;
+
+	}
+
+	/**
+	 * Proxy to setStyle, sets absolute position of element
+	 * @returns {Element}
+	 */
 	setPosition() {
 
-		if (!this.coordinates) { return; }
+		if (!this.coordinates) { throw '[Element] invalid dimensions'; }
 
 		this.setStyle({
 			left: `${this.coordinates.x}`,
@@ -89,9 +192,12 @@ class Element {
 		});
 
 		return this;
-
 	}
 
+	/**
+	 * Gets physical element dimensions from browser
+	 * @returns {Element}
+	 */
 	getDimensions() {
 
 		let dimensions = {
@@ -113,18 +219,18 @@ class Element {
 		this.dimensions = dimensions;
 
 		return this;
-
 	}
 
 	/**
-	 * Calculate real world pixel co-ordinates from percentages
+	 * Calculates real world pixel co-ordinates from percentages
 	 * @param {object} parentDimensions
 	 * @param {number} x % 0 - 1
 	 * @param {number} y % 0 - 1
+	 * @returns {Element}
 	 */
 	calculatePosition(parentDimensions, x, y) {
 
-		if (typeof x !== 'number' || typeof y !== 'number' || !this.dimensions) { return; }
+		if (typeof x !== 'number' || typeof y !== 'number' || !this.dimensions) { throw '[Element] invalid dimensions'; }
 
 		let minRange = 0,
 			maxRange = 1;
@@ -138,14 +244,15 @@ class Element {
 		};
 
 		this.coordinates = {
-			x: availableDimensions.width * x,
-			y: availableDimensions.height * y
+			x: Math.round(availableDimensions.width * x),
+			y: Math.round(availableDimensions.height * y)
 		};
 
 		return this;
-
 	}
 
 }
 
-export { Element as default };
+const element = (options) => new Element(options);
+
+export { element as default };

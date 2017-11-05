@@ -58,6 +58,7 @@ function cleanString(string) {
  * @returns {object}
  */
 function clock(timeInMilliseconds) {
+
 	const SECONDS_IN_MINUTES = 60;
 	const MINUTES_IN_HOURS = 60;
 	const SECONDS_IN_HOURS = MINUTES_IN_HOURS * SECONDS_IN_MINUTES;

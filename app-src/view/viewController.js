@@ -1,9 +1,9 @@
 /**
  * Handles all the main view arrangements
  */
-import Element from '../tools/element';
-import { debounce } from '../tools/common';
+import element from '../tools/element';
 import { browser } from '../tools/browser';
+import { debounce } from '../tools/common';
 
 import config from '../configs/config';
 import data from '../model/data';
@@ -18,19 +18,19 @@ let appNodes = {
 		element : null,
 		children: [
 			{
-				id      : 'stage',
-				class   : ['stack', 'scaleToParent'],
-				children: [media.parentElement]
+				id       : 'stage',
+				classList: ['stack', 'scaleToParent'],
+				children : [media.parentElement]
 			},
 			{
-				id      : 'overlay',
-				class   : ['stack', 'scaleToParent'],
-				children: [notify.parentElement, subtitlesView.parentElement, sceneEventsView.parentElement]
+				id       : 'overlay',
+				classList: ['stack', 'scaleToParent'],
+				children : [notify.parentElement, subtitlesView.parentElement, sceneEventsView.parentElement]
 			},
 			{
-				id      : 'gui',
-				class   : ['stack', 'scaleToParent'],
-				children: [mediaGui.parentElement]
+				id       : 'gui',
+				classList: ['stack', 'scaleToParent'],
+				children : [mediaGui.parentElement]
 			}
 		]
 	}
@@ -42,15 +42,16 @@ let appNodes = {
  * @param {array} children
  */
 function appendToParent(parent, children) {
+
 	let fragment = document.createDocumentFragment();
 
 	for (let i = 0; i < children.length; i += 1) {
 		let child = children[i];
 
-		fragment.appendChild(child);
+		fragment.appendChild(child.node);
 	}
 
-	parent.appendChild(fragment);
+	parent.attach(fragment);
 }
 
 /**
@@ -63,17 +64,15 @@ function setupAppNodes(root, children) {
 		let child = children[i];
 
 		if (!child.element) {
-			child.element = new Element({
-				id       : child.id,
-				classList: child.class
-			});
+			child.element = element({ id: child.id })
+				.setClass(child.classList);
 		}
 
 		if (child.children && child.children.length) {
-			appendToParent(child.element.node, child.children);
+			appendToParent(child.element, child.children);
 		}
 
-		root.node.appendChild(child.element.node);
+		root.attach(child.element);
 	}
 }
 
@@ -87,7 +86,7 @@ function prepareDOM(html) {
 
 	body.innerHTML = html;
 
-	appNodes.root.element = new Element({ id: config.appRoot });
+	appNodes.root.element = element({ id: config.appRoot });
 
 	setupAppNodes(appNodes.root.element, appNodes.root.children);
 
@@ -153,7 +152,7 @@ const viewController = {
 	 */
 	initialise(html) {
 		prepareDOM(html);
-		browser.fullscreen(appNodes.root.element.node);
+		browser.fullscreen(appNodes.root.element);
 		setListeners();
 		handleViewportResizing();
 	}

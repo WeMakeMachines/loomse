@@ -1,13 +1,13 @@
 /**
  * Handles the view component for the sceneEvents
  */
-import Element from '../tools/element';
+import element from '../tools/element';
 
 const SETUP = {
 	id: 'events'
 };
 
-let parentElement = new Element({ id: SETUP.id }).node;
+let parentElement = element({ id: SETUP.id });
 
 /**
  * Creates an element for the event
@@ -15,11 +15,11 @@ let parentElement = new Element({ id: SETUP.id }).node;
  * @returns {object}
  */
 function createEventElement(id) {
-	let eventElement = new Element({ id }).node;
+	let eventElement = element({ id });
 
 	// TODO apply class hidden
 
-	parentElement.appendChild(eventElement);
+	parentElement.attach(eventElement);
 
 	return eventElement;
 }

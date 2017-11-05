@@ -1,13 +1,13 @@
 /**
  * Provides an API for handling html based notifications
  */
-import Element from '../tools/element';
+import element from '../tools/element';
 
 const SETUP = {
 	id: 'notify'
 };
 
-let parentElement = new Element({ id: SETUP.id }).node,
+let parentElement = element({ id: SETUP.id }),
 	content;
 
 /**
@@ -21,16 +21,18 @@ function splash(data) {
 		wipe();
 	}
 
-	content = new Element();
-	content.node.innerHTML = data.html;
-	parentElement.appendChild(content.node);
+	content = element()
+		.setHtml(data.html);
+
+	parentElement.attach(content);
 }
 
 /**
  * Removes written content
  */
 function wipe () {
-	parentElement.removeChild(content.node);
+
+	parentElement.detach(content);
 	content = null;
 }
 

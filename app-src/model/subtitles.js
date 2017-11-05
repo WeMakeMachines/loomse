@@ -151,14 +151,14 @@ function fix(time) {
  * Sets listeners for the HTML5 media object
  */
 function addMediaListener() {
-	media.parentElement.addEventListener('media:state:change', mediaListener, false);
+	media.parentElement.node.addEventListener('media:state:change', mediaListener, false);
 }
 
 /**
  * Removes the media listener
  */
 function removeMediaListener() {
-	media.parentElement.removeEventListener('media:state:change', mediaListener, false);
+	media.parentElement.node.removeEventListener('media:state:change', mediaListener, false);
 }
 
 /**
