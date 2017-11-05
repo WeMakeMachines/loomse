@@ -152,7 +152,7 @@ const viewController = {
 	 */
 	initialise(html) {
 		prepareDOM(html);
-		browser.fullscreen(appNodes.root.element);
+		browser.fullscreen(appNodes.root.element.node);
 		setListeners();
 		handleViewportResizing();
 	}
