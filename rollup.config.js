@@ -10,7 +10,7 @@ import uglify from 'rollup-plugin-uglify';
 let environment = process.env.NODE_ENV || 'development',
 	buildArguments = {
 	entry     : 'app-src/base.js',
-	dest      : 'app-build/loomSE-0.4.0.js',
+	dest      : `app-build/${config.appName}-${config.version}.js`,
 	format    : 'iife',
 	exports   : 'default',
 	moduleName: config.appName,

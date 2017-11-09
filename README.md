@@ -1,11 +1,15 @@
-# Loom Story Engine 0.4.0
+# Loom Story Engine 0.4.1
 *Interactive storytelling for the modern web*
+
+## What is Loom?
+
+Loom is an open-source application built in JavaScript, HTML5 and CSS3. With Loom, content creators can tell interactive stories over the modern web. Create your script in Loom, tell multiple tales.
 
 ## Dependencies
 
-Developing Loom requires npm, babel (for compiling ES6), sass and rollup for building.
+Developing within the Loom framework requires npm, babel (for compiling ES6), sass and rollup for building.
 
-A bult Loom project has no external dependencies.
+Unless your extensions request it, a bult Loom project has no external dependencies.
 
 ## Installation
 
