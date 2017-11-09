@@ -14,7 +14,9 @@
   "author": "Franco Speziali",
   "license": "GPL-3.0",
   "homepage": "http://www.loomse.org/",
-  "dependencies": {},
+  "dependencies": {
+    "es6-promise-polyfill": "^1.2.0"
+  },
   "devDependencies": {
     "babel-preset-es2015-rollup": "^3.0.0",
     "node-sass": "^4.5.3",

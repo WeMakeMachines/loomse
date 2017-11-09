@@ -7,9 +7,16 @@ Loom is an open-source application built in JavaScript, HTML5 and CSS3. With Loo
 
 ## Dependencies
 
-Developing within the Loom framework requires npm, babel (for compiling ES6), sass and rollup for building.
+### Development
+Developing within the Loom framework requires 
+-npm
+-babel (for compiling ES6)
+-sass
+-rollup (for building)
 
-Unless your extensions request it, a bult Loom project has no external dependencies.
+### Production
+- npm
+- es6-promise-polyfill
 
 ## Installation
 
