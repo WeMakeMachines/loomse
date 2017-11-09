@@ -2,24 +2,21 @@
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
-
 Loom is an open-source application built in JavaScript, HTML5 and CSS3. With Loom, content creators can tell interactive stories over the modern web. Create your script in Loom, tell multiple tales.
 
 ## Dependencies
-
 ### Development
-Developing within the Loom framework requires 
--npm
--babel (for compiling ES6)
--sass
--rollup (for building)
+Developing within the Loom framework requires
+- npm
+- babel (for compiling ES6)
+- sass
+- rollup (for building)
 
 ### Production
 - npm
 - es6-promise-polyfill
 
 ## Installation
-
 Download and run:
 
 ```
@@ -43,27 +40,24 @@ npm run prod
 Built files are stored in the `app-build` directory.
 
 ## Configuration & Behaviours
-
 Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with extensions.
 
 #### Application Behaviour
-
 These files are in JSON format.
 
 The configuration file `app-src/configs/config.json` controls some aspects of the application.
 The behaviours file `app-src/configs/storyBehaviour.json` controls some of the finer aspects of the script.
 
 #### The Script
-
 All the power for developing your non-linear narrative rests inside a JSON based script file. The default location for this is `assets/scripts/`.
 
 You can define separate scripts for mobile and desktop.
 
 ## Running the application
-
 The function `loomSE.initialise()` must be called to start the Loom application. By default this sites inside `index.html`.
 
 ## Writing your own extensions
+Loom provides a framework for you to write your own extensions.
 
 Extensions can be written in `app-src/user/extensions.js`, inside the `userDefinedModules` namespace.
 
@@ -77,7 +71,6 @@ render - callback function which posts your event into the DOM
 After `stop()` is run by the engine, the container for your module will also be removed from the DOM.
 
 #### Example module
-
 You can use the following structure to create your own modules:
 
 ```
@@ -109,7 +102,6 @@ const userDefinedModules = {
 ```
 
 ## API
-
 You can communicate with the core application with the Loom API.
 
 Current API commands:
