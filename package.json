@@ -1,10 +1,10 @@
 {
   "private": true,
   "name": "loomse",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Interactive storytelling for the modern web",
   "scripts": {
-    "dev": "./node_modules/.bin/rollup -c; ./node_modules/.bin/node-sass --include-path scss styles/master.scss styles/master.css",
+    "dev": "./node_modules/.bin/node-sass --include-path scss styles/master.scss styles/master.css; ./node_modules/.bin/rollup -c --watch;",
     "prod": "NODE_ENV=production ./node_modules/.bin/rollup -c"
   },
   "repository": {
@@ -20,7 +20,7 @@
   "devDependencies": {
     "babel-preset-es2015-rollup": "^3.0.0",
     "node-sass": "^4.5.3",
-    "rollup": "^0.41.6",
+    "rollup": "^0.51.x",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-eslint": "^3.0.0",
     "rollup-plugin-html": "^0.2.1",

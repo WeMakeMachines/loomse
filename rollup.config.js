@@ -9,12 +9,14 @@ import uglify from 'rollup-plugin-uglify';
 // eslint-disable-next-line
 let environment = process.env.NODE_ENV || 'development',
 	buildArguments = {
-	entry     : 'app-src/base.js',
-	dest      : `app-build/${config.appName}-${config.version}.js`,
-	format    : 'iife',
-	exports   : 'default',
-	moduleName: config.appName,
-	plugins   : [
+	input : 'app-src/base.js',
+	output: {
+		file  : `app-build/${config.appName}-${config.version}.js`,
+		format: 'iife'
+	},
+	exports: 'default',
+	name   : config.appName,
+	plugins: [
 		html({
 			include: 'app-src/templates/*.html'
 		}),
@@ -25,11 +27,14 @@ let environment = process.env.NODE_ENV || 'development',
 			exclude: 'node_modules/**',
 			ENV    : JSON.stringify(environment)
 		})
-	]
+	],
+	watch: {
+		include: 'app-src/**'
+	}
 };
 
 if (environment === 'development') {
-	buildArguments.sourceMap = 'inline';
+	buildArguments.sourcemap = 'inline';
 }
 
 if (environment === 'production') {
