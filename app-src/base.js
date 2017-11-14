@@ -25,21 +25,13 @@ const VERSION = config.version;
  * @returns {object}
  */
 function getScriptSource() {
-	let deviceType = browser.check(),
-		source;
+	let isMobile = browser.isMobile();
 
-	switch (deviceType) {
-		case 'mobile':
-			source = config.scripts.mobile;
-			break;
-		case 'desktop':
-			source = config.scripts.desktop;
-			break;
-		default:
-			break;
+	if (isMobile) {
+		return config.scripts.mobile;
 	}
 
-	return source;
+	return config.scripts.desktop;
 }
 
 /**

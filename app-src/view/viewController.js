@@ -93,14 +93,6 @@ function prepareDOM(html) {
 }
 
 /**
- * Gets the current client dimensions
- */
-function getClientDimensions() {
-	data.dimensions.width = document.documentElement.clientWidth;
-	data.dimensions.height = document.documentElement.clientHeight;
-}
-
-/**
  * Resizes an element
  * @param {object} node
  * @param {number} width
@@ -117,7 +109,7 @@ function resize(node, width, height) {
  * Resize handler
  */
 function handleViewportResizing() {
-	getClientDimensions();
+	data.dimensions = browser.getClientDimensions();
 	resize(appNodes.root.element, data.dimensions.width, data.dimensions.height);
 }
 

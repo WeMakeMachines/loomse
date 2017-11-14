@@ -6,6 +6,9 @@ const config = {
 		mobile : 'assets/scripts/script-mobile.json',
 		desktop: 'assets/scripts/script-desktop.json'
 	},
+	mobile: {
+		minimumResolution: 480
+	},
 	showLoadingPage: true,
 	developer      : {
 		mute              : true,
