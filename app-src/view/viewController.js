@@ -9,7 +9,7 @@ import config from '../configs/config';
 import data from '../model/data';
 import media from './media';
 import mediaGui from './components/media_gui';
-import notify from './notify';
+import popup from './popup';
 import sceneEventsView from './sceneEvents';
 import subtitlesView from './subtitles';
 
@@ -23,14 +23,19 @@ let appNodes = {
 				children : [media.parentElement]
 			},
 			{
-				id       : 'overlay',
+				id       : 'stageFront',
 				classList: ['stack', 'scaleToParent'],
-				children : [notify.parentElement, subtitlesView.parentElement, sceneEventsView.parentElement]
+				children : [subtitlesView.parentElement, sceneEventsView.parentElement]
 			},
 			{
 				id       : 'gui',
 				classList: ['stack', 'scaleToParent'],
 				children : [mediaGui.parentElement]
+			},
+			{
+				id       : 'overlay',
+				classList: ['stack', 'scaleToParent'],
+				children : [popup.parentElement]
 			}
 		]
 	}

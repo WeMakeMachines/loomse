@@ -1,22 +1,30 @@
 /**
  * Loom Story Engine
  */
+
+/** Config **/
 import config from './configs/config';
 import storyBehaviour from './configs/storyBehaviour';
 
+/** Tools **/
 import { ajaxRequest, clock, report } from './tools/common';
 import { browser } from './tools/browser';
 
+/** Models **/
 import data, { initialiseDataObject } from './model/data';
 import sceneEventsModel from './model/sceneEvents';
 import scriptHandler from './model/scriptHandler';
 import subtitlesModel from './model/subtitles';
 
+/** View components **/
 import media from './view/media';
 import loading from './view/loading';
+import popup from './view/popup';
 import view from './view/viewController';
 
+/** Templates **/
 import baseHtml from './templates/base.html';
+import askRestoreStateHtml from './templates/askRestoreState.html';
 
 const VERSION = config.version;
 
@@ -25,13 +33,36 @@ const VERSION = config.version;
  * @returns {object}
  */
 function getScriptSource() {
-	let isMobile = browser.isMobile();
-
-	if (isMobile) {
+	if (browser.isMobile()) {
 		return config.scripts.mobile;
 	}
 
 	return config.scripts.desktop;
+}
+
+/**
+ *
+ */
+function askRestoreLastState(state) {
+	loading.stop();
+
+	popup.splash({
+		html     : askRestoreStateHtml,
+		callbacks: {
+			accept: {
+				id    : 'askRestoreStateHtml__accept',
+				action: function() {
+					prepareAllParts(state[state.length - 1]);
+				}
+			},
+			cancel: {
+				id    : 'askRestoreStateHtml__cancel',
+				action: function() {
+					prepareAllParts(storyBehaviour.firstScene);
+				}
+			}
+		}
+	});
 }
 
 /**
@@ -128,21 +159,26 @@ export default {
 	 * Our public initialise method, used to initialise our application
 	 */
 	initialise() {
-		let firstScene = storyBehaviour.firstScene,
+		let previousState = browser.storage.returnState(),
+			scene = storyBehaviour.firstScene,
 			scriptSrc = getScriptSource(),
-			checkScript = ajaxRequest(scriptSrc, 'JSON');
+			requestScript = ajaxRequest(scriptSrc, 'JSON');
 
 		initialiseDataObject();
 		view.initialise(baseHtml);
 		loading.initialise();
 
-		checkScript.then((values) => {
+		requestScript.then((values) => {
 			data.script = values;
 
-			prepareAllParts(firstScene);
+			if (previousState) {
+				askRestoreLastState(previousState);
+			} else {
+				prepareAllParts(scene);
+			}
 		});
 
-		checkScript.catch(() => {
+		requestScript.catch(() => {
 			report('Oops, something went wrong with the script :(');
 		});
 	}

@@ -1,10 +1,10 @@
 /**
- * Provides an API for handling html based notifications
+ * Provides an API for handling html based popups
  */
 import element from './components/element';
 
 const SETUP = {
-	id: 'notify'
+	id: 'popup'
 };
 
 let parentElement = element({ id: SETUP.id }),
@@ -25,6 +25,25 @@ function splash(data) {
 		.setHtml(data.html);
 
 	parentElement.attach(content);
+
+	if (data.callbacks) {
+		attachCallbacksToButtons(data.callbacks);
+	}
+}
+
+/**
+ * Adds click listeners to html buttons
+ * @param {object} callbacks
+ */
+function attachCallbacksToButtons(callbacks) {
+	for (let key in callbacks) {
+		if (callbacks.hasOwnProperty(key)) {
+			let callback = callbacks[key],
+				button = document.getElementById(callback.id);
+
+			button.addEventListener('click', callback.action);
+		}
+	}
 }
 
 /**
@@ -36,10 +55,10 @@ function wipe () {
 	content = null;
 }
 
-const notify = {
+const popup = {
 	parentElement,
 	splash,
 	wipe
 };
 
-export { notify as default };
+export { popup as default };

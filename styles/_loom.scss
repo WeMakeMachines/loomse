@@ -24,7 +24,7 @@
     }
 }
 
-#overlay {
+#stageFront {
     z-index: 110;
 
     > div {
@@ -42,14 +42,14 @@
     #subtitles {
         z-index: 108;
     }
-
-    #notify {
-        z-index: 109;
-    }
 }
 
 #gui {
     z-index: 120;
+}
+
+#overlay {
+    z-index: 130;
 }
 
 .hide {

@@ -2,18 +2,18 @@
  * Progress loading bar
  */
 import html from '../templates/loading.html';
-import notify from './notify';
+import popup from './popup';
 
 const loading = {
 
 	initialise() {
-		notify.splash({
+		popup.splash({
 			html
 		});
 	},
 
 	stop() {
-		notify.wipe();
+		popup.wipe();
 	}
 };
 

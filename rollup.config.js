@@ -9,7 +9,7 @@ import uglify from 'rollup-plugin-uglify';
 // eslint-disable-next-line
 let environment = process.env.NODE_ENV || 'development',
 	buildArguments = {
-	input : 'app-src/base.js',
+	input : 'app-src/app.js',
 	output: {
 		file  : `app-build/${config.appName}-${config.version}.js`,
 		format: 'iife'
@@ -38,12 +38,13 @@ if (environment === 'development') {
 }
 
 if (environment === 'production') {
-	buildArguments.plugins.push(
+	buildArguments.plugins.unshift(
 		eslint({
 			exclude: []
-		}),
-		uglify()
+		})
 	);
+
+	buildArguments.plugins.push(uglify());
 }
 
 export { buildArguments as default };

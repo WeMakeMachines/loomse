@@ -1,5 +1,6 @@
-import { FullscreenAPI } from './browser_api';
+import { FullscreenAPI } from './fullscreen_api';
 import config from '../configs/config';
+import storage from './localstorage';
 
 /**
  * Gets the current client dimensions
@@ -8,8 +9,8 @@ import config from '../configs/config';
 function getClientDimensions() {
 
 	return {
-		width : document.documentElement.clientWidth,
-		height: document.documentElement.clientHeight
+		width : window.innerWidth,
+		height: window.innerHeight
 	};
 }
 
@@ -30,8 +31,8 @@ const browser = {
 	},
 
 	getClientDimensions,
-
-	isMobile
+	isMobile,
+	storage
 };
 
 export { browser };
