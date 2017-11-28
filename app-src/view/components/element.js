@@ -213,16 +213,15 @@ class Element {
 	 */
 	setPosition(containerDimensions, x, y) {
 
-		this.getDimensions()
-			.calculatePosition(containerDimensions, x, y);
+		this.dimensions = this.getDimensions();
 
-		console.log('dimensions', this.dimensions, this.node);
+		this.calculatePosition(containerDimensions, x, y);
 
 		if (!this.coordinates) { throw '[Element] invalid dimensions'; }
 
 		this.setStyle({
-			left: `${this.coordinates.x}`,
-			top : `${this.coordinates.y}`
+			left: this.coordinates.x,
+			top : this.coordinates.y
 		});
 
 		return this;
@@ -230,7 +229,7 @@ class Element {
 
 	/**
 	 * Gets physical element dimensions from browser
-	 * @returns {Element}
+	 * @returns {object}
 	 */
 	getDimensions() {
 
@@ -250,9 +249,7 @@ class Element {
 
 		body.removeChild(clone);
 
-		this.dimensions = dimensions;
-
-		return this;
+		return dimensions;
 	}
 
 	/**
