@@ -13,8 +13,7 @@ Developing within the Loom framework requires
 - rollup (for building)
 
 ### Production
-- npm
-- es6-promise-polyfill
+- Babel polyfill
 
 ## Installation
 Download and run:

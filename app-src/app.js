@@ -2,6 +2,8 @@
  * Loom Story Engine
  */
 
+import 'babel-polyfill';
+
 /** Config **/
 import config from './configs/config';
 import storyBehaviour from './configs/storyBehaviour';
@@ -25,6 +27,7 @@ import view from './view/viewController';
 /** Templates **/
 import baseHtml from './templates/base.html';
 import askRestoreStateHtml from './templates/askRestoreState.html';
+import unableToPlayHtml from './templates/unableToPlay.html';
 
 const VERSION = config.version;
 
@@ -33,7 +36,7 @@ const VERSION = config.version;
  * @returns {object}
  */
 function getScriptSource() {
-	if (browser.isMobile()) {
+	if (browser.isSmallScreen()) {
 		return config.scripts.mobile;
 	}
 
@@ -43,7 +46,7 @@ function getScriptSource() {
 /**
  *
  */
-function askRestoreLastState(state) {
+function promptRestoreLastState(state) {
 	loading.stop();
 
 	popup.splash({
@@ -63,6 +66,17 @@ function askRestoreLastState(state) {
 			}
 		}
 	});
+}
+
+/**
+ *
+ */
+function unableToPlay() {
+
+	popup.splash({
+		html: unableToPlayHtml
+	});
+
 }
 
 /**
@@ -159,7 +173,8 @@ export default {
 	 * Our public initialise method, used to initialise our application
 	 */
 	initialise() {
-		let previousState = browser.storage.returnState(),
+		let browserSupport = browser.isCompatible(),
+			previousState = browser.storage.returnState(),
 			scene = storyBehaviour.firstScene,
 			scriptSrc = getScriptSource(),
 			requestScript = ajaxRequest(scriptSrc, 'JSON');
@@ -168,11 +183,16 @@ export default {
 		view.initialise(baseHtml);
 		loading.initialise();
 
+		if (!browserSupport) {
+			unableToPlay();
+			return;
+		}
+
 		requestScript.then((values) => {
 			data.script = values;
 
 			if (previousState) {
-				askRestoreLastState(previousState);
+				promptRestoreLastState(previousState);
 			} else {
 				prepareAllParts(scene);
 			}

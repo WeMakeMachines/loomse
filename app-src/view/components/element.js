@@ -47,16 +47,17 @@ class Element {
 	 */
 	attach(child) {
 
-		if (!child || typeof child !== 'object') { throw '[Element] unable to attach node'; }
-
-		if (child.node) {
-			this.node.appendChild(child.node);
-		} else {
-			this.node.appendChild(child);
+		try {
+			if (child.node) {
+				this.node.appendChild(child.node);
+			} else {
+				this.node.appendChild(child);
+			}
+		} catch (error) {
+			throw `[Element] unable to attach node: ${error}`;
 		}
 
 		return this;
-
 	}
 
 	/**
@@ -64,12 +65,17 @@ class Element {
 	 */
 	attachToParent() {
 
-		if (!this.parent) { throw '[Element] unable to attach node'; }
-
-		this.parent.attach(this.node);
+		try {
+			if (this.parent && this.parent.attach) {
+				this.parent.attach(this.node);
+			} else {
+				this.parent.appendChild(this.node);
+			}
+		} catch (error) {
+			throw `[Element] unable to attach node: ${error}`;
+		}
 
 		return this;
-
 	}
 
 	/**
@@ -78,16 +84,17 @@ class Element {
 	 */
 	detach(child) {
 
-		if (!child || typeof child !== 'object') { throw '[Element] unable to remove node'; }
-
-		if (child.node) {
-			this.node.removeChild(child.node);
-		} else {
-			this.node.removeChild(child);
+		try {
+			if (child.node) {
+				this.node.removeChild(child.node);
+			} else {
+				this.node.removeChild(child);
+			}
+		} catch (error) {
+			throw `[Element] unable to remove node: ${error}`;
 		}
 
 		return this;
-
 	}
 
 	/**
@@ -95,12 +102,13 @@ class Element {
 	 */
 	detachFromParent() {
 
-		if (!this.parent) { throw '[Element] unable to remove node'; }
-
-		this.parent.detach(this.node);
+		try {
+			this.parent.detach(this.node);
+		} catch (error) {
+			throw `[Element] unable to remove node : ${error}`;
+		}
 
 		return this;
-
 	}
 
 	/**

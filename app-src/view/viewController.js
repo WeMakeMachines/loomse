@@ -87,11 +87,13 @@ function setupAppNodes(root, children) {
  */
 function prepareDOM(html) {
 
-	let body = document.getElementsByTagName('body')[0];
+	let appRoot = element({ id: config.appRoot, parent: document.body });
 
-	body.innerHTML = html;
+	appRoot.innerHTML = html;
 
-	appNodes.root.element = element({ id: config.appRoot });
+	appRoot.attachToParent();
+
+	appNodes.root.element = appRoot;
 
 	setupAppNodes(appNodes.root.element, appNodes.root.children);
 

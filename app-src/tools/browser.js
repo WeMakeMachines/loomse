@@ -15,9 +15,19 @@ function getClientDimensions() {
 }
 
 /**
+ * Checks if current browser supports the VIDEO canPlayType method
  * @returns {boolean}
  */
-function isMobile() {
+function supportsVideo() {
+	let test = document.createElement('video').canPlayType;
+
+	return Boolean(test);
+}
+
+/**
+ * @returns {boolean}
+ */
+function isSmallScreen() {
 	let dimensions = getClientDimensions();
 
 	return dimensions.width < config.mobile.minimumResolution ||
@@ -30,8 +40,12 @@ const browser = {
 		this.fullscreen = new FullscreenAPI(element);
 	},
 
+	isCompatible() {
+		return supportsVideo();
+	},
+
 	getClientDimensions,
-	isMobile,
+	isSmallScreen,
 	storage
 };
 
