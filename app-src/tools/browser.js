@@ -1,5 +1,5 @@
-import { FullscreenAPI } from './fullscreen_api';
-import config from '../configs/config';
+import FullscreenAPI from './fullscreen_api';
+import config from '../configs/config.json';
 import storage from './localstorage';
 
 /**

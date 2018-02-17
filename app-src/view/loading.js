@@ -1,8 +1,8 @@
 /**
  * Progress loading bar
  */
-import html from '../templates/loading.html';
-import popup from './popup';
+import html from '../html/loading.html';
+import popup from './components/popup/popup';
 
 const loading = {
 

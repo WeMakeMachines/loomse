@@ -5,13 +5,13 @@ import element from './components/element';
 import { browser } from '../tools/browser';
 import { debounce } from '../tools/common';
 
-import config from '../configs/config';
+import config from '../configs/config.json';
 import data from '../model/data';
-import media from './media';
-import mediaGui from './components/media_gui';
-import popup from './popup';
+import media from './components/media/media';
+import mediaGui from './components/media_gui/media_gui';
+import popup from './components/popup/popup';
 import sceneEventsView from './sceneEvents';
-import subtitlesView from './subtitles';
+import subtitlesView from './components/subtitles/subtitles';
 
 let appNodes = {
 	root: {
@@ -141,7 +141,7 @@ function setListeners() {
 	}
 }
 
-const viewController = {
+const controller = {
 
 	appNodes,
 
@@ -157,4 +157,4 @@ const viewController = {
 	}
 };
 
-export { viewController as default };
+export { controller as default };

@@ -12,7 +12,7 @@ function checkIsAvailable() {
 		return Boolean(window.localStorage);
 	}
 	catch (error) {
-		return false;
+		throw 'Unable to save state to localStorage';
 	}
 }
 

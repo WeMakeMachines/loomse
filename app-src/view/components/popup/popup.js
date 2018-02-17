@@ -1,7 +1,7 @@
 /**
  * Provides an API for handling html based popups
  */
-import element from './components/element';
+import element from '../element';
 
 const SETUP = {
 	id: 'popup'

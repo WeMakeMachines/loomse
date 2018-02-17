@@ -3,11 +3,11 @@
  * Since subtitles appear in a linear fashion (the next one always follows the previous one),
  * -> we always keep on record the current subtitle to be displayed
  */
-import element from './components/element';
-import config from '../configs/config';
-import data from '../model/data';
-import { report } from '../tools/common';
-import storyBehaviour from '../configs/storyBehaviour';
+import element from '../element';
+import config from '../../../configs/config.json';
+import data from '../../../model/data';
+import { report } from '../../../tools/common';
+import storyBehaviour from '../../../configs/storyBehaviour.json';
 
 const SETUP = {
 	id: 'subtitles'

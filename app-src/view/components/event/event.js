@@ -1,4 +1,4 @@
-import data from '../../model/data';
+import data from '../../../model/data';
 
 /**
  * Event class

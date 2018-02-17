@@ -60,7 +60,7 @@ module.exports = {
         ],
         "eol-last": [
             "error",
-            "never"
+            "always"
         ],
         "eqeqeq": "error",
         "func-call-spacing": "error",
@@ -265,7 +265,6 @@ module.exports = {
                 "before": false
             }
         ],
-        "sort-imports": "warn",
         "sort-keys": "off",
         "sort-vars": "off",
         "space-before-blocks": "error",

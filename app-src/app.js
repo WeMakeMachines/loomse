@@ -5,8 +5,8 @@
 import 'babel-polyfill';
 
 /** Config **/
-import config from './configs/config';
-import storyBehaviour from './configs/storyBehaviour';
+import config from './configs/config.json';
+import storyBehaviour from './configs/storyBehaviour.json';
 
 /** Tools **/
 import { ajaxRequest, clock, report } from './tools/common';
@@ -19,15 +19,15 @@ import scriptHandler from './model/scriptHandler';
 import subtitlesModel from './model/subtitles';
 
 /** View components **/
-import media from './view/media';
+import media from './view/components/media/media';
 import loading from './view/loading';
-import popup from './view/popup';
-import view from './view/viewController';
+import popup from './view/components/popup/popup';
+import view from './view/controller';
 
-/** Templates **/
-import baseHtml from './templates/base.html';
-import askRestoreStateHtml from './templates/askRestoreState.html';
-import unableToPlayHtml from './templates/unableToPlay.html';
+/** Html **/
+import baseHtml from './html/base.html';
+import askRestoreStateHtml from './html/askRestoreState.html';
+import unableToPlayHtml from './html/unableToPlay.html';
 
 const VERSION = config.version;
 

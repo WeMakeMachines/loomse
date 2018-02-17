@@ -1,8 +1,12 @@
-# Loom Story Engine 0.4.2
+# Loom Story Engine 0.5.0
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
 Loom is an open-source application built in JavaScript, HTML5 and CSS3. With Loom, content creators can tell interactive stories over the modern web. Create your script in Loom, tell multiple tales.
+
+## Browser Compatibility ##
+
+TODO
 
 ## Dependencies
 ### Development

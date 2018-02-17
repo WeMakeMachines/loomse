@@ -1,8 +1,10 @@
+import config from './app-src/configs/config.json';
+
 // Rollup plugins
 import babel from 'rollup-plugin-babel';
-import config from './app-src/configs/config';
 import eslint from 'rollup-plugin-eslint';
 import html from 'rollup-plugin-html';
+import json from 'rollup-plugin-json';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
 
@@ -17,11 +19,14 @@ let environment = process.env.NODE_ENV || 'development',
 	exports: 'default',
 	name   : config.appName,
 	plugins: [
-		html({
-			include: 'app-src/templates/*.html'
-		}),
 		babel({
-			exclude: 'node_modules/**'
+			include: 'app-src/**/*.js'
+		}),
+		html({
+			include: 'app-src/**/*.html'
+		}),
+		json({
+			include: 'app-src/**/*.json'
 		}),
 		replace({
 			exclude: 'node_modules/**',

@@ -2,8 +2,8 @@
  * Subtitles handling and rendering
  */
 import { ajaxRequest, report } from '../tools/common';
-import media from '../view/media';
-import subtitlesView from '../view/subtitles';
+import media from '../view/components/media/media';
+import subtitlesView from '../view/components/subtitles/subtitles';
 
 const validFormats = ['srt'];
 

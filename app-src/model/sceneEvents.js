@@ -1,10 +1,10 @@
 /**
  * Handles all the logic for the scene events
  */
-import Event from '../view/components/event';
-import media from '../view/media';
+import Event from '../view/components/event/event';
+import media from '../view/components/media/media';
 import sceneEventsView from '../view/sceneEvents';
-import storyBehaviour from '../configs/storyBehaviour';
+import storyBehaviour from '../configs/storyBehaviour.json';
 import userDefinedModules from '../user/extensions';
 
 const MINIMUM_SEEK_RANGE = storyBehaviour.media.minimumSeekRange;

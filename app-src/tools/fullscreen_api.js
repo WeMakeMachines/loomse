@@ -1,7 +1,7 @@
 /**
  * Handles the fullscreen API for client devices
  */
-class FullscreenAPI {
+export default class FullscreenAPI {
 
 	/**
 	 * Returns currently known API methods for client devices
@@ -44,15 +44,14 @@ class FullscreenAPI {
 	static returnVendorAPI() {
 
 		let vendorAPI = this.vendorAPI(),
-			vendors = Object.keys(vendorAPI),
-			root = document;
+			vendors = Object.keys(vendorAPI);
 
 		for (let i = 0; i < vendors.length; i += 1) {
 			let vendor = vendors[i],
 				api = vendorAPI[vendor],
 				isFullscreenAvailable = api.isAvailable;
 
-			if (root[isFullscreenAvailable]) {
+			if (document[isFullscreenAvailable]) {
 				return api;
 			}
 		}
@@ -113,5 +112,3 @@ class FullscreenAPI {
 		return this.api.listener || null;
 	}
 }
-
-export { FullscreenAPI };
