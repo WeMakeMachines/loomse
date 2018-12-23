@@ -13,11 +13,11 @@ let environment = process.env.NODE_ENV || 'development',
 	buildArguments = {
 	input : 'app-src/app.js',
 	output: {
+		name   : config.appName,
 		file  : `app-build/${config.appName}-${config.version}.js`,
-		format: 'iife'
+		format: 'iife',
+		exports: 'default'
 	},
-	exports: 'default',
-	name   : config.appName,
 	plugins: [
 		babel({
 			include: 'app-src/**/*.js'
@@ -39,7 +39,7 @@ let environment = process.env.NODE_ENV || 'development',
 };
 
 if (environment === 'development') {
-	buildArguments.sourcemap = 'inline';
+	buildArguments.output.sourcemap = 'inline';
 }
 
 if (environment === 'production') {
