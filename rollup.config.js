@@ -6,6 +6,7 @@ import eslint from 'rollup-plugin-eslint';
 import html from 'rollup-plugin-html';
 import json from 'rollup-plugin-json';
 import replace from 'rollup-plugin-replace';
+import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 
 // eslint-disable-next-line
@@ -19,6 +20,11 @@ let environment = process.env.NODE_ENV || 'development',
 		exports: 'default'
 	},
 	plugins: [
+		resolve({
+			module: true,
+			main: true,
+			extensions: ['.js', '.json']
+		}),
 		babel({
 			include: 'app-src/**/*.js'
 		}),
