@@ -17,7 +17,7 @@
   "homepage": "http://www.loomse.org/",
   "devDependencies": {
     "@babel/core": "^7.2.2",
-    "babel-preset-env": "^1.7.0",
+    "@babel/preset-env": "^7.2.3",
     "node-sass": "^4.5.3",
     "rollup": "^0.68.1",
     "rollup-plugin-babel": "^4.1.0",
