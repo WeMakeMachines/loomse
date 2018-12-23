@@ -1,0 +1,8 @@
+{
+  "application": {
+    "script": "Oops, something went wrong with the script :("
+  },
+  "browser": {
+    "localStorage": "Unable to access local storage"
+  }
+}

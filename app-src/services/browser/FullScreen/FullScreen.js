@@ -1,7 +1,7 @@
 /**
  * Handles the fullscreen API for client devices
  */
-export default class FullscreenAPI {
+export class FullScreen {
 
 	/**
 	 * Returns currently known API methods for client devices
@@ -76,7 +76,7 @@ export default class FullscreenAPI {
 	toggle() {
 
 		if (!this.isAvailable) {
-			throw 'Fullscreen not available on this device';
+			throw new Error('Fullscreen not available on this device');
 		}
 
 		if (this.state) {
