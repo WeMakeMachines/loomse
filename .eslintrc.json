@@ -1,4 +1,4 @@
-module.exports = {
+{
     "env": {
         "browser": true,
         "es6": true
@@ -63,6 +63,7 @@ module.exports = {
             "always"
         ],
         "eqeqeq": "error",
+        "for-direction": "error",
         "func-call-spacing": "error",
         "func-name-matching": "error",
         "func-names": [
@@ -71,6 +72,7 @@ module.exports = {
         ],
         "func-style": "off",
         "generator-star-spacing": "error",
+        "getter-return": "off",
         "global-require": "error",
         "guard-for-in": "error",
         "handle-callback-err": "error",
@@ -80,10 +82,6 @@ module.exports = {
         "indent": "off",
         "init-declarations": "off",
         "jsx-quotes": "error",
-        "key-spacing": [
-        	"error",
-	        { "align": "colon" }
-        ],
         "keyword-spacing": [
             "error",
             {
@@ -247,11 +245,11 @@ module.exports = {
         "radix": "error",
         "require-await": "error",
         "require-jsdoc": [
-            "error", {
+            "warn", {
 		        "require": {
 			        "FunctionDeclaration": true,
-			        "MethodDefinition": true,
-			        "ClassDeclaration": true,
+			        "MethodDefinition": false,
+			        "ClassDeclaration": false,
 			        "ArrowFunctionExpression": false
 		        }
 	        }
@@ -302,4 +300,4 @@ module.exports = {
             "never"
         ]
     }
-};
+}
