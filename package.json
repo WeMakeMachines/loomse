@@ -4,9 +4,7 @@
   "version": "0.5.0",
   "description": "Interactive storytelling for the modern web",
   "scripts": {
-    "watch": "./node_modules/.bin/rollup -c --watch;",
-    "dev": "./node_modules/.bin/node-sass --include-path scss styles/master.scss styles/master.css; ./node_modules/.bin/rollup -c",
-    "prod": "NODE_ENV=production ./node_modules/.bin/rollup -c"
+    "dev": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -17,18 +15,14 @@
   "homepage": "http://www.loomse.org/",
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
-    "node-sass": "^4.5.3",
-    "rollup": "^0.68.1",
-    "rollup-plugin-babel": "^4.1.0",
-    "rollup-plugin-eslint": "^5.0.0",
-    "rollup-plugin-html": "^0.2.1",
-    "rollup-plugin-json": "^3.1.0",
-    "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-replace": "^2.1.0",
-    "rollup-plugin-uglify": "^6.0.0"
+    "babel-loader": "^8.0.5",
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0"
   },
   "dependencies": {
-    "vue": "^2.5.21"
+    "@babel/polyfill": "^7.2.5",
+    "@babel/runtime": "^7.2.0"
   }
 }

@@ -1,6 +1,5 @@
 {
 	"appName": "loomSE",
-	"appRoot": "loomSE",
 	"version": "0.5.0",
 	"scripts": {
 		"mobile": "assets/scripts/script-mobile.json",
