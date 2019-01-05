@@ -4,6 +4,7 @@
 	"author": "Franco Speziali",
 	"description": "A sample script to demonstrate the capabilities of Loom",
 	"firstScene": "intro",
+	"language": "en_GB",
 	"scenes": {
 		"intro": {
 			"longName": "",
@@ -18,7 +19,7 @@
 				"mp4": "assets/videos/SampleVideo_1280x720_10mb.mp4",
 				"duration": null,
 				"subtitles": {
-					"english": "assets/subtitles/english.srt"
+					"en_GB": "assets/subtitles/en_GB.srt"
 				}
 			},
 			"events": [
