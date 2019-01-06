@@ -1,7 +1,5 @@
 const source = './app-src';
 const destination = './app-build';
-
-const webpack = require('webpack');
 const path = require('path');
 const appConfig = require(`${source}/configs/config.json`);
 
@@ -10,7 +8,10 @@ const config = {
 	entry: `${source}/app.js`,
 	output: {
 		path: path.resolve(__dirname, destination),
-		filename: `${appConfig.appName}-${appConfig.version}.js`
+		filename: `${appConfig.appName}-${appConfig.version}.js`,
+		libraryTarget: 'umd',
+		libraryExport: 'default',
+		library: appConfig.appName
 	},
 	devtool: 'source-map',
 	module: {
