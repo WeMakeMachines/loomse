@@ -48,7 +48,7 @@ function getFileType(url) {
 	return fileExtension;
 }
 
-function srt (rawText) {
+function srt(rawText) {
 
 	return new Promise((resolve, reject) => {
 

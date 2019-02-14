@@ -5,7 +5,7 @@ import LocalStorage from './LocalStorage';
 export const browser = {
 
 	fullscreen(element) {
-		this.fullscreen = new FullScreen(element);
+		return new FullScreen(element);
 	},
 
 	/**
@@ -13,7 +13,6 @@ export const browser = {
 	 * @returns {object}
 	 */
 	getClientDimensions() {
-
 		return {
 			width : window.innerWidth,
 			height: window.innerHeight

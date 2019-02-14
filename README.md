@@ -118,3 +118,14 @@ Current API commands:
 - `loomSE.skip(scneName)` - skip to name of scene
 - `loomSE.reload()` - reload current scene
 - `loomSE.version` - show current version
+
+## Terminology
+
+##### Script
+Like the script in a play, a script is the blueprint for a story.
+
+##### Story
+A collection of scenes.
+
+##### Scene
+Part of a story.

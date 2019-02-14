@@ -4,5 +4,14 @@
   },
   "browser": {
     "localStorage": "Unable to access local storage"
+  },
+  "DOM": {
+    "componentMounted": "Component already mounted",
+    "notReady": "DOM not ready",
+    "parentNotFound": "Can not mount to parent, parent not found",
+    "elementExists": "Element already exists"
+  },
+  "parsers": {
+    "invalidFile": "Unable to parse file"
   }
 }

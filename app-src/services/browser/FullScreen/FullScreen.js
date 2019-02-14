@@ -14,25 +14,25 @@ export class FullScreen {
 				isAvailable: 'fullscreenEnabled',
 				request    : 'requestFullscreen',
 				exit       : 'exitFullscreen',
-				listener   : 'fullscreenchange'
+				event      : 'fullscreenchange'
 			},
 			webkit: {
 				isAvailable: 'webkitFullscreenEnabled',
 				request    : 'webkitRequestFullscreen',
 				exit       : 'webkitExitFullscreen',
-				listener   : 'webkitfullscreenchange'
+				event      : 'webkitfullscreenchange'
 			},
 			moz: {
 				isAvailable: 'mozFullScreenEnabled',
 				request    : 'mozRequestFullScreen',
 				exit       : 'mozCancelFullScreen',
-				listener   : 'mozfullscreenchange'
+				event      : 'mozfullscreenchange'
 			},
 			ms: {
 				isAvailable: 'msFullscreenEnabled',
 				request    : 'msRequestFullscreen',
 				exit       : 'msExitFullscreen',
-				listener   : 'MSFullscreenChange'
+				event      : 'MSFullscreenChange'
 			}
 		};
 	}
@@ -105,10 +105,10 @@ export class FullScreen {
 	}
 
 	/**
-	 * Returns the correct listener for the client
+	 * Returns the correct event for the client
 	 * @returns {string | null}
 	 */
-	returnListener() {
-		return this.api.listener || null;
+	returnEvent() {
+		return this.api.event || null;
 	}
 }

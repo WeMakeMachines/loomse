@@ -1,8 +1,3 @@
-/**
- * Support for .srt files
- * @param {array} rawText
- */
-
 import { clockStringToMilliseconds } from '../../../tools';
 
 export class SRT {
@@ -10,7 +5,7 @@ export class SRT {
 	static getBlockMarker(line) {
 		const processedLine = Number(line);
 
-		if (processedLine === 0 || isNaN(processedLine)) { return false; }
+		if (processedLine === 0 || isNaN(processedLine)) { return; }
 
 		return processedLine;
 	}
@@ -52,15 +47,17 @@ export class SRT {
 				index += 1;
 
 				accumulator.push({
-					index: blockMarker,
-					text: ''
+					payload: {
+						index: blockMarker,
+						text: ''
+					}
 				});
 
 			} else if(blockTimes) {
 				lastEntry.in = blockTimes.in;
 				lastEntry.out = blockTimes.out;
 			} else {
-				lastEntry.text += line;
+				lastEntry.payload.text += line;
 			}
 
 			return accumulator;

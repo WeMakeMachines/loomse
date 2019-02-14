@@ -7,26 +7,26 @@ Lorum ipsum
 dolor sit amet
 
 3
-00:00:05,000 --> 00:00:05,500
+00:00:05,000 --> 00:00:10,500
 consectetur adipiscing elit,
 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
 
 4
-00:00:05,600 --> 00:00:005,900
+00:00:10,600 --> 00:00:11,900
 Ut enim ad minim veniam
 
 5
-00:00:06,200 --> 00:00:07,000
+00:00:12,200 --> 00:00:13,000
 consectetur, adipisci velit
 
 6
-00:00:09,000 --> 00:00:12,000
+00:00:13,000 --> 00:00:14,000
 qui dolorem ipsum quia dolor sit amet
 
 7
-00:00:12,100 --> 00:00:13,000
+00:00:15,100 --> 00:00:15,500
 consectetur
 
 8
-00:00:13,200 --> 00:00:14,000
+00:00:16,200 --> 00:00:17,000
 Neque porro quisquam
