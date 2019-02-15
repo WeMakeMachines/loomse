@@ -180,17 +180,19 @@ export class Component {
             if (properties.hasOwnProperty(property)) {
                 let value = properties[property];
 
-                switch (property) {
-                    case 'width':
-                    case 'height':
-                    case 'top':
-                    case 'left':
-                    case 'right':
-                    case 'bottom':
-                        value += 'px';
-                        break;
-                    default:
-                        break;
+                if (typeof value === 'number') {
+                    switch (property) {
+                        case 'width':
+                        case 'height':
+                        case 'top':
+                        case 'left':
+                        case 'right':
+                        case 'bottom':
+                            value += 'px';
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 this.node.style[property] = value;

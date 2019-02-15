@@ -10,10 +10,13 @@ import { secondsToMilliseconds } from '../../tools';
 
 import { radio } from '../../../services';
 
+import styles from './styles';
+
 export class Events extends Component {
 	constructor(events) {
 		super({
-			id: 'events'
+			id: 'events',
+			styles: styles.events
 		});
 
 		this.queue = new Queue(events);

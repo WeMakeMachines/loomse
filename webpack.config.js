@@ -1,3 +1,5 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const source = './app-src';
 const destination = './app-build';
 const path = require('path');
@@ -17,6 +19,20 @@ const config = {
 	module: {
 		rules: [
 			{
+				test: /\.ttf$/,
+				exclude: /node_modules/,
+				use: {
+					loader: 'file-loader'
+				}
+			},
+			{
+				test: /\.scss$/,
+				exclude: /node_modules/,
+				use: {
+					loader: 'sass-loader'
+				}
+			},
+			{
 				test: /\.js$/,
 				exclude: /node_modules/,
 				use: {
@@ -24,7 +40,14 @@ const config = {
 				}
 			}
 		]
-	}
+	},
+	plugins: [
+		new HtmlWebpackPlugin({
+			title: 'Loom Story Engine',
+			template: 'template.html',
+			filename: '../index.html'
+		})
+	]
 };
 
 module.exports = config;

@@ -3,6 +3,8 @@ import Component from '../Abstract';
 import { radio } from '../../../services';
 import state from '../../state';
 
+import styles from './styles';
+
 export class Video extends Component {
 
 	static setSources(options) {
@@ -29,7 +31,10 @@ export class Video extends Component {
 	}
 
 	constructor (options) {
-		super({ type: 'video' });
+		super({
+			type: 'video',
+			styles: styles.video
+		});
 
 		this.node.autoplay = false;
 		this.node.controls = options.controls;

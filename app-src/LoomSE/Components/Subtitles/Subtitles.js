@@ -19,7 +19,10 @@ import state from '../../state';
 
 export class Subtitles extends Component {
 	constructor(url) {
-		super({ id: 'subtitles' });
+		super({
+			id: 'subtitles',
+			styles: styles.subtitles
+		});
 
 		this.parsedFile = parseFile(url[state.language]);
 		this.active = false;

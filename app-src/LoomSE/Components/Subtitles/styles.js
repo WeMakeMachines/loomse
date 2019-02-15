@@ -1,4 +1,10 @@
+import { stack } from '../../../constants/styles';
+
 export default {
+
+	subtitles: {
+		...stack
+	},
 
 	subtitle: {
 		display: 'block',
