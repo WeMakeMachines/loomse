@@ -1,4 +1,8 @@
-import errors from '../../../configs/errors';
+class LocalStorageError extends Error {
+	constructor(message) {
+		super(message);
+	}
+}
 
 export class LocalStorage {
 
@@ -19,8 +23,7 @@ export class LocalStorage {
 			return true;
 		}
 		catch (error) {
-			console.warn(`${errors.browser.localStorage} - ${error}`);
-			return false;
+			throw new LocalStorageError(`Unable to access local storage, ${error}`);
 		}
 	}
 
@@ -51,8 +54,7 @@ export class LocalStorage {
 			this.ref.localStorage.setItem(this.storageKey, saveToStorage);
 		}
 		catch (error) {
-			throw new Error(`${errors.browser.localStorage} - ${error}`);
+			throw new LocalStorageError(`Unable to access local storage, ${error}`);
 		}
 	}
-
 }

@@ -2,8 +2,6 @@ import { ajaxRequest } from '../';
 
 import { plainTextFiles } from '../../constants';
 
-import errors from '../../../configs/errors';
-
 import { SRT } from './types';
 
 export {
@@ -32,7 +30,7 @@ async function parseFile(url, fileType) {
 			parsedFile = await srt(file);
 			break;
 		default:
-			Promise.reject(errors.parsers.invalidFile);
+			Promise.reject('Unable to parse file');
 	}
 
 	return Promise.resolve(parsedFile);

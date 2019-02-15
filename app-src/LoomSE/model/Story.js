@@ -3,9 +3,14 @@ import { browser } from '../../services';
 import { ajaxRequest } from '../tools';
 
 import config from '../../configs/config';
-import errors from '../../configs/errors';
 
 import state from '../state';
+
+class ScriptError extends Error {
+    constructor(message) {
+        super(message);
+    }
+}
 
 export class Story {
 
@@ -47,8 +52,7 @@ export class Story {
                     resolve();
                 })
                 .catch((error) => {
-                    console.warn(error);
-                    reject(errors.application.script);
+                    throw new ScriptError(`Unable to read script, ${error}`);
                 });
         });
     }

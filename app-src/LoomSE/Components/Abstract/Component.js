@@ -1,4 +1,8 @@
-import errors from '../../../configs/errors';
+class ComponentError extends Error {
+    constructor(message) {
+        super(message);
+    }
+}
 
 export class Component {
 
@@ -16,8 +20,7 @@ export class Component {
         const node = document.createElement(options.type);
 
         if (options.id && document.getElementById(options.id)) {
-            console.warn(errors.DOM.elementExists);
-            return;
+            throw new ComponentError('DOM element already exists');
         } else if (options.id) {
             node.setAttribute('id', options.id);
         }
@@ -75,13 +78,11 @@ export class Component {
         let parent;
 
         if (this.mounted) {
-            console.warn(errors.DOM.componentMounted);
-            return;
+            throw new ComponentError('Component already mounted');
         }
 
         if (!this.parent && !options) {
-            console.warn(errors.DOM.parentNotFound);
-            return;
+            throw new ComponentError('Parent not found');
         }
 
         if (this.parent && typeof this.parent === 'object') {
@@ -107,13 +108,13 @@ export class Component {
             this.mounted = true;
             this.parent = parent;
         } else {
-            console.warn(errors.DOM.parentNotFound);
+            throw new ComponentError('Parent not found');
         }
     }
 
     mountToBody() {
         if (this.parent) {
-            console.warn(errors.DOM.componentMounted);
+            throw new ComponentError('Component already mounted');
         }
 
         const parent = document.querySelector('body');
@@ -122,13 +123,13 @@ export class Component {
             parent.appendChild(this.node);
             this.parent = parent;
         } else {
-            console.warn(errors.DOM.notReady);
+            throw new ComponentError('DOM not ready');
         }
     }
 
     unmount() {
         if (!this.parent) {
-            console.warn(errors.DOM.parentNotFound);
+            throw new ComponentError('Parent not found');
         }
 
         this.parent.removeChild(this.node);
@@ -156,7 +157,7 @@ export class Component {
      */
     setAttributes(attributes) {
         if (typeof attributes !== 'object') {
-            throw new Error('[Element] invalid parameters');
+            throw new ComponentError('Invalid attributes');
         }
 
         for (let key in attributes) {
@@ -172,7 +173,7 @@ export class Component {
      */
     setStyles(properties) {
         if (typeof properties !== 'object') {
-            throw new Error('[Element] invalid parameters');
+            throw new ComponentError('Invalid properties');
         }
 
         for (let property in properties) {
@@ -203,7 +204,7 @@ export class Component {
      */
     setText(text) {
         if (!text || typeof text !== 'string') {
-            throw new Error('[Element] invalid text');
+            throw new ComponentError('Invalid string');
         }
 
         let textNode = document.createTextNode(text);
@@ -217,7 +218,7 @@ export class Component {
      */
     setHtml(htmlString) {
         if (!htmlString || typeof htmlString !== 'string') {
-            throw new Error('[Element] invalid html');
+            throw new ComponentError('Invalid HTML');
         }
 
         this.node.innerHTML = htmlString;
@@ -235,7 +236,9 @@ export class Component {
 
         this.calculatePosition(containerDimensions, x, y);
 
-        if (!this.coordinates) { throw new Error('[Element] invalid dimensions'); }
+        if (!this.coordinates) {
+            throw new ComponentError('Invalid dimensions');
+        }
 
         this.setStyles({
             left: this.coordinates.x,
