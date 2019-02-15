@@ -4,7 +4,8 @@ export default {
 		display: 'block',
 		textAlign: 'center',
 		fontSize: '19px',
-		color: '#ffffff'
+		color: '#ffffff',
+		fontFamily: 'Roboto, sans-serif'
 	}
 
 };

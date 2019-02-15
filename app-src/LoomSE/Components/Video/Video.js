@@ -29,10 +29,7 @@ export class Video extends Component {
 	}
 
 	constructor (options) {
-		super({
-			type: 'video',
-			class: 'fillView'
-		});
+		super({ type: 'video' });
 
 		this.node.autoplay = false;
 		this.node.controls = options.controls;

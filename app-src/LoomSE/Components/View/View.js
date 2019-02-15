@@ -8,23 +8,26 @@ import { debounce } from '../../tools';
 
 import state from '../../state';
 
+import styles from './styles';
+
 export class View extends Component {
 
 	constructor(node) {
 
-		super({ node });
+		super({
+			node,
+			styles: styles.view
+		});
 
 		this.fullscreen = browser.fullscreen(this.node);
 
 		this.containers = {
 			stage: new Stage({
 				id: 'stage',
-				class: 'fillView',
 				layer: 0
 			}),
 			overlay: new Overlay({
 				id: 'overlay',
-				class: 'fillView',
 				layer: 1
 			})
 		};

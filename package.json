@@ -4,7 +4,8 @@
   "version": "0.5.0",
   "description": "Interactive storytelling for the modern web",
   "scripts": {
-    "dev": "webpack --config webpack.config.js"
+    "dev": "webpack --config webpack.config.js",
+    "styles": "node-sass --include-path scss styles/master.scss styles/master.css;"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "babel-loader": "^8.0.5",
+    "node-sass": "^4.11.0",
     "webpack": "^4.28.3",
     "webpack-cli": "^3.2.0"
   },

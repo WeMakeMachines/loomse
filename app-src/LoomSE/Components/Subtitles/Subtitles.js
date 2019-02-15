@@ -19,9 +19,7 @@ import state from '../../state';
 
 export class Subtitles extends Component {
 	constructor(url) {
-		super({
-			id: 'subtitles'
-		});
+		super({ id: 'subtitles' });
 
 		this.parsedFile = parseFile(url[state.language]);
 		this.active = false;
@@ -64,16 +62,15 @@ export class Subtitles extends Component {
 	showSubtitle(event) {
 		const timedObject = this.queue.getTimedObject(event.id);
 
-		const subtitle = {
+		this.activeEvents[event.id] = new Block({
+			type: 'p',
 			id: `subtitle-${event.id}`,
 			styles: styles.subtitle,
 			x: storyBehaviour.subtitles.x,
 			y: storyBehaviour.subtitles.y,
 			text: timedObject.payload.text,
 			parent: this.node
-		};
-
-		this.activeEvents[event.id] = new Block(subtitle);
+		});
 
 		this.activeEvents[event.id].render();
 	}

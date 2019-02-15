@@ -1,9 +1,4 @@
-#loomSE {
-    z-index: 0;
-}
-
 #stage {
-    z-index: 100;
 
     > div {
         width: 100%;
@@ -12,57 +7,8 @@
         left: 0;
         top: 0;
     }
-
-    #mediaGroup {
-
-        video {
-            display: block;
-            margin: 0 auto;
-            width: 100%;
-            height: 100%;
-        }
-    }
-}
-
-#stageFront {
-    z-index: 110;
-
-    > div {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-    }
-
-    #events {
-        z-index: 107;
-    }
-
-    #subtitles {
-        z-index: 108;
-    }
-}
-
-#gui {
-    z-index: 120;
-}
-
-#overlay {
-    z-index: 130;
 }
 
 .hide {
     display: none;
-}
-
-.stack {
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.scaleToParent {
-    width: 100%;
-    height: 100%;
 }
