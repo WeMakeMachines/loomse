@@ -43,9 +43,8 @@ const config = {
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			title: 'Loom Story Engine',
-			template: 'template.html',
-			filename: '../index.html'
+			template: `${source}/index.html`,
+			filename: 'index.html'
 		})
 	]
 };
