@@ -1,6 +1,6 @@
 import { clockStringToMilliseconds } from '../../../tools';
 
-export class SRT {
+export class SRT_Parser {
 
 	static getBlockMarker(line) {
 		const processedLine = Number(line);

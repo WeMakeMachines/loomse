@@ -1,7 +1,5 @@
 import { Story, Scene } from './model';
 
-import applicationAPI from './applicationAPI';
-
 import state from './state';
 
 export class LoomSE {
@@ -12,7 +10,6 @@ export class LoomSE {
         this.isClientSupported = options.isClientSupported;
         this.story = new Story();
         this.state = state;
-        this.api = applicationAPI;
 
         this.story.load()
             .then(() => {

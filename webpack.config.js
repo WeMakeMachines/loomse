@@ -1,7 +1,7 @@
 const source = './app-src';
 const destination = './app-build';
 const path = require('path');
-const appConfig = require(`${source}/configs/config.json`);
+const appConfig = require(`${source}/constants/config.json`);
 
 const config = {
 	mode: 'development',
@@ -11,7 +11,7 @@ const config = {
 		filename: `${appConfig.appName}-${appConfig.version}.js`,
 		libraryTarget: 'umd',
 		libraryExport: 'default',
-		library: appConfig.appName
+		library: 'LoomSE'
 	},
 	devtool: 'source-map',
 	module: {

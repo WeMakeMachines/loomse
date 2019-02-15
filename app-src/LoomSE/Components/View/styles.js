@@ -1,10 +1,10 @@
-import { styles } from '../../constants';
+import { colors } from '../../../constants/styles';
 
 export default {
 
 	view: {
 		zIndex: 0,
-		backgroundColor: styles.colours.black
+		backgroundColor: colors.black
 	}
 
 };

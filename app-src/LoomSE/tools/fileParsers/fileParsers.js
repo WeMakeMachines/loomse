@@ -1,8 +1,8 @@
 import { ajaxRequest } from '../';
 
-import { plainTextFiles } from '../../constants';
+import { SRT } from '../../../constants/plainTextFiles';
 
-import { SRT } from './types';
+import { SRT_Parser } from './parsers';
 
 export {
 	parseFile,
@@ -26,7 +26,7 @@ async function parseFile(url, fileType) {
 	let parsedFile;
 
 	switch (fileType) {
-		case plainTextFiles.SRT:
+		case SRT:
 			parsedFile = await srt(file);
 			break;
 		default:
@@ -52,7 +52,7 @@ function srt(rawText) {
 
 		if (typeof rawText !== 'string') { reject(); }
 
-		const parsedData = new SRT(rawText);
+		const parsedData = new SRT_Parser(rawText);
 		const blocks = parsedData.blocks;
 
 		if (!blocks) { reject(); }

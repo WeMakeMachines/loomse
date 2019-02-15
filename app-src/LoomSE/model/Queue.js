@@ -1,4 +1,4 @@
-import { eventActions } from '../constants';
+import { RUN, STOP } from '../../constants/eventActions';
 
 export class Queue {
 
@@ -33,13 +33,13 @@ export class Queue {
 			const timedObjectIn = {
 				id: i,
 				time: this._timedObjects[i].in,
-				action: eventActions.RUN
+				action: RUN
 			};
 
 			const timedObjectOut = {
 				id: i,
 				time: this._timedObjects[i].out,
-				action: eventActions.STOP
+				action: STOP
 			};
 
 			queue.push(timedObjectIn, timedObjectOut);

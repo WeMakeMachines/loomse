@@ -4,14 +4,14 @@ import { Queue } from '../../model/Queue';
 
 import { Block } from '../';
 
-import { eventActions } from '../../constants';
+import { RUN, STOP } from '../../../constants/eventActions';
 
 import { secondsToMilliseconds } from '../../tools';
 import { parseFile } from '../../tools';
 
 import { radio } from '../../../services';
 
-import storyBehaviour from '../../../configs/storyBehaviour';
+import storyBehaviour from '../../../constants/storyBehaviour';
 
 import styles from './styles';
 
@@ -46,10 +46,10 @@ export class Subtitles extends Component {
 
 	runAction(event) {
 		switch (event.action) {
-			case eventActions.RUN:
+			case RUN:
 				this.showSubtitle(event);
 				break;
-			case eventActions.STOP:
+			case STOP:
 				this.hideSubtitle(event);
 				break;
 			default:

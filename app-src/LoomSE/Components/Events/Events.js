@@ -4,7 +4,7 @@ import { Queue } from '../../model/Queue';
 
 import Event from '../Event';
 
-import { eventActions } from '../../constants';
+import { RUN, STOP } from '../../../constants/eventActions';
 
 import { secondsToMilliseconds } from '../../tools';
 
@@ -33,11 +33,11 @@ export class Events extends Component {
 	actionEvent(event) {
 
 		switch (event.action) {
-			case eventActions.RUN:
+			case RUN:
 				this.activeEvents[event.id] = new Event(this.queue.getTimedObject(event.id));
 				this.activeEvents[event.id].run();
 				break;
-			case eventActions.STOP:
+			case STOP:
 				this.activeEvents[event.id].stop();
 
 				delete this.activeEvents[event.id];

@@ -2,24 +2,65 @@ import LoomSE from './LoomSE';
 
 import { browser } from './services';
 
-import config from './configs/config';
+import config from './constants/config';
+
+import { VIDEO_PAUSE, VIDEO_PLAY } from './constants/applicationActions';
 
 import { initialiseView } from './LoomSE/view';
 import { initialiseRadio } from './services';
 
-export default function(node) {
+import state from './LoomSE/state';
 
-	initialiseView(node);
-	initialiseRadio(node);
+export default class App {
 
-	const loomSE = new LoomSE({
-		lastState: browser.localStorage.getData(),
-		isClientSupported: browser.isCompatible()
-	});
+	constructor(node) {
+		this.node = node;
+		this.version = config.version;
+		this.v = this.version;
 
-	return {
-		...loomSE.api,
-		v: config.version,
-		version: config.version
-	};
-};
+		initialiseView(node);
+		initialiseRadio(node);
+
+		new LoomSE({
+			node,
+			lastState: browser.localStorage.getData(),
+			isClientSupported: browser.isCompatible()
+		});
+	}
+
+	reload() {
+	}
+
+	pause() {
+		const event = new CustomEvent(VIDEO_PAUSE);
+
+		this.node.dispatchEvent(event);
+	}
+
+	play() {
+		const event = new CustomEvent(VIDEO_PLAY);
+
+		this.node.dispatchEvent(event);
+	}
+
+	seek() {
+
+	}
+
+	skip() {
+
+	}
+
+	status() {
+
+	}
+
+	currentTime() {
+		return state.time;
+	}
+
+	duration() {
+
+	}
+
+}
