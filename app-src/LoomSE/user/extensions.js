@@ -4,9 +4,7 @@
 import loomSE from '../../app';
 
 const userDefinedModules = {
-
 	test() {
-
 		return {
 			run(element, render) {
 				console.log('element', element);
@@ -23,7 +21,6 @@ const userDefinedModules = {
 			}
 		};
 	}
-
 };
 
 export { userDefinedModules as default };

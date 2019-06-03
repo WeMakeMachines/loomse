@@ -7,13 +7,4 @@ import Subtitles from './Subtitles';
 import Video from './Video';
 import View from './View';
 
-export {
-	Block,
-	Component,
-	Events,
-	Loading,
-	Modal,
-	Subtitles,
-	Video,
-	View
-};
+export { Block, Component, Events, Loading, Modal, Subtitles, Video, View };

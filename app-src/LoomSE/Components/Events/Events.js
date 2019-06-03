@@ -26,7 +26,9 @@ export class Events extends Component {
 	}
 
 	isReadyToAction(time) {
-		if (!time || !this.queue.pending) { return; }
+		if (!time || !this.queue.pending) {
+			return;
+		}
 
 		if (time >= this.queue.pending.time) {
 			this.actionEvent(this.queue.pending);
@@ -34,10 +36,11 @@ export class Events extends Component {
 	}
 
 	actionEvent(event) {
-
 		switch (event.action) {
 			case RUN:
-				this.activeEvents[event.id] = new Event(this.queue.getTimedObject(event.id));
+				this.activeEvents[event.id] = new Event(
+					this.queue.getTimedObject(event.id)
+				);
 				this.activeEvents[event.id].run();
 				break;
 			case STOP:
@@ -53,7 +56,7 @@ export class Events extends Component {
 	}
 
 	listenToRadio() {
-		radio.listen('video:timeupdate', (payload) => {
+		radio.listen('video:timeupdate', payload => {
 			if (payload.time) {
 				const time = secondsToMilliseconds(payload.time);
 

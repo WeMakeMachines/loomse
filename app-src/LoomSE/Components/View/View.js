@@ -11,9 +11,7 @@ import state from '../../state';
 import styles from './styles';
 
 export class View extends Component {
-
 	constructor(node) {
-
 		super({
 			node,
 			styles: styles.view
@@ -40,7 +38,9 @@ export class View extends Component {
 
 	mountContainers() {
 		for (let key in this.containers) {
-			if (!this.containers.hasOwnProperty(key)) { continue; }
+			if (!this.containers.hasOwnProperty(key)) {
+				continue;
+			}
 
 			const container = this.containers[key];
 
@@ -53,12 +53,12 @@ export class View extends Component {
 		const fullscreenEvent = this.fullscreen.returnEvent();
 		const resizeComponents = this.resizeComponents.bind(this);
 
-		window.addEventListener('resize', function () {
+		window.addEventListener('resize', function() {
 			debounce(resizeComponents, debounceDelay);
 		});
 
 		if (fullscreenEvent) {
-			document.addEventListener(fullscreenEvent, function () {
+			document.addEventListener(fullscreenEvent, function() {
 				resizeComponents();
 			});
 		}
@@ -79,7 +79,7 @@ export class View extends Component {
 			const component = components[i];
 
 			component.resize({
-				width : state.clientDimensions.width,
+				width: state.clientDimensions.width,
 				height: state.clientDimensions.height
 			});
 		}

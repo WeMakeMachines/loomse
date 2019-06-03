@@ -4,7 +4,6 @@ import Component from '../Abstract';
  * Provides an API for handling modal dialogs
  */
 export class Modal extends Component {
-
 	constructor(options) {
 		super(options);
 		this.content = null;
@@ -15,14 +14,15 @@ export class Modal extends Component {
 	 * @param {object} data
 	 */
 	updateContent(data) {
-		if (typeof data !== 'object' || !data.html) { return; }
+		if (typeof data !== 'object' || !data.html) {
+			return;
+		}
 
 		if (this.content) {
 			this.setHtml('');
 		}
 
-		this.content = Component.createNode()
-			.setHtml(data.html);
+		this.content = Component.createNode().setHtml(data.html);
 
 		this.node.attach(this.content);
 	}

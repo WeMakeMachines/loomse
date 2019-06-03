@@ -1,11 +1,12 @@
 import { clockStringToMilliseconds } from '../../../tools';
 
 export class SRT_Parser {
-
 	static getBlockMarker(line) {
 		const processedLine = Number(line);
 
-		if (processedLine === 0 || isNaN(processedLine)) { return; }
+		if (processedLine === 0 || isNaN(processedLine)) {
+			return;
+		}
 
 		return processedLine;
 	}
@@ -13,7 +14,9 @@ export class SRT_Parser {
 	static getTimes(line) {
 		const marker = '-->';
 
-		if (line.indexOf(marker) === -1) { return; }
+		if (line.indexOf(marker) === -1) {
+			return;
+		}
 
 		const lineAsArray = line.split(marker);
 
@@ -52,8 +55,7 @@ export class SRT_Parser {
 						text: ''
 					}
 				});
-
-			} else if(blockTimes) {
+			} else if (blockTimes) {
 				lastEntry.in = blockTimes.in;
 				lastEntry.out = blockTimes.out;
 			} else {
@@ -61,7 +63,6 @@ export class SRT_Parser {
 			}
 
 			return accumulator;
-
 		}, initialValue);
 	}
 }

@@ -1,7 +1,7 @@
 const initialState = {
-    time: 0,
+	time: 0,
 	clientDimensions: {
-		width : null,
+		width: null,
 		height: null
 	},
 	scene: null,
@@ -11,7 +11,6 @@ const initialState = {
 };
 
 class State {
-
 	constructor(options) {
 		this._time = options.time;
 		this._clientDimensions = options.clientDimensions;
@@ -31,9 +30,9 @@ class State {
 
 	get time() {
 		return this._time;
-    }
+	}
 
-    set time(time) {
+	set time(time) {
 		this._time = time;
 	}
 
@@ -50,7 +49,9 @@ class State {
 	}
 
 	set clientDimensions(dimensions) {
-		if (typeof dimensions !== 'object') { return; }
+		if (typeof dimensions !== 'object') {
+			return;
+		}
 
 		this._clientDimensions.width = dimensions.width;
 		this._clientDimensions.height = dimensions.height;

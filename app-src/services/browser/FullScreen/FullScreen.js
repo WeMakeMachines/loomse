@@ -2,37 +2,35 @@
  * Handles the fullscreen API for client devices
  */
 export class FullScreen {
-
 	/**
 	 * Returns currently known API methods for client devices
 	 * @returns {object}
 	 */
 	static vendorAPI() {
-
 		return {
 			universal: {
 				isAvailable: 'fullscreenEnabled',
-				request    : 'requestFullscreen',
-				exit       : 'exitFullscreen',
-				event      : 'fullscreenchange'
+				request: 'requestFullscreen',
+				exit: 'exitFullscreen',
+				event: 'fullscreenchange'
 			},
 			webkit: {
 				isAvailable: 'webkitFullscreenEnabled',
-				request    : 'webkitRequestFullscreen',
-				exit       : 'webkitExitFullscreen',
-				event      : 'webkitfullscreenchange'
+				request: 'webkitRequestFullscreen',
+				exit: 'webkitExitFullscreen',
+				event: 'webkitfullscreenchange'
 			},
 			moz: {
 				isAvailable: 'mozFullScreenEnabled',
-				request    : 'mozRequestFullScreen',
-				exit       : 'mozCancelFullScreen',
-				event      : 'mozfullscreenchange'
+				request: 'mozRequestFullScreen',
+				exit: 'mozCancelFullScreen',
+				event: 'mozfullscreenchange'
 			},
 			ms: {
 				isAvailable: 'msFullscreenEnabled',
-				request    : 'msRequestFullscreen',
-				exit       : 'msExitFullscreen',
-				event      : 'MSFullscreenChange'
+				request: 'msRequestFullscreen',
+				exit: 'msExitFullscreen',
+				event: 'MSFullscreenChange'
 			}
 		};
 	}
@@ -42,7 +40,6 @@ export class FullScreen {
 	 * @returns {object | null}
 	 */
 	static returnVendorAPI() {
-
 		let vendorAPI = this.vendorAPI(),
 			vendors = Object.keys(vendorAPI);
 
@@ -74,7 +71,6 @@ export class FullScreen {
 	 * Toggle fullscreen mode
 	 */
 	toggle() {
-
 		if (!this.isAvailable) {
 			throw new Error('Fullscreen not available on this device');
 		}

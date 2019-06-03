@@ -12,7 +12,6 @@ import { initialiseRadio } from './services';
 import state from './LoomSE/state';
 
 export default class App {
-
 	constructor(node) {
 		this.node = node;
 		this.version = config.version;
@@ -28,8 +27,7 @@ export default class App {
 		});
 	}
 
-	reload() {
-	}
+	reload() {}
 
 	pause() {
 		const event = new CustomEvent(VIDEO_PAUSE);
@@ -43,24 +41,15 @@ export default class App {
 		this.node.dispatchEvent(event);
 	}
 
-	seek() {
+	seek() {}
 
-	}
+	skip() {}
 
-	skip() {
-
-	}
-
-	status() {
-
-	}
+	status() {}
 
 	currentTime() {
 		return state.time;
 	}
 
-	duration() {
-
-	}
-
+	duration() {}
 }

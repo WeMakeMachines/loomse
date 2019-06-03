@@ -2,24 +2,20 @@
  * Creates a new DOM element or wraps an existing DOM element
  */
 class Element {
-
 	/**
 	 * Returns a valid DOM element
 	 * @param {object} options
 	 * @returns {object}
 	 */
 	static createNode(options) {
-
 		let node = document.createElement(options.type);
 
 		if (options.id) {
-
 			let getElementById = document.getElementById(options.id);
 
 			node = getElementById || node;
 
 			node.setAttribute('id', options.id);
-
 		}
 
 		return node;
@@ -29,16 +25,16 @@ class Element {
 	 * @param {object} options
 	 */
 	constructor(options) {
-
 		options = options || {};
 
-		if (typeof options !== 'object') { throw new Error('[Element] instantiation error'); }
+		if (typeof options !== 'object') {
+			throw new Error('[Element] instantiation error');
+		}
 
 		options.type = options.type || 'div';
 
 		this.parent = options.parent;
 		this.node = this.constructor.createNode(options);
-
 	}
 
 	/**
@@ -46,7 +42,6 @@ class Element {
 	 * @returns {Element}
 	 */
 	attach(child) {
-
 		try {
 			if (child.node) {
 				this.node.appendChild(child.node);
@@ -64,7 +59,6 @@ class Element {
 	 * @returns {Element}
 	 */
 	attachToParent() {
-
 		try {
 			if (this.parent && this.parent.attach) {
 				this.parent.attach(this.node);
@@ -83,7 +77,6 @@ class Element {
 	 * @returns {Element}
 	 */
 	detach(child) {
-
 		try {
 			if (child.node) {
 				this.node.removeChild(child.node);
@@ -101,7 +94,6 @@ class Element {
 	 * @returns {Element}
 	 */
 	detachFromParent() {
-
 		try {
 			this.parent.detach(this.node);
 		} catch (error) {
@@ -117,14 +109,16 @@ class Element {
 	 * @returns {Element}
 	 */
 	setClass(classList) {
-
-		if (!classList || !(typeof classList === 'string' || Array.isArray(classList))) {
+		if (
+			!classList ||
+			!(typeof classList === 'string' || Array.isArray(classList))
+		) {
 			throw new Error('[Element] invalid parameters');
 		}
 
 		classList = typeof classList === 'string' ? [classList] : classList;
 
-		classList.forEach((cssClass) => {
+		classList.forEach(cssClass => {
 			this.node.classList.add(cssClass);
 		});
 
@@ -189,7 +183,6 @@ class Element {
 	 * @returns {Element}
 	 */
 	setText(text) {
-
 		if (!text || typeof text !== 'string') {
 			throw new Error('[Element] invalid text');
 		}
@@ -199,7 +192,6 @@ class Element {
 		this.node.appendChild(textNode);
 
 		return this;
-
 	}
 
 	/**
@@ -208,7 +200,6 @@ class Element {
 	 * @returns {Element}
 	 */
 	setHtml(htmlString) {
-
 		if (!htmlString || typeof htmlString !== 'string') {
 			throw new Error('[Element] invalid html');
 		}
@@ -216,7 +207,6 @@ class Element {
 		this.node.innerHTML = htmlString;
 
 		return this;
-
 	}
 
 	/**
@@ -227,16 +217,17 @@ class Element {
 	 * @returns {Element}
 	 */
 	setPosition(containerDimensions, x, y) {
-
 		this.dimensions = this.getDimensions();
 
 		this.calculatePosition(containerDimensions, x, y);
 
-		if (!this.coordinates) { throw new Error('[Element] invalid dimensions'); }
+		if (!this.coordinates) {
+			throw new Error('[Element] invalid dimensions');
+		}
 
 		this.setStyle({
 			left: this.coordinates.x,
-			top : this.coordinates.y
+			top: this.coordinates.y
 		});
 
 		return this;
@@ -247,15 +238,17 @@ class Element {
 	 * @returns {object}
 	 */
 	getDimensions() {
-
 		let dimensions = {
-				width : null,
+				width: null,
 				height: null
 			},
 			body = document.getElementsByTagName('body')[0],
 			clone = this.node.cloneNode(true);
 
-		clone.setAttribute('style', 'display: inline-block !important; position: absolute; left: 0; top: 0; z-index: -100');
+		clone.setAttribute(
+			'style',
+			'display: inline-block !important; position: absolute; left: 0; top: 0; z-index: -100'
+		);
 
 		body.appendChild(clone);
 
@@ -275,7 +268,6 @@ class Element {
 	 * @returns {Element}
 	 */
 	calculatePosition(parentDimensions, x, y) {
-
 		if (typeof x !== 'number' || typeof y !== 'number' || !this.dimensions) {
 			throw new Error('[Element] invalid dimensions');
 		}
@@ -283,11 +275,15 @@ class Element {
 		let minRange = 0,
 			maxRange = 1;
 
-		if (x < minRange || x > maxRange) { x = minRange; }
-		if (y < minRange || y > maxRange) { y = minRange; }
+		if (x < minRange || x > maxRange) {
+			x = minRange;
+		}
+		if (y < minRange || y > maxRange) {
+			y = minRange;
+		}
 
 		let availableDimensions = {
-			width : parentDimensions.width - this.dimensions.width,
+			width: parentDimensions.width - this.dimensions.width,
 			height: parentDimensions.height - this.dimensions.height
 		};
 
@@ -300,4 +296,4 @@ class Element {
 	}
 }
 
-export const element = (options) => new Element(options);
+export const element = options => new Element(options);

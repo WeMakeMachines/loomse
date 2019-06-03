@@ -1,7 +1,6 @@
 import { RUN, STOP } from '../../constants/eventActions';
 
 export class Queue {
-
 	constructor(timedObjects) {
 		this._timedObjects = timedObjects;
 		this._queue = this.build();

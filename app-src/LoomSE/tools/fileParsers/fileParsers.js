@@ -4,11 +4,7 @@ import { SRT } from '../../../constants/plainTextFiles';
 
 import { SRT_Parser } from './parsers';
 
-export {
-	parseFile,
-	getFileType,
-	srt
-};
+export { parseFile, getFileType, srt };
 
 /**
  * Parses the file into an array
@@ -17,7 +13,9 @@ export {
  * @returns {object}
  */
 async function parseFile(url, fileType) {
-	if (!url || typeof url !== 'string') { return; }
+	if (!url || typeof url !== 'string') {
+		return;
+	}
 
 	fileType = fileType || getFileType(url);
 
@@ -47,17 +45,18 @@ function getFileType(url) {
 }
 
 function srt(rawText) {
-
 	return new Promise((resolve, reject) => {
-
-		if (typeof rawText !== 'string') { reject(); }
+		if (typeof rawText !== 'string') {
+			reject();
+		}
 
 		const parsedData = new SRT_Parser(rawText);
 		const blocks = parsedData.blocks;
 
-		if (!blocks) { reject(); }
+		if (!blocks) {
+			reject();
+		}
 
 		resolve(parsedData.blocks);
-
 	});
 }

@@ -24,7 +24,6 @@ function millisecondsToSeconds(time) {
  * @returns {object}
  */
 function millisecondsToClockString(milliseconds) {
-
 	let remainder = milliseconds / millisecondsInSeconds,
 		hours,
 		minutes,
@@ -74,13 +73,12 @@ function millisecondsToClockString(milliseconds) {
 
 	if (split === '0') {
 		split = '000';
-	}
-	else {
+	} else {
 		split = split.substr(2, 3);
 	}
 
 	return {
-		hours  : addLeadingZero(hours),
+		hours: addLeadingZero(hours),
 		minutes: addLeadingZero(minutes),
 		seconds: addLeadingZero(seconds),
 		split
@@ -94,7 +92,6 @@ function millisecondsToClockString(milliseconds) {
  * @returns {object}
  */
 function clockStringToMilliseconds(string, separators) {
-
 	separators = Object.assign({}, separators, {
 		major: ':',
 		minor: ','

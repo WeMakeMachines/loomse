@@ -1,5 +1,4 @@
 class Radio {
-
 	constructor(node) {
 		this.antenna = node;
 	}
@@ -13,7 +12,9 @@ class Radio {
 	}
 
 	listen(channel, callback) {
-		return this.antenna.addEventListener(channel, (data) => { callback(data.detail); });
+		return this.antenna.addEventListener(channel, data => {
+			callback(data.detail);
+		});
 	}
 }
 

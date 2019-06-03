@@ -1,4 +1,1 @@
-export {
-	radio as default,
-	initialiseRadio
-} from './radio';
+export { radio as default, initialiseRadio } from './radio';

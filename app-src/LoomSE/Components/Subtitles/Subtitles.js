@@ -28,19 +28,21 @@ export class Subtitles extends Component {
 		this.active = false;
 		this.activeEvents = {};
 
-		this.parsedFile.then((subtitles) => {
+		this.parsedFile.then(subtitles => {
 			this.queue = new Queue(subtitles);
 
 			this.listenToRadio();
 		});
 
-		this.parsedFile.catch((error) => {
+		this.parsedFile.catch(error => {
 			console.warn(error);
 		});
 	}
 
 	isReadyToAction(time) {
-		if (!time || !this.queue.pending) { return; }
+		if (!time || !this.queue.pending) {
+			return;
+		}
 
 		if (time >= this.queue.pending.time) {
 			this.runAction(this.queue.pending);
@@ -85,7 +87,7 @@ export class Subtitles extends Component {
 	}
 
 	listenToRadio() {
-		radio.listen('video:timeupdate', (payload) => {
+		radio.listen('video:timeupdate', payload => {
 			if (payload.time) {
 				const time = secondsToMilliseconds(payload.time);
 

@@ -54,17 +54,14 @@ import mediaGuiHtml from '../../../html/media_gui.html';
  * On screen Media controls
  */
 export default class Gui {
-
 	/**
 	 * @param {object} html
 	 */
 	constructor(html = mediaGuiHtml) {
-
 		this.id = 'mediaGui';
 		this.container = element({ id: this.id });
 
-		this.html = element()
-			.setHtml(html);
+		this.html = element().setHtml(html);
 
 		this.container.appendChild(this.html.node);
 	}
@@ -77,15 +74,16 @@ export default class Gui {
 	 * @returns {Toggle}
 	 */
 	attachButton(selector, action, toggle) {
-
 		toggle = toggle || false;
 
 		const selection = this.html.querySelector(`${selector}`);
 
-		if (!selection) { throw new Error('[Buttons] Unable to attach action to button'); }
+		if (!selection) {
+			throw new Error('[Buttons] Unable to attach action to button');
+		}
 
 		return new Toggle({
-			node  : selection,
+			node: selection,
 			action: () => action(),
 			toggle
 		});

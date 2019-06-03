@@ -6,15 +6,13 @@ import state from '../../state';
 import styles from './styles';
 
 export class Video extends Component {
-
 	static setSources(options) {
-
 		const sources = {};
 
 		if (options.mp4 && typeof options.mp4 === 'string') {
 			sources.mp4 = new Component({ type: 'source' });
 			sources.mp4.setAttributes({
-				src : options.mp4,
+				src: options.mp4,
 				type: 'video/mp4'
 			});
 		}
@@ -22,7 +20,7 @@ export class Video extends Component {
 		if (options.ogg && typeof options.ogg === 'string') {
 			sources.ogg = new Component({ type: 'source' });
 			sources.ogg.setAttributes({
-				src : options.ogg,
+				src: options.ogg,
 				type: 'video/ogg'
 			});
 		}
@@ -30,7 +28,7 @@ export class Video extends Component {
 		return sources;
 	}
 
-	constructor (options) {
+	constructor(options) {
 		super({
 			type: 'video',
 			styles: styles.video
@@ -55,8 +53,10 @@ export class Video extends Component {
 	}
 
 	mountSources() {
-		for(let key in this.sources) {
-			if (!this.sources.hasOwnProperty(key)) { continue; }
+		for (let key in this.sources) {
+			if (!this.sources.hasOwnProperty(key)) {
+				continue;
+			}
 
 			const source = this.sources[key];
 
@@ -87,16 +87,15 @@ export class Video extends Component {
 	}
 
 	play() {
-		this.node.play()
+		this.node
+			.play()
 			.then(() => {
 				this.resize({
-					width : state.clientDimensions.width,
+					width: state.clientDimensions.width,
 					height: state.clientDimensions.height
 				});
 			})
-			.catch(() => {
-
-			});
+			.catch(() => {});
 	}
 
 	pause() {
@@ -104,7 +103,6 @@ export class Video extends Component {
 	}
 
 	playPause() {
-
 		if (this.node.paused) {
 			this.play();
 			return true;
@@ -113,5 +111,4 @@ export class Video extends Component {
 		this.pause();
 		return false;
 	}
-
 }

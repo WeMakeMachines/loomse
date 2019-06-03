@@ -1,7 +1,6 @@
 import { stack } from '../../../constants/styles';
 
 export default {
-
 	subtitles: {
 		...stack
 	},
@@ -13,5 +12,4 @@ export default {
 		color: '#ffffff',
 		fontFamily: 'Roboto, sans-serif'
 	}
-
 };

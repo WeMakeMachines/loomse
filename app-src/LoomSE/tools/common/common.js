@@ -1,12 +1,7 @@
 /**
  * Common tools
  */
-export {
-	ajaxRequest,
-	cleanString,
-	debounce,
-	random
-};
+export { ajaxRequest, cleanString, debounce, random };
 
 /**
  * Simplified AJAX call
@@ -24,7 +19,6 @@ function ajaxRequest(url, type) {
 		xmlHTTP.send();
 
 		xmlHTTP.onload = () => {
-
 			if (xmlHTTP.status === SUCCESS) {
 				switch (type) {
 					case 'JSON':
@@ -37,13 +31,11 @@ function ajaxRequest(url, type) {
 			} else {
 				reject(xmlHTTP.status);
 			}
-
 		};
 
 		xmlHTTP.onerror = () => {
 			reject('File or network error');
 		};
-
 	});
 }
 
@@ -53,9 +45,7 @@ function ajaxRequest(url, type) {
  * @returns {string}
  */
 function cleanString(string) {
-
 	return string.replace(/\s+/g, '').toLowerCase();
-
 }
 
 /**
@@ -68,7 +58,6 @@ const debounce = (() => {
 	let delayedFunction;
 
 	return (callback, delay) => {
-
 		if (delayedFunction) {
 			clearTimeout(delayedFunction);
 		}

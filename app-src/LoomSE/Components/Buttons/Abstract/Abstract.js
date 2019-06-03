@@ -3,11 +3,10 @@
  *
  */
 export class Abstract {
-
 	/**
 	 * @param {object} object
 	 */
-	constructor (object) {
+	constructor(object) {
 		this.toggle = object.toggle;
 		this.node = object.node;
 		this.onElement = this.node.querySelector('.on');

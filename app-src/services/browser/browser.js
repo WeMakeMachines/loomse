@@ -3,7 +3,6 @@ import FullScreen from './FullScreen';
 import LocalStorage from './LocalStorage';
 
 export const browser = {
-
 	fullscreen(element) {
 		return new FullScreen(element);
 	},
@@ -14,7 +13,7 @@ export const browser = {
 	 */
 	getClientDimensions() {
 		return {
-			width : window.innerWidth,
+			width: window.innerWidth,
 			height: window.innerHeight
 		};
 	},
@@ -25,8 +24,10 @@ export const browser = {
 	hasSmallScreen() {
 		let dimensions = this.getClientDimensions();
 
-		return dimensions.width < config.mobile.minimumResolution ||
-			dimensions.height < config.mobile.minimumResolution;
+		return (
+			dimensions.width < config.mobile.minimumResolution ||
+			dimensions.height < config.mobile.minimumResolution
+		);
 	},
 
 	isCompatible() {

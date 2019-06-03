@@ -1,7 +1,6 @@
 import { EXPIRED, FIRED, WAITING } from '../../../constants/eventStates';
 
 export class Event {
-
 	constructor(options) {
 		this.id = options.id;
 		this.state = WAITING;
@@ -18,6 +17,5 @@ export class Event {
 		this.state = FIRED;
 	}
 
-	stop() {
-	}
+	stop() {}
 }

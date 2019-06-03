@@ -4,11 +4,10 @@ import Abstract from '../Abstract';
  * Button extension which allows for toggling behaviours
  */
 export class Toggle extends Abstract {
-
 	/**
 	 * @param {object} object
 	 */
-	constructor (object) {
+	constructor(object) {
 		super(object);
 		this.node.onclick = () => {
 			let state = this.action();
@@ -36,5 +35,4 @@ export class Toggle extends Abstract {
 		this.onElement.classList.remove('hide');
 		this.offElement.classList.add('hide');
 	}
-
 }
