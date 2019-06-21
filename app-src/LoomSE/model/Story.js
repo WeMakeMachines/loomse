@@ -6,11 +6,7 @@ import config from '../../constants/config';
 
 import state from '../state';
 
-class ScriptError extends Error {
-	constructor(message) {
-		super(message);
-	}
-}
+class ScriptError extends Error {}
 
 export class Story {
 	/**
@@ -35,7 +31,7 @@ export class Story {
 	}
 
 	load() {
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			this.fetchScript()
 				.then(values => {
 					this.shortName = values.shortName;

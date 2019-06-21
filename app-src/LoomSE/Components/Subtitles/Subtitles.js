@@ -6,8 +6,7 @@ import { Block } from '../';
 
 import { RUN, STOP } from '../../../constants/eventActions';
 
-import { secondsToMilliseconds } from '../../tools';
-import { parseFile } from '../../tools';
+import { secondsToMilliseconds, parseFile } from '../../tools';
 
 import { radio } from '../../../services';
 

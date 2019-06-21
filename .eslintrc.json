@@ -10,6 +10,7 @@
     "parserOptions": {
         "sourceType": "module"
     },
+    "parser": "babel-eslint",
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-spacing": [
@@ -18,9 +19,9 @@
         ],
         "array-callback-return": "error",
         "arrow-body-style": ["error", "as-needed", { "requireReturnForObjectLiteral": true }],
-        "arrow-parens": "error",
         "arrow-spacing": "error",
         "block-scoped-var": "error",
+        "block-spacing": "error",
         "block-spacing": "error",
         "brace-style": "off",
         "callback-return": "off",
@@ -31,7 +32,7 @@
             }
         ],
         "capitalized-comments": "off",
-        "class-methods-use-this": "error",
+        "class-methods-use-this": "warn",
         "comma-dangle": "error",
         "comma-spacing": [
             "error",
@@ -94,7 +95,6 @@
             "error",
             "unix"
         ],
-        "lines-around-comment": "error",
         "lines-around-directive": "error",
         "max-depth": "error",
         "max-len": "off",
@@ -157,7 +157,6 @@
         "no-negated-condition": "off",
         "no-negated-in-lhs": "error",
         "no-nested-ternary": "error",
-        "no-new": "error",
         "no-new-func": "error",
         "no-new-object": "error",
         "no-new-require": "error",

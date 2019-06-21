@@ -5,7 +5,8 @@
   "description": "Interactive storytelling for the modern web",
   "scripts": {
     "dev": "webpack --config webpack.config.js",
-    "prettier": "prettier --write 'app-src/**/*.js'"
+    "prettier": "prettier --write 'app-src/**/*.js'",
+    "eslint": "eslint app-src"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,9 @@
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
+    "eslint": "^5.16.0",
     "html-webpack-plugin": "^3.2.0",
     "prettier": "1.17.1",
     "webpack": "^4.35.0",

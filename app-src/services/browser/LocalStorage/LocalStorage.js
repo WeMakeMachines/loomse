@@ -1,8 +1,4 @@
-class LocalStorageError extends Error {
-	constructor(message) {
-		super(message);
-	}
-}
+class LocalStorageError extends Error {}
 
 export class LocalStorage {
 	constructor(ref = window) {

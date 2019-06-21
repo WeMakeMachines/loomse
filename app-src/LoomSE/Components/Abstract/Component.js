@@ -1,8 +1,4 @@
-class ComponentError extends Error {
-	constructor(message) {
-		super(message);
-	}
-}
+class ComponentError extends Error {}
 
 export class Component {
 	/**

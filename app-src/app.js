@@ -1,13 +1,12 @@
 import LoomSE from './LoomSE';
 
-import { browser } from './services';
+import { browser, initialiseRadio } from './services';
 
 import config from './constants/config';
 
 import { VIDEO_PAUSE, VIDEO_PLAY } from './constants/applicationActions';
 
 import { initialiseView } from './LoomSE/view';
-import { initialiseRadio } from './services';
 
 import state from './LoomSE/state';
 
