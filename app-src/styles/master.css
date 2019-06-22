@@ -1,0 +1,148 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url("../assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); }
+
+@font-face {
+  font-family: 'Roboto-Italic';
+  src: url("../assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); }
+
+@font-face {
+  font-family: 'Roboto-Light';
+  src: url("../assets/fonts/Roboto/Roboto-Light.ttf") format("truetype"); }
+
+@font-face {
+  font-family: 'Roboto-Medium';
+  src: url("../assets/fonts/Roboto/Roboto-Medium.ttf") format("truetype"); }
+
+@font-face {
+  font-family: 'Roboto-Bold';
+  src: url("../assets/fonts/Roboto/Roboto-Bold.ttf") format("truetype"); }
+
+* {
+  box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, sans-serif;
+  font-size: 100%;
+  color: #fafde1;
+  background-color: #170508; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal; }
+
+ul, ol, p {
+  margin: 0;
+  padding: 0; }
+
+a, a:link, a:visited, a:hover {
+  text-decoration: none;
+  color: inherit; }
+
+.mainTitle {
+  font-size: 50px;
+  text-align: center;
+  color: #fafde1;
+  margin: 5px; }
+
+#loomSE_subtitles div {
+  position: absolute;
+  bottom: 90px;
+  width: 100%;
+  text-align: center; }
+  #loomSE_subtitles div p {
+    display: inline;
+    background: #fafde1;
+    font-size: 18px;
+    font-weight: bold;
+    color: #170508;
+    padding: 5px; }
+
+#loomSE {
+  z-index: 0; }
+
+#stage {
+  z-index: 100; }
+  #stage > div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0; }
+  #stage #mediaGroup video {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%; }
+
+#stageFront {
+  z-index: 110; }
+  #stageFront > div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0; }
+  #stageFront #events {
+    z-index: 107; }
+  #stageFront #subtitles {
+    z-index: 108; }
+
+#gui {
+  z-index: 120; }
+
+#overlay {
+  z-index: 130; }
+
+.hide {
+  display: none; }
+
+.stack {
+  position: absolute;
+  left: 0;
+  top: 0; }
+
+.scaleToParent {
+  width: 100%;
+  height: 100%; }
+
+#mediaGui {
+  position: absolute;
+  bottom: 0;
+  width: 100%; }
+  #mediaGui svg {
+    fill: #fafde1; }
+  #mediaGui .bar {
+    height: 36px;
+    width: 100%;
+    padding: 6px;
+    background-color: darkslategray; }
+
+.gui_button {
+  background: none;
+  border: 0;
+  cursor: pointer; }
+
+.subtitle {
+  position: absolute;
+  font-size: 24px;
+  color: black;
+  padding: 4px;
+  background-color: aqua; }
+
+/* Module specific css */
+div.mediaTime span {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  background-color: darkred; }
+
+.extension {
+  position: absolute;
+  font-size: 24px;
+  color: black;
+  padding: 4px;
+  background-color: aqua; }
