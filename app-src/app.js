@@ -1,4 +1,4 @@
-import LoomSE from './LoomSE';
+import Loom from './LoomSE';
 
 import { browser, initialiseRadio } from './services';
 
@@ -19,7 +19,7 @@ export default class App {
 		initialiseView(node);
 		initialiseRadio(node);
 
-		new LoomSE({
+		new Loom({
 			node,
 			lastState: browser.localStorage.getData(),
 			isClientSupported: browser.isCompatible()

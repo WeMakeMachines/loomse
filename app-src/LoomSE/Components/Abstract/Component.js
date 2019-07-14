@@ -139,7 +139,7 @@ export class Component {
 			!classList ||
 			!(typeof classList === 'string' || Array.isArray(classList))
 		) {
-			throw new Error('[Element] invalid parameters');
+			throw new ComponentError('[Element] invalid parameters');
 		}
 
 		classList = typeof classList === 'string' ? [classList] : classList;

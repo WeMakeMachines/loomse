@@ -2,7 +2,9 @@ import { Story, Scene } from './Models';
 
 import state from './state';
 
-export class LoomSE {
+class LoomError extends Error {}
+
+export class Loom {
 	constructor(options) {
 		this.node = options.node;
 		this.lastState = options.lastState;
@@ -16,7 +18,7 @@ export class LoomSE {
 				this.loadScene(this.story.firstScene);
 			})
 			.catch(error => {
-				throw new Error(error);
+				throw new LoomError(error);
 			});
 	}
 
