@@ -1,23 +1,16 @@
-# Loom Story Engine 0.5.1
+# Loom Story Engine 0.5.2
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
 Loom is an open-source application built in JavaScript, HTML5 and CSS3. With Loom, content creators can tell interactive stories over the modern web. Create your script in Loom, tell multiple tales.
 
-## Browser Compatibility ##
-
-TODO
-
 ## Dependencies
-### Development
+
 Developing within the Loom framework requires
 - npm
 - babel (for compiling ES6)
 - sass
 - webpack (for building)
-
-### Production
-- Babel polyfill
 
 ## Installation
 Download and run:
@@ -111,11 +104,8 @@ You can communicate with the core application with the Loom API.
 Current API commands:
 
 - `currentTime()` - returns current time (in seconds)
-- `duration()` - returns duration of media (in seconds)
 - `pause()` - pause current media
 - `play(time)` - play current media
-- `duration()` - duration of current media
-- `seek(time)` - seek to time (in seconds) in media
 - `skipTo(sceneName)` - skip to scene
 - `reload()` - reload current scene
 - `version` - show current version

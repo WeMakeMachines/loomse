@@ -4,6 +4,7 @@ const initialState = {
 		width: null,
 		height: null
 	},
+	scene: '',
 	events: [],
 	history: [],
 	language: 'en_GB'
@@ -12,6 +13,7 @@ const initialState = {
 class State {
 	constructor(options) {
 		this._time = options.time;
+		this._scene = options.scene;
 		this._clientDimensions = options.clientDimensions;
 		this._history = options.history;
 		this._events = options.events;
@@ -32,6 +34,14 @@ class State {
 
 	set time(time) {
 		this._time = time;
+	}
+
+	get scene() {
+		return this._scene;
+	}
+
+	set scene(scene) {
+		this._scene = scene;
 	}
 
 	get language() {

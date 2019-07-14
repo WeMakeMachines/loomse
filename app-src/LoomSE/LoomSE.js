@@ -41,6 +41,8 @@ export class Loom {
 
 			this.scene = new Scene(this.story.scenes[string]);
 
+			state.scene = string;
+
 			if (registerInHistory) {
 				state.addToHistory(string);
 			}
