@@ -50,6 +50,22 @@ export class Video extends Component {
 			ogg: options.ogg
 		});
 
+		this.play = () => {
+			this.node
+				.play()
+				.then(() => {
+					this.resize({
+						width: state.clientDimensions.width,
+						height: state.clientDimensions.height
+					});
+				})
+				.catch(() => {});
+		};
+
+		this.pause = () => {
+			this.node.pause();
+		};
+
 		this.mountSources();
 		this.registerMediaEvents();
 		this.listenToRadio();
@@ -92,24 +108,13 @@ export class Video extends Component {
 	}
 
 	listenToRadio() {
-		radio.listen(DIRECTOR_PAUSE, () => this.pause());
-		radio.listen(DIRECTOR_PLAY, () => this.play());
+		radio.listen(DIRECTOR_PAUSE, this.pause);
+		radio.listen(DIRECTOR_PLAY, this.play);
 	}
 
-	play() {
-		this.node
-			.play()
-			.then(() => {
-				this.resize({
-					width: state.clientDimensions.width,
-					height: state.clientDimensions.height
-				});
-			})
-			.catch(() => {});
-	}
-
-	pause() {
-		this.node.pause();
+	stopListeningToRadio() {
+		radio.stopListening(DIRECTOR_PAUSE, this.pause);
+		radio.stopListening(DIRECTOR_PLAY, this.play);
 	}
 
 	playPause() {

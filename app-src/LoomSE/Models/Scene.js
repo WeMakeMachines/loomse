@@ -44,6 +44,10 @@ export class Scene {
 	}
 
 	unmountComponents() {
+		// TODO handle this better, remove radio events for subtitles
+		this.video.stopListeningToRadio();
+		this.events.stopListeningToRadio();
+
 		view.containers.stage.removeChildren();
 	}
 }

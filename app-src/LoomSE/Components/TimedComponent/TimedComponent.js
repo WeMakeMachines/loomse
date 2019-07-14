@@ -18,18 +18,23 @@ export class TimedComponent extends Component {
 
 		this.activeEvents = {};
 		this.queue = new Queue(events);
+		this.radioCallback = event => {
+			if (event.detail.time) {
+				const time = secondsToMilliseconds(event.detail.time);
+
+				this.isReadyToAction(time);
+			}
+		};
 
 		this.listenToRadio();
 	}
 
 	listenToRadio() {
-		radio.listen(VIDEO_TIMEUPDATE, payload => {
-			if (payload.time) {
-				const time = secondsToMilliseconds(payload.time);
+		radio.listen(VIDEO_TIMEUPDATE, this.radioCallback);
+	}
 
-				this.isReadyToAction(time);
-			}
-		});
+	stopListeningToRadio() {
+		radio.stopListening(VIDEO_TIMEUPDATE, this.radioCallback);
 	}
 
 	isReadyToAction(time) {
