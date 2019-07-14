@@ -11,6 +11,7 @@ export class Scene {
 		this.longName = options.longName;
 		this.video = new Video(options.video);
 		this.events = new Events(this.parseEvents(options.events));
+		this.components = [];
 
 		this.mountComponents(this.video, this.events);
 
@@ -40,6 +41,14 @@ export class Scene {
 	}
 
 	mountComponents(...components) {
-		components.forEach(component => view.containers.stage.attach(component));
+		components.forEach(component => {
+			view.containers.stage.attach(component);
+
+			this.components.push(component);
+		});
+	}
+
+	unmountComponents() {
+		this.components.forEach(component => component.unmount());
 	}
 }

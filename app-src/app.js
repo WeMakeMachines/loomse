@@ -10,16 +10,18 @@ import { initialiseView } from './LoomSE/view';
 
 import state from './LoomSE/state';
 
+let loom;
+
 export default class App {
 	constructor(node) {
 		this.node = node;
 		this.version = config.version;
-		this.v = this.version;
+		this.v = config.version;
 
 		initialiseView(node);
 		initialiseRadio(node);
 
-		new Loom({
+		loom = new Loom({
 			node,
 			lastState: browser.localStorage.getData(),
 			isClientSupported: browser.isCompatible()
@@ -38,7 +40,9 @@ export default class App {
 
 	seek() {}
 
-	skip() {}
+	skipTo(scene) {
+		loom.loadScene(scene);
+	}
 
 	status() {}
 

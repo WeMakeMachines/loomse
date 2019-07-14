@@ -65,8 +65,9 @@ export class Component {
 
 	attach(component) {
 		this.children.push(component);
-
 		this.node.appendChild(component.node);
+
+		component.parent = this.node;
 	}
 
 	mount(options) {

@@ -116,7 +116,7 @@ Current API commands:
 - `play(time)` - play current media
 - `duration()` - duration of current media
 - `seek(time)` - seek to time (in seconds) in media
-- `skip(sceneName)` - skip to name of scene
+- `skipTo(sceneName)` - skip to scene
 - `reload()` - reload current scene
 - `version` - show current version
 

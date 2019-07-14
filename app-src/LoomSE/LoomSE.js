@@ -16,7 +16,7 @@ export class Loom {
 		this.lastState = options.lastState;
 		this.isClientSupported = options.isClientSupported;
 		this.story = new Story();
-		this.state = state;
+		this.scene = null;
 
 		this.story
 			.load()
@@ -31,15 +31,24 @@ export class Loom {
 	}
 
 	loadScene(string, registerInHistory) {
-		registerInHistory = registerInHistory || true;
-
-		const scene = this.story.scenes[string];
-
-		state.scene = new Scene(scene);
-
-		if (registerInHistory) {
-			state.addToHistory(string);
+		if (this.scene) {
+			this.unloadScene();
 		}
+
+		// TODO find better solution
+		setTimeout(() => {
+			registerInHistory = registerInHistory || true;
+
+			this.scene = new Scene(this.story.scenes[string]);
+
+			if (registerInHistory) {
+				state.addToHistory(string);
+			}
+		});
+	}
+
+	unloadScene() {
+		this.scene.unmountComponents();
 	}
 
 	updateStateTime() {

@@ -81,7 +81,7 @@ export class Video extends Component {
 			'ended'
 		];
 
-		events.forEach((event) => {
+		events.forEach(event => {
 			this.node.addEventListener(event, () => {
 				radio.broadcast(`video:${event}`, {
 					state: event,
