@@ -1,67 +1,24 @@
-import Component from '../Abstract';
-
-import { Queue } from '../../Models';
-
 import Event from '../Event';
-
-import { RUN, STOP } from '../../../constants/eventActions';
-
-import { secondsToMilliseconds } from '../../tools';
-
-import { radio } from '../../../services';
+import TimedComponent from '../TimedComponent';
 
 import styles from './styles';
 
-export class Events extends Component {
+export class Events extends TimedComponent {
 	constructor(events) {
-		super({
-			id: 'events',
-			styles: styles.events
-		});
-
-		this.queue = new Queue(events);
-		this.activeEvents = {};
-
-		this.listenToRadio();
+		super('events', styles.events, events);
 	}
 
-	isReadyToAction(time) {
-		if (!time || !this.queue.pending) {
-			return;
-		}
-
-		if (time >= this.queue.pending.time) {
-			this.actionEvent(this.queue.pending);
-		}
+	run(event) {
+		this.activeEvents[event.id] = new Event(
+			this.queue.getTimedObject(event.id),
+			this.node
+		);
+		this.activeEvents[event.id].run();
 	}
 
-	actionEvent(event) {
-		switch (event.action) {
-			case RUN:
-				this.activeEvents[event.id] = new Event(
-					this.queue.getTimedObject(event.id)
-				);
-				this.activeEvents[event.id].run();
-				break;
-			case STOP:
-				this.activeEvents[event.id].stop();
+	stop(event) {
+		this.activeEvents[event.id].stop();
 
-				delete this.activeEvents[event.id];
-				break;
-			default:
-				return;
-		}
-
-		this.queue.advance();
-	}
-
-	listenToRadio() {
-		radio.listen('video:timeupdate', payload => {
-			if (payload.time) {
-				const time = secondsToMilliseconds(payload.time);
-
-				this.isReadyToAction(time);
-			}
-		});
+		delete this.activeEvents[event.id];
 	}
 }
