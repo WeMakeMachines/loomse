@@ -1,25 +1,27 @@
-import LoomSE from './LoomSE';
+import Loom from './LoomSE';
 
-import { browser, initialiseRadio } from './services';
+import { browser, initialiseRadio, radio } from './services';
 
 import config from './constants/config';
 
-import { VIDEO_PAUSE, VIDEO_PLAY } from './constants/applicationActions';
+import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/applicationActions';
 
 import { initialiseView } from './LoomSE/view';
 
 import state from './LoomSE/state';
 
+let loom;
+
 export default class App {
 	constructor(node) {
 		this.node = node;
 		this.version = config.version;
-		this.v = this.version;
+		this.v = config.version;
 
 		initialiseView(node);
 		initialiseRadio(node);
 
-		new LoomSE({
+		loom = new Loom({
 			node,
 			lastState: browser.localStorage.getData(),
 			isClientSupported: browser.isCompatible()
@@ -29,20 +31,18 @@ export default class App {
 	reload() {}
 
 	pause() {
-		const event = new CustomEvent(VIDEO_PAUSE);
-
-		this.node.dispatchEvent(event);
+		radio.broadcast(DIRECTOR_PAUSE);
 	}
 
 	play() {
-		const event = new CustomEvent(VIDEO_PLAY);
-
-		this.node.dispatchEvent(event);
+		radio.broadcast(DIRECTOR_PLAY);
 	}
 
 	seek() {}
 
-	skip() {}
+	skipTo(scene) {
+		loom.loadScene(scene);
+	}
 
 	status() {}
 

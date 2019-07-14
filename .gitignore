@@ -1,0 +1,10 @@
+### Dev environment ###
+
+.idea/
+
+## Build ###
+app-build/
+
+### NPM ###
+
+node_modules/

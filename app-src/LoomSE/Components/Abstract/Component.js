@@ -65,8 +65,19 @@ export class Component {
 
 	attach(component) {
 		this.children.push(component);
-
 		this.node.appendChild(component.node);
+
+		component.mounted = true;
+		component.parent = this.node;
+	}
+
+	removeChildren() {
+		this.children.forEach(child => {
+			if (child.mounted) {
+				child.unmount();
+				child.mounted = false;
+			}
+		});
 	}
 
 	mount(options) {
@@ -116,6 +127,7 @@ export class Component {
 
 		if (parent) {
 			parent.appendChild(this.node);
+			this.mounted = true;
 			this.parent = parent;
 		} else {
 			throw new ComponentError('DOM not ready');
@@ -127,7 +139,9 @@ export class Component {
 			throw new ComponentError('Parent not found');
 		}
 
-		this.parent.removeChild(this.node);
+		if (this.mounted) {
+			this.parent.removeChild(this.node);
+		}
 	}
 
 	/**
@@ -139,7 +153,7 @@ export class Component {
 			!classList ||
 			!(typeof classList === 'string' || Array.isArray(classList))
 		) {
-			throw new Error('[Element] invalid parameters');
+			throw new ComponentError('[Element] invalid parameters');
 		}
 
 		classList = typeof classList === 'string' ? [classList] : classList;

@@ -1,1 +1,1 @@
-export { LoomSE as default } from './LoomSE';
+export { Loom as default } from './LoomSE';

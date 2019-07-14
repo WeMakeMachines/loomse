@@ -1,4 +1,4 @@
-# Loom Story Engine 0.5.0
+# Loom Story Engine 0.5.1
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
@@ -14,7 +14,7 @@ Developing within the Loom framework requires
 - npm
 - babel (for compiling ES6)
 - sass
-- rollup (for building)
+- webpack (for building)
 
 ### Production
 - Babel polyfill
@@ -59,17 +59,21 @@ You can define separate scripts for mobile and desktop.
 ## Running the application
 The function `loomSE.initialise()` must be called to start the Loom application. By default this sites inside `index.html`.
 
-## Writing your own extensions
-Loom provides a framework for you to write your own extensions.
+## Writing your own modules
+Loom provides a framework for you to write your own modules.
 
-Extensions can be written in `app-src/user/extensions.js`, inside the `userDefinedModules` namespace.
+Modules can be written in `app-src/user/userModules.js`.
 
-They must be written with 2 exposed return functions, `run(element, render)` and `stop()`. These are each called respectively during media playback at the in and out times set by the script.
+Each module must have a publicly accessible interface. These are each called respectively during media playback at the
+in and out times set by the script.
 
-run() is called with 2 arguments - `element` and `render`.
+#### `run(payload, element, render)`
 
-element - object reference to the the container in which the module will be posted
-render - callback function which posts your event into the DOM
+- `payload` contains event data set in the script
+- `element` object reference to the the container in which the module will be posted
+- `render` callback function which posts your event into the DOM
+
+#### `stop()`
 
 After `stop()` is run by the engine, the container for your module will also be removed from the DOM.
 
@@ -77,31 +81,28 @@ After `stop()` is run by the engine, the container for your module will also be 
 You can use the following structure to create your own modules:
 
 ```
-const userDefinedModules = {
+myModule() {
 
-	myModule() {
+    return {
 
-		return {
+        run(payload, element, render) {
 
-			run(element, render) {
+            console.log('event begins!');
 
-			    console.log('event begins!');
+            // do some stuff
 
-				// do some stuff
+            render();
+        },
 
-				render();
-			},
+        stop() {
 
-			stop() {
+            console.log('closing!');
 
-				console.log('closing!');
+        }
 
-			}
+    };
 
-		};
-	}
-
-};
+}
 ```
 
 ## API
@@ -109,15 +110,15 @@ You can communicate with the core application with the Loom API.
 
 Current API commands:
 
-- `loomSE.currentTime()` - returns current time (in seconds)
-- `loomSE.duration()` - returns duration of media (in seconds)
-- `loomSE.pause()` - pause current media
-- `loomSE.play(time)` - play current media
-- `loomSE.duration()` - duration of current media
-- `loomSE.seek(time)` - seek to time (in seconds) in media
-- `loomSE.skip(scneName)` - skip to name of scene
-- `loomSE.reload()` - reload current scene
-- `loomSE.version` - show current version
+- `currentTime()` - returns current time (in seconds)
+- `duration()` - returns duration of media (in seconds)
+- `pause()` - pause current media
+- `play(time)` - play current media
+- `duration()` - duration of current media
+- `seek(time)` - seek to time (in seconds) in media
+- `skipTo(sceneName)` - skip to scene
+- `reload()` - reload current scene
+- `version` - show current version
 
 ## Terminology
 

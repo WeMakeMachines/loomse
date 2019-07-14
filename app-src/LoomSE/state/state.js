@@ -4,7 +4,6 @@ const initialState = {
 		width: null,
 		height: null
 	},
-	scene: null,
 	events: [],
 	history: [],
 	language: 'en_GB'
@@ -14,7 +13,6 @@ class State {
 	constructor(options) {
 		this._time = options.time;
 		this._clientDimensions = options.clientDimensions;
-		this._scene = options.scene;
 		this._history = options.history;
 		this._events = options.events;
 		this._language = options.language;
@@ -55,14 +53,6 @@ class State {
 
 		this._clientDimensions.width = dimensions.width;
 		this._clientDimensions.height = dimensions.height;
-	}
-
-	get scene() {
-		return this._scene;
-	}
-
-	set scene(scene) {
-		this._scene = scene;
 	}
 
 	addToHistory(object) {

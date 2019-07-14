@@ -1,3 +1,5 @@
+class ElementError extends Error {}
+
 /**
  * Creates a new DOM element or wraps an existing DOM element
  */
@@ -28,7 +30,7 @@ class Element {
 		options = options || {};
 
 		if (typeof options !== 'object') {
-			throw new Error('[Element] instantiation error');
+			throw new ElementError('[Element] instantiation error');
 		}
 
 		options.type = options.type || 'div';
@@ -49,7 +51,7 @@ class Element {
 				this.node.appendChild(child);
 			}
 		} catch (error) {
-			throw new Error(`[Element] unable to attach node: ${error}`);
+			throw new ElementError(`[Element] unable to attach node: ${error}`);
 		}
 
 		return this;
@@ -66,7 +68,7 @@ class Element {
 				this.parent.appendChild(this.node);
 			}
 		} catch (error) {
-			throw new Error(`[Element] unable to attach node: ${error}`);
+			throw new ElementError(`[Element] unable to attach node: ${error}`);
 		}
 
 		return this;
@@ -84,7 +86,7 @@ class Element {
 				this.node.removeChild(child);
 			}
 		} catch (error) {
-			throw new Error(`[Element] unable to remove node: ${error}`);
+			throw new ElementError(`[Element] unable to remove node: ${error}`);
 		}
 
 		return this;
@@ -97,7 +99,7 @@ class Element {
 		try {
 			this.parent.detach(this.node);
 		} catch (error) {
-			throw new Error(`[Element] unable to remove node : ${error}`);
+			throw new ElementError(`[Element] unable to remove node : ${error}`);
 		}
 
 		return this;
@@ -113,7 +115,7 @@ class Element {
 			!classList ||
 			!(typeof classList === 'string' || Array.isArray(classList))
 		) {
-			throw new Error('[Element] invalid parameters');
+			throw new ElementError('[Element] invalid parameters');
 		}
 
 		classList = typeof classList === 'string' ? [classList] : classList;
@@ -131,7 +133,7 @@ class Element {
 	 */
 	setAttributes(attributes) {
 		if (typeof attributes !== 'object') {
-			throw new Error('[Element] invalid parameters');
+			throw new ElementError('[Element] invalid parameters');
 		}
 
 		for (let key in attributes) {
@@ -150,7 +152,7 @@ class Element {
 	 */
 	setStyle(properties) {
 		if (typeof properties !== 'object') {
-			throw new Error('[Element] invalid parameters');
+			throw new ElementError('[Element] invalid parameters');
 		}
 
 		for (let property in properties) {
@@ -184,7 +186,7 @@ class Element {
 	 */
 	setText(text) {
 		if (!text || typeof text !== 'string') {
-			throw new Error('[Element] invalid text');
+			throw new ElementError('[Element] invalid text');
 		}
 
 		let textNode = document.createTextNode(text);
@@ -201,7 +203,7 @@ class Element {
 	 */
 	setHtml(htmlString) {
 		if (!htmlString || typeof htmlString !== 'string') {
-			throw new Error('[Element] invalid html');
+			throw new ElementError('[Element] invalid html');
 		}
 
 		this.node.innerHTML = htmlString;
@@ -222,7 +224,7 @@ class Element {
 		this.calculatePosition(containerDimensions, x, y);
 
 		if (!this.coordinates) {
-			throw new Error('[Element] invalid dimensions');
+			throw new ElementError('[Element] invalid dimensions');
 		}
 
 		this.setStyle({
@@ -269,7 +271,7 @@ class Element {
 	 */
 	calculatePosition(parentDimensions, x, y) {
 		if (typeof x !== 'number' || typeof y !== 'number' || !this.dimensions) {
-			throw new Error('[Element] invalid dimensions');
+			throw new ElementError('[Element] invalid dimensions');
 		}
 
 		let minRange = 0,

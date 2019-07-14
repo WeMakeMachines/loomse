@@ -24,40 +24,40 @@
 			},
 			"events": [
 				{
-					"function": "test",
+					"moduleName": "overlayText",
 					"disabled": false,
 					"in": 0,
 					"out": 5000,
 					"x": 0.1,
 					"y": 0.1,
-					"class": "mediaTime"
+					"payload": {}
 				},
 				{
-					"function": "test",
+					"moduleName": "overlayText",
 					"disabled": false,
 					"in": 5000,
 					"out": 10000,
 					"x": 0.2,
 					"y": 0.2,
-					"class": "mediaTime"
+					"payload": {}
 				},
 				{
-					"function": "test",
+					"moduleName": "overlayText",
 					"disabled": false,
 					"in": 10000,
 					"out": 15000,
 					"x": 0.3,
 					"y": 0.3,
-					"class": "mediaTime"
+					"payload": {}
 				},
 				{
-					"function": "test",
+					"moduleName": "overlayText",
 					"disabled": false,
 					"in": 15000,
 					"out": 20000,
 					"x": 0.8,
 					"y": 0.8,
-					"class": "mediaTime"
+					"payload": {}
 				}
 			]
 		},

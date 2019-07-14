@@ -1,14 +1,22 @@
-import { Story, Scene } from './model';
+import { Story, Scene } from './Models';
+
+import { radio } from '../services';
+
+import { VIDEO_TIMEUPDATE } from '../constants/applicationActions';
 
 import state from './state';
 
-export class LoomSE {
+import { secondsToMilliseconds } from './tools/time';
+
+class LoomError extends Error {}
+
+export class Loom {
 	constructor(options) {
 		this.node = options.node;
 		this.lastState = options.lastState;
 		this.isClientSupported = options.isClientSupported;
 		this.story = new Story();
-		this.state = state;
+		this.scene = null;
 
 		this.story
 			.load()
@@ -16,19 +24,38 @@ export class LoomSE {
 				this.loadScene(this.story.firstScene);
 			})
 			.catch(error => {
-				throw new Error(error);
+				throw new LoomError(error);
 			});
+
+		this.updateStateTime();
 	}
 
 	loadScene(string, registerInHistory) {
-		registerInHistory = registerInHistory || true;
-
-		const scene = this.story.scenes[string];
-
-		state.scene = new Scene(scene);
-
-		if (registerInHistory) {
-			state.addToHistory(string);
+		if (this.scene) {
+			this.unloadScene();
 		}
+
+		// TODO find better solution
+		setTimeout(() => {
+			registerInHistory = registerInHistory || true;
+
+			this.scene = new Scene(this.story.scenes[string]);
+
+			if (registerInHistory) {
+				state.addToHistory(string);
+			}
+		});
+	}
+
+	unloadScene() {
+		this.scene.unmountComponents();
+	}
+
+	updateStateTime() {
+		radio.listen(VIDEO_TIMEUPDATE, payload => {
+			if (payload.time) {
+				state.time = secondsToMilliseconds(payload.time);
+			}
+		});
 	}
 }
