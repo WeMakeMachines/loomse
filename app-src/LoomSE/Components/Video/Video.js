@@ -1,6 +1,12 @@
 import Component from '../Abstract';
 
 import { radio } from '../../../services';
+
+import {
+	DIRECTOR_PLAY,
+	DIRECTOR_PAUSE
+} from '../../../constants/applicationActions';
+
 import state from '../../state';
 
 import styles from './styles';
@@ -46,6 +52,7 @@ export class Video extends Component {
 
 		this.mountSources();
 		this.registerMediaEvents();
+		this.listenToRadio();
 
 		if (options.autoplay) {
 			this.play();
@@ -74,16 +81,19 @@ export class Video extends Component {
 			'ended'
 		];
 
-		for (let i = 0; i < events.length; i += 1) {
-			let event = events[i];
-
+		events.forEach((event) => {
 			this.node.addEventListener(event, () => {
 				radio.broadcast(`video:${event}`, {
 					state: event,
 					time: this.node.currentTime
 				});
 			});
-		}
+		});
+	}
+
+	listenToRadio() {
+		radio.listen(DIRECTOR_PAUSE, () => this.pause());
+		radio.listen(DIRECTOR_PLAY, () => this.play());
 	}
 
 	play() {

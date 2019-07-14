@@ -1,10 +1,10 @@
 import Loom from './LoomSE';
 
-import { browser, initialiseRadio } from './services';
+import { browser, initialiseRadio, radio } from './services';
 
 import config from './constants/config';
 
-import { VIDEO_PAUSE, VIDEO_PLAY } from './constants/applicationActions';
+import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/applicationActions';
 
 import { initialiseView } from './LoomSE/view';
 
@@ -29,15 +29,11 @@ export default class App {
 	reload() {}
 
 	pause() {
-		const event = new CustomEvent(VIDEO_PAUSE);
-
-		this.node.dispatchEvent(event);
+		radio.broadcast(DIRECTOR_PAUSE);
 	}
 
 	play() {
-		const event = new CustomEvent(VIDEO_PLAY);
-
-		this.node.dispatchEvent(event);
+		radio.broadcast(DIRECTOR_PLAY);
 	}
 
 	seek() {}
