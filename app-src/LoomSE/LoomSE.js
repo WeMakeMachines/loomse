@@ -1,4 +1,4 @@
-import { Story, Scene } from './model';
+import { Story, Scene } from './Models';
 
 import state from './state';
 

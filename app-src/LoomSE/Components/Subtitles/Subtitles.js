@@ -1,6 +1,6 @@
 import Component from '../Abstract';
 
-import { Queue } from '../../model/Queue';
+import { Queue } from '../../Models';
 
 import { Block } from '../';
 
