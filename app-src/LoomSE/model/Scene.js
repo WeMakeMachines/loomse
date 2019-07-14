@@ -1,4 +1,5 @@
 import view from '../view';
+import storyBehaviour from '../../constants/storyBehaviour';
 
 import { Events, Subtitles, Video } from '../Components';
 
@@ -7,14 +8,16 @@ export class Scene {
 		this.longName = options.longName;
 		this.video = new Video(options.video);
 		this.events = new Events(options.events);
-		this.subtitles = new Subtitles(options.video.subtitles);
 
-		this.mountComponents();
+		this.mountComponents(this.video, this.events);
+
+		if(storyBehaviour.subtitles.active) {
+			this.subtitles = new Subtitles(options.video.subtitles);
+			this.mountComponents(this.subtitles);
+		}
 	}
 
-	mountComponents() {
-		view.containers.stage.attach(this.video);
-		view.containers.stage.attach(this.events);
-		view.containers.stage.attach(this.subtitles);
+	mountComponents(...components) {
+		components.forEach((component) => view.containers.stage.attach(component));
 	}
 }

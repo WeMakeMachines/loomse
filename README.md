@@ -1,4 +1,4 @@
-# Loom Story Engine 0.5.0
+# Loom Story Engine 0.5.1
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
@@ -14,7 +14,7 @@ Developing within the Loom framework requires
 - npm
 - babel (for compiling ES6)
 - sass
-- rollup (for building)
+- webpack (for building)
 
 ### Production
 - Babel polyfill
@@ -64,10 +64,11 @@ Loom provides a framework for you to write your own extensions.
 
 Extensions can be written in `app-src/user/extensions.js`, inside the `userDefinedModules` namespace.
 
-They must be written with 2 exposed return functions, `run(element, render)` and `stop()`. These are each called respectively during media playback at the in and out times set by the script.
+They must be written with 2 exposed return functions, `run(payload, element, render)` and `stop()`. These are each called respectively during media playback at the in and out times set by the script.
 
-run() is called with 2 arguments - `element` and `render`.
+run() is called with 3 arguments -  `payload`, `element` and `render`.
 
+payload - contains event data set in the script
 element - object reference to the the container in which the module will be posted
 render - callback function which posts your event into the DOM
 
@@ -83,7 +84,7 @@ const userDefinedModules = {
 
 		return {
 
-			run(element, render) {
+			run(payload, element, render) {
 
 			    console.log('event begins!');
 
