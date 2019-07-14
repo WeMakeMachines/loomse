@@ -1,6 +1,10 @@
 import { Story, Scene } from './Models';
 
+import { radio } from '../services';
+
 import state from './state';
+
+import { secondsToMilliseconds } from './tools/time';
 
 class LoomError extends Error {}
 
@@ -20,6 +24,8 @@ export class Loom {
 			.catch(error => {
 				throw new LoomError(error);
 			});
+
+		this.updateStateTime();
 	}
 
 	loadScene(string, registerInHistory) {
@@ -32,5 +38,13 @@ export class Loom {
 		if (registerInHistory) {
 			state.addToHistory(string);
 		}
+	}
+
+	updateStateTime() {
+		radio.listen('video:timeupdate', payload => {
+			if (payload.time) {
+				state.time = secondsToMilliseconds(payload.time);
+			}
+		});
 	}
 }
