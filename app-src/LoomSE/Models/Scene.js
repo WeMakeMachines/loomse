@@ -1,5 +1,6 @@
 import view from '../view';
 import storyBehaviour from '../../constants/storyBehaviour';
+import * as userDefinedModules from '../user/userModules';
 
 import { Events, Subtitles, Video } from '../Components';
 import { parseFile } from '../tools/fileParsers';
@@ -9,7 +10,7 @@ export class Scene {
 	constructor(options) {
 		this.longName = options.longName;
 		this.video = new Video(options.video);
-		this.events = new Events(options.events);
+		this.events = new Events(this.parseEvents(options.events));
 
 		this.mountComponents(this.video, this.events);
 
@@ -24,6 +25,18 @@ export class Scene {
 					console.warn(error);
 				});
 		}
+	}
+
+	parseEvents(events) {
+		return events.map(event => {
+			const module = userDefinedModules[event['moduleName']];
+
+			if (module) {
+				event.module = module;
+			}
+
+			return event;
+		});
 	}
 
 	mountComponents(...components) {
