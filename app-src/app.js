@@ -28,7 +28,9 @@ export default class App {
 		});
 	}
 
-	reload() {}
+	reload() {
+		loom.loadScene(state.scene);
+	}
 
 	pause() {
 		radio.broadcast(DIRECTOR_PAUSE);
@@ -38,17 +40,11 @@ export default class App {
 		radio.broadcast(DIRECTOR_PLAY);
 	}
 
-	seek() {}
-
 	skipTo(scene) {
 		loom.loadScene(scene);
 	}
 
-	status() {}
-
 	currentTime() {
 		return state.time;
 	}
-
-	duration() {}
 }

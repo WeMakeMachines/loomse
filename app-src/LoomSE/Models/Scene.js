@@ -1,6 +1,6 @@
 import view from '../view';
 import storyBehaviour from '../../constants/storyBehaviour';
-import * as userDefinedModules from '../user/userModules';
+import * as userDefinedModules from '../../userDefined/userModules';
 
 import { Events, Subtitles, Video } from '../Components';
 import { parseFile } from '../tools/fileParsers';
@@ -44,6 +44,10 @@ export class Scene {
 	}
 
 	unmountComponents() {
+		// TODO handle this better, remove radio events for subtitles
+		this.video.stopListeningToRadio();
+		this.events.stopListeningToRadio();
+
 		view.containers.stage.removeChildren();
 	}
 }

@@ -41,6 +41,8 @@ export class Loom {
 
 			this.scene = new Scene(this.story.scenes[string]);
 
+			state.scene = string;
+
 			if (registerInHistory) {
 				state.addToHistory(string);
 			}
@@ -52,9 +54,9 @@ export class Loom {
 	}
 
 	updateStateTime() {
-		radio.listen(VIDEO_TIMEUPDATE, payload => {
-			if (payload.time) {
-				state.time = secondsToMilliseconds(payload.time);
+		radio.listen(VIDEO_TIMEUPDATE, event => {
+			if (event.detail.time) {
+				state.time = secondsToMilliseconds(event.detail.time);
 			}
 		});
 	}

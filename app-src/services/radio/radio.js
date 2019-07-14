@@ -12,9 +12,11 @@ class Radio {
 	}
 
 	listen(channel, callback) {
-		return this.antenna.addEventListener(channel, data => {
-			callback(data.detail);
-		});
+		this.antenna.addEventListener(channel, callback);
+	}
+
+	stopListening(channel, callback) {
+		this.antenna.removeEventListener(channel, callback);
 	}
 }
 
