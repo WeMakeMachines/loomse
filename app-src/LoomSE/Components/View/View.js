@@ -65,7 +65,7 @@ export class View extends Component {
 	}
 
 	resizeComponents() {
-		state.clientDimensions = browser.getClientDimensions();
+		state.clientDimensions = browser.getWindowDimensions();
 
 		const components = [
 			this,
