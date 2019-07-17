@@ -48,7 +48,6 @@ const config = {
 			filename: 'index.html'
 		}),
 		new CopyPlugin([
-			{ from: `${source}/styles`, to: 'styles' },
 			{ from: `${source}/assets`, to: 'assets' }
 		])
 	]

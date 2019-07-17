@@ -1,4 +1,4 @@
-# Loom Story Engine 0.5.2
+# Loom Story Engine 0.5.3
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
@@ -50,12 +50,15 @@ All the power for developing your non-linear narrative rests inside a JSON based
 You can define separate scripts for mobile and desktop.
 
 ## Running the application
-The function `loomSE.initialise()` must be called to start the Loom application. By default this sites inside `index.html`.
+
+Import the script into your html file, and initialise the `LoomSE` class with the `new` keyword, providing an object
+reference as the argument. The LoomSE application will be contained at the object reference. For example:
+`var loomSE = new LoomSE(document.querySelector('#loomSE'));`.
 
 ## Writing your own modules
 Loom provides a framework for you to write your own modules.
 
-Modules can be written in `app-src/user/userModules.js`.
+Modules can be written in `app-src/userDefined/userModules.js`.
 
 Each module must have a publicly accessible interface. These are each called respectively during media playback at the
 in and out times set by the script.
@@ -103,12 +106,12 @@ You can communicate with the core application with the Loom API.
 
 Current API commands:
 
-- `currentTime()` - returns current time (in seconds)
-- `pause()` - pause current media
-- `play(time)` - play current media
-- `skipTo(sceneName)` - skip to scene
-- `reload()` - reload current scene
-- `version` - show current version
+- `currentTime()` _{function}_ - returns current time (in seconds)
+- `pause()` _{function}_ - pause current media
+- `play(time)` _{function}_- play current media
+- `skipTo(sceneName)` _{function}_ - skip to scene
+- `reload()` _{function}_ - reload current scene
+- `version` / `v` _{string}_ - show current version
 
 ## Terminology
 
