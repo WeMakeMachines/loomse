@@ -8,10 +8,10 @@ export const browser = {
 	},
 
 	/**
-	 * Gets the current client dimensions
-	 * @returns {object}
+	 * Gets the current window dimensions
+	 * @returns {{width: number, height: number}}
 	 */
-	getClientDimensions() {
+	getWindowDimensions() {
 		return {
 			width: window.innerWidth,
 			height: window.innerHeight
@@ -22,7 +22,7 @@ export const browser = {
 	 * @returns {boolean}
 	 */
 	hasSmallScreen() {
-		let dimensions = this.getClientDimensions();
+		let dimensions = this.getWindowDimensions();
 
 		return (
 			dimensions.width < config.mobile.minimumResolution ||
