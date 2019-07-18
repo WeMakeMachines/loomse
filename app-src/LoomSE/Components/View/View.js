@@ -37,7 +37,7 @@ export class View extends Component {
 	}
 
 	mountContainers() {
-		for (let key in this.containers) {
+		for (const key in this.containers) {
 			if (!this.containers.hasOwnProperty(key)) {
 				continue;
 			}
