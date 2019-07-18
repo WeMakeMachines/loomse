@@ -1,67 +1,68 @@
 {
-	"shortName": "Loom Sample Script",
-	"longName": "",
-	"author": "Franco Speziali",
-	"description": "A sample script to demonstrate the capabilities of Loom",
-	"firstScene": "intro",
-	"language": "en_GB",
-	"scenes": {
-		"intro": {
-			"longName": "",
-			"video": {
-				"loop": {
-					"in": null,
-					"out": null
-				},
-				"autoplay": true,
-				"muted": true,
-				"ogg": "",
-				"mp4": "assets/videos/SampleVideo_1280x720_10mb.mp4",
-				"duration": null,
-				"subtitles": {
-					"en_GB": "assets/subtitles/en_GB.srt"
-				}
-			},
-			"events": [
-				{
-					"moduleName": "overlayText",
-					"disabled": false,
-					"in": 0,
-					"out": 5000,
-					"x": 0.1,
-					"y": 0.1,
-					"payload": {}
-				},
-				{
-					"moduleName": "overlayText",
-					"disabled": false,
-					"in": 5000,
-					"out": 10000,
-					"x": 0.2,
-					"y": 0.2,
-					"payload": {}
-				},
-				{
-					"moduleName": "overlayText",
-					"disabled": false,
-					"in": 10000,
-					"out": 15000,
-					"x": 0.3,
-					"y": 0.3,
-					"payload": {}
-				},
-				{
-					"moduleName": "overlayText",
-					"disabled": false,
-					"in": 15000,
-					"out": 20000,
-					"x": 0.8,
-					"y": 0.8,
-					"payload": {}
-				}
-			]
+  "shortName": "Loom Sample Script",
+  "longName": "",
+  "author": "Franco Speziali",
+  "description": "A sample script to demonstrate the capabilities of Loom",
+  "firstScene": "intro",
+  "language": "en_GB",
+  "scenes": {
+	"intro": {
+	  "longName": "",
+	  "video": {
+		"loop": {
+		  "in": null,
+		  "out": null
 		},
-		"end": {
+		"autoplay": true,
+		"muted": true,
+		"sources": {
+		  "mp4": "assets/videos/SampleVideo_1280x720_10mb.mp4",
+		  "ogg": "",
+		  "webm": ""
+		},
+		"duration": null,
+		"subtitles": {
+		  "en_GB": "assets/subtitles/en_GB.srt"
 		}
+	  },
+	  "events": [
+		{
+		  "moduleName": "overlayText",
+		  "disabled": false,
+		  "in": 0,
+		  "out": 5000,
+		  "x": 0.1,
+		  "y": 0.1,
+		  "payload": {}
+		},
+		{
+		  "moduleName": "overlayText",
+		  "disabled": false,
+		  "in": 5000,
+		  "out": 10000,
+		  "x": 0.2,
+		  "y": 0.2,
+		  "payload": {}
+		},
+		{
+		  "moduleName": "overlayText",
+		  "disabled": false,
+		  "in": 10000,
+		  "out": 15000,
+		  "x": 0.3,
+		  "y": 0.3,
+		  "payload": {}
+		},
+		{
+		  "moduleName": "overlayText",
+		  "disabled": false,
+		  "in": 15000,
+		  "out": 20000,
+		  "x": 0.8,
+		  "y": 0.8,
+		  "payload": {}
+		}
+	  ]
 	}
+  }
 }

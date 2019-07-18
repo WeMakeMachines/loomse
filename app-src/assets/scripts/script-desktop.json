@@ -15,8 +15,11 @@
 				},
 				"autoplay": true,
 				"muted": true,
-				"ogg": "",
-				"mp4": "assets/videos/SampleVideo_1280x720_10mb.mp4",
+			  	"sources": {
+				  "mp4": "assets/videos/SampleVideo_1280x720_10mb.mp4",
+				  "ogg": "",
+				  "webm": ""
+				},
 				"duration": null,
 				"subtitles": {
 					"en_GB": "assets/subtitles/en_GB.srt"
@@ -60,8 +63,6 @@
 					"payload": {}
 				}
 			]
-		},
-		"end": {
 		}
 	}
 }
