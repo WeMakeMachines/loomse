@@ -1,6 +1,6 @@
 {
 	"appName": "loomSE",
-	"version": "0.5.3",
+	"version": "0.5.4",
 	"scripts": {
 		"mobile": "assets/scripts/script-mobile.json",
 		"desktop": "assets/scripts/script-desktop.json"

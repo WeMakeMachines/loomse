@@ -1,4 +1,4 @@
-# Loom Story Engine 0.5.3
+# Loom Story Engine 0.5.4
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
