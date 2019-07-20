@@ -1,5 +1,6 @@
 const config = {};
 const defaults = {
+	modulesGlobalReference: 'loomSE_modules',
 	scripts: {
 		mobile: '',
 		desktop: ''

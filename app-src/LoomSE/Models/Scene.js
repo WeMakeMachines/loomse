@@ -1,8 +1,8 @@
 import view from '../view';
 import config from '../../config';
-import * as userDefinedModules from '../../userDefined/userModules';
 
 import { Events, Subtitles, Video } from '../Components';
+import modules from '../modules';
 import { parseFile } from '../tools/fileParsers';
 import state from '../state';
 
@@ -29,7 +29,7 @@ export class Scene {
 
 	parseEvents(events) {
 		return events.map(event => {
-			const module = userDefinedModules[event['moduleName']];
+			const module = modules.getModule(event['moduleName']);
 
 			if (module) {
 				event.module = module;

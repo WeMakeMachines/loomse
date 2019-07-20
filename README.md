@@ -58,7 +58,7 @@ reference as the argument. The LoomSE application will be contained at the objec
 ## Writing your own modules
 Loom provides a framework for you to write your own modules.
 
-Modules can be written in `app-src/userDefined/userModules.js`.
+Modules are namespaced to the global object `loomSE_modules`.
 
 Each module must have a publicly accessible interface. These are each called respectively during media playback at the
 in and out times set by the script.
@@ -77,28 +77,32 @@ After `stop()` is run by the engine, the container for your module will also be 
 You can use the following structure to create your own modules:
 
 ```
-myModule() {
+loomSE_modules = {
 
-    return {
+    myModule: function() {
 
-        run(payload, element, render) {
+        return {
+    
+            run(payload, element, render) {
+    
+                console.log('event begins!');
+    
+                // do some stuff
+    
+                render();
+            },
+    
+            stop() {
+    
+                console.log('closing!');
+    
+            }
+    
+        };
+        
+    }
 
-            console.log('event begins!');
-
-            // do some stuff
-
-            render();
-        },
-
-        stop() {
-
-            console.log('closing!');
-
-        }
-
-    };
-
-}
+};
 ```
 
 ## API
