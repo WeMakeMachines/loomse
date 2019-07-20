@@ -1,6 +1,3 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-
 const source = './app-src';
 const destination = './app-build';
 const path = require('path');
@@ -41,16 +38,7 @@ const config = {
 				}
 			}
 		]
-	},
-	plugins: [
-		new HtmlWebpackPlugin({
-			template: `${source}/index.html`,
-			filename: 'index.html'
-		}),
-		new CopyPlugin([
-			{ from: `${source}/assets`, to: 'assets' }
-		])
-	]
+	}
 };
 
 module.exports = config;
