@@ -1,5 +1,5 @@
 import view from '../view';
-import config from '../../constants/config';
+import config from '../../config';
 import * as userDefinedModules from '../../userDefined/userModules';
 
 import { Events, Subtitles, Video } from '../Components';

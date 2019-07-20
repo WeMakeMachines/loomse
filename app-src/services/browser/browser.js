@@ -1,4 +1,4 @@
-import config from '../../constants/config';
+import config from '../../config';
 import FullScreen from './FullScreen';
 import LocalStorage from './LocalStorage';
 
