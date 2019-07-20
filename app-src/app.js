@@ -2,7 +2,7 @@ import Loom from './LoomSE';
 
 import { browser, initialiseRadio, radio } from './services';
 
-import config from './constants/config';
+import packageJson from '../package';
 
 import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/applicationActions';
 
@@ -15,8 +15,8 @@ let loom;
 export default class App {
 	constructor(node) {
 		this.node = node;
-		this.version = config.version;
-		this.v = config.version;
+		this.version = packageJson.version;
+		this.v = packageJson.version;
 
 		initialiseView(node);
 		initialiseRadio(node);

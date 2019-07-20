@@ -1,5 +1,5 @@
 import view from '../view';
-import storyBehaviour from '../../constants/storyBehaviour';
+import config from '../../constants/config';
 import * as userDefinedModules from '../../userDefined/userModules';
 
 import { Events, Subtitles, Video } from '../Components';
@@ -14,7 +14,7 @@ export class Scene {
 
 		this.mountComponents(this.video, this.events);
 
-		if (storyBehaviour.subtitles.active) {
+		if (config.subtitles.active) {
 			// TODO Create abstraction here
 			parseFile(options.video.subtitles[state.language])
 				.then(subtitles => {
