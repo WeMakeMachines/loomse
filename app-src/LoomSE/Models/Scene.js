@@ -1,9 +1,9 @@
 import view from '../view';
-import storyBehaviour from '../../constants/storyBehaviour';
-import * as userDefinedModules from '../../userDefined/userModules';
+import config from '../config';
 
 import { Events, Subtitles, Video } from '../Components';
 import { parseFile } from '../tools/fileParsers';
+import { browser } from '../../services';
 import state from '../state';
 
 export class Scene {
@@ -14,7 +14,7 @@ export class Scene {
 
 		this.mountComponents(this.video, this.events);
 
-		if (storyBehaviour.subtitles.active) {
+		if (config.subtitles.active) {
 			// TODO Create abstraction here
 			parseFile(options.video.subtitles[state.language])
 				.then(subtitles => {
@@ -29,7 +29,7 @@ export class Scene {
 
 	parseEvents(events) {
 		return events.map(event => {
-			const module = userDefinedModules[event['moduleName']];
+			const module = browser.getExternalModule(event['moduleName']);
 
 			if (module) {
 				event.module = module;

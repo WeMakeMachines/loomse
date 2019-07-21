@@ -171,10 +171,12 @@ export class Component {
 			throw new ComponentError('Invalid attributes');
 		}
 
-		for (let key in attributes) {
-			if (attributes.hasOwnProperty(key)) {
-				this.node.setAttribute(key, attributes[key]);
+		for (const key in attributes) {
+			if (!attributes.hasOwnProperty(key)) {
+				continue;
 			}
+
+			this.node.setAttribute(key, attributes[key]);
 		}
 	}
 

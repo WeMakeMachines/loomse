@@ -2,6 +2,8 @@ import { Story, Scene } from './Models';
 
 import { radio } from '../services';
 
+import { setupConfig } from './config';
+
 import { VIDEO_TIMEUPDATE } from '../constants/applicationActions';
 
 import state from './state';
@@ -12,6 +14,8 @@ class LoomError extends Error {}
 
 export class Loom {
 	constructor(options) {
+		setupConfig(options.config);
+
 		this.node = options.node;
 		this.lastState = options.lastState;
 		this.isClientSupported = options.isClientSupported;

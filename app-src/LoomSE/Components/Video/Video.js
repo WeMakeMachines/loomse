@@ -1,5 +1,7 @@
 import Component from '../Abstract';
 
+import Source from './Source';
+
 import { radio } from '../../../services';
 
 import {
@@ -11,29 +13,9 @@ import state from '../../state';
 
 import styles from './styles';
 
+class VideoError extends Error {}
+
 export class Video extends Component {
-	static setSources(options) {
-		const sources = {};
-
-		if (options.mp4 && typeof options.mp4 === 'string') {
-			sources.mp4 = new Component({ type: 'source' });
-			sources.mp4.setAttributes({
-				src: options.mp4,
-				type: 'video/mp4'
-			});
-		}
-
-		if (options.ogg && typeof options.ogg === 'string') {
-			sources.ogg = new Component({ type: 'source' });
-			sources.ogg.setAttributes({
-				src: options.ogg,
-				type: 'video/ogg'
-			});
-		}
-
-		return sources;
-	}
-
 	constructor(options) {
 		super({
 			type: 'video',
@@ -44,11 +26,6 @@ export class Video extends Component {
 		this.node.controls = options.controls;
 		this.node.loop = options.loop;
 		this.node.muted = options.muted || false;
-
-		this.sources = this.constructor.setSources({
-			mp4: options.mp4,
-			ogg: options.ogg
-		});
 
 		this.play = () => {
 			this.node
@@ -66,6 +43,7 @@ export class Video extends Component {
 			this.node.pause();
 		};
 
+		this.sources = this.setSources(options.sources);
 		this.mountSources();
 		this.registerMediaEvents();
 		this.listenToRadio();
@@ -75,13 +53,31 @@ export class Video extends Component {
 		}
 	}
 
+	setSources(sources) {
+		if (!sources) {
+			throw new VideoError('No video sources found');
+		}
+
+		const generatedSources = {};
+
+		for (const key in sources) {
+			if (!sources.hasOwnProperty(key)) {
+				continue;
+			}
+
+			generatedSources[key] = new Source(key, sources[key]);
+		}
+
+		return generatedSources;
+	}
+
 	mountSources() {
-		for (let key in this.sources) {
+		for (const key in this.sources) {
 			if (!this.sources.hasOwnProperty(key)) {
 				continue;
 			}
 
-			const source = this.sources[key];
+			const source = this.sources[key].element;
 
 			source.mount({ node: this.node });
 		}
@@ -124,6 +120,7 @@ export class Video extends Component {
 		}
 
 		this.pause();
+
 		return false;
 	}
 }

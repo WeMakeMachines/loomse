@@ -1,4 +1,4 @@
-# Loom Story Engine 0.5.2
+# Loom Story Engine 0.5.4
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
@@ -9,8 +9,10 @@ Loom is an open-source application built in JavaScript, HTML5 and CSS3. With Loo
 Developing within the Loom framework requires
 - npm
 - babel (for compiling ES6)
-- sass
 - webpack (for building)
+
+Application dependencies
+- djv (for validating the script file)
 
 ## Installation
 Download and run:
@@ -29,33 +31,69 @@ npm run dev
 To build in production mode, run:
 
 ```
-npm run prod
+npm run build
 
 ```
 
 Built files are stored in the `app-build` directory.
 
-## Configuration & Behaviours
-Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with extensions.
+## Configuring and running
 
-#### Application Behaviour
-These files are in JSON format.
+### LoomSE object syntax
 
-The configuration file `app-src/configs/config.json` controls some aspects of the application.
-The behaviours file `app-src/configs/storyBehaviour.json` controls some of the finer aspects of the script.
+_LoomSE(HTMLElement, object)_
 
-#### The Script
-All the power for developing your non-linear narrative rests inside a JSON based script file. The default location for this is `assets/scripts/`.
+- **HTMLElement** refers to an object in the DOM which will house the Loom Story
+- **object** refers the the initialisation and configuration parameters
+
+### Configuring
+
+The config object is shaped as follows
+
+- `script` (required) - Defines where the script file is located
+- `externalModules` - Name of global object which contains all the modules
+- `mobileScript` - Defines the mobile script
+- `mobile` - Contains mobile specific properties
+- `subtitles` - An object containing overrides for the subtitles mechanism
+
+`mobile`
+- `minimumResolution` - Below this resolution the mobile script will be used
+
+`subtitles`
+- `active` - Indicates whether subtitles should be shown at start
+- `language` - Default selected language for the subtitles
+- `x` - x co-ordinate for the subtitles
+- `y` - y co-ordinate for the subtitles
+
+### Example usage
+
+##### HTML
+```
+<div id="loomSE"></div>
+```
+
+##### JavaScript
+```
+var hmtlElelement = document.querySelector('#loomSE');
+var config = {
+    script: 'script.json'
+    mobileScript 'script-mobile.json'
+};
+var loomSE = new LoomSE(hmtlElement, config);
+
+```
+
+## The Story Script
+All the power for developing your non-linear narrative rests inside a JSON based script file.
 
 You can define separate scripts for mobile and desktop.
 
-## Running the application
-The function `loomSE.initialise()` must be called to start the Loom application. By default this sites inside `index.html`.
+Please refer to the [script schema](app-src/LoomSE/schemas/script.json).
 
-## Writing your own modules
+## External modules
 Loom provides a framework for you to write your own modules.
 
-Modules can be written in `app-src/user/userModules.js`.
+Modules are namespaced to the global object specified in the config property `externalModules`.
 
 Each module must have a publicly accessible interface. These are each called respectively during media playback at the
 in and out times set by the script.
@@ -74,28 +112,32 @@ After `stop()` is run by the engine, the container for your module will also be 
 You can use the following structure to create your own modules:
 
 ```
-myModule() {
+loomSE_modules = {
 
-    return {
+    myModule: function() {
 
-        run(payload, element, render) {
+        return {
+    
+            run(payload, element, render) {
+    
+                console.log('event begins!');
+    
+                // do some stuff
+    
+                render();
+            },
+    
+            stop() {
+    
+                console.log('closing!');
+    
+            }
+    
+        };
+        
+    }
 
-            console.log('event begins!');
-
-            // do some stuff
-
-            render();
-        },
-
-        stop() {
-
-            console.log('closing!');
-
-        }
-
-    };
-
-}
+};
 ```
 
 ## API
@@ -103,12 +145,12 @@ You can communicate with the core application with the Loom API.
 
 Current API commands:
 
-- `currentTime()` - returns current time (in seconds)
-- `pause()` - pause current media
-- `play(time)` - play current media
-- `skipTo(sceneName)` - skip to scene
-- `reload()` - reload current scene
-- `version` - show current version
+- `currentTime()` _{function}_ - returns current time (in seconds)
+- `pause()` _{function}_ - pause current media
+- `play(time)` _{function}_- play current media
+- `skipTo(sceneName)` _{function}_ - skip to scene
+- `reload()` _{function}_ - reload current scene
+- `version` / `v` _{string}_ - show current version
 
 ## Terminology
 

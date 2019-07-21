@@ -37,7 +37,7 @@ export class View extends Component {
 	}
 
 	mountContainers() {
-		for (let key in this.containers) {
+		for (const key in this.containers) {
 			if (!this.containers.hasOwnProperty(key)) {
 				continue;
 			}
@@ -65,7 +65,7 @@ export class View extends Component {
 	}
 
 	resizeComponents() {
-		state.clientDimensions = browser.getClientDimensions();
+		state.clientDimensions = browser.getWindowDimensions();
 
 		const components = [
 			this,

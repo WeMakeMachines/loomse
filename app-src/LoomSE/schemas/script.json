@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Script schema",
+  "description": "This document outlines the correct formatting for the script schema",
+  "type": "object",
+  "required": [
+    "firstScene",
+    "scenes"
+  ],
+  "properties": {
+    "shortName": {
+      "type": "string",
+      "description": "A short, succinct title",
+      "default": ""
+    },
+    "longName": {
+      "type": "string",
+      "description": "A more verbose name for the script",
+      "default": ""
+    },
+    "author": {
+      "type": "string",
+      "description": "Name of the author",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "description": "A brief description of the story",
+      "default": ""
+    },
+    "firstScene": {
+      "type": "string",
+      "description": "The name of the first scene. Must exist in in scenes object.",
+      "default": ""
+    },
+    "language": {
+      "type": "string",
+      "description": "The default language of the story",
+      "examples": [
+        "en_GB"
+      ]
+    },
+    "scenes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "video",
+          "events"
+        ],
+        "properties": {
+          "longName": {
+            "type": "string",
+            "description": "Name of scene",
+            "default": ""
+          },
+          "video": {
+            "type": "object",
+            "required": [
+              "sources"
+            ],
+            "properties": {
+              "loop": {
+                "properties": {
+                  "in": {
+                    "type": "integer",
+                    "description": "Loop in point (in milliseconds)",
+                    "minimum": 0
+                  },
+                  "out": {
+                    "type": "integer",
+                    "description": "Loop out point (in milliseconds)"
+                  }
+                }
+              },
+              "autoplay": {
+                "type": "boolean",
+                "description": "Autoplay video on load flag",
+                "default": false
+              },
+              "muted": {
+                "type": "boolean",
+                "description": "Mute audio",
+                "default": false
+              },
+              "sources": {
+                "type": "object",
+                "properties": {
+                  "mp4": {
+                    "type": "string",
+                    "description": "Relative path to mp4 asset",
+                    "default": ""
+                  },
+                  "ogg": {
+                    "type": "string",
+                    "description": "Relative path to ogg asset",
+                    "default": ""
+                  },
+                  "webm": {
+                    "type": "string",
+                    "description": "Relative path to webm asset",
+                    "default": ""
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "Length of video file"
+                  },
+                  "subtitles": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string",
+                      "description": "Relative path to subtitles file",
+                      "default": ""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/event" }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "event": {
+      "type": "object",
+      "required": [
+        "in",
+        "out"
+      ],
+      "properties": {
+        "moduleName": {
+          "type": "string",
+          "description": "References the external module name",
+          "default": ""
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Flag to determine if the module should be disabled",
+          "default": false
+        },
+        "in": {
+          "type": "integer",
+          "description": "Loop in point (in milliseconds)",
+          "default": 0,
+          "minimum": 0
+        },
+        "out": {
+          "type": "integer",
+          "description": "Loop out point (in milliseconds)",
+          "default": 0
+        },
+        "x": {
+          "type": "number",
+          "description": "x representational co-ordinate",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "number",
+          "description": "y representational co-ordinate",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1
+        },
+        "payload": {
+          "type": "object",
+          "description": "Additional data to pass into the module",
+          "default": {},
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

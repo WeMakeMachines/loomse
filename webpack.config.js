@@ -1,17 +1,14 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-
 const source = './app-src';
 const destination = './app-build';
 const path = require('path');
-const appConfig = require(`${source}/constants/config.json`);
+const packageJson = require('./package.json');
 
 const config = {
 	mode: 'development',
 	entry: `${source}/app.js`,
 	output: {
 		path: path.resolve(__dirname, destination),
-		filename: `${appConfig.appName}-${appConfig.version}.js`,
+		filename: `${packageJson.name}-${packageJson.version}.js`,
 		libraryTarget: 'umd',
 		libraryExport: 'default',
 		library: 'LoomSE'
@@ -41,17 +38,7 @@ const config = {
 				}
 			}
 		]
-	},
-	plugins: [
-		new HtmlWebpackPlugin({
-			template: `${source}/index.html`,
-			filename: 'index.html'
-		}),
-		new CopyPlugin([
-			{ from: `${source}/styles`, to: 'styles' },
-			{ from: `${source}/assets`, to: 'assets' }
-		])
-	]
+	}
 };
 
 module.exports = config;

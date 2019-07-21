@@ -1,4 +1,4 @@
-import config from '../../constants/config.json';
+import config from '../../LoomSE/config';
 import FullScreen from './FullScreen';
 import LocalStorage from './LocalStorage';
 
@@ -8,10 +8,10 @@ export const browser = {
 	},
 
 	/**
-	 * Gets the current client dimensions
-	 * @returns {object}
+	 * Gets the current window dimensions
+	 * @returns {{width: number, height: number}}
 	 */
-	getClientDimensions() {
+	getWindowDimensions() {
 		return {
 			width: window.innerWidth,
 			height: window.innerHeight
@@ -22,7 +22,7 @@ export const browser = {
 	 * @returns {boolean}
 	 */
 	hasSmallScreen() {
-		let dimensions = this.getClientDimensions();
+		let dimensions = this.getWindowDimensions();
 
 		return (
 			dimensions.width < config.mobile.minimumResolution ||
@@ -42,6 +42,24 @@ export const browser = {
 		let test = document.createElement('video').canPlayType;
 
 		return Boolean(test);
+	},
+
+	getExternalModule(moduleName) {
+
+		const externalModules = config['externalModules'];
+
+		if (!externalModules) {
+			return;
+		}
+
+		const module = window[externalModules][moduleName];
+
+		if (!module) {
+			throw new Error('No modules found');
+		}
+
+		return module;
+
 	},
 
 	localStorage: new LocalStorage()
