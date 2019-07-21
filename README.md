@@ -1,4 +1,4 @@
-# Loom Story Engine 0.5.4
+# Loom Story Engine 0.5.5
 *Interactive storytelling for the modern web*
 
 ## What is Loom?
@@ -51,8 +51,8 @@ _LoomSE(HTMLElement, object)_
 The config object is shaped as follows
 
 - `script` (required) - Defines where the script file is located
-- `externalModules` - Name of global object which contains all the modules
 - `mobileScript` - Defines the mobile script
+- `externalModules` - Name of global object which contains all the modules
 - `mobile` - Contains mobile specific properties
 - `subtitles` - An object containing overrides for the subtitles mechanism
 
@@ -74,12 +74,12 @@ The config object is shaped as follows
 
 ##### JavaScript
 ```
-var hmtlElelement = document.querySelector('#loomSE');
+var htmlElement = document.querySelector('#loomSE');
 var config = {
     script: 'script.json'
     mobileScript 'script-mobile.json'
 };
-var loomSE = new LoomSE(hmtlElement, config);
+var loomSE = new LoomSE(htmlElement, config);
 
 ```
 

@@ -1,21 +1,21 @@
 {
   "private": false,
   "name": "loomse",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Interactive storytelling for the modern web",
+  "author": "Franco Speziali",
+  "license": "GPL-3.0",
+  "homepage": "http://www.loomse.org/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WeMakeMachines/loomse.git"
+  },
   "scripts": {
     "dev": "webpack --config webpack.config.js --watch --mode='development'",
     "build": "webpack --config webpack.config.js --mode='production'",
     "prettier": "prettier --write 'app-src/**/*.js'",
     "eslint": "eslint app-src"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/WeMakeMachines/loomse.git"
-  },
-  "author": "Franco Speziali",
-  "license": "GPL-3.0",
-  "homepage": "http://www.loomse.org/",
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
