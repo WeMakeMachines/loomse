@@ -239,27 +239,6 @@ export class Component {
 		this.node.innerHTML = htmlString;
 	}
 
-	/**
-	 * Sets absolute position of element
-	 * @param {object} containerDimensions
-	 * @param {number} x
-	 * @param {number} y
-	 */
-	setPosition(containerDimensions, x, y) {
-		this.dimensions = this.getDimensions();
-
-		this.calculatePosition(containerDimensions, x, y);
-
-		if (!this.coordinates) {
-			throw new ComponentError('Invalid dimensions');
-		}
-
-		this.setStyles({
-			left: this.coordinates.x,
-			top: this.coordinates.y
-		});
-	}
-
 	setLayer(layer) {
 		this.setStyles({
 			zIndex: layer
