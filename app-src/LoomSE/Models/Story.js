@@ -20,13 +20,13 @@ export class Story {
 	 */
 	static getScriptFile() {
 
-		if(!config.scripts || !config.scripts.desktop) {
+		if(!config.script) {
 			throw new ScriptError('No script file to load from');
 		}
 
-		return (config.scripts.mobile && browser.hasSmallScreen())
-			? config.scripts.mobile
-			: config.scripts.desktop;
+		return (config.mobileScript && browser.hasSmallScreen())
+			? config.mobileScript
+			: config.script;
 	}
 
 	constructor(schema = scriptSchema) {
