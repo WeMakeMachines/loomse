@@ -9,8 +9,10 @@ Loom is an open-source application built in JavaScript, HTML5 and CSS3. With Loo
 Developing within the Loom framework requires
 - npm
 - babel (for compiling ES6)
-- sass
 - webpack (for building)
+
+Application dependencies
+- djv (for validating the script file)
 
 ## Installation
 Download and run:
@@ -29,36 +31,69 @@ npm run dev
 To build in production mode, run:
 
 ```
-npm run prod
+npm run build
 
 ```
 
 Built files are stored in the `app-build` directory.
 
-## Configuration & Behaviours
-Loom can be configured by changing the behavioural properties of the application, as well as extending the base functionality with extensions.
+## Configuring and running
 
-#### Application Behaviour
-These files are in JSON format.
+### LoomSE object syntax
 
-The configuration file `app-src/configs/config.json` controls some aspects of the application.
-The behaviours file `app-src/configs/storyBehaviour.json` controls some of the finer aspects of the script.
+_LoomSE(HTMLElement, object)_
 
-#### The Script
-All the power for developing your non-linear narrative rests inside a JSON based script file. The default location for this is `assets/scripts/`.
+- **HTMLElement** refers to an object in the DOM which will house the Loom Story
+- **object** refers the the initialisation and configuration parameters
+
+### Configuring
+
+The config object is shaped as follows
+
+- `script` (required) - Defines where the script file is located
+- `externalModules` - Name of global object which contains all the modules
+- `mobileScript` - Defines the mobile script
+- `mobile` - Contains mobile specific properties
+- `subtitles` - An object containing overrides for the subtitles mechanism
+
+`mobile`
+- `minimumResolution` - Below this resolution the mobile script will be used
+
+`subtitles`
+- `active` - Indicates whether subtitles should be shown at start
+- `language` - Default selected language for the subtitles
+- `x` - x co-ordinate for the subtitles
+- `y` - y co-ordinate for the subtitles
+
+### Example usage
+
+##### HTML
+```
+<div id="loomSE"></div>
+```
+
+##### JavaScript
+```
+var hmtlElelement = document.querySelector('#loomSE');
+var config = {
+    script: 'script.json'
+    mobileScript 'script-mobile.json'
+};
+var loomSE = new LoomSE(hmtlElement, config);
+
+```
+
+## The Story Script
+All the power for developing your non-linear narrative rests inside a JSON based script file.
 
 You can define separate scripts for mobile and desktop.
 
-## Running the application
+Please refer to the [script schema](app-src/LoomSE/schemas/script.json).
 
-Import the script into your html file, and initialise the `LoomSE` class with the `new` keyword, providing an object
-reference as the argument. The LoomSE application will be contained at the object reference. For example:
-`var loomSE = new LoomSE(document.querySelector('#loomSE'));`.
-
-## Writing your own modules
+## External modules
 Loom provides a framework for you to write your own modules.
 
-Modules are namespaced to the global object `loomSE_modules`.
+Modules are namespaced to the global object specified in the config property `externalModules`.
 
 Each module must have a publicly accessible interface. These are each called respectively during media playback at the
 in and out times set by the script.
