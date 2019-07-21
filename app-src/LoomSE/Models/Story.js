@@ -2,7 +2,7 @@ import { browser } from '../../services';
 
 import { ajaxRequest } from '../tools';
 
-import config from '../../config';
+import config from '../config';
 import scriptSchema from '../schemas/script';
 
 import state from '../state';

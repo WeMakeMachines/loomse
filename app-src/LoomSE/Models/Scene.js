@@ -1,5 +1,5 @@
 import view from '../view';
-import config from '../../config';
+import config from '../config';
 
 import { Events, Subtitles, Video } from '../Components';
 import modules from '../modules';

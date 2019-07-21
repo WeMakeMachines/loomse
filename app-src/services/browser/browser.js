@@ -1,4 +1,4 @@
-import config from '../../config';
+import config from '../../LoomSE/config';
 import FullScreen from './FullScreen';
 import LocalStorage from './LocalStorage';
 
