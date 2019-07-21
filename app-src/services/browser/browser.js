@@ -44,5 +44,23 @@ export const browser = {
 		return Boolean(test);
 	},
 
+	getExternalModule(moduleName) {
+
+		const externalModules = config['externalModules'];
+
+		if (!externalModules) {
+			return;
+		}
+
+		const module = window[externalModules][moduleName];
+
+		if (!module) {
+			throw new Error('No modules found');
+		}
+
+		return module;
+
+	},
+
 	localStorage: new LocalStorage()
 };

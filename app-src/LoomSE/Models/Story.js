@@ -11,13 +11,20 @@ import Djv from 'djv';
 
 class ScriptError extends Error {}
 
+// TODO Abstract script logic into own class
+
 export class Story {
 	/**
 	 * Determines the appropriate source of the script (mobile or desktop)
 	 * @returns {string}
 	 */
 	static getScriptFile() {
-		return browser.hasSmallScreen()
+
+		if(!config.scripts || !config.scripts.desktop) {
+			throw new ScriptError('No script file to load from');
+		}
+
+		return (config.scripts.mobile && browser.hasSmallScreen())
 			? config.scripts.mobile
 			: config.scripts.desktop;
 	}

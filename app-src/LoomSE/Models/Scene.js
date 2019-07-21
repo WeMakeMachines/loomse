@@ -2,8 +2,8 @@ import view from '../view';
 import config from '../config';
 
 import { Events, Subtitles, Video } from '../Components';
-import modules from '../modules';
 import { parseFile } from '../tools/fileParsers';
+import { browser } from '../../services';
 import state from '../state';
 
 export class Scene {
@@ -29,7 +29,7 @@ export class Scene {
 
 	parseEvents(events) {
 		return events.map(event => {
-			const module = modules.getModule(event['moduleName']);
+			const module = browser.getExternalModule(event['moduleName']);
 
 			if (module) {
 				event.module = module;

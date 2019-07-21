@@ -13,7 +13,7 @@ import state from './LoomSE/state';
 let loom;
 
 export default class App {
-	constructor(node) {
+	constructor(node, config) {
 		this.node = node;
 		this.version = packageJson.version;
 		this.v = packageJson.version;
@@ -23,6 +23,7 @@ export default class App {
 
 		loom = new Loom({
 			node,
+			config,
 			lastState: browser.localStorage.getData(),
 			isClientSupported: browser.isCompatible()
 		});
