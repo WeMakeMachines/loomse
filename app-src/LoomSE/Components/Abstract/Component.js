@@ -1,4 +1,4 @@
-import { radio } from '../../../services';
+import { radioService } from '../../../lib';
 
 class ComponentError extends Error {}
 
@@ -342,7 +342,7 @@ export class Component {
 
 		this.eventHandlerRegistry[channel] = callback.bind(this);
 
-		radio.listen(channel, this.eventHandlerRegistry[channel]);
+		radioService.listen(channel, this.eventHandlerRegistry[channel]);
 	}
 
 	stopListeningToChannel(channel) {
@@ -352,7 +352,7 @@ export class Component {
 			return;
 		}
 
-		radio.stopListening(channel, this.eventHandlerRegistry[channel]);
+		radioService.stopListening(channel, this.eventHandlerRegistry[channel]);
 
 		delete this.eventHandlerRegistry[channel];
 	}

@@ -45,7 +45,6 @@ export const browser = {
 	},
 
 	getExternalModule(moduleName) {
-
 		const externalModules = config['externalModules'];
 
 		if (!externalModules) {
@@ -59,7 +58,6 @@ export const browser = {
 		}
 
 		return module;
-
 	},
 
 	localStorage: new LocalStorage()

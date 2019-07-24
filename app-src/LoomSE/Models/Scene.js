@@ -3,7 +3,7 @@ import config from '../config';
 
 import { Events, Subtitles, Video } from '../Components';
 import { parseFile } from '../tools/fileParsers';
-import { browser } from '../../services';
+import { browser } from '../../lib';
 import state from '../state';
 
 export class Scene {

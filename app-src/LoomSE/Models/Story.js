@@ -1,4 +1,4 @@
-import { browser } from '../../services';
+import { browser } from '../../lib';
 
 import { ajaxRequest } from '../tools';
 
@@ -19,12 +19,11 @@ export class Story {
 	 * @returns {string}
 	 */
 	static getScriptFile() {
-
-		if(!config.script) {
+		if (!config.script) {
 			throw new ScriptError('No script file to load from');
 		}
 
-		return (config.mobileScript && browser.hasSmallScreen())
+		return config.mobileScript && browser.hasSmallScreen()
 			? config.mobileScript
 			: config.script;
 	}

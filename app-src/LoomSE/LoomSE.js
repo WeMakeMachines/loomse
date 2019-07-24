@@ -1,6 +1,6 @@
 import { Story, Scene } from './Models';
 
-import { radio } from '../services';
+import { radioService } from '../lib';
 
 import { setupConfig } from './config';
 
@@ -58,7 +58,7 @@ export class Loom {
 	}
 
 	updateStateTime() {
-		radio.listen(VIDEO_TIMEUPDATE, event => {
+		radioService.listen(VIDEO_TIMEUPDATE, event => {
 			if (event.detail.time) {
 				state.time = secondsToMilliseconds(event.detail.time);
 			}

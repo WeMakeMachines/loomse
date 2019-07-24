@@ -1,6 +1,6 @@
 import Loom from './LoomSE';
 
-import { browser, initialiseRadio, radio } from './services';
+import { browser, initialiseRadio, radioService } from './lib';
 
 import packageJson from '../package';
 
@@ -30,11 +30,11 @@ export default function App(HTMLElement, config) {
 		},
 
 		pause() {
-			radio.broadcast(DIRECTOR_PAUSE);
+			radioService.broadcast(DIRECTOR_PAUSE);
 		},
 
 		play() {
-			radio.broadcast(DIRECTOR_PLAY);
+			radioService.broadcast(DIRECTOR_PLAY);
 		},
 
 		skipTo(scene) {
