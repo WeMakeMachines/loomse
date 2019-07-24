@@ -1,6 +1,7 @@
-export { config as default, setupConfig };
+export { appConfig as default, setupAppConfig };
 
 const defaults = {
+	externalModules: '',
 	mobile: {
 		minimumResolution: 480
 	},
@@ -11,12 +12,12 @@ const defaults = {
 	}
 };
 
-let config = {
+let appConfig = {
 	...defaults
 };
 
-function setupConfig(options) {
-	config = {
+function setupAppConfig(options) {
+	appConfig = {
 		...defaults,
 		...options
 	};

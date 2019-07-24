@@ -2,7 +2,7 @@ import { browser } from '../../lib';
 
 import { ajaxRequest } from '../tools';
 
-import config from '../config';
+import appConfig from '../appConfig';
 import scriptSchema from '../schemas/script';
 
 import state from '../state';
@@ -19,13 +19,14 @@ export class Story {
 	 * @returns {string}
 	 */
 	static getScriptFile() {
-		if (!config.script) {
+		if (!appConfig.script) {
 			throw new ScriptError('No script file to load from');
 		}
 
-		return config.mobileScript && browser.hasSmallScreen()
-			? config.mobileScript
-			: config.script;
+		return appConfig.mobileScript &&
+			browser.hasSmallScreen(appConfig.mobile.minimumResolution)
+			? appConfig.mobileScript
+			: appConfig.script;
 	}
 
 	constructor(schema = scriptSchema) {
