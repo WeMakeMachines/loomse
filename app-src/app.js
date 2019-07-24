@@ -14,8 +14,8 @@ export default function App(HTMLElement, config) {
 	const node = HTMLElement;
 	const version = packageJson.version;
 
-	initialiseView(node);
 	initialiseRadio(node);
+	initialiseView(node);
 
 	const loom = new Loom({
 		node,

@@ -7,3 +7,5 @@ export const VIDEO_SEEKING = 'video:seeking';
 export const VIDEO_SEEKED = 'video:seeked';
 export const VIDEO_TIMEUPDATE = 'video:timeupdate';
 export const VIDEO_ENDED = 'video:ended';
+
+export const STAGE_RESIZE = 'stage:resize';

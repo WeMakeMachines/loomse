@@ -1,3 +1,5 @@
+import { radio } from '../../../services';
+
 class ComponentError extends Error {}
 
 export class Component {
@@ -35,6 +37,7 @@ export class Component {
 		this.visible = options.visible || true;
 		this.children = options.children || [];
 		this.textNode = options.text ? document.createTextNode(options.text) : null;
+		this.eventHandlerRegistry = {};
 
 		if (!this.visible) {
 			this.hide();
@@ -273,12 +276,8 @@ export class Component {
 	 * @returns {object}
 	 */
 	getDimensions() {
-		let dimensions = {
-				width: null,
-				height: null
-			},
-			body = document.getElementsByTagName('body')[0],
-			clone = this.node.cloneNode(true);
+		const body = document.getElementsByTagName('body')[0];
+		const clone = this.node.cloneNode(true);
 
 		clone.setAttribute(
 			'style',
@@ -287,8 +286,10 @@ export class Component {
 
 		body.appendChild(clone);
 
-		dimensions.width = clone.clientWidth;
-		dimensions.height = clone.clientHeight;
+		const dimensions = {
+			width: clone.clientWidth,
+			height: clone.clientHeight
+		};
 
 		body.removeChild(clone);
 
@@ -300,25 +301,20 @@ export class Component {
 	 * @param {number} x % 0 - 1
 	 * @param {number} y % 0 - 1
 	 */
-	setPositionFromPercentage(x, y) {
-		if (!this.parent) {
-			console.warn('Unable to set position; no parent set');
-			return;
-		}
-
-		if (typeof x !== 'number' || typeof y !== 'number') {
-			console.warn('Unable to set position; invalid co-ordinates');
-			return;
-		}
-
-		let minRange = 0,
-			maxRange = 1;
+	setPositionFromPercentage(x = 0, y = 0) {
+		const minRange = 0;
+		const maxRange = 1;
 
 		if (x < minRange || x > maxRange) {
 			x = minRange;
 		}
 		if (y < minRange || y > maxRange) {
 			y = minRange;
+		}
+
+		if (!this.parent) {
+			console.warn('Unable to set position; no parent set');
+			return;
 		}
 
 		const availableDimensions = {
@@ -335,5 +331,29 @@ export class Component {
 			left: coordinates.x,
 			top: coordinates.y
 		});
+	}
+
+	listenToChannel(channel, callback) {
+		if (this.eventHandlerRegistry[channel]) {
+			console.warn('Already listening to channel, ', channel);
+
+			return;
+		}
+
+		this.eventHandlerRegistry[channel] = callback.bind(this);
+
+		radio.listen(channel, this.eventHandlerRegistry[channel]);
+	}
+
+	stopListeningToChannel(channel) {
+		if (!this.eventHandlerRegistry[channel]) {
+			console.warn('Handler not found, ', channel);
+
+			return;
+		}
+
+		radio.stopListening(channel, this.eventHandlerRegistry[channel]);
+
+		delete this.eventHandlerRegistry[channel];
 	}
 }
