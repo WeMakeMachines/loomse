@@ -35,9 +35,9 @@ export class Component {
 		this.mounted = false;
 		this.parent = options.parent || null;
 		this.visible = options.visible || true;
-		this.children = options.children || [];
 		this.textNode = options.text ? document.createTextNode(options.text) : null;
-		this.eventHandlerRegistry = {};
+		this._childRegistry = options.children || [];
+		this._eventHandlerRegistry = {};
 
 		if (!this.visible) {
 			this.hide();
@@ -66,8 +66,12 @@ export class Component {
 		});
 	}
 
+	get children() {
+		return this._childRegistry;
+	}
+
 	attach(component) {
-		this.children.push(component);
+		this._childRegistry.push(component);
 		this.node.appendChild(component.node);
 
 		component.mounted = true;
@@ -75,7 +79,7 @@ export class Component {
 	}
 
 	removeChildren() {
-		this.children.forEach(child => {
+		this._childRegistry.forEach(child => {
 			if (child.mounted) {
 				child.unmount();
 				child.mounted = false;
@@ -334,26 +338,26 @@ export class Component {
 	}
 
 	listenToChannel(channel, callback) {
-		if (this.eventHandlerRegistry[channel]) {
+		if (this._eventHandlerRegistry[channel]) {
 			console.warn('Already listening to channel, ', channel);
 
 			return;
 		}
 
-		this.eventHandlerRegistry[channel] = callback.bind(this);
+		this._eventHandlerRegistry[channel] = callback.bind(this);
 
-		radioService.listen(channel, this.eventHandlerRegistry[channel]);
+		radioService.listen(channel, this._eventHandlerRegistry[channel]);
 	}
 
 	stopListeningToChannel(channel) {
-		if (!this.eventHandlerRegistry[channel]) {
+		if (!this._eventHandlerRegistry[channel]) {
 			console.warn('Handler not found, ', channel);
 
 			return;
 		}
 
-		radioService.stopListening(channel, this.eventHandlerRegistry[channel]);
+		radioService.stopListening(channel, this._eventHandlerRegistry[channel]);
 
-		delete this.eventHandlerRegistry[channel];
+		delete this._eventHandlerRegistry[channel];
 	}
 }
