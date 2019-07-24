@@ -10,42 +10,45 @@ import { initialiseView } from './LoomSE/view';
 
 import state from './LoomSE/state';
 
-let loom;
+export default function App(HTMLElement, config) {
+	const node = HTMLElement;
+	const version = packageJson.version;
 
-export default class App {
-	constructor(node, config) {
-		this.node = node;
-		this.version = packageJson.version;
-		this.v = packageJson.version;
+	initialiseView(node);
+	initialiseRadio(node);
 
-		initialiseView(node);
-		initialiseRadio(node);
+	const loom = new Loom({
+		node,
+		config,
+		lastState: browser.localStorage.getData(),
+		isClientSupported: browser.isCompatible()
+	});
 
-		loom = new Loom({
-			node,
-			config,
-			lastState: browser.localStorage.getData(),
-			isClientSupported: browser.isCompatible()
-		});
-	}
+	const api = {
+		reload() {
+			loom.loadScene(state.scene);
+		},
 
-	reload() {
-		loom.loadScene(state.scene);
-	}
+		pause() {
+			radio.broadcast(DIRECTOR_PAUSE);
+		},
 
-	pause() {
-		radio.broadcast(DIRECTOR_PAUSE);
-	}
+		play() {
+			radio.broadcast(DIRECTOR_PLAY);
+		},
 
-	play() {
-		radio.broadcast(DIRECTOR_PLAY);
-	}
+		skipTo(scene) {
+			loom.loadScene(scene);
+		},
 
-	skipTo(scene) {
-		loom.loadScene(scene);
-	}
+		currentTime() {
+			return state.time;
+		},
 
-	currentTime() {
-		return state.time;
-	}
+		version,
+
+		v: version
+	};
+
+	return api;
 }
