@@ -11,7 +11,7 @@
     "url": "https://github.com/WeMakeMachines/loomse.git"
   },
   "scripts": {
-    "dev": "webpack --config webpack.config.js --watch --mode='development'",
+    "dev": "webpack --config webpack.config.js --devtool='source-map' --watch --mode='development'",
     "build": "webpack --config webpack.config.js --mode='production'",
     "prettier": "prettier --write 'app-src/**/*.js'",
     "eslint": "eslint app-src",
