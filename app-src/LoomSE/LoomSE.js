@@ -19,11 +19,11 @@ export class Loom {
 		this.node = options.node;
 		this.lastState = options.lastState;
 		this.isClientSupported = options.isClientSupported;
-		this.story = new Story();
 		this.scene = null;
+		this.story = new Story();
 
 		this.story
-			.load()
+			.readScript()
 			.then(() => {
 				this.loadScene(this.story.firstScene);
 			})
