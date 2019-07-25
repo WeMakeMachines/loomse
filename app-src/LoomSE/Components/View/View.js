@@ -3,8 +3,10 @@ import Component from '../Abstract';
 import Stage from '../Stage';
 import Overlay from '../Overlay';
 
-import { browser } from '../../../services';
+import { browser, radioService } from '../../../lib';
 import { debounce } from '../../tools';
+
+import { STAGE_RESIZE } from '../../../constants/applicationActions';
 
 import state from '../../state';
 
@@ -83,5 +85,10 @@ export class View extends Component {
 				height: state.clientDimensions.height
 			});
 		}
+
+		radioService.broadcast(STAGE_RESIZE, {
+			width: state.clientDimensions.width,
+			height: state.clientDimensions.height
+		});
 	}
 }

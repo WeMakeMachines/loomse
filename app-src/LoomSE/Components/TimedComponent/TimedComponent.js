@@ -7,8 +7,6 @@ import { RUN, STOP } from '../../../constants/eventActions';
 
 import { secondsToMilliseconds } from '../../tools';
 
-import { radio } from '../../../services';
-
 export class TimedComponent extends Component {
 	constructor(id, styles, events) {
 		super({
@@ -18,26 +16,21 @@ export class TimedComponent extends Component {
 
 		this.activeEvents = {};
 		this.queue = new Queue(events);
-		this.radioCallback = event => {
-			if (event.detail.time) {
-				const time = secondsToMilliseconds(event.detail.time);
 
-				this.isReadyToAction(time);
-			}
-		};
-
-		this.listenToRadio();
-	}
-
-	listenToRadio() {
-		radio.listen(VIDEO_TIMEUPDATE, this.radioCallback);
+		this.listenToChannel(VIDEO_TIMEUPDATE, this.isReadyToAction);
 	}
 
 	stopListeningToRadio() {
-		radio.stopListening(VIDEO_TIMEUPDATE, this.radioCallback);
+		this.stopListeningToChannel(VIDEO_TIMEUPDATE);
 	}
 
-	isReadyToAction(time) {
+	isReadyToAction(event) {
+		if (!event.detail.time) {
+			return;
+		}
+
+		const time = secondsToMilliseconds(event.detail.time);
+
 		if (!time || !this.queue.pending) {
 			return;
 		}

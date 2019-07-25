@@ -1,4 +1,3 @@
-import config from '../../LoomSE/config';
 import FullScreen from './FullScreen';
 import LocalStorage from './LocalStorage';
 
@@ -21,12 +20,12 @@ export const browser = {
 	/**
 	 * @returns {boolean}
 	 */
-	hasSmallScreen() {
+	hasSmallScreen(minimumResolution) {
 		let dimensions = this.getWindowDimensions();
 
 		return (
-			dimensions.width < config.mobile.minimumResolution ||
-			dimensions.height < config.mobile.minimumResolution
+			dimensions.width < minimumResolution ||
+			dimensions.height < minimumResolution
 		);
 	},
 
@@ -44,22 +43,18 @@ export const browser = {
 		return Boolean(test);
 	},
 
-	getExternalModule(moduleName) {
-
-		const externalModules = config['externalModules'];
-
-		if (!externalModules) {
+	getExternalModule(externalModuleReference, moduleName) {
+		if (!externalModuleReference) {
 			return;
 		}
 
-		const module = window[externalModules][moduleName];
+		const module = window[externalModuleReference][moduleName];
 
 		if (!module) {
 			throw new Error('No modules found');
 		}
 
 		return module;
-
 	},
 
 	localStorage: new LocalStorage()

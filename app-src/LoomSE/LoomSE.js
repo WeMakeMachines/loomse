@@ -1,8 +1,8 @@
 import { Story, Scene } from './Models';
 
-import { radio } from '../services';
+import { radioService } from '../lib';
 
-import { setupConfig } from './config';
+import { setupAppConfig } from './appConfig';
 
 import { VIDEO_TIMEUPDATE } from '../constants/applicationActions';
 
@@ -14,16 +14,16 @@ class LoomError extends Error {}
 
 export class Loom {
 	constructor(options) {
-		setupConfig(options.config);
+		setupAppConfig(options.config);
 
 		this.node = options.node;
 		this.lastState = options.lastState;
 		this.isClientSupported = options.isClientSupported;
-		this.story = new Story();
 		this.scene = null;
+		this.story = new Story();
 
 		this.story
-			.load()
+			.readScript()
 			.then(() => {
 				this.loadScene(this.story.firstScene);
 			})
@@ -58,7 +58,7 @@ export class Loom {
 	}
 
 	updateStateTime() {
-		radio.listen(VIDEO_TIMEUPDATE, event => {
+		radioService.listen(VIDEO_TIMEUPDATE, event => {
 			if (event.detail.time) {
 				state.time = secondsToMilliseconds(event.detail.time);
 			}

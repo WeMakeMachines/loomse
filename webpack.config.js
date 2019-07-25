@@ -4,7 +4,6 @@ const path = require('path');
 const packageJson = require('./package.json');
 
 const config = {
-	mode: 'development',
 	entry: `${source}/app.js`,
 	output: {
 		path: path.resolve(__dirname, destination),
@@ -13,23 +12,8 @@ const config = {
 		libraryExport: 'default',
 		library: 'LoomSE'
 	},
-	devtool: 'source-map',
 	module: {
 		rules: [
-			{
-				test: /\.ttf$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'file-loader'
-				}
-			},
-			{
-				test: /\.scss$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'sass-loader'
-				}
-			},
 			{
 				test: /\.js$/,
 				exclude: /node_modules/,

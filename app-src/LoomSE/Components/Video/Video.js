@@ -2,7 +2,7 @@ import Component from '../Abstract';
 
 import Source from './Source';
 
-import { radio } from '../../../services';
+import { radioService } from '../../../lib';
 
 import {
 	DIRECTOR_PLAY,
@@ -27,26 +27,12 @@ export class Video extends Component {
 		this.node.loop = options.loop;
 		this.node.muted = options.muted || false;
 
-		this.play = () => {
-			this.node
-				.play()
-				.then(() => {
-					this.resize({
-						width: state.clientDimensions.width,
-						height: state.clientDimensions.height
-					});
-				})
-				.catch(() => {});
-		};
-
-		this.pause = () => {
-			this.node.pause();
-		};
-
 		this.sources = this.setSources(options.sources);
 		this.mountSources();
 		this.registerMediaEvents();
-		this.listenToRadio();
+
+		this.listenToChannel(DIRECTOR_PAUSE, this.pause);
+		this.listenToChannel(DIRECTOR_PLAY, this.play);
 
 		if (options.autoplay) {
 			this.play();
@@ -95,7 +81,7 @@ export class Video extends Component {
 
 		events.forEach(event => {
 			this.node.addEventListener(event, () => {
-				radio.broadcast(`video:${event}`, {
+				radioService.broadcast(`video:${event}`, {
 					state: event,
 					time: this.node.currentTime
 				});
@@ -103,14 +89,25 @@ export class Video extends Component {
 		});
 	}
 
-	listenToRadio() {
-		radio.listen(DIRECTOR_PAUSE, this.pause);
-		radio.listen(DIRECTOR_PLAY, this.play);
+	stopListeningToRadio() {
+		this.stopListeningToChannel(DIRECTOR_PAUSE);
+		this.stopListeningToChannel(DIRECTOR_PLAY);
 	}
 
-	stopListeningToRadio() {
-		radio.stopListening(DIRECTOR_PAUSE, this.pause);
-		radio.stopListening(DIRECTOR_PLAY, this.play);
+	play() {
+		this.node
+			.play()
+			.then(() => {
+				this.resize({
+					width: state.clientDimensions.width,
+					height: state.clientDimensions.height
+				});
+			})
+			.catch(() => {});
+	}
+
+	pause() {
+		this.node.pause();
 	}
 
 	playPause() {

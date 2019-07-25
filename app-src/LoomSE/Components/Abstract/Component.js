@@ -1,3 +1,5 @@
+import { radioService } from '../../../lib';
+
 class ComponentError extends Error {}
 
 export class Component {
@@ -33,8 +35,9 @@ export class Component {
 		this.mounted = false;
 		this.parent = options.parent || null;
 		this.visible = options.visible || true;
-		this.children = options.children || [];
 		this.textNode = options.text ? document.createTextNode(options.text) : null;
+		this._childRegistry = options.children || [];
+		this._eventHandlerRegistry = {};
 
 		if (!this.visible) {
 			this.hide();
@@ -63,8 +66,12 @@ export class Component {
 		});
 	}
 
+	get children() {
+		return this._childRegistry;
+	}
+
 	attach(component) {
-		this.children.push(component);
+		this._childRegistry.push(component);
 		this.node.appendChild(component.node);
 
 		component.mounted = true;
@@ -72,7 +79,7 @@ export class Component {
 	}
 
 	removeChildren() {
-		this.children.forEach(child => {
+		this._childRegistry.forEach(child => {
 			if (child.mounted) {
 				child.unmount();
 				child.mounted = false;
@@ -239,27 +246,6 @@ export class Component {
 		this.node.innerHTML = htmlString;
 	}
 
-	/**
-	 * Sets absolute position of element
-	 * @param {object} containerDimensions
-	 * @param {number} x
-	 * @param {number} y
-	 */
-	setPosition(containerDimensions, x, y) {
-		this.dimensions = this.getDimensions();
-
-		this.calculatePosition(containerDimensions, x, y);
-
-		if (!this.coordinates) {
-			throw new ComponentError('Invalid dimensions');
-		}
-
-		this.setStyles({
-			left: this.coordinates.x,
-			top: this.coordinates.y
-		});
-	}
-
 	setLayer(layer) {
 		this.setStyles({
 			zIndex: layer
@@ -294,12 +280,8 @@ export class Component {
 	 * @returns {object}
 	 */
 	getDimensions() {
-		let dimensions = {
-				width: null,
-				height: null
-			},
-			body = document.getElementsByTagName('body')[0],
-			clone = this.node.cloneNode(true);
+		const body = document.getElementsByTagName('body')[0];
+		const clone = this.node.cloneNode(true);
 
 		clone.setAttribute(
 			'style',
@@ -308,8 +290,10 @@ export class Component {
 
 		body.appendChild(clone);
 
-		dimensions.width = clone.clientWidth;
-		dimensions.height = clone.clientHeight;
+		const dimensions = {
+			width: clone.clientWidth,
+			height: clone.clientHeight
+		};
 
 		body.removeChild(clone);
 
@@ -321,25 +305,20 @@ export class Component {
 	 * @param {number} x % 0 - 1
 	 * @param {number} y % 0 - 1
 	 */
-	setPositionFromPercentage(x, y) {
-		if (!this.parent) {
-			console.warn('Unable to set position; no parent set');
-			return;
-		}
-
-		if (typeof x !== 'number' || typeof y !== 'number') {
-			console.warn('Unable to set position; invalid co-ordinates');
-			return;
-		}
-
-		let minRange = 0,
-			maxRange = 1;
+	setPositionFromPercentage(x = 0, y = 0) {
+		const minRange = 0;
+		const maxRange = 1;
 
 		if (x < minRange || x > maxRange) {
 			x = minRange;
 		}
 		if (y < minRange || y > maxRange) {
 			y = minRange;
+		}
+
+		if (!this.parent) {
+			console.warn('Unable to set position; no parent set');
+			return;
 		}
 
 		const availableDimensions = {
@@ -356,5 +335,29 @@ export class Component {
 			left: coordinates.x,
 			top: coordinates.y
 		});
+	}
+
+	listenToChannel(channel, callback) {
+		if (this._eventHandlerRegistry[channel]) {
+			console.warn('Already listening to channel, ', channel);
+
+			return;
+		}
+
+		this._eventHandlerRegistry[channel] = callback.bind(this);
+
+		radioService.listen(channel, this._eventHandlerRegistry[channel]);
+	}
+
+	stopListeningToChannel(channel) {
+		if (!this._eventHandlerRegistry[channel]) {
+			console.warn('Handler not found, ', channel);
+
+			return;
+		}
+
+		radioService.stopListening(channel, this._eventHandlerRegistry[channel]);
+
+		delete this._eventHandlerRegistry[channel];
 	}
 }

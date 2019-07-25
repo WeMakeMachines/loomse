@@ -1,10 +1,11 @@
 ### Dev environment ###
-
-.idea/
+.idea
 
 ## Build ###
-app-build/
+app-build
 
 ### NPM ###
+node_modules
 
-node_modules/
+## OS ##
+.DS_Store

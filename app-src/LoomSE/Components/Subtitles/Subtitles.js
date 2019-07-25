@@ -1,7 +1,7 @@
 import Block from '../Block';
 import TimedComponent from '../TimedComponent';
 
-import config from '../../config';
+import appConfig from '../../appConfig';
 
 import styles from './styles';
 
@@ -17,8 +17,8 @@ export class Subtitles extends TimedComponent {
 			type: 'p',
 			id: `subtitle-${event.id}`,
 			styles: styles.subtitle,
-			x: config.subtitles.x,
-			y: config.subtitles.y,
+			x: appConfig.subtitles.x,
+			y: appConfig.subtitles.y,
 			text: timedObject.payload.text,
 			parent: this.node
 		});

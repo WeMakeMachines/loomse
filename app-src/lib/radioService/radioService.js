@@ -1,4 +1,4 @@
-class Radio {
+class RadioService {
 	constructor(node) {
 		this.antenna = node;
 	}
@@ -20,8 +20,8 @@ class Radio {
 	}
 }
 
-export let radio;
+export let radioService;
 
 export function initialiseRadio(node) {
-	radio = new Radio(node);
+	radioService = new RadioService(node);
 }
