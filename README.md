@@ -88,7 +88,7 @@ All the power for developing your non-linear narrative rests inside a JSON based
 
 You can define separate scripts for mobile and desktop.
 
-Please refer to the [script schema](app-src/LoomSE/schemas/script.json).
+Please refer to the [script schema](source/LoomSE/schemas/script.json).
 
 ## External modules
 Loom provides a framework for you to write your own modules.

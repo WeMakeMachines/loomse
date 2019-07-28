@@ -1,5 +1,5 @@
-const source = './app-src';
-const destination = './app-build';
+const source = './source';
+const destination = './dist';
 const path = require('path');
 const packageJson = require('./package.json');
 

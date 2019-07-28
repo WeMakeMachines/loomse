@@ -2,7 +2,7 @@
 .idea
 
 ## Build ###
-app-build
+dist
 
 ### NPM ###
 node_modules
