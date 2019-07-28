@@ -1,12 +1,12 @@
-# Loom Story Engine 0.5.5
+# Loom Story Engine 0.5.6
 *Interactive storytelling for the modern web*
 
-## What is Loom?
-Loom is an open-source application built in JavaScript, HTML5 and CSS3. With Loom, content creators can tell interactive stories over the modern web. Create your script in Loom, tell multiple tales.
+## What is LoomSE?
+LoomSE is an open-source application built in JavaScript, HTML5 and CSS3. With Loom, content creators can tell interactive stories over the modern web. Create your script in Loom, tell multiple tales.
 
 ## Dependencies
 
-Developing within the Loom framework requires
+Developing within the LoomSE framework requires
 - npm
 - babel (for compiling ES6)
 - webpack (for building)
@@ -15,38 +15,38 @@ Application dependencies
 - djv (for validating the script file)
 
 ## Installation
-Download and run:
 
-```
-npm install
+This repository includes a minified version of LoomSE
 
-```
-To build in development mode, run:
+#### via npm ###
 
-```
-npm run dev
+`npm install --save loomse`
 
-```
+#### Importing
 
-To build in production mode, run:
+The LoomSE package can be implemented via CommonJS, AMD or as a global variable.
 
-```
-npm run build
+##### ES6 Import
 
-```
+The most common way of importing LoomSE into your project would be via ES6 import,
+for example:
 
-Built files are stored in the `app-build` directory.
+`import LoomSE from 'loomse'`
 
-## Configuring and running
+## Initialising and configuration
 
-### LoomSE object syntax
+LoomSE must be initialised via the `new` keyword. For example;
+
+`const loomSE = new LoomSE();`
+
+#### LoomSE object syntax
 
 _LoomSE(HTMLElement, object)_
 
 - **HTMLElement** refers to an object in the DOM which will house the Loom Story
 - **object** refers the the initialisation and configuration parameters
 
-### Configuring
+#### Configuring
 
 The config object is shaped as follows
 
@@ -54,18 +54,14 @@ The config object is shaped as follows
 - `mobileScript` - Defines the mobile script
 - `externalModules` - Name of global object which contains all the modules
 - `mobile` - Contains mobile specific properties
+    - `minimumResolution` - Below this resolution the mobile script will be used
 - `subtitles` - An object containing overrides for the subtitles mechanism
+    - `active` - Indicates whether subtitles should be shown at start
+    - `language` - Default selected language for the subtitles
+    - `x` - x co-ordinate for the subtitles
+    - `y` - y co-ordinate for the subtitles
 
-`mobile`
-- `minimumResolution` - Below this resolution the mobile script will be used
-
-`subtitles`
-- `active` - Indicates whether subtitles should be shown at start
-- `language` - Default selected language for the subtitles
-- `x` - x co-ordinate for the subtitles
-- `y` - y co-ordinate for the subtitles
-
-### Example usage
+#### Example usage
 
 ##### HTML
 ```
@@ -88,7 +84,7 @@ All the power for developing your non-linear narrative rests inside a JSON based
 
 You can define separate scripts for mobile and desktop.
 
-Please refer to the [script schema](app-src/LoomSE/schemas/script.json).
+Please refer to the [script schema](source/LoomSE/schemas/script.json).
 
 ## External modules
 Loom provides a framework for you to write your own modules.
@@ -98,17 +94,17 @@ Modules are namespaced to the global object specified in the config property `ex
 Each module must have a publicly accessible interface. These are each called respectively during media playback at the
 in and out times set by the script.
 
-#### `run(payload, element, render)`
+##### `run(payload, element, render)`
 
 - `payload` contains event data set in the script
 - `element` object reference to the the container in which the module will be posted
 - `render` callback function which posts your event into the DOM
 
-#### `stop()`
+##### `stop()`
 
 After `stop()` is run by the engine, the container for your module will also be removed from the DOM.
 
-#### Example module
+##### Example module
 You can use the following structure to create your own modules:
 
 ```
