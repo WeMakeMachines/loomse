@@ -13,9 +13,10 @@ import state from '../../state';
 import styles from './styles';
 
 export class View extends Component {
-	constructor(node) {
+	constructor(parent) {
 		super({
-			node,
+			parent,
+			id: 'view',
 			styles: styles.view
 		});
 
@@ -33,7 +34,7 @@ export class View extends Component {
 		};
 
 		this.mountContainers();
-		this.mountToBody();
+		this.mount();
 		this.setListeners();
 		this.resizeComponents();
 	}
