@@ -1,9 +1,6 @@
 ### Dev environment ###
 .idea
 
-## Build ###
-dist
-
 ### NPM ###
 node_modules
 

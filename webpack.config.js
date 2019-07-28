@@ -7,7 +7,7 @@ const config = {
 	entry: `${source}/app.js`,
 	output: {
 		path: path.resolve(__dirname, destination),
-		filename: `${packageJson.name}-${packageJson.version}.js`,
+		filename: `${packageJson.name}.js`,
 		libraryTarget: 'umd',
 		libraryExport: 'default',
 		library: 'LoomSE'
