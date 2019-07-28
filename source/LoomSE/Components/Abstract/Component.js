@@ -125,22 +125,6 @@ export class Component {
 		}
 	}
 
-	mountToBody() {
-		if (this.parent) {
-			throw new ComponentError('Component already mounted');
-		}
-
-		const parent = document.querySelector('body');
-
-		if (parent) {
-			parent.appendChild(this.node);
-			this.mounted = true;
-			this.parent = parent;
-		} else {
-			throw new ComponentError('DOM not ready');
-		}
-	}
-
 	unmount() {
 		if (!this.parent) {
 			throw new ComponentError('Parent not found');
