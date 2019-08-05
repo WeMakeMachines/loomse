@@ -10,8 +10,15 @@ import { initialiseView } from './LoomSE/view';
 
 import state from './LoomSE/state';
 
-export default function App(HTMLElement, config) {
-	const node = HTMLElement;
+/**
+ * This function represents the public constructor object for LoomSE
+ * @param {HTMLElement} parent The parent element to which the application will attach to
+ * @param {Object} config The configuration object
+ * @returns {Object} Public API
+ * @constructor
+ */
+export default function App(parent, config) {
+	const node = parent;
 	const version = packageJson.version;
 
 	initialiseRadio(node);
@@ -24,7 +31,7 @@ export default function App(HTMLElement, config) {
 		isClientSupported: browser.isCompatible()
 	});
 
-	const api = {
+	return {
 		reload() {
 			loom.loadScene(state.scene);
 		},
@@ -49,6 +56,4 @@ export default function App(HTMLElement, config) {
 
 		v: version
 	};
-
-	return api;
 }

@@ -23,6 +23,7 @@ export class Story {
 
 	/**
 	 * Determines the appropriate source of the script (mobile or desktop)
+	 * @param {string} config
 	 * @returns {string}
 	 */
 	getScriptUri(config) {

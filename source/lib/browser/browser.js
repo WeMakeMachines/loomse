@@ -18,6 +18,8 @@ export const browser = {
 	},
 
 	/**
+	 * Determines if the device has a small screen or not
+	 * @param {number} minimumResolution
 	 * @returns {boolean}
 	 */
 	hasSmallScreen(minimumResolution) {
