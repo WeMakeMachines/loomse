@@ -50,6 +50,7 @@ The initialParameters object is shaped as follows
 - `mobileScriptJson` _{JSON}_ - mobile JSON data with the script
 - `scriptUri` _{string}_ - script file URI
 - `mobileScriptUri` _{string}_ - mobile script file URI
+- `resizeVideoTo` _{'parent'|'window'}_ - resizes the video element to match the dimensions of the selection
 - `externalModules` _{string}_ - Name of global object which contains all the modules
 - `mobileMinimumResolution` _{number}_ - Below this resolution the mobile script will be used
 - `subtitles` - An object containing overrides for the subtitles mechanism

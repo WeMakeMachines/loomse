@@ -9,10 +9,15 @@ export const browser = {
 	/**
 	 * Gets the current element dimensions
 	 * @param {HTMLElement} element
-	 * @returns {Object}
+	 * @returns {{width: number, height: number}}
 	 */
 	getElementDimensions(element) {
-		return element.getBoundingClientRect();
+		const elementDimensions = element.getBoundingClientRect();
+
+		return {
+			width: elementDimensions.width,
+			height: elementDimensions.height
+		};
 	},
 
 	/**

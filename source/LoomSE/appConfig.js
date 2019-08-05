@@ -6,6 +6,7 @@ const defaults = {
 	scriptUri: '',
 	mobileScriptUri: '',
 	externalModules: '',
+	resizeVideoTo: 'parent',
 	mobileMinimumResolution: 480,
 	subtitles: {
 		active: false,
