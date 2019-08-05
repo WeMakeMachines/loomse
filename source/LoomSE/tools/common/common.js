@@ -1,7 +1,7 @@
 /**
  * Common tools
  */
-export { ajaxRequest, cleanString, debounce, random };
+export { ajaxRequest, cleanString, debounce, isEmptyObject, random };
 
 /**
  * Simplified AJAX call
@@ -67,6 +67,17 @@ const debounce = (() => {
 		}, delay);
 	};
 })();
+
+/**
+ * Checks if an object is empty
+ * @param {Object} object
+ * @returns {boolean}
+ */
+function isEmptyObject(object) {
+	const keys = Object.keys(object);
+
+	return !Boolean(keys.length);
+}
 
 /**
  * Returns a random number between minRange and maxRange
