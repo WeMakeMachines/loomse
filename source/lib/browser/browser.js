@@ -7,6 +7,15 @@ export const browser = {
 	},
 
 	/**
+	 * Gets the current element dimensions
+	 * @param {HTMLElement} element
+	 * @returns {Object}
+	 */
+	getElementDimensions(element) {
+		return element.getBoundingClientRect();
+	},
+
+	/**
 	 * Gets the current window dimensions
 	 * @returns {{width: number, height: number}}
 	 */
