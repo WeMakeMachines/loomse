@@ -1,10 +1,12 @@
 export { appConfig as default, setupAppConfig };
 
 const defaults = {
+	scriptJson: {},
+	mobileScriptJson: {},
+	scriptUri: '',
+	mobileScriptUri: '',
 	externalModules: '',
-	mobile: {
-		minimumResolution: 480
-	},
+	mobileMinimumResolution: 480,
 	subtitles: {
 		active: false,
 		x: 0.5,

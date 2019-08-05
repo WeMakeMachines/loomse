@@ -46,16 +46,17 @@ _LoomSE(parent{HTMLElement}, initialParameters{Object})_
 
 The initialParameters object is shaped as follows
 
-- `script` (required) - Defines where the script file is located
-- `mobileScript` - Defines the mobile script
-- `externalModules` - Name of global object which contains all the modules
-- `mobile` - Contains mobile specific properties
-    - `minimumResolution` - Below this resolution the mobile script will be used
+- `scriptJson` _{JSON}_ - JSON data with the script
+- `mobileScriptJson` _{JSON}_ - mobile JSON data with the script
+- `scriptUri` _{string}_ - script file URI
+- `mobileScriptUri` _{string}_ - mobile script file URI
+- `externalModules` _{string}_ - Name of global object which contains all the modules
+- `mobileMinimumResolution` _{number}_ - Below this resolution the mobile script will be used
 - `subtitles` - An object containing overrides for the subtitles mechanism
-    - `active` - Indicates whether subtitles should be shown at start
-    - `language` - Default selected language for the subtitles
-    - `x` - x co-ordinate for the subtitles
-    - `y` - y co-ordinate for the subtitles
+    - `active` _{boolean}_ - Indicates whether subtitles should be shown at start
+    - `language` _{string}_ - Default selected language for the subtitles
+    - `x` _{number}_ - x co-ordinate for the subtitles
+    - `y` _{number}_ - y co-ordinate for the subtitles
 
 #### Example usage
 
@@ -66,12 +67,12 @@ The initialParameters object is shaped as follows
 
 ##### JavaScript
 ```
-var htmlElement = document.querySelector('#loomSE');
-var config = {
-    script: 'script.json'
-    mobileScript 'script-mobile.json'
+const parent = document.querySelector('#loomSE');
+const initialParams = {
+    scriptUri: 'script.json'
+    mobileScriptUri: 'script-mobile.json'
 };
-var loomSE = new LoomSE(htmlElement, config);
+const loomSE = new LoomSE(parent, initialParams);
 
 ```
 
