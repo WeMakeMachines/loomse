@@ -7,6 +7,7 @@ const defaults = {
 	mobileScriptUri: '',
 	externalModules: '',
 	resizeVideoTo: 'parent',
+	videoStretchMethod: 'cover',
 	mobileMinimumResolution: 480,
 	subtitles: {
 		active: false,
