@@ -13,13 +13,20 @@ import state from '../../state';
 
 import styles from './styles';
 
+import appConfig from '../../appConfig';
+
 class VideoError extends Error {}
 
 export class Video extends Component {
-	constructor(options) {
+	constructor(options, config = appConfig) {
+		const videoStyles = {
+			...styles.video,
+			objectFit: config.videoStretchMethod
+		};
+
 		super({
 			type: 'video',
-			styles: styles.video
+			styles: videoStyles
 		});
 
 		this.node.autoplay = false;
@@ -65,7 +72,7 @@ export class Video extends Component {
 
 			const source = this.sources[key].element;
 
-			source.mount({ node: this.node });
+			source.mountTo(this.node);
 		}
 	}
 

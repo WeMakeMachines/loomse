@@ -6,27 +6,28 @@ import packageJson from '../package';
 
 import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/applicationActions';
 
-import { initialiseView } from './LoomSE/view';
-
-import state from './LoomSE/state';
-
-export default function App(HTMLElement, config) {
-	const node = HTMLElement;
+/**
+ * This function represents the public constructor object for LoomSE
+ * @param {HTMLElement} parent The parent element to which the application will attach to
+ * @param {Object} initialParameters
+ * @returns {Object} Public API
+ * @constructor
+ */
+export default function App(parent, initialParameters) {
 	const version = packageJson.version;
 
-	initialiseRadio(node);
-	initialiseView(node);
+	initialiseRadio(parent);
 
 	const loom = new Loom({
-		node,
-		config,
+		parent,
+		initialParameters,
 		lastState: browser.localStorage.getData(),
 		isClientSupported: browser.isCompatible()
 	});
 
-	const api = {
+	return {
 		reload() {
-			loom.loadScene(state.scene);
+			loom.loadScene(loom.state.scene);
 		},
 
 		pause() {
@@ -42,13 +43,11 @@ export default function App(HTMLElement, config) {
 		},
 
 		currentTime() {
-			return state.time;
+			return loom.state.time;
 		},
 
 		version,
 
 		v: version
 	};
-
-	return api;
 }

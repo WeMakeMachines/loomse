@@ -5,14 +5,13 @@ import { ajaxRequest } from '../../tools/common';
 class ScriptReaderError extends Error {}
 
 export class ScriptReader {
-	constructor(scriptUri, schema = scriptSchema) {
-		this.scriptUri = scriptUri;
+	constructor(schema = scriptSchema) {
 		this.schema = schema;
 	}
 
-	load() {
+	loadFromUri(uri) {
 		return new Promise(resolve => {
-			this.fetchScript()
+			ajaxRequest(uri, 'JSON')
 				.then(jsonData => resolve(jsonData))
 				.catch(error => {
 					throw new ScriptReaderError(`Unable to read script, ${error}`);
@@ -34,9 +33,5 @@ export class ScriptReader {
 		throw new ScriptReaderError(
 			`Script error, does not match schema, ${JSON.stringify(output)}`
 		);
-	}
-
-	fetchScript() {
-		return ajaxRequest(this.scriptUri, 'JSON');
 	}
 }

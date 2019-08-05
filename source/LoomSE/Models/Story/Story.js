@@ -4,14 +4,23 @@ import { ScriptReader } from './ScriptReader';
 
 import state from '../../state';
 
+import { isEmptyObject } from '../../tools/common';
+
 import { browser } from '../../../lib';
 
 class StoryError extends Error {}
 
 export class Story {
 	constructor(config = appConfig) {
-		this.scriptReader = new ScriptReader(this.getScriptUri(config));
-		this.script = {};
+		this.hasSmallScreen = browser.hasSmallScreen(
+			config.mobileMinimumResolution
+		);
+		this.scriptJson = config.script || {};
+		this.mobileScriptJson = config.mobileScriptJson || {};
+		this.scriptUri = config.scriptUri;
+		this.mobileScriptUri = config.mobileScriptUri;
+		this.scriptReader = new ScriptReader();
+		this.json = {};
 		this.shortName = '';
 		this.longName = '';
 		this.author = '';
@@ -23,28 +32,32 @@ export class Story {
 
 	/**
 	 * Determines the appropriate source of the script (mobile or desktop)
-	 * @returns {string}
+	 * @returns {JSON}
 	 */
-	getScriptUri(config) {
-		if (!config['script']) {
-			throw new StoryError('No script file to load');
+	getJson() {
+		if (this.hasSmallScreen && isEmptyObject(this.mobileScriptJson)) {
+			return this.scriptReader.loadFromUri(this.mobileScriptUri);
+		} else if (this.hasSmallScreen) {
+			return this.mobileScriptJson;
 		}
 
-		return config['mobileScript'] && browser.hasSmallScreen()
-			? config['mobileScript']
-			: config['script'];
+		if (isEmptyObject(this.scriptJson)) {
+			return this.scriptReader.loadFromUri(this.scriptUri);
+		}
+
+		return this.scriptJson;
 	}
 
 	async readScript() {
-		this.script = await this.scriptReader.load();
+		this.json = await this.getJson();
 
-		const isScriptValid = this.scriptReader.validate(this.script);
+		const isScriptValid = this.scriptReader.validate(this.json);
 
 		if (!isScriptValid) {
 			throw new StoryError('Unable to continue');
 		}
 
-		this.parseScriptParameters(this.script);
+		this.parseScriptParameters(this.json);
 	}
 
 	parseScriptParameters(scriptParameters) {

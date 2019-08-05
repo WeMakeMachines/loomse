@@ -7,6 +7,20 @@ export const browser = {
 	},
 
 	/**
+	 * Gets the current element dimensions
+	 * @param {HTMLElement} element
+	 * @returns {{width: number, height: number}}
+	 */
+	getElementDimensions(element) {
+		const elementDimensions = element.getBoundingClientRect();
+
+		return {
+			width: elementDimensions.width,
+			height: elementDimensions.height
+		};
+	},
+
+	/**
 	 * Gets the current window dimensions
 	 * @returns {{width: number, height: number}}
 	 */
@@ -18,6 +32,8 @@ export const browser = {
 	},
 
 	/**
+	 * Determines if the device has a small screen or not
+	 * @param {number} minimumResolution
 	 * @returns {boolean}
 	 */
 	hasSmallScreen(minimumResolution) {

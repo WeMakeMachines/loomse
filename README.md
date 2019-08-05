@@ -1,4 +1,4 @@
-# Loom Story Engine 0.5.7
+# Loom Story Engine
 *Interactive storytelling for the modern web*
 
 ## What is LoomSE?
@@ -6,17 +6,17 @@ LoomSE is an open-source application built in JavaScript, HTML5 and CSS3. With L
 
 ## Dependencies
 
-Developing within the LoomSE framework requires
+#### Development dependencies
 - npm
 - babel (for compiling ES6)
 - webpack (for building)
 
-Application dependencies
+#### Production dependencies
 - djv (for validating the script file)
 
 ## Installation
 
-This repository includes a minified version of LoomSE
+This repository includes a minified version of LoomSE `/dist/loomse.min.js`
 
 #### via npm ###
 
@@ -24,42 +24,41 @@ This repository includes a minified version of LoomSE
 
 #### Importing
 
-The LoomSE package can be implemented via CommonJS, AMD or as a global variable.
-
-##### ES6 Import
-
-The most common way of importing LoomSE into your project would be via ES6 import,
+The most common way of importing LoomSE into your project would be via an ES6 import,
 for example:
 
 `import LoomSE from 'loomse'`
 
 ## Initialising and configuration
 
-LoomSE must be initialised via the `new` keyword. For example;
+The LoomSE object must be initialised via the `new` keyword. For example;
 
 `const loomSE = new LoomSE();`
 
 #### LoomSE object syntax
 
-_LoomSE(HTMLElement, object)_
+_LoomSE(parent{HTMLElement}, initialParameters{Object})_
 
-- **HTMLElement** refers to an object in the DOM which will house the Loom Story
-- **object** refers the the initialisation and configuration parameters
+- `parent` refers to an object in the DOM to which the Loom Story application will unpack itself
+- `initialParameters` refers the the initialisation parameters
 
 #### Configuring
 
-The config object is shaped as follows
+The initialParameters object is shaped as follows
 
-- `script` (required) - Defines where the script file is located
-- `mobileScript` - Defines the mobile script
-- `externalModules` - Name of global object which contains all the modules
-- `mobile` - Contains mobile specific properties
-    - `minimumResolution` - Below this resolution the mobile script will be used
+- `scriptJson` _{JSON}_ - JSON data with the script
+- `mobileScriptJson` _{JSON}_ - mobile JSON data with the script
+- `scriptUri` _{string}_ - script file URI
+- `mobileScriptUri` _{string}_ - mobile script file URI
+- `resizeVideoTo` _{'parent'|'window'}_ - resizes the video element to match the dimensions of the selection
+- `videoStretchMethod` _{'cover'|'contain'|'fill'}_ - The video fit method
+- `externalModules` _{string}_ - Name of global object which contains all the modules
+- `mobileMinimumResolution` _{number}_ - Below this resolution the mobile script will be used
 - `subtitles` - An object containing overrides for the subtitles mechanism
-    - `active` - Indicates whether subtitles should be shown at start
-    - `language` - Default selected language for the subtitles
-    - `x` - x co-ordinate for the subtitles
-    - `y` - y co-ordinate for the subtitles
+    - `active` _{boolean}_ - Indicates whether subtitles should be shown at start
+    - `language` _{string}_ - Default selected language for the subtitles
+    - `x` _{number}_ - x co-ordinate for the subtitles
+    - `y` _{number}_ - y co-ordinate for the subtitles
 
 #### Example usage
 
@@ -70,12 +69,12 @@ The config object is shaped as follows
 
 ##### JavaScript
 ```
-var htmlElement = document.querySelector('#loomSE');
-var config = {
-    script: 'script.json'
-    mobileScript 'script-mobile.json'
+const parent = document.querySelector('#loomSE');
+const initialParams = {
+    scriptUri: 'script.json'
+    mobileScriptUri: 'script-mobile.json'
 };
-var loomSE = new LoomSE(htmlElement, config);
+const loomSE = new LoomSE(parent, initialParams);
 
 ```
 

@@ -12,14 +12,17 @@ import state from '../../state';
 
 import styles from './styles';
 
+import appConfig from '../../appConfig';
+
 export class View extends Component {
-	constructor(parent) {
+	constructor(parent, config = appConfig) {
 		super({
 			parent,
 			id: 'view',
 			styles: styles.view
 		});
 
+		this.resizeVideoTo = config.resizeVideoTo;
 		this.fullscreen = browser.fullscreen(this.node);
 
 		this.containers = {
@@ -36,7 +39,7 @@ export class View extends Component {
 		this.mountContainers();
 		this.mount();
 		this.setListeners();
-		this.resizeComponents();
+		this.updateClientDimensions();
 	}
 
 	mountContainers() {
@@ -47,29 +50,40 @@ export class View extends Component {
 
 			const container = this.containers[key];
 
-			container.mount({ node: this.node });
+			container.mountTo(this.node);
 		}
 	}
 
 	setListeners() {
 		const debounceDelay = 200;
 		const fullscreenEvent = this.fullscreen.returnEvent();
-		const resizeComponents = this.resizeComponents.bind(this);
+		const updateClientDimensions = this.updateClientDimensions.bind(this);
 
 		window.addEventListener('resize', function() {
-			debounce(resizeComponents, debounceDelay);
+			debounce(updateClientDimensions, debounceDelay);
 		});
 
 		if (fullscreenEvent) {
 			document.addEventListener(fullscreenEvent, function() {
-				resizeComponents();
+				updateClientDimensions();
 			});
 		}
 	}
 
-	resizeComponents() {
-		state.clientDimensions = browser.getWindowDimensions();
+	updateClientDimensions() {
+		switch (this.resizeVideoTo) {
+			default:
+			case 'parent':
+				state.clientDimensions = browser.getElementDimensions(this.parent);
+				break;
+			case 'window':
+				state.clientDimensions = browser.getWindowDimensions();
+		}
 
+		this.resizeComponents();
+	}
+
+	resizeComponents() {
 		const components = [
 			this,
 			this.containers.stage,
@@ -78,14 +92,12 @@ export class View extends Component {
 			...this.containers.overlay.children
 		];
 
-		for (let i = 0; i < components.length; i += 1) {
-			const component = components[i];
-
+		components.forEach(component =>
 			component.resize({
 				width: state.clientDimensions.width,
 				height: state.clientDimensions.height
-			});
-		}
+			})
+		);
 
 		radioService.broadcast(STAGE_RESIZE, {
 			width: state.clientDimensions.width,
