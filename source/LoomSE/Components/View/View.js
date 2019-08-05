@@ -47,7 +47,7 @@ export class View extends Component {
 
 			const container = this.containers[key];
 
-			container.mount({ node: this.node });
+			container.mountTo(this.node);
 		}
 	}
 

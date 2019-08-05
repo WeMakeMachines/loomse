@@ -3,39 +3,27 @@ import { radioService } from '../../../lib';
 class ComponentError extends Error {}
 
 export class Component {
-	/**
-	 * Returns a valid DOM element
-	 * @param {object} options
-	 * @returns {object}
-	 */
-	static createNode(options) {
-		if (!options.type) {
-			options.type = 'div';
-		}
-
-		const node = document.createElement(options.type);
-
-		if (options.id && document.getElementById(options.id)) {
-			throw new ComponentError('DOM element already exists');
-		} else if (options.id) {
-			node.setAttribute('id', options.id);
-		}
-
-		return node;
+	static createNode(type = 'div') {
+		return document.createElement(type);
 	}
 
-	constructor(options) {
-		options = options || {};
+	static createTextNode(text) {
+		if (!text) {
+			return null;
+		}
 
+		return document.createTextNode(text);
+	}
+
+	constructor(options = {}) {
 		this.node =
 			options.node && typeof options.node === 'object'
 				? options.node
-				: this.constructor.createNode(options);
+				: this.constructor.createNode(options.type);
 
 		this.mounted = false;
 		this.parent = options.parent || null;
 		this.visible = options.visible || true;
-		this.textNode = options.text ? document.createTextNode(options.text) : null;
 		this._childRegistry = options.children || [];
 		this._eventHandlerRegistry = {};
 
@@ -43,8 +31,12 @@ export class Component {
 			this.hide();
 		}
 
-		if (this.textNode) {
-			this.node.appendChild(this.textNode);
+		if (options.id) {
+			this.setId(options.id);
+		}
+
+		if (options.text) {
+			this.node.appendChild(this.constructor.createTextNode(options.text));
 		}
 
 		if (options.class) {
@@ -87,52 +79,52 @@ export class Component {
 		});
 	}
 
-	mount(options) {
-		let parent;
-
+	mount() {
 		if (this.mounted) {
 			throw new ComponentError('Component already mounted');
 		}
 
-		if (!this.parent && !options) {
-			throw new ComponentError('Parent not found');
-		}
-
-		if (this.parent && typeof this.parent === 'object') {
+		if (
+			this.parent &&
+			typeof this.parent === 'object' &&
+			this.parent.appendChild
+		) {
 			this.parent.appendChild(this.node);
 			this.mounted = true;
+
 			return;
 		}
 
-		if (typeof options.node === 'object') {
-			parent = options.node;
+		throw new ComponentError('Parent not found');
+	}
+
+	mountTo(parent) {
+		if (this.mounted) {
+			throw new ComponentError('Component already mounted');
 		}
 
-		if (options.id) {
-			parent = document.getElementById(options.id);
-		}
-
-		if (options.selector) {
-			parent = document.querySelector(options.selector);
-		}
-
-		if (parent && typeof parent === 'object') {
-			parent.appendChild(this.node);
-			this.mounted = true;
+		if (parent && typeof parent === 'object' && parent.appendChild) {
 			this.parent = parent;
-		} else {
-			throw new ComponentError('Parent not found');
+			this.parent.appendChild(this.node);
+			this.mounted = true;
+
+			return;
 		}
+
+		throw new ComponentError('Parent not found');
 	}
 
 	unmount() {
+		if (!this.mounted) {
+			return;
+		}
+
 		if (!this.parent) {
 			throw new ComponentError('Parent not found');
 		}
 
-		if (this.mounted) {
-			this.parent.removeChild(this.node);
-		}
+		this.parent.removeChild(this.node);
+		this.mounted = false;
 	}
 
 	/**
@@ -171,6 +163,20 @@ export class Component {
 		}
 	}
 
+	setId(id = '') {
+		if (!id) {
+			return;
+		}
+
+		const elementExists = document.getElementById(id);
+
+		if (elementExists) {
+			throw new ComponentError('ID already in use');
+		}
+
+		this.node.setAttribute('id', id);
+	}
+
 	/**
 	 * Method for setting style properties
 	 * @param {object} properties
@@ -180,54 +186,29 @@ export class Component {
 			throw new ComponentError('Invalid properties');
 		}
 
-		for (let property in properties) {
-			if (properties.hasOwnProperty(property)) {
-				let value = properties[property];
-
-				if (typeof value === 'number') {
-					switch (property) {
-						case 'width':
-						case 'height':
-						case 'top':
-						case 'left':
-						case 'right':
-						case 'bottom':
-							value += 'px';
-							break;
-						default:
-							break;
-					}
-				}
-
-				this.node.style[property] = value;
+		for (const property in properties) {
+			if (!properties.hasOwnProperty(property)) {
+				continue;
 			}
+			let value = properties[property];
+
+			if (typeof value === 'number') {
+				switch (property) {
+					case 'width':
+					case 'height':
+					case 'top':
+					case 'left':
+					case 'right':
+					case 'bottom':
+						value += 'px';
+						break;
+					default:
+						break;
+				}
+			}
+
+			this.node.style[property] = value;
 		}
-	}
-
-	/**
-	 * Creates an inner text node
-	 * @param {string} text
-	 */
-	setText(text) {
-		if (!text || typeof text !== 'string') {
-			throw new ComponentError('Invalid string');
-		}
-
-		let textNode = document.createTextNode(text);
-
-		this.node.appendChild(textNode);
-	}
-
-	/**
-	 * Sets inner HTML content
-	 * @param {string} htmlString
-	 */
-	setHtml(htmlString) {
-		if (!htmlString || typeof htmlString !== 'string') {
-			throw new ComponentError('Invalid HTML');
-		}
-
-		this.node.innerHTML = htmlString;
 	}
 
 	setLayer(layer) {

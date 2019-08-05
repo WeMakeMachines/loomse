@@ -65,7 +65,7 @@ export class Video extends Component {
 
 			const source = this.sources[key].element;
 
-			source.mount({ node: this.node });
+			source.mountTo(this.node);
 		}
 	}
 
