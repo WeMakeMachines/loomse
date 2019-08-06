@@ -1,6 +1,6 @@
 import { Story, Scene } from './Models';
 
-import { radioService } from '../lib';
+import { radioService } from '../lib/radioService';
 
 import { setupAppConfig } from './appConfig';
 

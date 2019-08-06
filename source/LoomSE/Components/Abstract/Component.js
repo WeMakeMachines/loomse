@@ -1,4 +1,4 @@
-import { radioService } from '../../../lib';
+import { radioService } from '../../../lib/radioService';
 
 class ComponentError extends Error {}
 

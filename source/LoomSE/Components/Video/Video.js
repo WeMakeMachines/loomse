@@ -2,7 +2,7 @@ import Component from '../Abstract';
 
 import Source from './Source';
 
-import { radioService } from '../../../lib';
+import { radioService } from '../../../lib/radioService';
 
 import {
 	DIRECTOR_PLAY,

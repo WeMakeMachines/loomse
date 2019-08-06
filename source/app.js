@@ -1,6 +1,8 @@
 import Loom from './LoomSE';
 
-import { browser, initialiseRadio, radioService } from './lib';
+import { isCompatible, localStorage } from './lib/browser';
+
+import { initialiseRadio, radioService } from './lib/radioService';
 
 import packageJson from '../package';
 
@@ -21,8 +23,8 @@ export default function App(parent, initialParameters) {
 	const loom = new Loom({
 		parent,
 		initialParameters,
-		lastState: browser.localStorage.getData(),
-		isClientSupported: browser.isCompatible()
+		lastState: localStorage.getData(),
+		isClientSupported: isCompatible()
 	});
 
 	return {

@@ -3,7 +3,12 @@ import Component from '../Abstract';
 import Stage from '../Stage';
 import Overlay from '../Overlay';
 
-import { browser, radioService } from '../../../lib';
+import {
+	fullscreen,
+	getDocumentDimensions,
+	getElementDimensions
+} from '../../../lib/browser';
+import { radioService } from '../../../lib/radioService';
 import { debounce } from '../../tools';
 
 import { STAGE_RESIZE } from '../../../constants/applicationActions';
@@ -23,7 +28,7 @@ export class View extends Component {
 		});
 
 		this.resizeVideoTo = config.resizeVideoTo;
-		this.fullscreen = browser.fullscreen(this.node);
+		this.fullscreen = fullscreen(this.node);
 
 		this.containers = {
 			stage: new Stage({
@@ -74,10 +79,10 @@ export class View extends Component {
 		switch (this.resizeVideoTo) {
 			default:
 			case 'parent':
-				state.clientDimensions = browser.getElementDimensions(this.parent);
+				state.clientDimensions = getElementDimensions(this.parent);
 				break;
 			case 'window':
-				state.clientDimensions = browser.getDocumentDimensions();
+				state.clientDimensions = getDocumentDimensions();
 		}
 
 		this.resizeComponents();
