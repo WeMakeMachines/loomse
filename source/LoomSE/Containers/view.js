@@ -1,4 +1,4 @@
-import { View } from '../Components';
+import View from './View';
 
 export function initialiseView(node) {
 	view = new View(node);

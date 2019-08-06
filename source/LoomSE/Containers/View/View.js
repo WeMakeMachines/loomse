@@ -1,4 +1,4 @@
-import Component from '../Abstract';
+import { Component } from '../../Components';
 
 import Stage from '../Stage';
 import Overlay from '../Overlay';

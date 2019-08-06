@@ -1,4 +1,4 @@
-import view from '../view';
+import view from '../Containers';
 import appConfig from '../appConfig';
 
 import { Events, Subtitles, Video } from '../Components';
