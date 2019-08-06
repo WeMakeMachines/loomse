@@ -77,7 +77,7 @@ export class View extends Component {
 				state.clientDimensions = browser.getElementDimensions(this.parent);
 				break;
 			case 'window':
-				state.clientDimensions = browser.getWindowDimensions();
+				state.clientDimensions = browser.getDocumentDimensions();
 		}
 
 		this.resizeComponents();

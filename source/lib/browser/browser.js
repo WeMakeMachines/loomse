@@ -21,12 +21,12 @@ export const browser = {
 	},
 
 	/**
-	 * Gets the current window dimensions
+	 * Gets the current document dimensions
 	 * @returns {{width: number, height: number}}
 	 */
-	getWindowDimensions() {
+	getDocumentDimensions() {
 		return {
-			width: window.innerWidth,
+			width: Math.min(document.body.clientWidth, window.innerWidth),
 			height: window.innerHeight
 		};
 	},
@@ -37,7 +37,7 @@ export const browser = {
 	 * @returns {boolean}
 	 */
 	hasSmallScreen(minimumResolution) {
-		let dimensions = this.getWindowDimensions();
+		let dimensions = this.getDocumentDimensions();
 
 		return (
 			dimensions.width < minimumResolution ||
