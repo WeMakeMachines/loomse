@@ -6,15 +6,13 @@ import state from '../../state';
 
 import { isEmptyObject } from '../../tools/common';
 
-import { browser } from '../../../lib';
+import { hasSmallScreen } from '../../../lib/browser';
 
 class StoryError extends Error {}
 
 export class Story {
 	constructor(config = appConfig) {
-		this.hasSmallScreen = browser.hasSmallScreen(
-			config.mobileMinimumResolution
-		);
+		this.hasSmallScreen = hasSmallScreen(config.mobileMinimumResolution);
 		this.scriptJson = config.script || {};
 		this.mobileScriptJson = config.mobileScriptJson || {};
 		this.scriptUri = config.scriptUri;

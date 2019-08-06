@@ -1,10 +1,10 @@
 import { Story, Scene } from './Models';
 
-import { radioService } from '../lib';
+import { radioService } from '../lib/radioService';
 
 import { setupAppConfig } from './appConfig';
 
-import { initialiseView } from './view';
+import { initialiseView } from './Containers';
 
 import { VIDEO_TIMEUPDATE } from '../constants/applicationActions';
 
