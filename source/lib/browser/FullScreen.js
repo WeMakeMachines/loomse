@@ -1,7 +1,9 @@
+export default FullScreen;
+
 /**
  * Handles the fullscreen API for client devices
  */
-export class FullScreen {
+class FullScreen {
 	/**
 	 * Returns currently known API methods for client devices
 	 * @returns {object}

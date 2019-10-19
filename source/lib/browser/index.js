@@ -8,8 +8,8 @@ export {
 	getExternalModule,
 	hasSmallScreen,
 	isCompatible,
-	localStorage,
-	supportsVideo
+	supportsVideo,
+	localStorage
 };
 
 const localStorage = new LocalStorage();

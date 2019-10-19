@@ -1,6 +1,8 @@
+export default LocalStorage;
+
 class LocalStorageError extends Error {}
 
-export class LocalStorage {
+class LocalStorage {
 	constructor(ref = window) {
 		this.ref = ref;
 		this.storageKey = 'data';
