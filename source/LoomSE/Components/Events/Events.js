@@ -1,7 +1,7 @@
 import Event from '../Event';
 import TimedComponent from '../TimedComponent';
 
-import { STAGE_RESIZE } from '../../../constants/applicationActions';
+import { STAGE_RESIZE } from '../../constants/applicationActions';
 
 import styles from './styles';
 

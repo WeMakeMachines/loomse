@@ -6,7 +6,7 @@ import state from '../../state';
 
 import { isEmptyObject } from '../../tools/common';
 
-import { hasSmallScreen } from '../../../lib/browser';
+import { hasSmallScreen } from '../../lib/browser';
 
 class StoryError extends Error {}
 

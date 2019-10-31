@@ -1,6 +1,6 @@
 import Block from '../Block';
 
-import { EXPIRED, FIRED, WAITING } from '../../../constants/eventStates';
+import { EXPIRED, FIRED, WAITING } from '../../constants/eventStates';
 
 export class Event {
 	constructor(options) {

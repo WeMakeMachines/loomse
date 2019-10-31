@@ -1,4 +1,4 @@
-import { colors } from '../../../constants/styles';
+import { colors } from '../../constants/styles';
 
 export default {
 	view: {

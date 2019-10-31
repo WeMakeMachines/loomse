@@ -2,12 +2,12 @@ import Component from '../Abstract';
 
 import Source from './Source';
 
-import { radioService } from '../../../lib/radioService';
+import { radioService } from '../../lib/radioService';
 
 import {
 	DIRECTOR_PLAY,
 	DIRECTOR_PAUSE
-} from '../../../constants/applicationActions';
+} from '../../constants/applicationActions';
 
 import state from '../../state';
 

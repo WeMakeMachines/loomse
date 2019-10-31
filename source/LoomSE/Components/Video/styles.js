@@ -1,4 +1,4 @@
-import { stack } from '../../../constants/styles';
+import { stack } from '../../constants/styles';
 
 export default {
 	video: {

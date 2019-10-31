@@ -2,8 +2,8 @@ import Component from '../Abstract';
 
 import { Queue } from '../../Models';
 
-import { VIDEO_TIMEUPDATE } from '../../../constants/applicationActions';
-import { RUN, STOP } from '../../../constants/eventActions';
+import { VIDEO_TIMEUPDATE } from '../../constants/applicationActions';
+import { RUN, STOP } from '../../constants/eventActions';
 
 import { secondsToMilliseconds } from '../../tools';
 

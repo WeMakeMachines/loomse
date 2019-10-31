@@ -1,6 +1,6 @@
 import { ajaxRequest } from '../';
 
-import { SRT } from '../../../constants/plainTextFiles';
+import { SRT } from '../../constants/plainTextFiles';
 
 import { SRT_Parser } from './parsers';
 

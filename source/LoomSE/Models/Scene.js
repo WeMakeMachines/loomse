@@ -3,7 +3,7 @@ import appConfig from '../appConfig';
 
 import { Events, Subtitles, Video } from '../Components';
 import { parseFile } from '../tools/fileParsers';
-import { getExternalModule } from '../../lib/browser';
+import { getExternalModule } from '../lib/browser';
 import state from '../state';
 
 export class Scene {

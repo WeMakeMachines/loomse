@@ -7,7 +7,7 @@ import {
 	VIDEO_MP4,
 	VIDEO_OGG,
 	VIDEO_WEBM
-} from '../../../../constants/videoSourceTypes';
+} from '../../../constants/videoSourceTypes';
 
 class SourceError extends Error {}
 

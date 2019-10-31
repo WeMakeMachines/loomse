@@ -7,11 +7,11 @@ import {
 	fullscreen,
 	getDocumentDimensions,
 	getElementDimensions
-} from '../../../lib/browser';
-import { radioService } from '../../../lib/radioService';
+} from '../../lib/browser';
+import { radioService } from '../../lib/radioService';
 import { debounce } from '../../tools';
 
-import { STAGE_RESIZE } from '../../../constants/applicationActions';
+import { STAGE_RESIZE } from '../../constants/applicationActions';
 
 import state from '../../state';
 

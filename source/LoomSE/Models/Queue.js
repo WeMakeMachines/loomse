@@ -1,4 +1,4 @@
-import { RUN, STOP } from '../../constants/eventActions';
+import { RUN, STOP } from '../constants/eventActions';
 
 export class Queue {
 	constructor(timedObjects) {

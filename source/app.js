@@ -1,12 +1,15 @@
 import Loom from './LoomSE';
 
-import { isCompatible, localStorage } from './lib/browser';
+import { isCompatible, localStorage } from './LoomSE/lib/browser';
 
-import { initialiseRadio, radioService } from './lib/radioService';
+import { initialiseRadio, radioService } from './LoomSE/lib/radioService';
 
 import packageJson from '../package';
 
-import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/applicationActions';
+import {
+	DIRECTOR_PAUSE,
+	DIRECTOR_PLAY
+} from './LoomSE/constants/applicationActions';
 
 /**
  * This function represents the public constructor object for LoomSE
