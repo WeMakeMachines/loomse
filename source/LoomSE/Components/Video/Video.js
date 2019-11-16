@@ -2,7 +2,7 @@ import Component from '../Abstract';
 
 import Source from './Source';
 
-import { radioService } from '../../lib/radioService';
+import { radioService } from '../../services/radioService';
 
 import {
 	DIRECTOR_PLAY,
@@ -89,7 +89,6 @@ export class Video extends Component {
 		events.forEach(event => {
 			this.node.addEventListener(event, () => {
 				radioService.broadcast(`video:${event}`, {
-					state: event,
 					time: this.node.currentTime
 				});
 			});
