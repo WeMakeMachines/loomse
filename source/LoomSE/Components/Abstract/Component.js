@@ -1,5 +1,3 @@
-import { radioService } from '../../lib/radioService';
-
 class ComponentError extends Error {}
 
 export class Component {
@@ -25,7 +23,6 @@ export class Component {
 		this.parent = options.parent || null;
 		this.visible = options.visible || true;
 		this._childRegistry = options.children || [];
-		this._eventHandlerRegistry = {};
 
 		if (!this.visible) {
 			this.hide();
@@ -36,7 +33,9 @@ export class Component {
 		}
 
 		if (options.text) {
-			this.node.appendChild(this.constructor.createTextNode(options.text));
+			this.node.appendChild(
+				this.constructor.createTextNode(options.text)
+			);
 		}
 
 		if (options.class) {
@@ -300,29 +299,5 @@ export class Component {
 			left: coordinates.x,
 			top: coordinates.y
 		});
-	}
-
-	listenToChannel(channel, callback) {
-		if (this._eventHandlerRegistry[channel]) {
-			console.warn('Already listening to channel, ', channel);
-
-			return;
-		}
-
-		this._eventHandlerRegistry[channel] = callback.bind(this);
-
-		radioService.listen(channel, this._eventHandlerRegistry[channel]);
-	}
-
-	stopListeningToChannel(channel) {
-		if (!this._eventHandlerRegistry[channel]) {
-			console.warn('Handler not found, ', channel);
-
-			return;
-		}
-
-		radioService.stopListening(channel, this._eventHandlerRegistry[channel]);
-
-		delete this._eventHandlerRegistry[channel];
 	}
 }
