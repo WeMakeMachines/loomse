@@ -1,5 +1,3 @@
-export default FullScreen;
-
 /**
  * Handles the fullscreen API for client devices
  */
@@ -110,3 +108,5 @@ class FullScreen {
 		return this.api.event || null;
 	}
 }
+
+export default FullScreen;

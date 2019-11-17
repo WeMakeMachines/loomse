@@ -1,4 +1,4 @@
-import { clockStringToMilliseconds } from '../../../tools';
+import { clockStringToMilliseconds } from '../index';
 
 export class SRT_Parser {
 	static getBlockMarker(line) {

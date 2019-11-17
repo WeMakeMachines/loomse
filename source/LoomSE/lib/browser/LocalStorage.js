@@ -1,5 +1,3 @@
-export default LocalStorage;
-
 class LocalStorageError extends Error {}
 
 class LocalStorage {
@@ -19,7 +17,9 @@ class LocalStorage {
 			this.ref.localStorage.removeItem(testKey);
 			return true;
 		} catch (error) {
-			throw new LocalStorageError(`Unable to access local storage, ${error}`);
+			throw new LocalStorageError(
+				`Unable to access local storage, ${error}`
+			);
 		}
 	}
 
@@ -55,7 +55,11 @@ class LocalStorage {
 		try {
 			this.ref.localStorage.setItem(this.storageKey, saveToStorage);
 		} catch (error) {
-			throw new LocalStorageError(`Unable to access local storage, ${error}`);
+			throw new LocalStorageError(
+				`Unable to access local storage, ${error}`
+			);
 		}
 	}
 }
+
+export default LocalStorage;

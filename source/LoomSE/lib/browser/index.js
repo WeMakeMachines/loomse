@@ -6,7 +6,6 @@ export {
 	getDocumentDimensions,
 	getElementDimensions,
 	getExternalModule,
-	hasSmallScreen,
 	isCompatible,
 	supportsVideo,
 	localStorage
@@ -55,20 +54,6 @@ function getExternalModule(externalModuleReference, moduleName) {
 	}
 
 	return module;
-}
-
-/**
- * Determines if the device has a small screen or not
- * @param {number} minimumResolution
- * @returns {boolean}
- */
-function hasSmallScreen(minimumResolution) {
-	let dimensions = getDocumentDimensions();
-
-	return (
-		dimensions.width < minimumResolution ||
-		dimensions.height < minimumResolution
-	);
 }
 
 function isCompatible() {
