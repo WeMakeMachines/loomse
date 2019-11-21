@@ -1,54 +1,41 @@
-import Loom from './LoomSE';
-
-import { isCompatible, localStorage } from './LoomSE/lib/browser';
-
-import { initialiseRadio, radioService } from './LoomSE/lib/radioService';
+import LoomSE from './LoomSE';
 
 import packageJson from '../package';
 
-import {
-	DIRECTOR_PAUSE,
-	DIRECTOR_PLAY
-} from './LoomSE/constants/applicationActions';
-
 /**
- * This function represents the public constructor object for LoomSE
- * @param {HTMLElement} parent The parent element to which the application will attach to
- * @param {Object} initialParameters
+ * This function represents the public interface (facade) for LoomSE
+ * @param {HTMLElement} node The parent element to which the application will attach
+ * @param {Object} config
  * @returns {Object} Public API
  * @constructor
  */
-export default function App(parent, initialParameters) {
+export default function App(node, config) {
 	const version = packageJson.version;
-
-	initialiseRadio(parent);
-
-	const loom = new Loom({
-		parent,
-		initialParameters,
-		lastState: localStorage.getData(),
-		isClientSupported: isCompatible()
-	});
+	const loomSE = new LoomSE(node, config);
 
 	return {
+		loadScriptFromJson(json) {
+			loomSE.loadScriptFromJson(json);
+		},
+
+		loadScriptFromUrl(url) {
+			loomSE.loadScriptFromUrl(url);
+		},
+
 		reload() {
-			loom.loadScene(loom.state.scene);
+			loomSE.loadScene(loomSE.state.scene);
 		},
 
 		pause() {
-			radioService.broadcast(DIRECTOR_PAUSE);
+			loomSE.pause();
 		},
 
 		play() {
-			radioService.broadcast(DIRECTOR_PLAY);
+			loomSE.play();
 		},
 
 		skipTo(scene) {
-			loom.loadScene(scene);
-		},
-
-		currentTime() {
-			return loom.state.time;
+			loomSE.loadScene(scene);
 		},
 
 		version,
