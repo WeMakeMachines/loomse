@@ -1,17 +1,20 @@
-import LoomSE from './LoomSE';
+import { mount } from 'redom';
 
+import LoomSE from './LoomSE';
 import packageJson from '../package';
 
 /**
  * This function represents the public interface (facade) for LoomSE
- * @param {HTMLElement} node The parent element to which the application will attach
+ * @param {HTMLElement} el The parent element to which the application will attach
  * @param {Object} config
  * @returns {Object} Public API
  * @constructor
  */
-export default function App(node, config) {
+export default function App(el, config) {
 	const version = packageJson.version;
-	const loomSE = new LoomSE(node, config);
+	const loomSE = new LoomSE(config);
+
+	mount(el, loomSE);
 
 	return {
 		loadScriptFromJson(json) {

@@ -13,7 +13,7 @@ class SourceError extends Error {}
 
 class Source {
 	constructor(type, uri) {
-		this.node = el('source', {
+		this.el = el('source', {
 			src: uri,
 			type: this.mapFileFormatToMediaType(type)
 		});

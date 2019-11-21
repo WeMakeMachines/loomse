@@ -7,13 +7,13 @@ import styles from './styles';
 
 class Scene {
 	constructor({ events, longName, video }) {
-		this.node = el('#loomSE_scene', { style: { ...styles } });
+		this.el = el('#loomSE_scene', { style: { ...styles } });
 
 		this.longName = longName;
 		this.video = new Video(video);
 		this.events = new Events(events);
 
-		setChildren(this.node, [this.video.node]);
+		setChildren(this.el, [this.video.el]);
 	}
 }
 

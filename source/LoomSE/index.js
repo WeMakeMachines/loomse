@@ -15,8 +15,8 @@ import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/applicationActions';
 class LoomSE_Error extends Error {}
 
 class LoomSE {
-	constructor(parentNode, config = {}) {
-		this.node = el('#loomSE', {
+	constructor(config = {}) {
+		this.el = el('#loomSE', {
 			style: {
 				...styles,
 				width: `${config.width}px`,
@@ -26,8 +26,6 @@ class LoomSE {
 
 		this.story = {};
 		this.scene = {};
-
-		mount(parentNode, this.node);
 	}
 
 	loadScriptFromJson(json) {
@@ -64,7 +62,7 @@ class LoomSE {
 
 		this.scene = new Scene(this.story.scenes[string]);
 
-		mount(this.node, this.scene.node);
+		mount(this.el, this.scene);
 	}
 
 	unloadScene() {}
@@ -78,7 +76,7 @@ class LoomSE {
 	}
 
 	resize(width, height) {
-		setStyle(this.node, { width: `${width}px`, height: `${height}px` });
+		setStyle(this.el, { width: `${width}px`, height: `${height}px` });
 	}
 }
 

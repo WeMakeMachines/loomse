@@ -30,7 +30,7 @@ class Video {
 		muted = false,
 		sources = {}
 	}) {
-		this.node = el('video#loomSE_video', {
+		this.el = el('video#loomSE_video', {
 			autoplay: false,
 			controls: controls,
 			loop: loop,
@@ -80,44 +80,44 @@ class Video {
 
 			const source = this.sources[key];
 
-			mount(this.node, source.node);
+			mount(this.el, source.el);
 		}
 	}
 
 	listenToVideoEvents() {
-		this.node.addEventListener('playing', () => {
+		this.el.addEventListener('playing', () => {
 			radioService.broadcast(VIDEO_PLAYING, {
-				time: this.node.currentTime
+				time: this.el.currentTime
 			});
 		});
 
-		this.node.addEventListener('paused', () => {
+		this.el.addEventListener('paused', () => {
 			radioService.broadcast(VIDEO_PAUSED, {
-				time: this.node.currentTime
+				time: this.el.currentTime
 			});
 		});
 
-		this.node.addEventListener('seeking', () => {
+		this.el.addEventListener('seeking', () => {
 			radioService.broadcast(VIDEO_SEEKING, {
-				time: this.node.currentTime
+				time: this.el.currentTime
 			});
 		});
 
-		this.node.addEventListener('seeked', () => {
+		this.el.addEventListener('seeked', () => {
 			radioService.broadcast(VIDEO_SEEKED, {
-				time: this.node.currentTime
+				time: this.el.currentTime
 			});
 		});
 
-		this.node.addEventListener('timeupdate', () => {
+		this.el.addEventListener('timeupdate', () => {
 			radioService.broadcast(VIDEO_TIMEUPDATE, {
-				time: this.node.currentTime
+				time: this.el.currentTime
 			});
 		});
 
-		this.node.addEventListener('ended', () => {
+		this.el.addEventListener('ended', () => {
 			radioService.broadcast(VIDEO_ENDED, {
-				time: this.node.currentTime
+				time: this.el.currentTime
 			});
 		});
 	}
@@ -128,18 +128,18 @@ class Video {
 	}
 
 	play() {
-		this.node
+		this.el
 			.play()
 			.then(() => {})
 			.catch(() => {});
 	}
 
 	pause() {
-		this.node.pause();
+		this.el.pause();
 	}
 
 	playPause() {
-		if (this.node.paused) {
+		if (this.el.paused) {
 			this.play();
 		} else {
 			this.pause();
