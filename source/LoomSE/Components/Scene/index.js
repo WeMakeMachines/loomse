@@ -1,19 +1,24 @@
-import { el, setChildren } from 'redom';
+import { el } from 'redom';
 
 import Events from '../Events';
+import Timeline from '../Timeline';
 import Video from '../Video';
 
 import styles from './styles';
 
 class Scene {
 	constructor({ events, longName, video }) {
-		this.el = el('#loomSE_scene', { style: { ...styles } });
+		this.el = el(
+			'#loomSE_scene',
+			{ style: { ...styles } },
+			(this.timeline = new Timeline()),
+			(this.video = new Video(video))
+		);
 
-		this.longName = longName;
-		this.video = new Video(video);
 		this.events = new Events(events);
+		this.longName = longName;
 
-		setChildren(this.el, [this.video.el]);
+		this.video.play();
 	}
 }
 
