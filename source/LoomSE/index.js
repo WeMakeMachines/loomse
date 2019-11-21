@@ -1,4 +1,4 @@
-import { el, mount } from 'redom';
+import { el, mount, setStyle } from 'redom';
 
 import styles from './styles';
 
@@ -75,6 +75,10 @@ class LoomSE {
 
 	play() {
 		radioService.broadcast(DIRECTOR_PLAY);
+	}
+
+	resize(width, height) {
+		setStyle(this.node, { width: `${width}px`, height: `${height}px` });
 	}
 }
 

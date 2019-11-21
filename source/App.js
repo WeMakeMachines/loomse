@@ -22,16 +22,20 @@ export default function App(node, config) {
 			loomSE.loadScriptFromUrl(url);
 		},
 
-		reloadScene() {
-			loomSE.loadScene();
-		},
-
 		pause() {
 			loomSE.pause();
 		},
 
 		play() {
 			loomSE.play();
+		},
+
+		reloadScene() {
+			loomSE.loadScene();
+		},
+
+		resize(width, height) {
+			loomSE.resize(width, height);
 		},
 
 		skipTo(scene) {
