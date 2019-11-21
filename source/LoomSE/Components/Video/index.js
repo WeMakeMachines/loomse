@@ -11,6 +11,7 @@ import {
 
 import {
 	VIDEO_ENDED,
+	VIDEO_DURATION_CHANGED,
 	VIDEO_PAUSED,
 	VIDEO_PLAYING,
 	VIDEO_SEEKED,
@@ -24,7 +25,6 @@ class VideoError extends Error {}
 
 class Video {
 	constructor({
-		autoplay = false,
 		controls = false,
 		loop = false,
 		muted = false,
@@ -48,10 +48,6 @@ class Video {
 			this
 		);
 		this.playToken = radioService.register(DIRECTOR_PLAY, this.play, this);
-
-		if (autoplay) {
-			this.play();
-		}
 	}
 
 	setSources(sources) {
@@ -85,9 +81,15 @@ class Video {
 	}
 
 	listenToVideoEvents() {
-		this.el.addEventListener('playing', () => {
-			radioService.broadcast(VIDEO_PLAYING, {
+		this.el.addEventListener('ended', () => {
+			radioService.broadcast(VIDEO_ENDED, {
 				time: this.el.currentTime
+			});
+		});
+
+		this.el.addEventListener('durationchange', () => {
+			radioService.broadcast(VIDEO_DURATION_CHANGED, {
+				duration: this.el.duration
 			});
 		});
 
@@ -97,8 +99,8 @@ class Video {
 			});
 		});
 
-		this.el.addEventListener('seeking', () => {
-			radioService.broadcast(VIDEO_SEEKING, {
+		this.el.addEventListener('playing', () => {
+			radioService.broadcast(VIDEO_PLAYING, {
 				time: this.el.currentTime
 			});
 		});
@@ -109,14 +111,14 @@ class Video {
 			});
 		});
 
-		this.el.addEventListener('timeupdate', () => {
-			radioService.broadcast(VIDEO_TIMEUPDATE, {
+		this.el.addEventListener('seeking', () => {
+			radioService.broadcast(VIDEO_SEEKING, {
 				time: this.el.currentTime
 			});
 		});
 
-		this.el.addEventListener('ended', () => {
-			radioService.broadcast(VIDEO_ENDED, {
+		this.el.addEventListener('timeupdate', () => {
+			radioService.broadcast(VIDEO_TIMEUPDATE, {
 				time: this.el.currentTime
 			});
 		});

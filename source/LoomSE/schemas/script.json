@@ -73,11 +73,6 @@
                   }
                 }
               },
-              "autoplay": {
-                "type": "boolean",
-                "description": "Autoplay video on load flag",
-                "default": false
-              },
               "muted": {
                 "type": "boolean",
                 "description": "Mute audio",
