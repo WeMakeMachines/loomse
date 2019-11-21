@@ -133,14 +133,14 @@
         "out"
       ],
       "properties": {
-        "moduleName": {
+        "type": {
           "type": "string",
-          "description": "References the external module name",
+          "description": "The type of event to fire",
           "default": ""
         },
         "disabled": {
           "type": "boolean",
-          "description": "Flag to determine if the module should be disabled",
+          "description": "Flag to determine if the event should be disabled",
           "default": false
         },
         "in": {
@@ -154,23 +154,9 @@
           "description": "Loop out point (in milliseconds)",
           "default": 0
         },
-        "x": {
-          "type": "number",
-          "description": "x representational co-ordinate",
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1
-        },
-        "y": {
-          "type": "number",
-          "description": "y representational co-ordinate",
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1
-        },
         "payload": {
           "type": "object",
-          "description": "Additional data to pass into the module",
+          "description": "Additional data to transmit with the event",
           "default": {},
           "additionalProperties": true
         }
