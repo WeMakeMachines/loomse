@@ -19,8 +19,8 @@ class LoomSE {
 		this.node = el('#loomSE', {
 			style: {
 				...styles,
-				width: config.width,
-				height: config.height
+				width: `${config.width}px`,
+				height: `${config.height}px`
 			}
 		});
 

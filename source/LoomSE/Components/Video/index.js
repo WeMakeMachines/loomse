@@ -35,7 +35,7 @@ class Video {
 			controls: controls,
 			loop: loop,
 			muted: muted,
-			style: { ...styles.video }
+			style: { ...styles }
 		});
 
 		this.sources = this.setSources(sources);
@@ -130,12 +130,7 @@ class Video {
 	play() {
 		this.node
 			.play()
-			.then(() => {
-				// this.resize({
-				// 	width: state.clientDimensions.width,
-				// 	height: state.clientDimensions.height
-				// });
-			})
+			.then(() => {})
 			.catch(() => {});
 	}
 
