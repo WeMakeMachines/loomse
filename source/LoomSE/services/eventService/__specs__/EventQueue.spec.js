@@ -1,4 +1,4 @@
-import { Queue } from '../Queue';
+import EventQueue from '../EventQueue';
 
 const mockTimedObjects = [
 	{
@@ -11,16 +11,16 @@ const mockTimedObjects = [
 	}
 ];
 
-describe('Queue model', () => {
+describe('Queue', () => {
 	let queue;
 
 	beforeEach(() => {
-		queue = new Queue(mockTimedObjects);
+		queue = new EventQueue(mockTimedObjects);
 	});
 
 	describe('pending getter', () => {
 		test('should return the next item in the queue to be the first item in the queue, if the index is 0', () => {
-			queue._index = 0;
+			queue.index = 0;
 
 			const actual = queue.pending;
 			const expected = { id: 0, time: 0, action: 'run' };
@@ -29,7 +29,7 @@ describe('Queue model', () => {
 		});
 
 		test('should return the second item in the queue to be the first item in the queue, if the index is 1', () => {
-			queue._index = 1;
+			queue.index = 1;
 
 			const actual = queue.pending;
 			const expected = { id: 0, time: 2000, action: 'stop' };
@@ -50,10 +50,10 @@ describe('Queue model', () => {
 
 	describe('advance method', () => {
 		test('should increase the queue size by +1', () => {
-			queue._index = 0;
+			queue.index = 0;
 			queue.advance();
 
-			const actual = queue._index;
+			const actual = queue.index;
 			const expected = 1;
 
 			expect(actual).toEqual(expected);
@@ -78,7 +78,7 @@ describe('Queue model', () => {
 		test('should sort the queue ascending on the time property when the argument "asc" is passed', () => {
 			queue.sort('asc');
 
-			const actual = queue._queue;
+			const actual = queue.queue;
 			const expected = [
 				{ id: 0, time: 0, action: 'run' },
 				{ id: 0, time: 2000, action: 'stop' },
@@ -92,7 +92,7 @@ describe('Queue model', () => {
 		test('should sort the queue descending on the time property when the argument "desc" is passed', () => {
 			queue.sort('desc');
 
-			const actual = queue._queue;
+			const actual = queue.queue;
 			const expected = [
 				{ id: 1, time: 4000, action: 'stop' },
 				{ id: 1, time: 3000, action: 'run' },
