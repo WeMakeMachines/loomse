@@ -22,8 +22,8 @@ export default function App(node, config) {
 			loomSE.loadScriptFromUrl(url);
 		},
 
-		reload() {
-			loomSE.loadScene(loomSE.state.scene);
+		reloadScene() {
+			loomSE.loadScene();
 		},
 
 		pause() {
