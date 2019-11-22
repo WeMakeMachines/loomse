@@ -79,45 +79,31 @@ class Video {
 
 	listenToVideoEvents() {
 		this.el.addEventListener('ended', () => {
-			radioService.broadcast(VIDEO_ENDED, {
-				time: this.el.currentTime
-			});
+			radioService.broadcast(VIDEO_ENDED);
 		});
 
 		this.el.addEventListener('durationchange', () => {
-			radioService.broadcast(VIDEO_DURATION_CHANGED, {
-				duration: this.el.duration
-			});
+			radioService.broadcast(VIDEO_DURATION_CHANGED, this.el.duration);
 		});
 
 		this.el.addEventListener('paused', () => {
-			radioService.broadcast(VIDEO_PAUSED, {
-				time: this.el.currentTime
-			});
+			radioService.broadcast(VIDEO_PAUSED);
 		});
 
 		this.el.addEventListener('playing', () => {
-			radioService.broadcast(VIDEO_PLAYING, {
-				time: this.el.currentTime
-			});
+			radioService.broadcast(VIDEO_PLAYING, this.el.currentTime);
 		});
 
 		this.el.addEventListener('seeked', () => {
-			radioService.broadcast(VIDEO_SEEKED, {
-				time: this.el.currentTime
-			});
+			radioService.broadcast(VIDEO_SEEKED, this.el.currentTime);
 		});
 
 		this.el.addEventListener('seeking', () => {
-			radioService.broadcast(VIDEO_SEEKING, {
-				time: this.el.currentTime
-			});
+			radioService.broadcast(VIDEO_SEEKING, this.el.currentTime);
 		});
 
 		this.el.addEventListener('timeupdate', () => {
-			radioService.broadcast(VIDEO_TIMEUPDATE, {
-				time: this.el.currentTime
-			});
+			radioService.broadcast(VIDEO_TIMEUPDATE, this.el.currentTime);
 		});
 	}
 

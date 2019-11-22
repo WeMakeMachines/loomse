@@ -23,18 +23,18 @@ class EventService {
 		radioService.unRegister(this.tokenTimeUpdate);
 	}
 
-	isReadyToAction(event) {
-		if (!event.time) {
+	isReadyToAction(time) {
+		if (!time) {
 			return;
 		}
 
-		const time = secondsToMilliseconds(event.time);
+		const milliseconds = secondsToMilliseconds(time);
 
-		if (!time || !this.queue.pending) {
+		if (!milliseconds || !this.queue.pending) {
 			return;
 		}
 
-		if (time >= this.queue.pending.time) {
+		if (milliseconds >= this.queue.pending.time) {
 			this.parseAction(this.queue.pending);
 		}
 	}

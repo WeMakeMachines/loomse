@@ -14,12 +14,12 @@ class VideoReporter {
 	}
 
 	registerListeners() {
-		radioService.register(VIDEO_DURATION_CHANGED, event => {
-			this.currentDuration = event.duration;
+		radioService.register(VIDEO_DURATION_CHANGED, duration => {
+			this.currentDuration = duration;
 		});
 
-		radioService.register(VIDEO_TIMEUPDATE, event => {
-			this.currentTime = event.time;
+		radioService.register(VIDEO_TIMEUPDATE, time => {
+			this.currentTime = time;
 		});
 	}
 }

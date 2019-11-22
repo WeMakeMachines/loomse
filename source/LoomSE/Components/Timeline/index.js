@@ -20,8 +20,8 @@ class Timeline {
 
 		this.tokenDurationChanged = radioService.register(
 			VIDEO_DURATION_CHANGED,
-			event => {
-				this.duration = event.duration;
+			duration => {
+				this.duration = duration;
 			}
 		);
 
@@ -32,8 +32,8 @@ class Timeline {
 		);
 	}
 
-	updateProgress(event) {
-		this.progressCounter.update(event.time, this.duration);
+	updateProgress(time) {
+		this.progressCounter.update(time, this.duration);
 	}
 }
 
