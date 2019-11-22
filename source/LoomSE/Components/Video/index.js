@@ -4,10 +4,7 @@ import Source from './Source';
 
 import { radioService } from '../../services';
 
-import {
-	DIRECTOR_PLAY,
-	DIRECTOR_PAUSE
-} from '../../constants/applicationActions';
+import { DIRECTOR_PLAY, DIRECTOR_PAUSE } from '../../constants/directorEvents';
 
 import {
 	VIDEO_ENDED,

@@ -11,7 +11,7 @@ import { jsonValidatorService, radioService } from './services';
 import { getCurrentDuration, getCurrentTime } from './reporters';
 import { ajaxRequest } from './lib';
 
-import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/applicationActions';
+import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/directorEvents';
 
 class LoomSE_Error extends Error {}
 
