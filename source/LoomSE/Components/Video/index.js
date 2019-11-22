@@ -42,12 +42,12 @@ class Video {
 		this.mountSources();
 		this.listenToVideoEvents();
 
-		this.pauseToken = radioService.register(
+		this.tokenPause = radioService.register(
 			DIRECTOR_PAUSE,
 			this.pause,
 			this
 		);
-		this.playToken = radioService.register(DIRECTOR_PLAY, this.play, this);
+		this.tokenPlay = radioService.register(DIRECTOR_PLAY, this.play, this);
 	}
 
 	setSources(sources) {
@@ -125,8 +125,8 @@ class Video {
 	}
 
 	stopListeningToRadio() {
-		radioService.unRegister(this.pauseToken);
-		radioService.unRegister(this.playToken);
+		radioService.unRegister(this.tokenPause);
+		radioService.unRegister(this.tokenPlay);
 	}
 
 	play() {

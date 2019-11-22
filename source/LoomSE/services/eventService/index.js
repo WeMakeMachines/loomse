@@ -12,7 +12,7 @@ class EventService {
 		this.startEventCallback = startEventCallback;
 		this.stopEventCallback = stopEventCallback;
 
-		this.timeUpdateToken = radioService.register(
+		this.tokenTimeUpdate = radioService.register(
 			VIDEO_TIMEUPDATE,
 			this.isReadyToAction,
 			this
@@ -20,7 +20,7 @@ class EventService {
 	}
 
 	unRegister() {
-		radioService.unRegister(this.timeUpdateToken);
+		radioService.unRegister(this.tokenTimeUpdate);
 	}
 
 	isReadyToAction(event) {

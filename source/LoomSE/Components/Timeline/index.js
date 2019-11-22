@@ -18,14 +18,14 @@ class Timeline {
 		);
 		this.duration = 999;
 
-		this.durationChangedToken = radioService.register(
+		this.tokenDurationChanged = radioService.register(
 			VIDEO_DURATION_CHANGED,
 			event => {
 				this.duration = event.duration;
 			}
 		);
 
-		this.timeUpdateToken = radioService.register(
+		this.tokenTimeUpdate = radioService.register(
 			VIDEO_TIMEUPDATE,
 			this.updateProgress,
 			this
