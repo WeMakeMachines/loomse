@@ -1,13 +1,18 @@
 import { el } from 'redom';
 
+import styles from './styles';
+
 import Events from '../Events';
 import Timeline from '../Timeline';
 import Video from '../Video';
 
-import styles from './styles';
+import { radioService } from '../../services/radioService';
+import { DIRECTOR_SCENE_CHANGE } from '../../constants/directorEvents';
 
 class Scene {
-	constructor({ events, longName, video }) {
+	constructor(sceneId, { events, longName, video }) {
+		radioService.broadcast(DIRECTOR_SCENE_CHANGE, sceneId);
+
 		this.el = el(
 			'#loomSE_scene',
 			{ style: { ...styles } },

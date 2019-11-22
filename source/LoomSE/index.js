@@ -69,7 +69,7 @@ class LoomSE {
 			this.unloadScene();
 		}
 
-		this.scene = new Scene(this.story.scenes[string]);
+		this.scene = new Scene(string, this.story.scenes[string]);
 
 		mount(this.el, this.scene);
 	}
