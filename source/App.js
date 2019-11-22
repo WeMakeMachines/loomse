@@ -17,6 +17,14 @@ export default function App(el, config) {
 	mount(el, loomSE);
 
 	return {
+		currentDuration() {
+			return loomSE.currentDuration();
+		},
+
+		currentTime() {
+			return loomSE.currentTime();
+		},
+
 		loadScriptFromJson(json) {
 			loomSE.loadScriptFromJson(json);
 		},

@@ -8,6 +8,7 @@ import Scene from './Components/Scene';
 import scriptSchema from './schemas/script';
 
 import { jsonValidatorService, radioService } from './services';
+import { getCurrentDuration, getCurrentTime } from './reporters';
 import { ajaxRequest } from './lib';
 
 import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/applicationActions';
@@ -26,6 +27,14 @@ class LoomSE {
 
 		this.story = {};
 		this.scene = {};
+	}
+
+	currentDuration() {
+		return getCurrentDuration();
+	}
+
+	currentTime() {
+		return getCurrentTime();
 	}
 
 	loadScriptFromJson(json) {
