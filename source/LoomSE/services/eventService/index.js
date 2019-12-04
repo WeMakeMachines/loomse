@@ -1,7 +1,7 @@
 import EventQueue from './EventQueue';
 import { radioService } from '../';
 import { VIDEO_TIMEUPDATE } from '../../constants/videoEvents';
-import { RUN, STOP } from '../../constants/eventActions';
+import { START, STOP } from '../../constants/eventActions';
 import { secondsToMilliseconds } from '../../lib/time';
 
 class EventServiceError extends Error {}
@@ -47,7 +47,7 @@ class EventService {
 		}
 
 		switch (event.action) {
-			case RUN:
+			case START:
 				this.startEventCallback(eventData);
 
 				break;

@@ -1,4 +1,4 @@
-import { RUN, STOP } from '../../constants/eventActions';
+import { START, STOP } from '../../constants/eventActions';
 
 class EventQueue {
 	constructor(events) {
@@ -32,7 +32,7 @@ class EventQueue {
 			const timedObjectIn = {
 				id: i,
 				time: this.events[i].in,
-				action: RUN
+				action: START
 			};
 
 			const timedObjectOut = {
