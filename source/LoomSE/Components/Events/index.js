@@ -1,4 +1,6 @@
-import { eventService } from '../../services';
+import { eventService, radioService } from '../../services';
+import { START, STOP } from '../../constants/eventActions';
+import { DIRECTOR_SCENE_EVENT } from '../../constants/directorEvents';
 
 class Events {
 	constructor(events) {
@@ -9,12 +11,20 @@ class Events {
 		});
 	}
 
-	start(message) {
-		console.log('on');
+	start({ type, payload }) {
+		radioService.broadcast(DIRECTOR_SCENE_EVENT, {
+			action: START,
+			type,
+			payload
+		});
 	}
 
-	stop(message) {
-		console.log('off');
+	stop({ type, payload }) {
+		radioService.broadcast(DIRECTOR_SCENE_EVENT, {
+			action: STOP,
+			type,
+			payload
+		});
 	}
 }
 
