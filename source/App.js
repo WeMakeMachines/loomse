@@ -25,12 +25,29 @@ export default function App(el, config) {
 			return loomSE.currentTime();
 		},
 
-		loadScriptFromJson(json) {
-			loomSE.loadScriptFromJson(json);
+		el: loomSE.el,
+
+		async loadScriptFromJson(json) {
+			try {
+				await loomSE.validateJson(json);
+
+				loomSE.setStory(json);
+				loomSE.loadScene(loomSE.story.firstScene);
+
+				return Promise.resolve();
+			} catch (error) {
+				return Promise.reject(`Unable to validate JSON, ${error}`);
+			}
 		},
 
-		loadScriptFromUrl(url) {
-			loomSE.loadScriptFromUrl(url);
+		async loadScriptFromUrl(url) {
+			try {
+				const json = await loomSE.loadScriptFromUrl(url);
+
+				return this.loadScriptFromJson(json);
+			} catch (error) {
+				return Promise.reject(`Unable to load JSON, ${error}`);
+			}
 		},
 
 		pause() {

@@ -17,8 +17,6 @@ import {
 	DIRECTOR_SCENE_EVENT
 } from './constants/directorEvents';
 
-class LoomSE_Error extends Error {}
-
 class LoomSE {
 	constructor(config = {}) {
 		this.el = el('#loomSE', {
@@ -43,31 +41,32 @@ class LoomSE {
 		return getCurrentTime();
 	}
 
-	loadScriptFromJson(json) {
-		this.validateAndLoadJson(json);
-	}
-
 	loadScriptFromUrl(url) {
-		ajaxRequest(url, 'JSON')
-			.then(json => {
-				this.validateAndLoadJson(json);
-			})
-			.catch(error => {
-				throw new LoomSE_Error(
-					`Unable to load script from url, ${error}`
-				);
-			});
+		return new Promise((resolve, reject) => {
+			ajaxRequest(url, 'JSON')
+				.then(json => {
+					resolve(json);
+				})
+				.catch(error => {
+					reject('Unable to load script from url', error);
+				});
+		});
 	}
 
-	validateAndLoadJson(json) {
-		jsonValidatorService(json, scriptSchema)
-			.then(() => {
-				this.story = new Story(json);
-				this.loadScene(this.story.firstScene);
-			})
-			.catch(error => {
-				throw new LoomSE_Error('Not a valid script', error);
-			});
+	validateJson(json) {
+		return new Promise((resolve, reject) => {
+			jsonValidatorService(json, scriptSchema)
+				.then(() => {
+					resolve();
+				})
+				.catch(error => {
+					reject('Not a valid script', error);
+				});
+		});
+	}
+
+	setStory(json) {
+		this.story = new Story(json);
 	}
 
 	loadScene(string) {
