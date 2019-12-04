@@ -11,7 +11,11 @@ import { jsonValidatorService, radioService } from './services';
 import { getCurrentDuration, getCurrentTime } from './reporters';
 import { ajaxRequest } from './lib';
 
-import { DIRECTOR_PAUSE, DIRECTOR_PLAY } from './constants/directorEvents';
+import {
+	DIRECTOR_PAUSE,
+	DIRECTOR_PLAY,
+	DIRECTOR_SCENE_EVENT
+} from './constants/directorEvents';
 
 class LoomSE_Error extends Error {}
 
@@ -27,6 +31,8 @@ class LoomSE {
 
 		this.story = {};
 		this.scene = {};
+
+		this.setupSyntheticEvents();
 	}
 
 	currentDuration() {
@@ -86,6 +92,18 @@ class LoomSE {
 
 	resize(width, height) {
 		setStyle(this.el, { width: `${width}px`, height: `${height}px` });
+	}
+
+	setupSyntheticEvents() {
+		radioService.register(
+			DIRECTOR_SCENE_EVENT,
+			message => {
+				this.el.dispatchEvent(
+					new CustomEvent(DIRECTOR_SCENE_EVENT, { detail: message })
+				);
+			},
+			this
+		);
 	}
 }
 
