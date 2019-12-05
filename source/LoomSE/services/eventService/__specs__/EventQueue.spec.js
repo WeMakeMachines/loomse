@@ -23,7 +23,7 @@ describe('Queue', () => {
 			queue.index = 0;
 
 			const actual = queue.pending;
-			const expected = { id: 0, time: 0, action: 'run' };
+			const expected = { id: 0, time: 0, action: 'start' };
 
 			expect(actual).toEqual(expected);
 		});
@@ -64,9 +64,9 @@ describe('Queue', () => {
 		test('should return a processed queue from the input, generating 2 objects per input', () => {
 			const actual = queue.build();
 			const expected = [
-				{ id: 0, time: 0, action: 'run' },
+				{ id: 0, time: 0, action: 'start' },
 				{ id: 0, time: 2000, action: 'stop' },
-				{ id: 1, time: 3000, action: 'run' },
+				{ id: 1, time: 3000, action: 'start' },
 				{ id: 1, time: 4000, action: 'stop' }
 			];
 
@@ -80,9 +80,9 @@ describe('Queue', () => {
 
 			const actual = queue.queue;
 			const expected = [
-				{ id: 0, time: 0, action: 'run' },
+				{ id: 0, time: 0, action: 'start' },
 				{ id: 0, time: 2000, action: 'stop' },
-				{ id: 1, time: 3000, action: 'run' },
+				{ id: 1, time: 3000, action: 'start' },
 				{ id: 1, time: 4000, action: 'stop' }
 			];
 
@@ -95,9 +95,9 @@ describe('Queue', () => {
 			const actual = queue.queue;
 			const expected = [
 				{ id: 1, time: 4000, action: 'stop' },
-				{ id: 1, time: 3000, action: 'run' },
+				{ id: 1, time: 3000, action: 'start' },
 				{ id: 0, time: 2000, action: 'stop' },
-				{ id: 0, time: 0, action: 'run' }
+				{ id: 0, time: 0, action: 'start' }
 			];
 
 			expect(actual).toEqual(expected);
