@@ -1,7 +1,5 @@
-import { stack } from '../../../constants/styles';
-
 export default {
-	video: {
-		...stack
-	}
+	width: '100%',
+	height: '100%',
+	'object-fit': 'contain'
 };

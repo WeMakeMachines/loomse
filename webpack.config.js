@@ -4,7 +4,7 @@ const path = require('path');
 const packageJson = require('./package.json');
 
 const config = {
-	entry: `${source}/app.js`,
+	entry: `${source}/App.js`,
 	output: {
 		path: path.resolve(__dirname, destination),
 		filename: `${packageJson.name}.js`,

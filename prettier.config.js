@@ -1,4 +1,8 @@
 module.exports = {
-	'useTabs': true,
-	'singleQuote': true
+	bracketSpacing: true,
+	endOfLine: 'lf',
+	singleQuote: true,
+	trailingComma: 'none',
+	tabWidth: 4,
+	useTabs: true
 };
