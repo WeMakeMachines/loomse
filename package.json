@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "loomse",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Interactive storytelling for the modern web",
   "author": "Franco Speziali",
   "license": "GPL-3.0",
@@ -34,6 +34,6 @@
   },
   "dependencies": {
     "djv": "^2.1.3-alpha.0",
-    "redom": "^3.24.1"
+    "redom": "^3.24.2"
   }
 }
