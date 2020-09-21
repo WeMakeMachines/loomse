@@ -5,9 +5,7 @@ import styles from './styles';
 import Story from './Components/Story';
 import Scene from './Components/Scene';
 
-import scriptSchema from './schemas/script';
-
-import { jsonValidatorService, radioService } from './services';
+import { radioService } from './services';
 import { getCurrentDuration, getCurrentTime } from './reporters';
 import { ajaxRequest } from './lib';
 
@@ -49,18 +47,6 @@ class LoomSE {
 				})
 				.catch(error => {
 					reject('Unable to load script from url', error);
-				});
-		});
-	}
-
-	validateJson(json) {
-		return new Promise((resolve, reject) => {
-			jsonValidatorService(json, scriptSchema)
-				.then(() => {
-					resolve();
-				})
-				.catch(error => {
-					reject('Not a valid script', error);
 				});
 		});
 	}

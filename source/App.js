@@ -27,16 +27,14 @@ export default function App(el, config) {
 
 		el: loomSE.el,
 
-		async loadScriptFromJson(json) {
+		loadScriptFromJson(json) {
 			try {
-				await loomSE.validateJson(json);
-
 				loomSE.setStory(json);
 				loomSE.loadScene(loomSE.story.firstScene);
 
 				return Promise.resolve();
 			} catch (error) {
-				return Promise.reject(`Unable to validate JSON, ${error}`);
+				return Promise.reject(`Unable to load JSON, ${error}`);
 			}
 		},
 
