@@ -38,16 +38,6 @@ export default function App(el, config) {
 			}
 		},
 
-		async loadScriptFromUrl(url) {
-			try {
-				const json = await loomSE.loadScriptFromUrl(url);
-
-				return this.loadScriptFromJson(json);
-			} catch (error) {
-				return Promise.reject(`Unable to load JSON, ${error}`);
-			}
-		},
-
 		pause() {
 			loomSE.pause();
 		},

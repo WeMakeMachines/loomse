@@ -1,43 +1,7 @@
 /**
  * Common tools
  */
-export { ajaxRequest, cleanString, debounce, isEmptyObject, random };
-
-/**
- * Simplified AJAX call
- * @param {string} url
- * @param {string} type
- * @returns {Promise}
- */
-function ajaxRequest(url, type) {
-	const SUCCESS = 200;
-
-	return new Promise((resolve, reject) => {
-		let xmlHTTP = new XMLHttpRequest();
-
-		xmlHTTP.open('GET', url);
-		xmlHTTP.send();
-
-		xmlHTTP.onload = () => {
-			if (xmlHTTP.status === SUCCESS) {
-				switch (type) {
-					case 'JSON':
-						resolve(JSON.parse(xmlHTTP.responseText));
-						break;
-					default:
-						resolve(xmlHTTP.responseText);
-						break;
-				}
-			} else {
-				reject(xmlHTTP.status);
-			}
-		};
-
-		xmlHTTP.onerror = () => {
-			reject('File or network error');
-		};
-	});
-}
+export { cleanString, debounce, isEmptyObject, random };
 
 /**
  * Removes whitespace from a string, and converts to lowercase
