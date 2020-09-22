@@ -19,20 +19,20 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
+    "@babel/cli": "7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^25.2.3",
+    "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-jest": "^23.8.2",
-    "jest": "^25.2.3",
+    "eslint": "^7.9.0",
+    "eslint-plugin-jest": "^24.0.2",
+    "jest": "^26.4.2",
     "prettier": "1.19.1",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "redom": "^3.26.0"
+    "redom": "^3.27.1"
   }
 }
