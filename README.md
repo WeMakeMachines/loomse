@@ -11,26 +11,35 @@ This repository includes a minified version of LoomSE `/dist/loomse.min.js`
   
 #### via npm ###  
   
->`npm install --save loomse`  
+>`npm i loomse`  
   
 ## Usage  
   
 #### Importing  
   
-The most common way of importing LoomSE into your project would be via an ES6 import,  
-for example:  
+The most common way of importing LoomSE into your project would be via an ES6 import, for example:  
   
 >`import LoomSE from 'loomse'`  
   
 #### Syntax  
   
->**_loomSE_ = new LoomSE(_parent_, _options_)**  
->  
->- `parent` a valid DOM element to which LoomSE will unpack itself  
->- `options` **| optional**  
->  - width: _number_  
->  - height: _number_  
->  
+**_loomSE_ = new LoomSE(_parent_[, _options_])**
+
+###### parent _(required)_
+
+A valid DOM element to which LoomSE will unpack itself
+
+###### options _(optional)_
+
+An object. Valid keys:
+
+- **width**: _number_
+    
+    width of the resulting video element
+
+- **height**: _number_
+
+    height of the resulting video element
   
 #### Example usage  
   
@@ -51,10 +60,14 @@ for example:
 ## The Story Script  
 All the power for developing your non-linear narrative rests inside a JSON based script file.  
   
-You can define separate scripts for mobile and desktop.  
-  
-Please refer to the [script schema](source/LoomSE/schemas/script.json).  
-  
+You could also define separate scripts for mobile and desktop (you will have to pass in the correct script into LoomSE).
+
+You can view a [sample script](DOCS/script-sample.json) to give you an idea of how to structure your JSON.
+
+Please refer to the [script schema](schemas/script.json).  
+
+You can use the above schema with a validator service such as AJV, to validate your JSON.
+
 ## API  
 You can communicate with the core application with the Loom API.  
   
@@ -71,10 +84,7 @@ current time (in seconds)
 The LoomSE element
   
 #### loadScriptFromJson(_jsonObject_)  
-*returns Promise*  
-  
-#### loadScriptFromUrl(_url_)  
-*returns Promise*  
+*returns Promise*
   
 #### pause()  
 *returns Void*  

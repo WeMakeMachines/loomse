@@ -5,11 +5,8 @@ import styles from './styles';
 import Story from './Components/Story';
 import Scene from './Components/Scene';
 
-import scriptSchema from './schemas/script';
-
-import { jsonValidatorService, radioService } from './services';
+import { radioService } from './services';
 import { getCurrentDuration, getCurrentTime } from './reporters';
-import { ajaxRequest } from './lib';
 
 import {
 	DIRECTOR_PAUSE,
@@ -39,30 +36,6 @@ class LoomSE {
 
 	currentTime() {
 		return getCurrentTime();
-	}
-
-	loadScriptFromUrl(url) {
-		return new Promise((resolve, reject) => {
-			ajaxRequest(url, 'JSON')
-				.then(json => {
-					resolve(json);
-				})
-				.catch(error => {
-					reject('Unable to load script from url', error);
-				});
-		});
-	}
-
-	validateJson(json) {
-		return new Promise((resolve, reject) => {
-			jsonValidatorService(json, scriptSchema)
-				.then(() => {
-					resolve();
-				})
-				.catch(error => {
-					reject('Not a valid script', error);
-				});
-		});
 	}
 
 	setStory(json) {
