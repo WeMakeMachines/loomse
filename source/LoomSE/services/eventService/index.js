@@ -42,7 +42,7 @@ class EventService {
 	parseAction(event) {
 		const eventData = this.queue.events[event.id];
 
-		if(!eventData) {
+		if (!eventData) {
 			throw new EventServiceError('Event data not found');
 		}
 

@@ -1,4 +1,4 @@
-import { el, mount, setStyle } from 'redom';
+import { el, mount, unmount, setStyle } from 'redom';
 
 import styles from './styles';
 
@@ -16,7 +16,7 @@ import {
 
 class LoomSE {
 	constructor(config = {}) {
-		this.el = el('#loomSE', {
+		this.el = el('', {
 			style: {
 				...styles,
 				width: `${config.width}px`,
@@ -52,7 +52,9 @@ class LoomSE {
 		mount(this.el, this.scene);
 	}
 
-	unloadScene() {}
+	unloadScene() {
+		unmount(this.el, this.scene);
+	}
 
 	pause() {
 		radioService.broadcast(DIRECTOR_PAUSE);
