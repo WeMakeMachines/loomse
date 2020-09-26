@@ -12,7 +12,7 @@ import { radioService } from '../../services';
 class Timeline {
 	constructor() {
 		this.el = el(
-			'#loomSE_timeline',
+			'',
 			{ style: { ...styles } },
 			(this.progressCounter = new ProgressCounter())
 		);

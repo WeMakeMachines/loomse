@@ -16,7 +16,7 @@ import {
 
 class LoomSE {
 	constructor(config = {}) {
-		this.el = el('#loomSE', {
+		this.el = el('', {
 			style: {
 				...styles,
 				width: `${config.width}px`,

@@ -14,7 +14,7 @@ class Scene {
 		radioService.broadcast(DIRECTOR_SCENE_CHANGE, sceneId);
 
 		this.el = el(
-			'#loomSE_scene',
+			'',
 			{ style: { ...styles } },
 			(this.timeline = new Timeline()),
 			(this.video = new Video(video))
