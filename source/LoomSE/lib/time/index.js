@@ -1,6 +1,4 @@
-export {
-	secondsToMilliseconds
-};
+export { secondsToMilliseconds };
 
 const millisecondsInSeconds = 1000;
 
