@@ -11,18 +11,18 @@ class Events {
 		});
 	}
 
-	start({ type, payload }) {
+	start({ moduleName, payload }) {
 		radioService.broadcast(DIRECTOR_SCENE_EVENT, {
 			action: START,
-			type,
+			moduleName,
 			payload
 		});
 	}
 
-	stop({ type, payload }) {
+	stop({ moduleName, payload }) {
 		radioService.broadcast(DIRECTOR_SCENE_EVENT, {
 			action: STOP,
-			type,
+			moduleName,
 			payload
 		});
 	}
