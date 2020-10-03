@@ -1,7 +1,7 @@
 import { mount } from 'redom';
 
 import LoomSE from './LoomSE';
-import packageJson from '../package';
+import packageJson from '../package.json';
 
 /**
  * This function represents the public interface (facade) for LoomSE
