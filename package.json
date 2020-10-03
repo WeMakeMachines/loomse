@@ -4,7 +4,7 @@
   "version": "0.6.6",
   "description": "Interactive storytelling for the modern web",
   "author": "Franco Speziali",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "homepage": "http://www.loomse.org/",
   "repository": {
     "type": "git",
