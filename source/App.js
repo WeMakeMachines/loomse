@@ -27,14 +27,14 @@ export default function App(el, config) {
 
 		el: loomSE.el,
 
-		loadScriptFromJson(json) {
+		startScript(storyObject) {
 			try {
-				loomSE.setStory(json);
+				loomSE.setStory(storyObject);
 				loomSE.loadScene(loomSE.story.firstScene);
 
 				return Promise.resolve();
 			} catch (error) {
-				return Promise.reject(`Unable to load JSON, ${error}`);
+				return Promise.reject(`Unable to load story object, ${error}`);
 			}
 		},
 

@@ -38,8 +38,8 @@ class LoomSE {
 		return getCurrentTime();
 	}
 
-	setStory(json) {
-		this.story = new Story(json);
+	setStory(storyObject) {
+		this.story = new Story(storyObject);
 	}
 
 	loadScene(string) {
