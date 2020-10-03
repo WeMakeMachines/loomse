@@ -10,6 +10,16 @@
     "type": "git",
     "url": "https://github.com/WeMakeMachines/loomse.git"
   },
+  "bugs": {
+    "url": "https://github.com/WeMakeMachines/loomse/issues"
+  },
+  "keywords": [
+    "html5",
+    "video",
+    "events",
+    "story",
+    "interactive"
+  ],
   "main": "./dist/loomse.min.js",
   "scripts": {
     "build": "rollup --config",
