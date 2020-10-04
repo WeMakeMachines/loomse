@@ -32,6 +32,15 @@ class Timeline {
 		);
 	}
 
+	onunmount() {
+		this.stopListeningToRadio();
+	}
+
+	stopListeningToRadio() {
+		radioService.unRegister(this.tokenDurationChanged);
+		radioService.unRegister(this.tokenTimeUpdate);
+	}
+
 	updateProgress(time) {
 		this.progressCounter.update(time, this.duration);
 	}

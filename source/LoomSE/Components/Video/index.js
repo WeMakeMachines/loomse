@@ -47,6 +47,10 @@ class Video {
 		this.tokenPlay = radioService.register(DIRECTOR_PLAY, this.play, this);
 	}
 
+	onunmount() {
+		this.stopListeningToRadio();
+	}
+
 	setSources(sources) {
 		if (!sources) {
 			throw new VideoError('No video sources found');
