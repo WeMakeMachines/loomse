@@ -25,7 +25,7 @@ class LoomSE {
 		});
 
 		this.story = {};
-		this.scene = {};
+		this.scene = null;
 
 		this.setupSyntheticEvents();
 	}

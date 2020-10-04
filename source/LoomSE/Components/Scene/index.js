@@ -25,6 +25,10 @@ class Scene {
 
 		this.video.play();
 	}
+
+	onunmount() {
+		this.events.unRegister();
+	}
 }
 
 export default Scene;
