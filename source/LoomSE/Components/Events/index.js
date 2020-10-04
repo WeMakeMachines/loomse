@@ -26,6 +26,10 @@ class Events {
 			payload
 		});
 	}
+
+	unRegister() {
+		this.events.unRegister();
+	}
 }
 
 export default Events;
