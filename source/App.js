@@ -10,7 +10,7 @@ import packageJson from '../package.json';
  * @returns {Object} Public API
  * @constructor
  */
-export default function App(el, config) {
+export default function App(el, config = {}) {
 	const version = packageJson.version;
 	const loomSE = new LoomSE(config);
 
@@ -54,8 +54,8 @@ export default function App(el, config) {
 			loomSE.resize(width, height);
 		},
 
-		skipTo(scene) {
-			loomSE.loadScene(scene);
+		skipTo(sceneName) {
+			loomSE.loadScene(sceneName);
 		},
 
 		version,
