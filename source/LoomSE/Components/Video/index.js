@@ -27,7 +27,7 @@ class Video {
 		muted = false,
 		sources = {}
 	}) {
-		this.el = el('', {
+		this.el = el('video', {
 			autoplay: false,
 			controls: controls,
 			loop: loop,
