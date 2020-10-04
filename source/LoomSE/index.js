@@ -44,16 +44,12 @@ class LoomSE {
 
 	loadScene(string) {
 		if (this.scene) {
-			this.unloadScene();
+			unmount(this.el, this.scene);
 		}
 
 		this.scene = new Scene(string, this.story.scenes[string]);
 
 		mount(this.el, this.scene);
-	}
-
-	unloadScene() {
-		unmount(this.el, this.scene);
 	}
 
 	pause() {
