@@ -37,7 +37,19 @@ class Video {
 
 		this.sources = this.setSources(sources);
 		this.mountSources();
-		this.listenToVideoEvents();
+
+		this.broadcastEndedEvent = () => radioService.broadcast(VIDEO_ENDED);
+		this.broadcastDurationChangeEvent = () =>
+			radioService.broadcast(VIDEO_DURATION_CHANGED, this.el.duration);
+		this.broadcastPlayingEvent = () =>
+			radioService.broadcast(VIDEO_PLAYING, this.el.currentTime);
+		this.broadcastPausedEvent = () => radioService.broadcast(VIDEO_PAUSED);
+		this.broadcastSeekedEvent = () =>
+			radioService.broadcast(VIDEO_SEEKED, this.el.currentTime);
+		this.broadcastSeekingEvent = () =>
+			radioService.broadcast(VIDEO_SEEKING, this.el.currentTime);
+		this.broadcastTimeUpdateEvent = () =>
+			radioService.broadcast(VIDEO_TIMEUPDATE, this.el.currentTime);
 
 		this.tokenPause = radioService.register(
 			DIRECTOR_PAUSE,
@@ -45,9 +57,12 @@ class Video {
 			this
 		);
 		this.tokenPlay = radioService.register(DIRECTOR_PLAY, this.play, this);
+
+		this.listenToVideoEvents();
 	}
 
 	onunmount() {
+		this.stopListeningToVideoEvents();
 		this.stopListeningToRadio();
 	}
 
@@ -82,33 +97,32 @@ class Video {
 	}
 
 	listenToVideoEvents() {
-		this.el.addEventListener('ended', () => {
-			radioService.broadcast(VIDEO_ENDED);
-		});
+		this.el.addEventListener('ended', this.broadcastEndedEvent);
+		this.el.addEventListener(
+			'durationchange',
+			this.broadcastDurationChangeEvent
+		);
+		this.el.addEventListener('paused', this.broadcastPausedEvent);
+		this.el.addEventListener('playing', this.broadcastPlayingEvent);
+		this.el.addEventListener('seeked', this.broadcastSeekedEvent);
+		this.el.addEventListener('seeking', this.broadcastSeekingEvent);
+		this.el.addEventListener('timeupdate', this.broadcastTimeUpdateEvent);
+	}
 
-		this.el.addEventListener('durationchange', () => {
-			radioService.broadcast(VIDEO_DURATION_CHANGED, this.el.duration);
-		});
-
-		this.el.addEventListener('paused', () => {
-			radioService.broadcast(VIDEO_PAUSED);
-		});
-
-		this.el.addEventListener('playing', () => {
-			radioService.broadcast(VIDEO_PLAYING, this.el.currentTime);
-		});
-
-		this.el.addEventListener('seeked', () => {
-			radioService.broadcast(VIDEO_SEEKED, this.el.currentTime);
-		});
-
-		this.el.addEventListener('seeking', () => {
-			radioService.broadcast(VIDEO_SEEKING, this.el.currentTime);
-		});
-
-		this.el.addEventListener('timeupdate', () => {
-			radioService.broadcast(VIDEO_TIMEUPDATE, this.el.currentTime);
-		});
+	stopListeningToVideoEvents() {
+		this.el.removeEventListener('ended', this.broadcastEndedEvent);
+		this.el.removeEventListener(
+			'durationchange',
+			this.broadcastDurationChangeEvent
+		);
+		this.el.removeEventListener('paused', this.broadcastPausedEvent);
+		this.el.removeEventListener('playing', this.broadcastPlayingEvent);
+		this.el.removeEventListener('seeked', this.broadcastSeekedEvent);
+		this.el.removeEventListener('seeking', this.broadcastSeekingEvent);
+		this.el.removeEventListener(
+			'timeupdate',
+			this.broadcastTimeUpdateEvent
+		);
 	}
 
 	stopListeningToRadio() {
