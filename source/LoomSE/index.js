@@ -15,12 +15,12 @@ import {
 } from './constants/directorEvents';
 
 class LoomSE {
-	constructor(config = {}) {
+	constructor({ width = '100%', height = '100%' }) {
 		this.el = el('', {
 			style: {
 				...styles,
-				width: `${config.width}px`,
-				height: `${config.height}px`
+				width: `${width}`,
+				height: `${height}`
 			}
 		});
 
@@ -65,7 +65,7 @@ class LoomSE {
 	}
 
 	resize(width, height) {
-		setStyle(this.el, { width: `${width}px`, height: `${height}px` });
+		setStyle(this.el, { width: `${width}`, height: `${height}` });
 	}
 
 	setupSyntheticEvents() {
