@@ -64,6 +64,7 @@ class LoomSE {
 		setStyle(this.el, { width: `${width}`, height: `${height}` });
 	}
 
+	// Here we relay internal messages from the radioService to the "outside" world via custom events
 	setupSyntheticEvents() {
 		radioService.register(
 			DIRECTOR_SCENE_EVENT,
