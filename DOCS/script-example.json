@@ -1,5 +1,5 @@
 {
-  "shortName": "Loom Sample Script",
+  "shortName": "LoomSE Template Script",
   "longName": "",
   "author": "Franco Speziali",
   "description": "A sample script to demonstrate the capabilities of Loom",
@@ -17,17 +17,15 @@
       },
       "events": [
         {
-          "moduleName": "showContentWithLogo",
+          "group": "showContentWithLogo",
           "in": 0,
           "out": 11000,
-          "x": 0.5,
-          "y": 0.5,
           "payload": {
             "text": "Loom Story Engine"
           }
         },
         {
-          "moduleName": "skipTo",
+          "group": "skipTo",
           "in": 11000,
           "out": 11000,
           "payload": {
@@ -47,27 +45,23 @@
       },
       "events": [
         {
-          "moduleName": "showContent",
+          "group": "showContent",
           "in": 500,
           "out": 4000,
-          "x": 0.5,
-          "y": 0.5,
           "payload": {
             "text": "This text is not part of the video file"
           }
         },
         {
-          "moduleName": "showContent",
+          "group": "showContent",
           "in": 4500,
           "out": 9500,
-          "x": 0.5,
-          "y": 0.5,
           "payload": {
             "text": "It is generated from an event"
           }
         },
         {
-          "moduleName": "skipTo",
+          "group": "skipTo",
           "in": 10000,
           "out": 10000,
           "payload": {

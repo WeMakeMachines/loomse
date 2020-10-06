@@ -11,20 +11,24 @@ class Events {
 		});
 	}
 
-	start({ moduleName, payload }) {
+	start({ group, payload }) {
 		radioService.broadcast(DIRECTOR_SCENE_EVENT, {
+			group,
 			action: START,
-			moduleName,
 			payload
 		});
 	}
 
-	stop({ moduleName, payload }) {
+	stop({ group, payload }) {
 		radioService.broadcast(DIRECTOR_SCENE_EVENT, {
+			group,
 			action: STOP,
-			moduleName,
 			payload
 		});
+	}
+
+	unRegister() {
+		this.events.unRegister();
 	}
 }
 

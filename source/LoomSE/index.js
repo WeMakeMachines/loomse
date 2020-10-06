@@ -15,17 +15,17 @@ import {
 } from './constants/directorEvents';
 
 class LoomSE {
-	constructor(config = {}) {
+	constructor({ width = '100%', height = '100%' }) {
 		this.el = el('', {
 			style: {
 				...styles,
-				width: `${config.width}px`,
-				height: `${config.height}px`
+				width: `${width}`,
+				height: `${height}`
 			}
 		});
 
 		this.story = {};
-		this.scene = {};
+		this.scene = null;
 
 		this.setupSyntheticEvents();
 	}
@@ -38,22 +38,18 @@ class LoomSE {
 		return getCurrentTime();
 	}
 
-	setStory(json) {
-		this.story = new Story(json);
+	setStory(storyObject) {
+		this.story = new Story(storyObject);
 	}
 
 	loadScene(string) {
 		if (this.scene) {
-			this.unloadScene();
+			unmount(this.el, this.scene);
 		}
 
 		this.scene = new Scene(string, this.story.scenes[string]);
 
 		mount(this.el, this.scene);
-	}
-
-	unloadScene() {
-		unmount(this.el, this.scene);
 	}
 
 	pause() {
@@ -65,9 +61,10 @@ class LoomSE {
 	}
 
 	resize(width, height) {
-		setStyle(this.el, { width: `${width}px`, height: `${height}px` });
+		setStyle(this.el, { width: `${width}`, height: `${height}` });
 	}
 
+	// Here we relay internal messages from the radioService to the "outside" world via custom events
 	setupSyntheticEvents() {
 		radioService.register(
 			DIRECTOR_SCENE_EVENT,

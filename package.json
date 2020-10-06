@@ -1,19 +1,28 @@
 {
   "private": false,
   "name": "loomse",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "Interactive storytelling for the modern web",
   "author": "Franco Speziali",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "homepage": "http://www.loomse.org/",
   "repository": {
     "type": "git",
     "url": "https://github.com/WeMakeMachines/loomse.git"
   },
+  "bugs": {
+    "url": "https://github.com/WeMakeMachines/loomse/issues"
+  },
+  "keywords": [
+    "html5",
+    "video",
+    "events",
+    "story",
+    "interactive"
+  ],
   "main": "./dist/loomse.min.js",
   "scripts": {
-    "dev": "webpack --config webpack.config.js --devtool='source-map' --watch --mode='development'",
-    "build": "webpack --config webpack.config.js --mode='production' -o dist/loomse.min.js",
+    "build": "rollup --config",
     "prettier": "prettier --write 'source/**/*.js'",
     "eslint": "eslint source",
     "test": "jest"
@@ -22,15 +31,17 @@
     "@babel/cli": "7.11.6",
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
+    "@rollup/plugin-babel": "^5.2.1",
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-json": "^4.1.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.3.0",
-    "babel-loader": "^8.1.0",
     "eslint": "^7.9.0",
     "eslint-plugin-jest": "^24.0.2",
     "jest": "^26.4.2",
     "prettier": "1.19.1",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "rollup": "^2.28.2",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
     "redom": "^3.27.1"

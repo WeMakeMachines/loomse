@@ -1,0 +1,21 @@
+{
+  "shortName": "LoomSE Sample Script",
+  "longName": "",
+  "author": "You",
+  "description": "",
+  "firstScene": "intro",
+  "language": "en_GB",
+  "scenes": {
+    "intro": {
+      "longName": "",
+      "video": {
+        "autoplay": true,
+        "muted": true,
+        "sources": {
+          "mp4": ""
+        }
+      },
+      "events": []
+    }
+  }
+}
