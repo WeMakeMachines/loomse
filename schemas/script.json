@@ -124,13 +124,14 @@
     "event": {
       "type": "object",
       "required": [
+        "group",
         "in",
         "out"
       ],
       "properties": {
         "type": {
-          "type": "string",
-          "description": "The type of event to fire",
+          "group": "string",
+          "description": "The name of the event to fire",
           "default": ""
         },
         "disabled": {
@@ -140,13 +141,13 @@
         },
         "in": {
           "type": "integer",
-          "description": "Loop in point (in milliseconds)",
+          "description": "Time for event to fire, also known as in point (in milliseconds)",
           "default": 0,
           "minimum": 0
         },
         "out": {
           "type": "integer",
-          "description": "Loop out point (in milliseconds)",
+          "description": "Time for event stop firing (in milliseconds)",
           "default": 0
         },
         "payload": {
