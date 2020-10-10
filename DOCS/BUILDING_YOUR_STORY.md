@@ -1,10 +1,10 @@
-# Build Your Story
+# Building Your Story
 
 All the power for developing your non-linear narrative rests inside a JSON based script file.  
   
 You could also define separate scripts for mobile and desktop (you will have to pass in the correct script into LoomSE).
 
-You can view a [example script](script-example.json) to give you an idea of how to structure your JSON.
+You can view an [example script](script-example.json) to give you an idea of how to structure your JSON.
 
 Please refer to the [script schema](schemas/script.json).  
 
@@ -103,3 +103,5 @@ The first scene will refer to the second scene via an event.
     }
   }
 ```
+
+To have loomse act on the data in the event, you will need to listen and respond to the events generated in the DOM. By taking control of how these events are handled, you can build rich and complex interactive systems. Learn more about this in our [Getting Started](GETTING_STARTED.md) guide.
