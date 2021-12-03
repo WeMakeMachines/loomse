@@ -1,5 +1,7 @@
+![Logo](./ASSETS/logo.png)
+
 # Loom Story Engine
-*Interactive storytelling for the modern web - create your script in Loom, tell multiple tales*  
+*Interactive storytelling for the modern web - create your script in Loom, tell multiple tales*
 
 ## What is LoomSE?
 LoomSE is a client side HTML5 video and event manager. Events can be scheduled to fire during video playback, which your application can subscribe to and use. By interacting with the API you can then direct how the video should play, or even which video should play next.
@@ -80,5 +82,5 @@ A collection of scenes
 ##### Scene
 Part of a story
   
-## Pronounciation  
+## Pronunciation  
 _{ loom-see }_
