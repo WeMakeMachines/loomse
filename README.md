@@ -6,8 +6,8 @@
 ## What is LoomSE?
 LoomSE is a client side HTML5 video and event manager. Events can be scheduled to fire during video playback, which your application can subscribe to and use. By interacting with the API you can then direct how the video should play, or even which video should play next.
 
-## Demo
-[loomse.org](http://loomse.org/)
+### One script, multiple stories
+With loomse, content creators can tell interactive stories over the modern web. Create your script in loomse, tell multiple tales.
 
 ## Installation
 This repository includes a minified version of LoomSE `/dist/loomse.min.js`  
@@ -81,6 +81,9 @@ A collection of scenes
   
 ##### Scene
 Part of a story
+
+## The project
+loomse is an engine for weaving stories together. Began by Franco Speziali in 2015, loomse was named in part as homage to the surrounding industrial history of Manchester, but also as a nod to the 1990 graphical adventure Loom.
   
 ## Pronunciation  
 _{ loom-see }_
