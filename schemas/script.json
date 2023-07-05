@@ -60,6 +60,11 @@
               "sources"
             ],
             "properties": {
+              "controls": {
+                "type": "boolean",
+                "description": "Toggle video controls",
+                "default": false
+              },
               "loop": {
                 "properties": {
                   "in": {
