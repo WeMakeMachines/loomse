@@ -129,8 +129,8 @@
         "out"
       ],
       "properties": {
-        "type": {
-          "group": "string",
+        "group": {
+          "type": "string",
           "description": "The name of the event to fire",
           "default": ""
         },
