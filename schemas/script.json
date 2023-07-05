@@ -78,6 +78,15 @@
                 "description": "Mute audio",
                 "default": false
               },
+              "duration": {
+                "type": "integer",
+                "description": "Length of video file"
+              },
+              "subtitles": {
+                "type": "string",
+                "description": "Relative path to subtitles file",
+                "default": ""
+              },
               "sources": {
                 "type": "object",
                 "properties": {
@@ -95,18 +104,6 @@
                     "type": "string",
                     "description": "Relative path to webm asset",
                     "default": ""
-                  },
-                  "duration": {
-                    "type": "integer",
-                    "description": "Length of video file"
-                  },
-                  "subtitles": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "Relative path to subtitles file",
-                      "default": ""
-                    }
                   }
                 }
               }
