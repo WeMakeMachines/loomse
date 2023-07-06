@@ -1,15 +1,13 @@
-import babel from '@rollup/plugin-babel';
-import commonjs from '@rollup/plugin-commonjs';
-import json from '@rollup/plugin-json';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
 
 export default {
-	input: 'source/App.js',
+	input: 'source/App.ts',
 	output: {
 		file: 'dist/loomse.min.js',
 		format: 'cjs',
 		exports: 'default'
 	},
 	external: ['redom'],
-	plugins: [json(), commonjs(), babel({ babelHelpers: 'bundled' }), terser()]
+	plugins: [typescript(), terser()]
 };

@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "loomse",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "description": "Interactive storytelling for the modern web",
   "author": "Franco Speziali",
   "license": "MIT",
@@ -13,6 +13,7 @@
   "bugs": {
     "url": "https://github.com/WeMakeMachines/loomse/issues"
   },
+  "type": "module",
   "keywords": [
     "html5",
     "video",
@@ -23,28 +24,24 @@
   ],
   "main": "./dist/loomse.min.js",
   "scripts": {
+    "prebuild": "node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > source/version.ts",
     "build": "rollup --config",
-    "prettier": "prettier --write 'source/**/*.js'",
+    "prettier": "prettier --write 'source/**/*.ts'",
     "eslint": "eslint source",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.6",
-    "@babel/core": "^7.17.8",
-    "@babel/eslint-parser": "^7.17.0",
-    "@babel/preset-env": "^7.16.11",
-    "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^21.0.2",
-    "@rollup/plugin-json": "^4.1.0",
-    "babel-jest": "^27.5.1",
-    "eslint": "^8.11.0",
-    "eslint-plugin-jest": "^26.1.2",
-    "jest": "^27.5.1",
-    "prettier": "2.6.0",
-    "rollup": "^2.70.1",
-    "rollup-plugin-terser": "^7.0.2"
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@types/jest": "^29.5.2",
+    "eslint": "^8.44.0",
+    "eslint-plugin-jest": "^27.2.2",
+    "prettier": "3.0.0",
+    "rollup": "^3.26.1",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
-    "redom": "^3.27.1"
+    "redom": "^3.29.1"
   }
 }
