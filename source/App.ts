@@ -11,7 +11,10 @@ import { ScriptedStory } from './LoomSE/types/scriptedStory';
  * @returns {Object} Public API
  * @constructor
  */
-export default function App(el: HTMLElement, config = {}) {
+export default function App(
+	el: HTMLElement,
+	config: { width?: string; height?: string } = {}
+) {
 	const version = VERSION;
 	const loomSE = new LoomSE(config);
 

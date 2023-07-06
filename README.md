@@ -38,11 +38,11 @@ A valid DOM element to which LoomSE will unpack itself
 ##### options _(optional)_
 An object. Valid keys:
 
-- **width**: _number_ _(default: 100%)_
+- **width**: _string_ _(default: 100%)_
     
     width of the resulting video element
 
-- **height**: _number_ _(default: 100%)_
+- **height**: _string_ _(default: 100%)_
 
     height of the resulting video element
  
@@ -57,8 +57,8 @@ An object. Valid keys:
 ```js
 const parent = document.querySelector('#loomSE');  
 const loomSE = new LoomSE(parent, {  
-  width: 800,  
-  height: 600  
+  width: "800px",  
+  height: "600px"
 });
 ```
 ## API
