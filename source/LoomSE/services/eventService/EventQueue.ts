@@ -1,10 +1,21 @@
-import { START, STOP } from '../../constants/eventActions';
+import { EventAction } from '../../types/events';
+import { ScriptedEvent } from '../../types/scriptedStory';
 
-class EventQueue {
-	constructor(events) {
+export interface TimedObject {
+	id: number;
+	time: number;
+	action: EventAction;
+}
+
+export default class EventQueue {
+	public index = 0;
+
+	public events: ScriptedEvent[];
+	public queue: TimedObject[];
+
+	constructor(events: ScriptedEvent[]) {
 		this.events = events;
 		this.queue = this.build();
-		this.index = 0;
 
 		this.sort('asc');
 	}
@@ -17,7 +28,7 @@ class EventQueue {
 		return this.queue[this.index];
 	}
 
-	getTimedObject(id) {
+	getTimedObject(id: number) {
 		return this.events[id];
 	}
 
@@ -32,13 +43,13 @@ class EventQueue {
 			const timedObjectIn = {
 				id: i,
 				time: this.events[i].in,
-				action: START
+				action: EventAction.START
 			};
 
 			const timedObjectOut = {
 				id: i,
 				time: this.events[i].out,
-				action: STOP
+				action: EventAction.STOP
 			};
 
 			queue.push(timedObjectIn, timedObjectOut);
@@ -47,7 +58,7 @@ class EventQueue {
 		return queue;
 	}
 
-	sort(type) {
+	sort(type: 'desc' | 'asc') {
 		switch (type) {
 			case 'desc':
 				this.queue.sort((a, b) => b.time - a.time);
@@ -59,5 +70,3 @@ class EventQueue {
 		}
 	}
 }
-
-export default EventQueue;

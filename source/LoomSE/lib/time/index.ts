@@ -2,6 +2,6 @@ export { secondsToMilliseconds };
 
 const millisecondsInSeconds = 1000;
 
-function secondsToMilliseconds(time) {
+function secondsToMilliseconds(time: number) {
 	return time * millisecondsInSeconds;
 }

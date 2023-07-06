@@ -8,7 +8,7 @@ export { cleanString, debounce, isEmptyObject, random };
  * @param {string} string
  * @returns {string}
  */
-function cleanString(string) {
+function cleanString(string: string) {
 	return string.replace(/\s+/g, '').toLowerCase();
 }
 
@@ -19,9 +19,9 @@ function cleanString(string) {
  * @returns {function}
  */
 const debounce = (() => {
-	let delayedFunction;
+	let delayedFunction: ReturnType<typeof setTimeout>;
 
-	return (callback, delay) => {
+	return (callback: () => void, delay: number) => {
 		if (delayedFunction) {
 			clearTimeout(delayedFunction);
 		}
@@ -37,7 +37,7 @@ const debounce = (() => {
  * @param {Object} object
  * @returns {boolean}
  */
-function isEmptyObject(object) {
+function isEmptyObject(object: { [key: string]: any }) {
 	const keys = Object.keys(object);
 
 	return !Boolean(keys.length);
@@ -49,7 +49,7 @@ function isEmptyObject(object) {
  * @param {number} maxRange
  * @returns {number}
  */
-function random(minRange, maxRange) {
+function random(minRange: number, maxRange: number) {
 	let range = maxRange - minRange;
 
 	if (typeof minRange === 'undefined') {

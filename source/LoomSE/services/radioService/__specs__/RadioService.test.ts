@@ -1,7 +1,7 @@
 import RadioService from '../RadioService';
 
 describe('RadioService', () => {
-	let radioService;
+	let radioService: RadioService;
 
 	beforeEach(() => {
 		radioService = new RadioService();
@@ -25,7 +25,7 @@ describe('RadioService', () => {
 			let response;
 
 			const message = 'yellow';
-			const functionToCall = message => (response = message);
+			const functionToCall = (message: any) => (response = message);
 			const channel = 'lemon';
 
 			radioService.registry = {

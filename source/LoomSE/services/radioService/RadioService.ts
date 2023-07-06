@@ -1,16 +1,21 @@
 import { random } from '../../lib/common';
 
-class RadioService {
+export default class RadioService {
+	public registry: {
+		[key: string]: {
+			[key: string]: {
+				handler: (...args: any[]) => void;
+				context?: void;
+			};
+		};
+	} = {};
+
 	/**
 	 * Returns a random sequence of characters to the specified length
 	 * @param {number} length
 	 * @returns {string}
 	 */
-	static tokenGenerator(length) {
-		if (typeof length !== 'number') {
-			throw new Error('Length not a number');
-		}
-
+	static tokenGenerator(length: number) {
 		const token = [];
 
 		for (let i = 0; i < length; i += 1) {
@@ -30,44 +35,47 @@ class RadioService {
 		return token.join('');
 	}
 
-	constructor() {
-		this.registry = {};
-	}
-
-	broadcast(channel, message) {
+	broadcast(channel: string, message?: any) {
 		if (!this.registry[channel]) {
 			console.warn('Channel not registered:', channel);
 
 			return;
 		}
 
-		Object.values(this.registry[channel]).forEach(listener => {
+		Object.values(this.registry[channel]).forEach((listener) => {
 			listener.handler.call(listener.context, message);
 		});
 	}
 
-	unRegister(token) {
-		const channel = Object.keys(this.registry).filter(channel => {
+	unRegister(token: string) {
+		const channel = Object.keys(this.registry).filter((channel) => {
 			const tokens = Object.keys(this.registry[channel]);
 
 			return tokens.includes(token);
-		});
+		})[0];
 
 		if (!channel) {
-			console.warn('Token not found');
+			console.warn('Unregister token not found');
 
 			return;
 		}
 
+		// @ts-ignore
 		delete this.registry[channel][token];
 
+		// @ts-ignore
 		if (!Object.keys(this.registry[channel]).length) {
+			// @ts-ignore
 			delete this.registry[channel];
 		}
 	}
 
-	register(channel, handler, context) {
-		const handlerToken = this.constructor.tokenGenerator(32);
+	register(
+		channel: string,
+		handler: (...args: any[]) => void,
+		context?: any
+	) {
+		const handlerToken = RadioService.tokenGenerator(32);
 
 		if (!this.registry[channel]) {
 			this.registry[channel] = {};
@@ -78,5 +86,3 @@ class RadioService {
 		return handlerToken;
 	}
 }
-
-export default RadioService;

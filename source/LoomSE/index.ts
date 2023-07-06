@@ -5,16 +5,17 @@ import styles from './styles';
 import Story from './Components/Story';
 import Scene from './Components/Scene';
 
-import { radioService } from './services';
-import { getCurrentDuration, getCurrentTime } from './reporters';
+import { radioService } from './services/radioService';
+import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
 
-import {
-	DIRECTOR_PAUSE,
-	DIRECTOR_PLAY,
-	DIRECTOR_SCENE_EVENT
-} from './constants/directorEvents';
+import { DirectorEvent } from './types/media';
 
-class LoomSE {
+export default class LoomSE {
+	public story: Story | null = null;
+	public scene: Scene | null = null;
+
+	public el: HTMLElement;
+
 	constructor({ width = '100%', height = '100%' }) {
 		this.el = el('', {
 			style: {
@@ -23,9 +24,6 @@ class LoomSE {
 				height: `${height}`
 			}
 		});
-
-		this.story = {};
-		this.scene = null;
 
 		this.setupSyntheticEvents();
 	}
@@ -38,44 +36,46 @@ class LoomSE {
 		return getCurrentTime();
 	}
 
-	setStory(storyObject) {
+	setStory(storyObject: Story) {
 		this.story = new Story(storyObject);
 	}
 
-	loadScene(string) {
+	loadScene(sceneName: string) {
+		if (!this.story) return;
+
 		if (this.scene) {
 			unmount(this.el, this.scene);
 		}
 
-		this.scene = new Scene(string, this.story.scenes[string]);
+		this.scene = new Scene(sceneName, this.story.scenes[sceneName]);
 
 		mount(this.el, this.scene);
 	}
 
 	pause() {
-		radioService.broadcast(DIRECTOR_PAUSE);
+		radioService.broadcast(DirectorEvent.PAUSE);
 	}
 
 	play() {
-		radioService.broadcast(DIRECTOR_PLAY);
+		radioService.broadcast(DirectorEvent.PLAY);
 	}
 
-	resize(width, height) {
+	resize(width: number, height: number) {
 		setStyle(this.el, { width: `${width}`, height: `${height}` });
 	}
 
 	// Here we relay internal messages from the radioService to the "outside" world via custom events
 	setupSyntheticEvents() {
 		radioService.register(
-			DIRECTOR_SCENE_EVENT,
-			message => {
+			DirectorEvent.SCENE_EVENT,
+			(message) => {
 				this.el.dispatchEvent(
-					new CustomEvent(DIRECTOR_SCENE_EVENT, { detail: message })
+					new CustomEvent(DirectorEvent.SCENE_EVENT, {
+						detail: message
+					})
 				);
 			},
 			this
 		);
 	}
 }
-
-export default LoomSE;

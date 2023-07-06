@@ -1,7 +1,14 @@
 /**
  * Handles the fullscreen API for client devices
  */
-class FullScreen {
+export default class FullScreen {
+	public root = document;
+	public state = false;
+	public api = FullScreen.returnVendorAPI();
+
+	public element: HTMLElement;
+	public isAvailable: boolean;
+
 	/**
 	 * Returns currently known API methods for client devices
 	 * @returns {object}
@@ -40,14 +47,22 @@ class FullScreen {
 	 * @returns {object | null}
 	 */
 	static returnVendorAPI() {
-		let vendorAPI = this.vendorAPI(),
-			vendors = Object.keys(vendorAPI);
+		const vendorAPI: {
+			[key: string]: {
+				isAvailable: string;
+				request: string;
+				exit: string;
+				event: string;
+			};
+		} = FullScreen.vendorAPI();
+		const vendors = Object.keys(vendorAPI);
 
 		for (let i = 0; i < vendors.length; i += 1) {
-			let vendor = vendors[i],
-				api = vendorAPI[vendor],
-				isFullscreenAvailable = api.isAvailable;
+			const vendor = vendors[i];
+			const api = vendorAPI[vendor];
+			const isFullscreenAvailable = api.isAvailable;
 
+			// @ts-ignore
 			if (document[isFullscreenAvailable]) {
 				return api;
 			}
@@ -59,11 +74,8 @@ class FullScreen {
 	/**
 	 * @param {object} element
 	 */
-	constructor(element) {
+	constructor(element: HTMLElement) {
 		this.element = element;
-		this.root = document;
-		this.state = false;
-		this.api = this.constructor.returnVendorAPI();
 		this.isAvailable = Boolean(this.api);
 	}
 
@@ -87,7 +99,8 @@ class FullScreen {
 	 * Sends a fullscreen request
 	 * @param {object} element
 	 */
-	request(element) {
+	request(element: HTMLElement) {
+		// @ts-ignore
 		element[this.api.request]();
 		this.state = true;
 	}
@@ -96,17 +109,17 @@ class FullScreen {
 	 * Sends an exit fullscreen request
 	 */
 	exit() {
+		// @ts-ignore
 		this.root[this.api.exit]();
 		this.state = false;
 	}
 
 	/**
 	 * Returns the correct event for the client
-	 * @returns {string | null}
 	 */
 	returnEvent() {
-		return this.api.event || null;
+		if (!this.api) return;
+
+		return this.api.event;
 	}
 }
-
-export default FullScreen;

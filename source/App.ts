@@ -1,7 +1,8 @@
 import { mount } from 'redom';
 
+import { VERSION } from './version';
 import LoomSE from './LoomSE';
-import packageJson from '../package.json';
+import { ScriptedStory } from './LoomSE/types/scriptedStory';
 
 /**
  * This function represents the public interface (facade) for LoomSE
@@ -10,8 +11,8 @@ import packageJson from '../package.json';
  * @returns {Object} Public API
  * @constructor
  */
-export default function App(el, config = {}) {
-	const version = packageJson.version;
+export default function App(el: HTMLElement, config = {}) {
+	const version = VERSION;
 	const loomSE = new LoomSE(config);
 
 	mount(el, loomSE);
@@ -27,10 +28,10 @@ export default function App(el, config = {}) {
 
 		el: loomSE.el,
 
-		startScript(storyObject) {
+		startScript(scriptedStory: ScriptedStory) {
 			try {
-				loomSE.setStory(storyObject);
-				loomSE.loadScene(loomSE.story.firstScene);
+				loomSE.setStory(scriptedStory);
+				loomSE.loadScene(scriptedStory.firstScene);
 
 				return Promise.resolve();
 			} catch (error) {
@@ -47,14 +48,16 @@ export default function App(el, config = {}) {
 		},
 
 		reloadScene() {
-			loomSE.loadScene();
+			if (loomSE.scene?.sceneId) {
+				loomSE.loadScene(loomSE.scene?.sceneId);
+			}
 		},
 
-		resize(width, height) {
+		resize(width: number, height: number) {
 			loomSE.resize(width, height);
 		},
 
-		skipTo(sceneName) {
+		skipTo(sceneName: string) {
 			loomSE.loadScene(sceneName);
 		},
 

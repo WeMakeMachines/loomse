@@ -1,19 +1,19 @@
 class LocalStorageError extends Error {}
 
-class LocalStorage {
-	constructor(ref = window) {
-		this.ref = ref;
-		this.storageKey = 'data';
-		this.data = {};
-		this.isAvailable = this.checkIsAvailable();
-	}
+export default class LocalStorage {
+	public ref = window;
+	public storageKey = 'data';
+	public data: {
+		[key: string]: any[];
+	} = {};
+	public isAvailable = this.checkIsAvailable();
 
 	checkIsAvailable() {
 		const testKey = 'test';
 
 		try {
 			this.isAvailable = true;
-			this.ref.localStorage.setItem(testKey, {});
+			this.ref.localStorage.setItem(testKey, '');
 			this.ref.localStorage.removeItem(testKey);
 			return true;
 		} catch (error) {
@@ -39,7 +39,7 @@ class LocalStorage {
 		return this.data;
 	}
 
-	saveData(key, value) {
+	saveData(key: string, value: string) {
 		if (!this.isAvailable) {
 			return;
 		}
@@ -61,5 +61,3 @@ class LocalStorage {
 		}
 	}
 }
-
-export default LocalStorage;

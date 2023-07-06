@@ -5,7 +5,6 @@ export {
 	fullscreen,
 	getDocumentDimensions,
 	getElementDimensions,
-	getExternalModule,
 	isCompatible,
 	supportsVideo,
 	localStorage
@@ -13,7 +12,7 @@ export {
 
 const localStorage = new LocalStorage();
 
-function fullscreen(element) {
+function fullscreen(element: HTMLElement) {
 	return new FullScreen(element);
 }
 
@@ -33,27 +32,13 @@ function getDocumentDimensions() {
  * @param {HTMLElement} element
  * @returns {{width: number, height: number}}
  */
-function getElementDimensions(element) {
+function getElementDimensions(element: HTMLElement) {
 	const elementDimensions = element.getBoundingClientRect();
 
 	return {
 		width: elementDimensions.width,
 		height: elementDimensions.height
 	};
-}
-
-function getExternalModule(externalModuleReference, moduleName) {
-	if (!externalModuleReference) {
-		return;
-	}
-
-	const module = window[externalModuleReference][moduleName];
-
-	if (!module) {
-		throw new Error('No modules found');
-	}
-
-	return module;
 }
 
 function isCompatible() {

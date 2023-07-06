@@ -1,32 +1,38 @@
 import { el, mount } from 'redom';
 
 import Source from './Source';
-
-import { radioService } from '../../services';
-
-import { DIRECTOR_PLAY, DIRECTOR_PAUSE } from '../../constants/directorEvents';
-
-import {
-	VIDEO_ENDED,
-	VIDEO_DURATION_CHANGED,
-	VIDEO_PAUSED,
-	VIDEO_PLAYING,
-	VIDEO_SEEKED,
-	VIDEO_SEEKING,
-	VIDEO_TIMEUPDATE
-} from '../../constants/videoEvents';
-
+import { radioService } from '../../services/radioService';
+import { DirectorEvent, VideoEvent } from '../../types/media';
 import styles from './styles';
 
 class VideoError extends Error {}
 
-class Video {
+interface VideoProps {
+	controls?: boolean;
+	loop?: { in: number; out: number } | boolean;
+	muted?: boolean;
+	sources: { [key: string]: string };
+}
+
+export default class Video {
+	public el: HTMLVideoElement;
+	public broadcastEndedEvent: () => void;
+	public broadcastDurationChangeEvent: () => void;
+	public broadcastPlayingEvent: () => void;
+	public broadcastPausedEvent: () => void;
+	public broadcastSeekedEvent: () => void;
+	public broadcastSeekingEvent: () => void;
+	public broadcastTimeUpdateEvent: () => void;
+	public radioUnregisterTokenPause: string;
+	public radioUnregisterTokenPlay: string;
+	public sources: { [key: string]: Source };
+
 	constructor({
 		controls = false,
 		loop = false,
 		muted = false,
-		sources = {}
-	}) {
+		sources
+	}: VideoProps) {
 		this.el = el('video', {
 			autoplay: false,
 			controls: controls,
@@ -38,25 +44,34 @@ class Video {
 		this.sources = this.setSources(sources);
 		this.mountSources();
 
-		this.broadcastEndedEvent = () => radioService.broadcast(VIDEO_ENDED);
+		this.broadcastEndedEvent = () =>
+			radioService.broadcast(VideoEvent.ENDED);
 		this.broadcastDurationChangeEvent = () =>
-			radioService.broadcast(VIDEO_DURATION_CHANGED, this.el.duration);
+			radioService.broadcast(
+				VideoEvent.DURATION_CHANGED,
+				this.el.duration
+			);
 		this.broadcastPlayingEvent = () =>
-			radioService.broadcast(VIDEO_PLAYING, this.el.currentTime);
-		this.broadcastPausedEvent = () => radioService.broadcast(VIDEO_PAUSED);
+			radioService.broadcast(VideoEvent.PLAYING, this.el.currentTime);
+		this.broadcastPausedEvent = () =>
+			radioService.broadcast(VideoEvent.PAUSED);
 		this.broadcastSeekedEvent = () =>
-			radioService.broadcast(VIDEO_SEEKED, this.el.currentTime);
+			radioService.broadcast(VideoEvent.SEEKED, this.el.currentTime);
 		this.broadcastSeekingEvent = () =>
-			radioService.broadcast(VIDEO_SEEKING, this.el.currentTime);
+			radioService.broadcast(VideoEvent.SEEKING, this.el.currentTime);
 		this.broadcastTimeUpdateEvent = () =>
-			radioService.broadcast(VIDEO_TIMEUPDATE, this.el.currentTime);
+			radioService.broadcast(VideoEvent.TIMEUPDATE, this.el.currentTime);
 
-		this.tokenPause = radioService.register(
-			DIRECTOR_PAUSE,
+		this.radioUnregisterTokenPause = radioService.register(
+			DirectorEvent.PAUSE,
 			this.pause,
 			this
 		);
-		this.tokenPlay = radioService.register(DIRECTOR_PLAY, this.play, this);
+		this.radioUnregisterTokenPlay = radioService.register(
+			DirectorEvent.PLAY,
+			this.play,
+			this
+		);
 
 		this.listenToVideoEvents();
 	}
@@ -66,12 +81,12 @@ class Video {
 		this.stopListeningToRadio();
 	}
 
-	setSources(sources) {
+	setSources(sources: { [key: string]: string }) {
 		if (!sources) {
 			throw new VideoError('No video sources found');
 		}
 
-		const generatedSources = {};
+		const generatedSources: { [key: string]: Source } = {};
 
 		for (const key in sources) {
 			if (!sources.hasOwnProperty(key)) {
@@ -126,8 +141,8 @@ class Video {
 	}
 
 	stopListeningToRadio() {
-		radioService.unRegister(this.tokenPause);
-		radioService.unRegister(this.tokenPlay);
+		radioService.unRegister(this.radioUnregisterTokenPause);
+		radioService.unRegister(this.radioUnregisterTokenPlay);
 	}
 
 	play() {
@@ -149,5 +164,3 @@ class Video {
 		}
 	}
 }
-
-export default Video;

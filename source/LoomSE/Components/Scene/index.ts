@@ -7,11 +7,19 @@ import Timeline from '../Timeline';
 import Video from '../Video';
 
 import { radioService } from '../../services/radioService';
-import { DIRECTOR_SCENE_CHANGE } from '../../constants/directorEvents';
+import { DirectorEvent } from '../../types/media';
+import { ScriptedScene } from '../../types/scriptedStory';
 
-class Scene {
-	constructor(sceneId, { events, longName, video }) {
-		radioService.broadcast(DIRECTOR_SCENE_CHANGE, sceneId);
+export default class Scene {
+	public el: HTMLElement;
+	public sceneId: string;
+	public timeline: Timeline;
+	public video: Video;
+	public events: Events;
+	public longName: string | undefined;
+
+	constructor(sceneId: string, { events, longName, video }: ScriptedScene) {
+		radioService.broadcast(DirectorEvent.SCENE_CHANGE, sceneId);
 
 		this.el = el(
 			'',
@@ -20,6 +28,7 @@ class Scene {
 			(this.video = new Video(video))
 		);
 
+		this.sceneId = sceneId;
 		this.events = new Events(events);
 		this.longName = longName;
 
@@ -30,5 +39,3 @@ class Scene {
 		this.events.unRegister();
 	}
 }
-
-export default Scene;
