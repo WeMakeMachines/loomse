@@ -18,9 +18,8 @@ function fullscreen(element: HTMLElement) {
 
 /**
  * Gets the current document dimensions
- * @returns {{width: number, height: number}}
  */
-function getDocumentDimensions() {
+function getDocumentDimensions(): { width: number; height: number } {
 	return {
 		width: Math.min(document.body.clientWidth, window.innerWidth),
 		height: window.innerHeight
@@ -29,10 +28,11 @@ function getDocumentDimensions() {
 
 /**
  * Gets the current element dimensions
- * @param {HTMLElement} element
- * @returns {{width: number, height: number}}
  */
-function getElementDimensions(element: HTMLElement) {
+function getElementDimensions(element: HTMLElement): {
+	width: number;
+	height: number;
+} {
 	const elementDimensions = element.getBoundingClientRect();
 
 	return {
@@ -41,15 +41,14 @@ function getElementDimensions(element: HTMLElement) {
 	};
 }
 
-function isCompatible() {
+function isCompatible(): boolean {
 	return supportsVideo();
 }
 
 /**
  * Checks if current browser supports the VIDEO canPlayType method
- * @returns {boolean}
  */
-function supportsVideo() {
+function supportsVideo(): boolean {
 	let test = document.createElement('video').canPlayType;
 
 	return Boolean(test);

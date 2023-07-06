@@ -6,10 +6,6 @@ import { ScriptedStory } from './LoomSE/types/scriptedStory';
 
 /**
  * This function represents the public interface (facade) for LoomSE
- * @param {HTMLElement} el The parent element to which the application will attach
- * @param {Object} config
- * @returns {Object} Public API
- * @constructor
  */
 export default function App(
 	el: HTMLElement,

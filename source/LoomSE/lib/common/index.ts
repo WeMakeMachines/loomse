@@ -1,24 +1,15 @@
 /**
  * Common tools
  */
-export { cleanString, debounce, isEmptyObject, random };
 
-/**
- * Removes whitespace from a string, and converts to lowercase
- * @param {string} string
- * @returns {string}
- */
-function cleanString(string: string) {
+export function cleanString(string: string) {
 	return string.replace(/\s+/g, '').toLowerCase();
 }
 
 /**
  * Prevents a function from being called repeatedly
- * @param {function} callback
- * @param {number} delay
- * @returns {function}
  */
-const debounce = (() => {
+export const debounce = (() => {
 	let delayedFunction: ReturnType<typeof setTimeout>;
 
 	return (callback: () => void, delay: number) => {
@@ -34,10 +25,8 @@ const debounce = (() => {
 
 /**
  * Checks if an object is empty
- * @param {Object} object
- * @returns {boolean}
  */
-function isEmptyObject(object: { [key: string]: any }) {
+export function isEmptyObject(object: { [key: string]: any }) {
 	const keys = Object.keys(object);
 
 	return !Boolean(keys.length);
@@ -45,11 +34,8 @@ function isEmptyObject(object: { [key: string]: any }) {
 
 /**
  * Returns a random number between minRange and maxRange
- * @param {number} minRange
- * @param {number} maxRange
- * @returns {number}
  */
-function random(minRange: number, maxRange: number) {
+export function random(minRange: number, maxRange: number): number {
 	let range = maxRange - minRange;
 
 	if (typeof minRange === 'undefined') {

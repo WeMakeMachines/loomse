@@ -12,10 +12,8 @@ export default class RadioService {
 
 	/**
 	 * Returns a random sequence of characters to the specified length
-	 * @param {number} length
-	 * @returns {string}
 	 */
-	static tokenGenerator(length: number) {
+	static tokenGenerator(length: number): string {
 		const token = [];
 
 		for (let i = 0; i < length; i += 1) {
@@ -60,12 +58,9 @@ export default class RadioService {
 			return;
 		}
 
-		// @ts-ignore
 		delete this.registry[channel][token];
 
-		// @ts-ignore
 		if (!Object.keys(this.registry[channel]).length) {
-			// @ts-ignore
 			delete this.registry[channel];
 		}
 	}

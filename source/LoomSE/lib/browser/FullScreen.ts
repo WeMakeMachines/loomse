@@ -11,7 +11,6 @@ export default class FullScreen {
 
 	/**
 	 * Returns currently known API methods for client devices
-	 * @returns {object}
 	 */
 	static vendorAPI() {
 		return {
@@ -44,7 +43,6 @@ export default class FullScreen {
 
 	/**
 	 * Returns the correct vendor API for client
-	 * @returns {object | null}
 	 */
 	static returnVendorAPI() {
 		const vendorAPI: {
@@ -71,9 +69,6 @@ export default class FullScreen {
 		return null;
 	}
 
-	/**
-	 * @param {object} element
-	 */
 	constructor(element: HTMLElement) {
 		this.element = element;
 		this.isAvailable = Boolean(this.api);
@@ -97,7 +92,6 @@ export default class FullScreen {
 
 	/**
 	 * Sends a fullscreen request
-	 * @param {object} element
 	 */
 	request(element: HTMLElement) {
 		// @ts-ignore
