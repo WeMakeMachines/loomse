@@ -60,23 +60,40 @@
               "sources"
             ],
             "properties": {
+              "autoplay": {
+                "type": "boolean",
+                "description": "Automatically play video on start",
+                "default": true
+              },
               "controls": {
                 "type": "boolean",
                 "description": "Toggle video controls",
                 "default": false
               },
               "loop": {
-                "properties": {
-                  "in": {
-                    "type": "integer",
-                    "description": "Loop in point (in milliseconds)",
-                    "minimum": 0
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "description": "Video in / out points to loop",
+                    "required": ["in", "out"],
+                    "properties": {
+                      "in": {
+                        "type": "integer",
+                        "description": "Loop in point (in milliseconds)",
+                        "minimum": 0
+                      },
+                      "out": {
+                        "type": "integer",
+                        "description": "Loop out point (in milliseconds)"
+                      }
+                    }
                   },
-                  "out": {
-                    "type": "integer",
-                    "description": "Loop out point (in milliseconds)"
+                  {
+                    "type": "boolean",
+                    "description": "Loop whole video",
+                    "default": false
                   }
-                }
+                ]
               },
               "muted": {
                 "type": "boolean",
