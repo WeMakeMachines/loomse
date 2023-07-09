@@ -4,10 +4,7 @@ import { VERSION } from './version';
 import LoomSE from './LoomSE';
 import { ScriptedStory } from './LoomSE/types/scriptedStory';
 
-/**
- * This function represents the public interface (facade) for LoomSE
- */
-export default function App(
+export default function loomse(
 	el: HTMLElement,
 	config: { width?: string; height?: string } = {}
 ) {
@@ -27,10 +24,10 @@ export default function App(
 
 		el: loomSE.el,
 
-		startScript(scriptedStory: ScriptedStory) {
+		startScript(json: {}) {
 			try {
-				loomSE.setStory(scriptedStory);
-				loomSE.loadScene(scriptedStory.firstScene);
+				loomSE.setStory(json as ScriptedStory);
+				loomSE.loadScene((json as ScriptedStory).firstScene);
 
 				return Promise.resolve();
 			} catch (error) {

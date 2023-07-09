@@ -11,10 +11,9 @@ import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
 import { DirectorEvent } from './types/media';
 
 export default class LoomSE {
+	public el: HTMLElement;
 	public story: Story | null = null;
 	public scene: Scene | null = null;
-
-	public el: HTMLElement;
 
 	constructor({ width = '100%', height = '100%' }) {
 		this.el = el('', {
