@@ -1,4 +1,4 @@
-![Logo](./ASSETS/logo.png)
+![Logo](assets/logo.png)
 
 # Loom Story Engine
 *Interactive storytelling for the modern web - create your script in Loom, tell multiple tales*
@@ -18,7 +18,7 @@ npm i loomse
 ```
 
 ## Usage
-See our **[Getting Started Guide](DOCS/GETTING_STARTED.md)** for a more detailed introduction
+See our **[Getting Started Guide](docs/GETTING_STARTED.md)** for a more detailed introduction
 
 #### Importing
 ES6 module via default export
@@ -62,14 +62,14 @@ const loomSE = new LoomSE(parent, {
 });
 ```
 ## API
-Visit the **[API](DOCS/API.md)** reference
+Visit the **[API](docs/API.md)** reference
 
 ## The Story Script
-Use the provided **[template script](DOCS/script-template.json)**
+Use the provided **[template script](docs/script-template.json)**
 
-Or look at the **[example script](DOCS/script-example.json)**
+Or look at the **[example script](docs/script-example.json)**
 
-Or Learn how to **[build Your Story](DOCS/BUILDING_YOUR_STORY.md)**
+Or Learn how to **[build Your Story](docs/BUILDING_YOUR_STORY.md)**
 
 ## Terminology
   
