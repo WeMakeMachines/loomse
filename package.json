@@ -6,6 +6,7 @@
   "author": "Franco Speziali",
   "license": "MIT",
   "typings": "dist/index.d.ts",
+  "homepage": "https://wemakemachines.github.io/loomse/",
   "repository": {
     "type": "git",
     "url": "https://github.com/WeMakeMachines/loomse.git"
