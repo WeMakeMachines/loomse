@@ -49,7 +49,7 @@ function isCompatible(): boolean {
  * Checks if current browser supports the VIDEO canPlayType method
  */
 function supportsVideo(): boolean {
-	let test = document.createElement('video').canPlayType;
+	const test = document.createElement('video').canPlayType;
 
 	return Boolean(test);
 }

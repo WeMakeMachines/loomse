@@ -22,7 +22,7 @@ export default class LoomSE {
 	private scene: Scene | null = null;
 
 	constructor(root: HTMLElement, { width = '100%', height = '100%' }) {
-		this.el = el('', {
+		this.el = el('div', {
 			style: {
 				...styles,
 				width: `${width}`,
@@ -74,7 +74,7 @@ export default class LoomSE {
 		return getCurrentTime();
 	}
 
-	startScript(json: {}) {
+	startScript(json: object) {
 		try {
 			this.setStory(json as ScriptedStory);
 			this.loadScene((json as ScriptedStory).firstScene);

@@ -16,7 +16,7 @@ export default class Timeline {
 
 	constructor() {
 		this.el = el(
-			'',
+			'div',
 			{ style: { ...styles } },
 			(this.progressCounter = new ProgressCounter())
 		);

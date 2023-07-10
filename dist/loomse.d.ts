@@ -14,7 +14,7 @@ export default class LoomSE {
 	);
 	currentDuration(): number;
 	currentTime(): number;
-	startScript(json: {}): Promise<void>;
+	startScript(json: object): Promise<void>;
 	pause(): void;
 	play(): void;
 	reloadScene(): void;

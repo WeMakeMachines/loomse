@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "loomse",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Interactive storytelling for the modern web",
   "author": "Franco Speziali",
   "license": "MIT",
@@ -13,30 +13,34 @@
   "bugs": {
     "url": "https://github.com/WeMakeMachines/loomse/issues"
   },
-  "type": "module",
   "keywords": [
     "html5",
     "video",
     "events",
     "story",
     "storytelling",
-    "interactive"
+    "interactive",
+    "interactive-storytelling"
   ],
+  "type": "module",
   "main": "./dist/loomse.min.js",
+  "module": "./dist/loomse.es.min.js",
   "types": "./dist/loomse.d.ts",
   "scripts": {
-    "prebuild": "rm -rf ./dist & mkdir dist & cp ./source/loomse.d.ts ./dist/ & node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > source/version.ts",
+    "prebuild": "rm -rf ./dist && mkdir dist && cp ./source/loomse.d.ts ./dist/ && cp oss-licenses.json ./dist/ && node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > source/version.ts",
     "build": "rollup --config",
     "prettier": "prettier --write 'source/**/*.ts'",
     "eslint": "eslint source",
     "test": "jest --verbose"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^11.1.2",
     "@types/jest": "^29.5.2",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
     "eslint": "^8.44.0",
-    "eslint-plugin-jest": "^27.2.2",
     "prettier": "3.0.0",
     "rollup": "^3.26.1",
     "ts-jest": "^29.1.1",

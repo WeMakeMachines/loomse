@@ -22,7 +22,7 @@ export default class Scene {
 		radioService.broadcast(DirectorEvent.SCENE_CHANGE, sceneId);
 
 		this.el = el(
-			'',
+			'div',
 			{ style: { ...styles } },
 			(this.timeline = new Timeline()),
 			(this.video = new Video(video))

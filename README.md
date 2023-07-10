@@ -50,7 +50,7 @@ An object. Valid keys:
   
 ##### HTML
 ```html
-<div id="loomSE"></div>
+<div id="loomse"></div>
 ``` 
 
 ##### JavaScript
