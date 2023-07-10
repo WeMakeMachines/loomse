@@ -1,11 +1,10 @@
 {
   "private": false,
   "name": "loomse",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Interactive storytelling for the modern web",
   "author": "Franco Speziali",
   "license": "MIT",
-  "typings": "dist/index.d.ts",
   "homepage": "https://wemakemachines.github.io/loomse/",
   "repository": {
     "type": "git",
@@ -26,7 +25,7 @@
   "main": "./dist/loomse.min.js",
   "types": "./dist/loomse.d.ts",
   "scripts": {
-    "prebuild": "rm -rf ./dist & mkdir dist & cp ./source/loomse.d.ts ./dist & node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > source/version.ts",
+    "prebuild": "rm -rf ./dist & mkdir dist & cp ./source/loomse.d.ts ./dist/ & node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > source/version.ts",
     "build": "rollup --config",
     "prettier": "prettier --write 'source/**/*.ts'",
     "eslint": "eslint source",

@@ -1,4 +1,4 @@
-import { isEmptyObject } from '../';
+import { isEmptyObject } from '../index';
 
 describe('Common tools', () => {
 	describe('isEmptyObject', () => {

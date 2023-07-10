@@ -1,64 +1,109 @@
-import { mount } from 'redom';
+import { el, mount, unmount, setStyle } from 'redom';
+
+import styles from './styles';
+
+import Story from './Components/Story';
+import Scene from './Components/Scene';
+
+import { radioService } from './services/radioService';
+import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
+
+import { DirectorEvent } from './types/media';
+import { ScriptedStory } from './types/scriptedStory';
 
 import { VERSION } from './version';
-import LoomSE from './LoomSE';
-import { ScriptedStory } from './LoomSE/types/scriptedStory';
 
-export default function loomse(
-	el: HTMLElement,
-	config: { width?: string; height?: string } = {}
-) {
-	const version = VERSION;
-	const loomSE = new LoomSE(config);
+export default class LoomSE {
+	public el: HTMLElement;
+	public version = VERSION;
+	public v = VERSION;
 
-	mount(el, loomSE);
+	private story: Story | null = null;
+	private scene: Scene | null = null;
 
-	return {
-		currentDuration() {
-			return loomSE.currentDuration();
-		},
-
-		currentTime() {
-			return loomSE.currentTime();
-		},
-
-		el: loomSE.el,
-
-		startScript(json: {}) {
-			try {
-				loomSE.setStory(json as ScriptedStory);
-				loomSE.loadScene((json as ScriptedStory).firstScene);
-
-				return Promise.resolve();
-			} catch (error) {
-				return Promise.reject(`Unable to load story object, ${error}`);
+	constructor(root: HTMLElement, { width = '100%', height = '100%' }) {
+		this.el = el('', {
+			style: {
+				...styles,
+				width: `${width}`,
+				height: `${height}`
 			}
-		},
+		});
 
-		pause() {
-			loomSE.pause();
-		},
+		mount(root, this.el);
 
-		play() {
-			loomSE.play();
-		},
+		this.setupSyntheticEvents();
+	}
 
-		reloadScene() {
-			if (loomSE.scene?.sceneId) {
-				loomSE.loadScene(loomSE.scene?.sceneId);
-			}
-		},
+	// Here we relay internal messages from the radioService to the "outside" world via custom events
+	private setupSyntheticEvents() {
+		radioService.register(
+			DirectorEvent.SCENE_EVENT,
+			(message) => {
+				this.el.dispatchEvent(
+					new CustomEvent(DirectorEvent.SCENE_EVENT, {
+						detail: message
+					})
+				);
+			},
+			this
+		);
+	}
 
-		resize(width: number, height: number) {
-			loomSE.resize(width, height);
-		},
+	private setStory(storyObject: Story) {
+		this.story = new Story(storyObject);
+	}
 
-		skipTo(sceneName: string) {
-			loomSE.loadScene(sceneName);
-		},
+	private loadScene(sceneName: string) {
+		if (!this.story) return;
 
-		version,
+		if (this.scene) {
+			unmount(this.el, this.scene);
+		}
 
-		v: version
-	};
+		this.scene = new Scene(sceneName, this.story.scenes[sceneName]);
+
+		mount(this.el, this.scene);
+	}
+
+	currentDuration() {
+		return getCurrentDuration();
+	}
+
+	currentTime() {
+		return getCurrentTime();
+	}
+
+	startScript(json: {}) {
+		try {
+			this.setStory(json as ScriptedStory);
+			this.loadScene((json as ScriptedStory).firstScene);
+
+			return Promise.resolve();
+		} catch (error) {
+			return Promise.reject(`Unable to load story object, ${error}`);
+		}
+	}
+
+	pause() {
+		radioService.broadcast(DirectorEvent.PAUSE);
+	}
+
+	play() {
+		radioService.broadcast(DirectorEvent.PLAY);
+	}
+
+	reloadScene() {
+		if (this.scene?.sceneId) {
+			this.loadScene(this.scene?.sceneId);
+		}
+	}
+
+	resize(width: number, height: number) {
+		setStyle(this.el, { width: `${width}`, height: `${height}` });
+	}
+
+	skipTo(sceneName: string) {
+		this.loadScene(sceneName);
+	}
 }
