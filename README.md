@@ -10,7 +10,9 @@ LoomSE is a client side HTML5 video and event manager. Events can be scheduled t
 With loomse, content creators can tell interactive stories over the modern web. Create your script in loomse, tell multiple tales.
 
 ## Installation
-This repository includes a minified version of LoomSE `/dist/loomse.min.js`  
+This repository includes multiple minified versions of LoomSE
+- `/dist/loomse.min.js` - UMD definition. Suitable for browsers
+- `/dist/loomse.e.min.js` - ES module, for usage with modules
 
 #### via npm ###
 ```
@@ -20,32 +22,6 @@ npm i loomse
 ## Usage
 See our **[Getting Started Guide](docs/GETTING_STARTED.md)** for a more detailed introduction
 
-#### Importing
-ES6 module via default export
-
-```js
-import LoomSE from 'loomse';
-```
-
-#### Syntax  
-```js
-const loomSE = new LoomSE(element: HTMLElement[, options: object]);
-```
-
-##### element _(required)_
-A valid DOM element to which LoomSE will unpack itself
-
-##### options _(optional)_
-An object. Valid keys:
-
-- **width**: _string_ _(default: 100%)_
-    
-    width of the resulting video element
-
-- **height**: _string_ _(default: 100%)_
-
-    height of the resulting video element
- 
 #### Example usage  
   
 ##### HTML
@@ -55,12 +31,13 @@ An object. Valid keys:
 
 ##### JavaScript
 ```js
-const parent = document.querySelector('#loomSE');  
+const parent = document.getElementById('loomse');  
 const loomSE = new LoomSE(parent, {  
   width: "800px",  
   height: "600px"
 });
 ```
+
 ## API
 Visit the **[API](docs/API.md)** reference
 

@@ -6,7 +6,7 @@ The following is a short guide to getting you started with LoomSE.
 
 ##### HTML
 ```html
-<div id="loomSE"></div>
+<div id="loomse"></div>
 ``` 
 
 If you're using build tools such as Webpack / Babel, you can import the minified LoomSE module via ES6. 
@@ -15,7 +15,7 @@ If you're using build tools such as Webpack / Babel, you can import the minified
 ```js
 import LoomSE from 'loomse';
 
-const parent = document.querySelector('#loomSE');  
+const parent = document.getElementById('loomse');  
 const loomSE = new LoomSE(parent);
 ```
 
