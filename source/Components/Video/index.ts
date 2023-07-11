@@ -146,10 +146,9 @@ export default class Video {
 	}
 
 	play() {
-		this.el
-			.play()
-			.then(() => {})
-			.catch(() => {});
+		this.el.play().catch((error) => {
+			console.warn(error);
+		});
 	}
 
 	pause() {
