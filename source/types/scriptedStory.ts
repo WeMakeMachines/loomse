@@ -32,7 +32,6 @@ export interface ScriptedVideo {
 		  }
 		| boolean;
 	muted?: boolean;
-	duration?: number;
 	subtitles?: string;
 	sources: {
 		mp4?: string;

@@ -60,6 +60,26 @@
               "sources"
             ],
             "properties": {
+              "sources": {
+                "type": "object",
+                "properties": {
+                  "mp4": {
+                    "type": "string",
+                    "description": "Relative path to mp4 asset",
+                    "default": ""
+                  },
+                  "ogg": {
+                    "type": "string",
+                    "description": "Relative path to ogg asset",
+                    "default": ""
+                  },
+                  "webm": {
+                    "type": "string",
+                    "description": "Relative path to webm asset",
+                    "default": ""
+                  }
+                }
+              },
               "autoplay": {
                 "type": "boolean",
                 "description": "Automatically play video on start",
@@ -100,34 +120,10 @@
                 "description": "Mute audio",
                 "default": false
               },
-              "duration": {
-                "type": "integer",
-                "description": "Length of video file"
-              },
               "subtitles": {
                 "type": "string",
                 "description": "Relative path to subtitles file",
                 "default": ""
-              },
-              "sources": {
-                "type": "object",
-                "properties": {
-                  "mp4": {
-                    "type": "string",
-                    "description": "Relative path to mp4 asset",
-                    "default": ""
-                  },
-                  "ogg": {
-                    "type": "string",
-                    "description": "Relative path to ogg asset",
-                    "default": ""
-                  },
-                  "webm": {
-                    "type": "string",
-                    "description": "Relative path to webm asset",
-                    "default": ""
-                  }
-                }
               }
             }
           },
