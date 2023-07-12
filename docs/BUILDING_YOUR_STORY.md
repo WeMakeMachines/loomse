@@ -6,7 +6,7 @@ You could also define separate scripts for mobile and desktop (you will have to 
 
 You can view an [example script](script-example.json) to give you an idea of how to structure your JSON.
 
-Please refer to the [script schema](schemas/script.json).  
+Please refer to the [script schema](schemas/story-script.json).  
 
 You can use the above schema with a validation tool such as AJV, to validate your JSON.
 
