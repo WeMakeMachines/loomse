@@ -10,7 +10,8 @@ export default class Events {
 		this.events = eventService({
 			events,
 			startEventCallback: this.start,
-			stopEventCallback: this.stop
+			stopEventCallback: this.stop,
+			timeUpdateChannel: RadioChannel.VIDEO_TIMEUPDATE
 		});
 	}
 

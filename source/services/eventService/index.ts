@@ -9,25 +9,33 @@ interface EventServiceProps {
 	events: Event[];
 	startEventCallback: (event: Event) => void;
 	stopEventCallback: (event: Event) => void;
+	timeUpdateChannel: RadioChannel;
 }
 
 export class EventService {
 	public queue: EventQueue;
-	public startEventCallback: (event: Event) => void;
-	public stopEventCallback: (event: Event) => void;
-	public listenerToken: string;
+
+	private readonly listenerToken: string;
+	private readonly startEventCallback: (event: Event) => void;
+	private readonly stopEventCallback: (event: Event) => void;
+	private readonly timeUpdateChannel: RadioChannel;
 
 	constructor({
 		events,
 		startEventCallback,
-		stopEventCallback
+		stopEventCallback,
+		timeUpdateChannel
 	}: EventServiceProps) {
 		this.queue = new EventQueue(events);
 		this.startEventCallback = startEventCallback;
 		this.stopEventCallback = stopEventCallback;
+		this.timeUpdateChannel = timeUpdateChannel;
 
+		/**
+		 * Using the radioService, listen to a channel which broadcasts time updates
+		 */
 		this.listenerToken = radioService.listenToChannel(
-			RadioChannel.VIDEO_TIMEUPDATE,
+			this.timeUpdateChannel,
 			this.isReadyToAction,
 			this
 		);
