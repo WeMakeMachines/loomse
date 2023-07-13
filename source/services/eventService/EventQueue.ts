@@ -1,19 +1,29 @@
-import { EventAction } from '../../types/events';
-import { ScriptedEvent } from '../../types/scriptedStory';
-
 export interface TimedObject {
 	id: number;
 	time: number;
 	action: EventAction;
 }
 
+export enum EventAction {
+	START = 'start',
+	STOP = 'stop'
+}
+
+export interface Event {
+	in: number;
+	out: number;
+	payload?: {
+		[key: string]: any;
+	};
+}
+
 export default class EventQueue {
 	public index = 0;
 
-	public events: ScriptedEvent[];
+	public events: Event[];
 	public queue: TimedObject[];
 
-	constructor(events: ScriptedEvent[]) {
+	constructor(events: Event[]) {
 		this.events = events;
 		this.queue = this.build();
 

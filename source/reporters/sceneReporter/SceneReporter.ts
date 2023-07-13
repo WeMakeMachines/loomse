@@ -1,6 +1,6 @@
 import { radioService } from '../../services/radioService';
 
-import { DirectorEvent } from '../../types/media';
+import { DirectorEvent } from '../../types/broadcastChannels';
 
 export default class SceneReporter {
 	public currentScene: string;

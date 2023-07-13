@@ -8,7 +8,7 @@ import Scene from './Components/Scene';
 import { radioService } from './services/radioService';
 import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
 
-import { DirectorEvent } from './types/media';
+import { DirectorEvent } from './types/broadcastChannels';
 import { ScriptedStory } from './types/scriptedStory';
 
 import { VERSION } from './version';

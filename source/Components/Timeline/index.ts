@@ -3,7 +3,7 @@ import { el } from 'redom';
 import ProgressCounter from './ProgressCounter';
 import styles from './styles';
 
-import { VideoEvent } from '../../types/media';
+import { VideoEvent } from '../../types/broadcastChannels';
 import { radioService } from '../../services/radioService';
 
 export default class Timeline {

@@ -1,7 +1,6 @@
-import EventQueue from '../EventQueue';
-import { ScriptedEvent } from '../../../types/scriptedStory';
+import EventQueue, { Event } from '../EventQueue';
 
-const mockTimedObjects: ScriptedEvent[] = [
+const mockTimedObjects: Event[] = [
 	{
 		in: 0,
 		out: 2000

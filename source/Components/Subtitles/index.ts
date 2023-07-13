@@ -1,10 +1,10 @@
 import { EventService, eventService } from '../../services/eventService';
-import { ScriptedEvent } from '../../types/scriptedStory';
+import { Event } from '../../services/eventService/EventQueue';
 
 export default class Subtitles {
 	public events: EventService;
 
-	constructor(events: ScriptedEvent[]) {
+	constructor(events: Event[]) {
 		this.events = eventService({
 			events,
 			startEventCallback: this.runCallback,
@@ -12,11 +12,11 @@ export default class Subtitles {
 		});
 	}
 
-	runCallback(event: ScriptedEvent) {
+	runCallback(event: Event) {
 		console.log('subtitle on');
 	}
 
-	stopCallback(event: ScriptedEvent) {
+	stopCallback(event: Event) {
 		console.log('subtitle off');
 	}
 }

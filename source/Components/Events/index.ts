@@ -1,13 +1,12 @@
 import { EventService, eventService } from '../../services/eventService';
 import { radioService } from '../../services/radioService';
-import { DirectorEvent } from '../../types/media';
-import { EventAction } from '../../types/events';
-import { ScriptedEvent } from '../../types/scriptedStory';
+import { DirectorEvent } from '../../types/broadcastChannels';
+import { Event, EventAction } from '../../services/eventService/EventQueue';
 
 export default class Events {
 	public events: EventService;
 
-	constructor(events: ScriptedEvent[]) {
+	constructor(events: Event[]) {
 		this.events = eventService({
 			events,
 			startEventCallback: this.start,
@@ -15,14 +14,14 @@ export default class Events {
 		});
 	}
 
-	start({ payload }: ScriptedEvent) {
+	start({ payload }: Event) {
 		radioService.broadcast(DirectorEvent.SCENE_EVENT, {
 			action: EventAction.START,
 			payload
 		});
 	}
 
-	stop({ payload }: ScriptedEvent) {
+	stop({ payload }: Event) {
 		radioService.broadcast(DirectorEvent.SCENE_EVENT, {
 			action: EventAction.STOP,
 			payload

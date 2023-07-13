@@ -2,7 +2,7 @@ import { el, mount } from 'redom';
 
 import Source from './Source';
 import { radioService } from '../../services/radioService';
-import { DirectorEvent, VideoEvent } from '../../types/media';
+import { DirectorEvent, VideoEvent } from '../../types/broadcastChannels';
 import styles from './styles';
 
 class VideoError extends Error {}

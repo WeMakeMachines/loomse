@@ -1,22 +1,20 @@
-import EventQueue, { TimedObject } from './EventQueue';
-import { radioService } from '../radioService';
-import { VideoEvent } from '../../types/media';
 import { secondsToMilliseconds } from '../../lib/time';
-import { EventAction } from '../../types/events';
-import { ScriptedEvent } from '../../types/scriptedStory';
+import { VideoEvent } from '../../types/broadcastChannels';
+import { radioService } from '../radioService';
+import EventQueue, { TimedObject, Event, EventAction } from './EventQueue';
 
 class EventServiceError extends Error {}
 
 interface EventServiceProps {
-	events: ScriptedEvent[];
-	startEventCallback: (event: ScriptedEvent) => void;
-	stopEventCallback: (event: ScriptedEvent) => void;
+	events: Event[];
+	startEventCallback: (event: Event) => void;
+	stopEventCallback: (event: Event) => void;
 }
 
 export class EventService {
 	public queue: EventQueue;
-	public startEventCallback: (event: ScriptedEvent) => void;
-	public stopEventCallback: (event: ScriptedEvent) => void;
+	public startEventCallback: (event: Event) => void;
+	public stopEventCallback: (event: Event) => void;
 	public radioUnregisterTokenTimeUpdate: string;
 
 	constructor({

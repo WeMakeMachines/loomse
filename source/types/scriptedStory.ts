@@ -2,6 +2,8 @@
  * Derived from /schemas/script.json
  */
 
+import { Event } from '../services/eventService/EventQueue';
+
 export interface ScriptedStory {
 	shortName?: string;
 	longName?: string;
@@ -19,7 +21,7 @@ export interface ScriptedScenes {
 export interface ScriptedScene {
 	longName?: string;
 	video: ScriptedVideo;
-	events: ScriptedEvent[];
+	events: Event[];
 }
 
 export interface ScriptedVideo {
@@ -38,12 +40,4 @@ export interface ScriptedVideo {
 		| boolean;
 	muted?: boolean;
 	subtitles?: string;
-}
-
-export interface ScriptedEvent {
-	in: number;
-	out: number;
-	payload?: {
-		[key: string]: any;
-	};
 }

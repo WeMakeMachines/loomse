@@ -1,6 +1,6 @@
 import { radioService } from '../../services/radioService';
 
-import { VideoEvent } from '../../types/media';
+import { VideoEvent } from '../../types/broadcastChannels';
 
 export default class VideoReporter {
 	public currentDuration = 0;

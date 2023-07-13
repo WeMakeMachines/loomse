@@ -7,7 +7,7 @@ import Timeline from '../Timeline';
 import Video from '../Video';
 
 import { radioService } from '../../services/radioService';
-import { DirectorEvent } from '../../types/media';
+import { DirectorEvent } from '../../types/broadcastChannels';
 import { ScriptedScene } from '../../types/scriptedStory';
 
 export default class Scene {
