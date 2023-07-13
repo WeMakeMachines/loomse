@@ -54,7 +54,7 @@ describe('Radio', () => {
 		});
 	});
 
-	describe('unRegister method', () => {
+	describe('stopListening method', () => {
 		test('should remove the handler from the radioService registry', () => {
 			const channel = 'lemon';
 			const listenerToken = radio.listenToChannel(channel, () => {});

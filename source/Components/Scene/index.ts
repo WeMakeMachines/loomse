@@ -35,6 +35,6 @@ export default class Scene {
 	}
 
 	onunmount() {
-		this.events.unRegister();
+		this.events.stopListeningToRadio();
 	}
 }

@@ -16,6 +16,7 @@ import {
 import { radio } from '../../services/radioService/radio';
 import Source from './Source';
 import styles from './styles';
+import Subtitles from '../Subtitles';
 
 class VideoError extends Error {}
 
@@ -24,6 +25,7 @@ interface VideoProps {
 	loop?: { in: number; out: number } | boolean;
 	muted?: boolean;
 	sources: { [key: string]: string };
+	subtitles?: string;
 }
 
 export default class Video {
@@ -43,7 +45,8 @@ export default class Video {
 		controls = false,
 		loop = false,
 		muted = false,
-		sources
+		sources,
+		subtitles
 	}: VideoProps) {
 		this.el = el('video', {
 			autoplay: false,
@@ -55,6 +58,10 @@ export default class Video {
 
 		this.sources = this.setSources(sources);
 		this.mountSources();
+
+		if (subtitles) {
+			new Subtitles(subtitles);
+		}
 
 		this.broadcastEndedEvent = () => broadcastVideoEnded();
 		this.broadcastDurationChangeEvent = () =>

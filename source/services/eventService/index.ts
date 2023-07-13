@@ -32,7 +32,7 @@ export class EventService {
 		);
 	}
 
-	unRegister() {
+	stopListeningToRadio() {
 		radio.stopListening(this.listenerToken);
 	}
 

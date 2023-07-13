@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "loomse",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "Interactive storytelling for the modern web",
   "author": "Franco Speziali",
   "license": "MIT",
@@ -29,6 +29,8 @@
   "scripts": {
     "prebuild": "rm -rf ./dist && mkdir dist && cp ./source/loomse.d.ts ./dist/ && cp oss-licenses.json ./dist/ && node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > source/version.ts",
     "build": "rollup --config",
+    "prebuild-dev": "npm run prebuild",
+    "build-dev": "mode=dev rollup --config",
     "prettier": "prettier --write 'source/**/*.ts'",
     "eslint": "eslint source",
     "test": "jest --verbose"
@@ -47,6 +49,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "redom": "^3.29.1"
+    "redom": "^3.29.1",
+    "simple-subtitle-parser": "^1.0.0"
   }
 }

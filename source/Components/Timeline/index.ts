@@ -42,7 +42,6 @@ export default class Timeline {
 	}
 
 	updateProgress(time: number) {
-		console.log(time);
 		this.progressCounter.update(time, this.duration);
 	}
 }

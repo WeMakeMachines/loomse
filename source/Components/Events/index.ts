@@ -27,7 +27,7 @@ export default class Events {
 		});
 	}
 
-	unRegister() {
-		this.events.unRegister();
+	stopListeningToRadio() {
+		this.events.stopListeningToRadio();
 	}
 }

@@ -12,13 +12,13 @@ export const broadcastDirectorPlay = () =>
 export const broadcastDirectorSceneChange = (sceneId: string) =>
 	radio.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_CHANGE, sceneId);
 
-export const broadcastDirectorSceneEvent = (event: {
+export const broadcastDirectorSceneEvent = (signal: {
 	action: EventAction;
 	payload: any;
 }) =>
 	radio.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_EVENT, {
-		action: event.action,
-		message: event.payload
+		action: signal.action,
+		message: signal.payload
 	});
 
 export const broadcastVideoEnded = () =>
@@ -41,3 +41,9 @@ export const broadcastVideoSeeking = (currentTime: number) =>
 
 export const broadcastVideoTimeUpdate = (currentTime: number) =>
 	radio.broadcastOnChannel(RadioChannel.VIDEO_TIMEUPDATE, currentTime);
+
+export const broadcastSubtitlePost = (subtitle: string) =>
+	radio.broadcastOnChannel(RadioChannel.SUBTITLE_POST, subtitle);
+
+export const broadcastSubtitleClear = () =>
+	radio.broadcastOnChannel(RadioChannel.SUBTITLE_CLEAR);

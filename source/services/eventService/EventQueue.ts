@@ -12,9 +12,7 @@ export enum EventAction {
 export interface Event {
 	in: number;
 	out: number;
-	payload?: {
-		[key: string]: any;
-	};
+	payload?: any;
 }
 
 export default class EventQueue {

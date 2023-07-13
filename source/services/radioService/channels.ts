@@ -9,5 +9,7 @@ export enum RadioChannel {
 	VIDEO_PLAYING = 'video:playing',
 	VIDEO_SEEKED = 'video:seeked',
 	VIDEO_SEEKING = 'video:seeking',
-	VIDEO_TIMEUPDATE = 'video:timeupdate'
+	VIDEO_TIMEUPDATE = 'video:timeupdate',
+	SUBTITLE_POST = 'subtitle:post',
+	SUBTITLE_CLEAR = 'subtitle:clear'
 }

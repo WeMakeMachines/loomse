@@ -2,6 +2,9 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 
+const devMode = process.env.mode === 'dev';
+const minify = devMode ? undefined : terser();
+
 export default [
 	// es module output
 	{
@@ -9,10 +12,11 @@ export default [
 		output: {
 			file: 'dist/loomse.es.min.js',
 			format: 'es',
-			exports: 'default'
+			exports: 'default',
+			sourcemap: devMode
 		},
-		external: ['redom'],
-		plugins: [typescript(), terser()]
+		external: ['redom', 'simple-subtitle-parser'],
+		plugins: [typescript(), minify]
 	},
 	// umd output
 	{
@@ -20,8 +24,9 @@ export default [
 		output: {
 			file: 'dist/loomse.min.js',
 			format: 'umd',
-			name: 'LoomSE'
+			name: 'LoomSE',
+			sourcemap: devMode
 		},
-		plugins: [typescript(), nodeResolve(), terser()]
+		plugins: [typescript(), nodeResolve(), minify]
 	}
 ];

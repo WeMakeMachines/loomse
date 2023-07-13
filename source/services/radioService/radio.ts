@@ -45,15 +45,15 @@ export default class Radio {
 	 *
 	 * Executes listener handlers
 	 */
-	broadcastOnChannel(channel: string, message?: any): void {
+	broadcastOnChannel(channel: string, signal?: any): void {
 		if (!this.registry[channel]) {
-			console.warn('Channel not registered:', channel);
+			console.warn(`Channel ${channel} has no listeners`);
 
 			return;
 		}
 
 		Object.values(this.registry[channel]).forEach((listener) => {
-			listener.handler.call(listener.context, message);
+			listener.handler.call(listener.context, signal);
 		});
 	}
 
