@@ -1,7 +1,6 @@
 import { EventService, eventService } from '../../services/eventService';
-import { radioService } from '../../services/radioService';
 import { Event, EventAction } from '../../services/eventService/EventQueue';
-import { RadioChannel } from '../../types/radioChannels';
+import { broadcastDirectorSceneEvent } from '../../services/radioService/broadcast';
 
 export default class Events {
 	public events: EventService;
@@ -10,20 +9,19 @@ export default class Events {
 		this.events = eventService({
 			events,
 			startEventCallback: this.start,
-			stopEventCallback: this.stop,
-			timeUpdateChannel: RadioChannel.VIDEO_TIMEUPDATE
+			stopEventCallback: this.stop
 		});
 	}
 
 	start({ payload }: Event) {
-		radioService.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_EVENT, {
+		broadcastDirectorSceneEvent({
 			action: EventAction.START,
 			payload
 		});
 	}
 
 	stop({ payload }: Event) {
-		radioService.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_EVENT, {
+		broadcastDirectorSceneEvent({
 			action: EventAction.STOP,
 			payload
 		});

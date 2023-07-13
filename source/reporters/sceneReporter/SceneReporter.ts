@@ -1,6 +1,4 @@
-import { radioService } from '../../services/radioService';
-
-import { RadioChannel } from '../../types/radioChannels';
+import { listenToDirectorSceneChange } from '../../services/radioService/listenTo';
 
 export default class SceneReporter {
 	public currentScene: string;
@@ -12,11 +10,8 @@ export default class SceneReporter {
 	}
 
 	registerListeners() {
-		radioService.listenToChannel(
-			RadioChannel.DIRECTOR_SCENE_CHANGE,
-			(sceneId: string) => {
-				this.currentScene = sceneId;
-			}
-		);
+		listenToDirectorSceneChange((sceneId) => {
+			this.currentScene = sceneId;
+		});
 	}
 }

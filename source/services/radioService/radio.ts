@@ -1,13 +1,13 @@
 import { random } from '../../lib/common';
 
 /**
- * Underlying radio service which ties the event mechanism together
+ * Underlying radio which ties the event mechanism together
  *
  * Each channel can have multiple listeners registered to it
  *
  * Listeners consist of a callback function, which is executed when the channel is broadcasting
  */
-export default class RadioService {
+export default class Radio {
 	public registry: {
 		[key: string]: {
 			[key: string]: {
@@ -53,7 +53,6 @@ export default class RadioService {
 		}
 
 		Object.values(this.registry[channel]).forEach((listener) => {
-			console.log(channel, message);
 			listener.handler.call(listener.context, message);
 		});
 	}
@@ -68,7 +67,7 @@ export default class RadioService {
 		handler: (...args: any[]) => void,
 		context?: any
 	): string {
-		const listenerToken = RadioService.tokenGenerator(32);
+		const listenerToken = Radio.tokenGenerator(32);
 
 		if (!this.registry[channel]) {
 			this.registry[channel] = {};
@@ -103,4 +102,4 @@ export default class RadioService {
 	}
 }
 
-export const radioService = new RadioService();
+export const radio = new Radio();

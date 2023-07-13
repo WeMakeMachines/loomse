@@ -6,12 +6,15 @@ import Story from './Components/Story';
 import Scene from './Components/Scene';
 
 import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
-import { radioService } from './services/radioService';
-
-import { RadioChannel } from './types/radioChannels';
+import {
+	broadcastDirectorPause,
+	broadcastDirectorPlay
+} from './services/radioService/broadcast';
+import { RadioChannel } from './services/radioService/channels';
 import { ScriptedStory } from './types/scriptedStory';
 
 import { VERSION } from './version';
+import { listenToDirectorSceneEvent } from './services/radioService/listenTo';
 
 export default class LoomSE {
 	public el: HTMLElement;
@@ -37,17 +40,13 @@ export default class LoomSE {
 
 	// Here we relay internal messages from the radioService to the "outside" world via custom events
 	private setupSyntheticEvents() {
-		radioService.listenToChannel(
-			RadioChannel.DIRECTOR_SCENE_EVENT,
-			(message) => {
-				this.el.dispatchEvent(
-					new CustomEvent(RadioChannel.DIRECTOR_SCENE_EVENT, {
-						detail: message
-					})
-				);
-			},
-			this
-		);
+		listenToDirectorSceneEvent((message) => {
+			this.el.dispatchEvent(
+				new CustomEvent(RadioChannel.DIRECTOR_SCENE_EVENT, {
+					detail: message
+				})
+			);
+		});
 	}
 
 	private setStory(storyObject: Story) {
@@ -86,11 +85,11 @@ export default class LoomSE {
 	}
 
 	pause() {
-		radioService.broadcastOnChannel(RadioChannel.DIRECTOR_PAUSE);
+		broadcastDirectorPause();
 	}
 
 	play() {
-		radioService.broadcastOnChannel(RadioChannel.DIRECTOR_PLAY);
+		broadcastDirectorPlay();
 	}
 
 	reloadScene() {

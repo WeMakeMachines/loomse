@@ -1,7 +1,7 @@
 import { secondsToMilliseconds } from '../../lib/time';
-import { RadioChannel } from '../../types/radioChannels';
-import { radioService } from '../radioService';
+import { radio } from '../radioService/radio';
 import EventQueue, { TimedObject, Event, EventAction } from './EventQueue';
+import { listenToVideoTimeUpdate } from '../radioService/listenTo';
 
 class EventServiceError extends Error {}
 
@@ -9,7 +9,6 @@ interface EventServiceProps {
 	events: Event[];
 	startEventCallback: (event: Event) => void;
 	stopEventCallback: (event: Event) => void;
-	timeUpdateChannel: RadioChannel;
 }
 
 export class EventService {
@@ -18,31 +17,23 @@ export class EventService {
 	private readonly listenerToken: string;
 	private readonly startEventCallback: (event: Event) => void;
 	private readonly stopEventCallback: (event: Event) => void;
-	private readonly timeUpdateChannel: RadioChannel;
 
 	constructor({
 		events,
 		startEventCallback,
-		stopEventCallback,
-		timeUpdateChannel
+		stopEventCallback
 	}: EventServiceProps) {
 		this.queue = new EventQueue(events);
 		this.startEventCallback = startEventCallback;
 		this.stopEventCallback = stopEventCallback;
-		this.timeUpdateChannel = timeUpdateChannel;
 
-		/**
-		 * Using the radioService, listen to a channel which broadcasts time updates
-		 */
-		this.listenerToken = radioService.listenToChannel(
-			this.timeUpdateChannel,
-			this.isReadyToAction,
-			this
+		this.listenerToken = listenToVideoTimeUpdate((time) =>
+			this.isReadyToAction(time)
 		);
 	}
 
 	unRegister() {
-		radioService.stopListening(this.listenerToken);
+		radio.stopListening(this.listenerToken);
 	}
 
 	isReadyToAction(time: number) {

@@ -1,8 +1,20 @@
 import { el, mount } from 'redom';
 
+import {
+	broadcastVideoDurationChanged,
+	broadcastVideoEnded,
+	broadcastVideoPaused,
+	broadcastVideoPlaying,
+	broadcastVideoSeeked,
+	broadcastVideoSeeking,
+	broadcastVideoTimeUpdate
+} from '../../services/radioService/broadcast';
+import {
+	listenToDirectorPause,
+	listenToDirectorPlay
+} from '../../services/radioService/listenTo';
+import { radio } from '../../services/radioService/radio';
 import Source from './Source';
-import { radioService } from '../../services/radioService';
-import { RadioChannel } from '../../types/radioChannels';
 import styles from './styles';
 
 class VideoError extends Error {}
@@ -44,46 +56,21 @@ export default class Video {
 		this.sources = this.setSources(sources);
 		this.mountSources();
 
-		this.broadcastEndedEvent = () =>
-			radioService.broadcastOnChannel(RadioChannel.VIDEO_ENDED);
+		this.broadcastEndedEvent = () => broadcastVideoEnded();
 		this.broadcastDurationChangeEvent = () =>
-			radioService.broadcastOnChannel(
-				RadioChannel.VIDEO_DURATION_CHANGED,
-				this.el.duration
-			);
+			broadcastVideoDurationChanged(this.el.duration);
 		this.broadcastPlayingEvent = () =>
-			radioService.broadcastOnChannel(
-				RadioChannel.VIDEO_PLAYING,
-				this.el.currentTime
-			);
-		this.broadcastPausedEvent = () =>
-			radioService.broadcastOnChannel(RadioChannel.VIDEO_PAUSED);
+			broadcastVideoPlaying(this.el.currentTime);
+		this.broadcastPausedEvent = () => broadcastVideoPaused();
 		this.broadcastSeekedEvent = () =>
-			radioService.broadcastOnChannel(
-				RadioChannel.VIDEO_SEEKED,
-				this.el.currentTime
-			);
+			broadcastVideoSeeked(this.el.currentTime);
 		this.broadcastSeekingEvent = () =>
-			radioService.broadcastOnChannel(
-				RadioChannel.VIDEO_SEEKING,
-				this.el.currentTime
-			);
+			broadcastVideoSeeking(this.el.currentTime);
 		this.broadcastTimeUpdateEvent = () =>
-			radioService.broadcastOnChannel(
-				RadioChannel.VIDEO_TIMEUPDATE,
-				this.el.currentTime
-			);
+			broadcastVideoTimeUpdate(this.el.currentTime);
 
-		this.tokenPause = radioService.listenToChannel(
-			RadioChannel.DIRECTOR_PAUSE,
-			this.pause,
-			this
-		);
-		this.tokenPlay = radioService.listenToChannel(
-			RadioChannel.DIRECTOR_PLAY,
-			this.play,
-			this
-		);
+		this.tokenPause = listenToDirectorPause(() => this.pause);
+		this.tokenPlay = listenToDirectorPlay(() => this.play);
 
 		this.listenToVideoEvents();
 	}
@@ -153,8 +140,8 @@ export default class Video {
 	}
 
 	stopListeningToRadio() {
-		radioService.stopListening(this.tokenPause);
-		radioService.stopListening(this.tokenPlay);
+		radio.stopListening(this.tokenPause);
+		radio.stopListening(this.tokenPlay);
 	}
 
 	play() {

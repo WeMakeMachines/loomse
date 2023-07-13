@@ -1,6 +1,7 @@
-import { radioService } from '../../services/radioService';
-
-import { RadioChannel } from '../../types/radioChannels';
+import {
+	listenToVideoDurationChanged,
+	listenToVideoTimeUpdate
+} from '../../services/radioService/listenTo';
 
 export default class VideoReporter {
 	public currentDuration = 0;
@@ -11,14 +12,11 @@ export default class VideoReporter {
 	}
 
 	registerListeners() {
-		radioService.listenToChannel(
-			RadioChannel.VIDEO_DURATION_CHANGED,
-			(duration: number) => {
-				this.currentDuration = duration;
-			}
-		);
+		listenToVideoDurationChanged((duration) => {
+			this.currentDuration = duration;
+		});
 
-		radioService.listenToChannel(RadioChannel.VIDEO_TIMEUPDATE, (time: number) => {
+		listenToVideoTimeUpdate((time) => {
 			this.currentTime = time;
 		});
 	}

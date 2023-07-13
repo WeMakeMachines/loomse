@@ -1,10 +1,10 @@
-import RadioService from '../index';
+import Radio from '../radio';
 
-describe('RadioService', () => {
-	let radioService: RadioService;
+describe('Radio', () => {
+	let radio: Radio;
 
 	beforeEach(() => {
-		radioService = new RadioService();
+		radio = new Radio();
 	});
 
 	describe('broadcast method', () => {
@@ -12,11 +12,11 @@ describe('RadioService', () => {
 			const functionToCall = jest.fn();
 			const channel = 'lemon';
 
-			radioService.registry = {
+			radio.registry = {
 				[channel]: { abc: { handler: functionToCall } }
 			};
 
-			radioService.broadcastOnChannel(channel);
+			radio.broadcastOnChannel(channel);
 
 			expect(functionToCall).toHaveBeenCalled();
 		});
@@ -28,11 +28,11 @@ describe('RadioService', () => {
 			const functionToCall = (message: any) => (response = message);
 			const channel = 'lemon';
 
-			radioService.registry = {
+			radio.registry = {
 				[channel]: { abc: { handler: functionToCall } }
 			};
 
-			radioService.broadcastOnChannel(channel, message);
+			radio.broadcastOnChannel(channel, message);
 
 			expect(response).toEqual(message);
 		});
@@ -42,16 +42,13 @@ describe('RadioService', () => {
 		test('should add the channel to the registry', () => {
 			const channel = 'lemon';
 
-			radioService.listenToChannel(channel, () => {});
+			radio.listenToChannel(channel, () => {});
 
-			expect(radioService.registry.hasOwnProperty(channel)).toEqual(true);
+			expect(radio.registry.hasOwnProperty(channel)).toEqual(true);
 		});
 
 		test('should return a listener token', () => {
-			const listenerToken = radioService.listenToChannel(
-				'lemon',
-				() => {}
-			);
+			const listenerToken = radio.listenToChannel('lemon', () => {});
 
 			expect(typeof listenerToken).toEqual('string');
 		});
@@ -60,29 +57,21 @@ describe('RadioService', () => {
 	describe('unRegister method', () => {
 		test('should remove the handler from the radioService registry', () => {
 			const channel = 'lemon';
-			const listenerToken = radioService.listenToChannel(
-				channel,
-				() => {}
-			);
+			const listenerToken = radio.listenToChannel(channel, () => {});
 
-			radioService.listenToChannel(channel, () => {});
-			radioService.stopListening(listenerToken);
+			radio.listenToChannel(channel, () => {});
+			radio.stopListening(listenerToken);
 
-			expect(radioService.registry[channel][listenerToken]).toEqual(
-				undefined
-			);
+			expect(radio.registry[channel][listenerToken]).toEqual(undefined);
 		});
 
 		test('should remove the channel if there are no handlers available', () => {
 			const channel = 'lemon';
-			const listenerToken = radioService.listenToChannel(
-				channel,
-				() => {}
-			);
+			const listenerToken = radio.listenToChannel(channel, () => {});
 
-			radioService.stopListening(listenerToken);
+			radio.stopListening(listenerToken);
 
-			expect(radioService.registry[channel]).toEqual(undefined);
+			expect(radio.registry[channel]).toEqual(undefined);
 		});
 	});
 
@@ -96,17 +85,13 @@ describe('RadioService', () => {
 					this.context = this;
 				},
 				radioServiceRegister() {
-					radioService.listenToChannel(
-						channel,
-						this.setContext,
-						this
-					);
+					radio.listenToChannel(channel, this.setContext, this);
 				}
 			};
 
 			myModule.radioServiceRegister();
 
-			radioService.broadcastOnChannel(channel);
+			radio.broadcastOnChannel(channel);
 
 			expect(myModule.context).toEqual(myModule);
 		});
@@ -115,7 +100,7 @@ describe('RadioService', () => {
 	describe('tokenGenerator', () => {
 		test('it should return a string of the length specified', () => {
 			const length = 32;
-			const token = RadioService.tokenGenerator(length);
+			const token = Radio.tokenGenerator(length);
 
 			expect(token.length).toEqual(length);
 		});
