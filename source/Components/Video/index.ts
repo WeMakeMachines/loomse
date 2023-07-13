@@ -2,7 +2,7 @@ import { el, mount } from 'redom';
 
 import Source from './Source';
 import { radioService } from '../../services/radioService';
-import { DirectorEvent, VideoEvent } from '../../types/broadcastChannels';
+import { RadioChannel } from '../../types/radioChannels';
 import styles from './styles';
 
 class VideoError extends Error {}
@@ -45,42 +45,42 @@ export default class Video {
 		this.mountSources();
 
 		this.broadcastEndedEvent = () =>
-			radioService.broadcastOnChannel(VideoEvent.ENDED);
+			radioService.broadcastOnChannel(RadioChannel.VIDEO_ENDED);
 		this.broadcastDurationChangeEvent = () =>
 			radioService.broadcastOnChannel(
-				VideoEvent.DURATION_CHANGED,
+				RadioChannel.VIDEO_DURATION_CHANGED,
 				this.el.duration
 			);
 		this.broadcastPlayingEvent = () =>
 			radioService.broadcastOnChannel(
-				VideoEvent.PLAYING,
+				RadioChannel.VIDEO_PLAYING,
 				this.el.currentTime
 			);
 		this.broadcastPausedEvent = () =>
-			radioService.broadcastOnChannel(VideoEvent.PAUSED);
+			radioService.broadcastOnChannel(RadioChannel.VIDEO_PAUSED);
 		this.broadcastSeekedEvent = () =>
 			radioService.broadcastOnChannel(
-				VideoEvent.SEEKED,
+				RadioChannel.VIDEO_SEEKED,
 				this.el.currentTime
 			);
 		this.broadcastSeekingEvent = () =>
 			radioService.broadcastOnChannel(
-				VideoEvent.SEEKING,
+				RadioChannel.VIDEO_SEEKING,
 				this.el.currentTime
 			);
 		this.broadcastTimeUpdateEvent = () =>
 			radioService.broadcastOnChannel(
-				VideoEvent.TIMEUPDATE,
+				RadioChannel.VIDEO_TIMEUPDATE,
 				this.el.currentTime
 			);
 
 		this.tokenPause = radioService.listenToChannel(
-			DirectorEvent.PAUSE,
+			RadioChannel.DIRECTOR_PAUSE,
 			this.pause,
 			this
 		);
 		this.tokenPlay = radioService.listenToChannel(
-			DirectorEvent.PLAY,
+			RadioChannel.DIRECTOR_PLAY,
 			this.play,
 			this
 		);

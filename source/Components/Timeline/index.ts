@@ -3,8 +3,8 @@ import { el } from 'redom';
 import ProgressCounter from './ProgressCounter';
 import styles from './styles';
 
-import { VideoEvent } from '../../types/broadcastChannels';
 import { radioService } from '../../services/radioService';
+import { RadioChannel } from '../../types/radioChannels';
 
 export default class Timeline {
 	public duration = 999;
@@ -22,14 +22,14 @@ export default class Timeline {
 		);
 
 		this.tokenDurationChanged = radioService.listenToChannel(
-			VideoEvent.DURATION_CHANGED,
+			RadioChannel.VIDEO_DURATION_CHANGED,
 			(duration) => {
 				this.duration = duration;
 			}
 		);
 
 		this.tokenTimeUpdate = radioService.listenToChannel(
-			VideoEvent.TIMEUPDATE,
+			RadioChannel.VIDEO_TIMEUPDATE,
 			this.updateProgress,
 			this
 		);

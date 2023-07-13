@@ -7,7 +7,7 @@ import Timeline from '../Timeline';
 import Video from '../Video';
 
 import { radioService } from '../../services/radioService';
-import { DirectorEvent } from '../../types/broadcastChannels';
+import { RadioChannel } from '../../types/radioChannels';
 import { ScriptedScene } from '../../types/scriptedStory';
 
 export default class Scene {
@@ -19,7 +19,7 @@ export default class Scene {
 	public longName: string | undefined;
 
 	constructor(sceneId: string, { events, longName, video }: ScriptedScene) {
-		radioService.broadcastOnChannel(DirectorEvent.SCENE_CHANGE, sceneId);
+		radioService.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_CHANGE, sceneId);
 
 		this.el = el(
 			'div',

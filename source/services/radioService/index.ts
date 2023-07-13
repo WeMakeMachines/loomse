@@ -53,6 +53,7 @@ export default class RadioService {
 		}
 
 		Object.values(this.registry[channel]).forEach((listener) => {
+			console.log(channel, message);
 			listener.handler.call(listener.context, message);
 		});
 	}

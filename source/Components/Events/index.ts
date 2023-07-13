@@ -1,7 +1,7 @@
 import { EventService, eventService } from '../../services/eventService';
 import { radioService } from '../../services/radioService';
-import { DirectorEvent } from '../../types/broadcastChannels';
 import { Event, EventAction } from '../../services/eventService/EventQueue';
+import { RadioChannel } from '../../types/radioChannels';
 
 export default class Events {
 	public events: EventService;
@@ -15,14 +15,14 @@ export default class Events {
 	}
 
 	start({ payload }: Event) {
-		radioService.broadcastOnChannel(DirectorEvent.SCENE_EVENT, {
+		radioService.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_EVENT, {
 			action: EventAction.START,
 			payload
 		});
 	}
 
 	stop({ payload }: Event) {
-		radioService.broadcastOnChannel(DirectorEvent.SCENE_EVENT, {
+		radioService.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_EVENT, {
 			action: EventAction.STOP,
 			payload
 		});

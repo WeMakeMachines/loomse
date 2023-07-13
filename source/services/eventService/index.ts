@@ -1,5 +1,5 @@
 import { secondsToMilliseconds } from '../../lib/time';
-import { VideoEvent } from '../../types/broadcastChannels';
+import { RadioChannel } from '../../types/radioChannels';
 import { radioService } from '../radioService';
 import EventQueue, { TimedObject, Event, EventAction } from './EventQueue';
 
@@ -27,7 +27,7 @@ export class EventService {
 		this.stopEventCallback = stopEventCallback;
 
 		this.listenerToken = radioService.listenToChannel(
-			VideoEvent.TIMEUPDATE,
+			RadioChannel.VIDEO_TIMEUPDATE,
 			this.isReadyToAction,
 			this
 		);
