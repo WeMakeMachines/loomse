@@ -12,8 +12,11 @@ export default class SceneReporter {
 	}
 
 	registerListeners() {
-		radioService.register(DirectorEvent.SCENE_CHANGE, (sceneId: string) => {
-			this.currentScene = sceneId;
-		});
+		radioService.listenToChannel(
+			DirectorEvent.SCENE_CHANGE,
+			(sceneId: string) => {
+				this.currentScene = sceneId;
+			}
+		);
 	}
 }

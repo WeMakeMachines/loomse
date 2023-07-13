@@ -11,8 +11,8 @@ export default class Timeline {
 
 	public el: HTMLElement;
 	public progressCounter: ProgressCounter;
-	public radioUnregisterTokenDurationChanged: string;
-	public radioUnregisterTokenTimeUpdate: string;
+	public tokenDurationChanged: string;
+	public tokenTimeUpdate: string;
 
 	constructor() {
 		this.el = el(
@@ -21,14 +21,14 @@ export default class Timeline {
 			(this.progressCounter = new ProgressCounter())
 		);
 
-		this.radioUnregisterTokenDurationChanged = radioService.register(
+		this.tokenDurationChanged = radioService.listenToChannel(
 			VideoEvent.DURATION_CHANGED,
 			(duration) => {
 				this.duration = duration;
 			}
 		);
 
-		this.radioUnregisterTokenTimeUpdate = radioService.register(
+		this.tokenTimeUpdate = radioService.listenToChannel(
 			VideoEvent.TIMEUPDATE,
 			this.updateProgress,
 			this
@@ -40,8 +40,8 @@ export default class Timeline {
 	}
 
 	stopListeningToRadio() {
-		radioService.unRegister(this.radioUnregisterTokenDurationChanged);
-		radioService.unRegister(this.radioUnregisterTokenTimeUpdate);
+		radioService.stopListening(this.tokenDurationChanged);
+		radioService.stopListening(this.tokenTimeUpdate);
 	}
 
 	updateProgress(time: number) {

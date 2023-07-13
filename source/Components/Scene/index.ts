@@ -19,7 +19,7 @@ export default class Scene {
 	public longName: string | undefined;
 
 	constructor(sceneId: string, { events, longName, video }: ScriptedScene) {
-		radioService.broadcast(DirectorEvent.SCENE_CHANGE, sceneId);
+		radioService.broadcastOnChannel(DirectorEvent.SCENE_CHANGE, sceneId);
 
 		this.el = el(
 			'div',

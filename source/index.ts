@@ -37,7 +37,7 @@ export default class LoomSE {
 
 	// Here we relay internal messages from the radioService to the "outside" world via custom events
 	private setupSyntheticEvents() {
-		radioService.register(
+		radioService.listenToChannel(
 			DirectorEvent.SCENE_EVENT,
 			(message) => {
 				this.el.dispatchEvent(
@@ -86,11 +86,11 @@ export default class LoomSE {
 	}
 
 	pause() {
-		radioService.broadcast(DirectorEvent.PAUSE);
+		radioService.broadcastOnChannel(DirectorEvent.PAUSE);
 	}
 
 	play() {
-		radioService.broadcast(DirectorEvent.PLAY);
+		radioService.broadcastOnChannel(DirectorEvent.PLAY);
 	}
 
 	reloadScene() {

@@ -11,14 +11,14 @@ export default class VideoReporter {
 	}
 
 	registerListeners() {
-		radioService.register(
+		radioService.listenToChannel(
 			VideoEvent.DURATION_CHANGED,
 			(duration: number) => {
 				this.currentDuration = duration;
 			}
 		);
 
-		radioService.register(VideoEvent.TIMEUPDATE, (time: number) => {
+		radioService.listenToChannel(VideoEvent.TIMEUPDATE, (time: number) => {
 			this.currentTime = time;
 		});
 	}

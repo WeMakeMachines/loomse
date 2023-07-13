@@ -15,7 +15,7 @@ export class EventService {
 	public queue: EventQueue;
 	public startEventCallback: (event: Event) => void;
 	public stopEventCallback: (event: Event) => void;
-	public radioUnregisterTokenTimeUpdate: string;
+	public listenerToken: string;
 
 	constructor({
 		events,
@@ -26,7 +26,7 @@ export class EventService {
 		this.startEventCallback = startEventCallback;
 		this.stopEventCallback = stopEventCallback;
 
-		this.radioUnregisterTokenTimeUpdate = radioService.register(
+		this.listenerToken = radioService.listenToChannel(
 			VideoEvent.TIMEUPDATE,
 			this.isReadyToAction,
 			this
@@ -34,7 +34,7 @@ export class EventService {
 	}
 
 	unRegister() {
-		radioService.unRegister(this.radioUnregisterTokenTimeUpdate);
+		radioService.stopListening(this.listenerToken);
 	}
 
 	isReadyToAction(time: number) {

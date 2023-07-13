@@ -23,8 +23,8 @@ export default class Video {
 	public broadcastSeekedEvent: () => void;
 	public broadcastSeekingEvent: () => void;
 	public broadcastTimeUpdateEvent: () => void;
-	public radioUnregisterTokenPause: string;
-	public radioUnregisterTokenPlay: string;
+	public tokenPause: string;
+	public tokenPlay: string;
 	public sources: { [key: string]: Source };
 
 	constructor({
@@ -45,29 +45,41 @@ export default class Video {
 		this.mountSources();
 
 		this.broadcastEndedEvent = () =>
-			radioService.broadcast(VideoEvent.ENDED);
+			radioService.broadcastOnChannel(VideoEvent.ENDED);
 		this.broadcastDurationChangeEvent = () =>
-			radioService.broadcast(
+			radioService.broadcastOnChannel(
 				VideoEvent.DURATION_CHANGED,
 				this.el.duration
 			);
 		this.broadcastPlayingEvent = () =>
-			radioService.broadcast(VideoEvent.PLAYING, this.el.currentTime);
+			radioService.broadcastOnChannel(
+				VideoEvent.PLAYING,
+				this.el.currentTime
+			);
 		this.broadcastPausedEvent = () =>
-			radioService.broadcast(VideoEvent.PAUSED);
+			radioService.broadcastOnChannel(VideoEvent.PAUSED);
 		this.broadcastSeekedEvent = () =>
-			radioService.broadcast(VideoEvent.SEEKED, this.el.currentTime);
+			radioService.broadcastOnChannel(
+				VideoEvent.SEEKED,
+				this.el.currentTime
+			);
 		this.broadcastSeekingEvent = () =>
-			radioService.broadcast(VideoEvent.SEEKING, this.el.currentTime);
+			radioService.broadcastOnChannel(
+				VideoEvent.SEEKING,
+				this.el.currentTime
+			);
 		this.broadcastTimeUpdateEvent = () =>
-			radioService.broadcast(VideoEvent.TIMEUPDATE, this.el.currentTime);
+			radioService.broadcastOnChannel(
+				VideoEvent.TIMEUPDATE,
+				this.el.currentTime
+			);
 
-		this.radioUnregisterTokenPause = radioService.register(
+		this.tokenPause = radioService.listenToChannel(
 			DirectorEvent.PAUSE,
 			this.pause,
 			this
 		);
-		this.radioUnregisterTokenPlay = radioService.register(
+		this.tokenPlay = radioService.listenToChannel(
 			DirectorEvent.PLAY,
 			this.play,
 			this
@@ -141,8 +153,8 @@ export default class Video {
 	}
 
 	stopListeningToRadio() {
-		radioService.unRegister(this.radioUnregisterTokenPause);
-		radioService.unRegister(this.radioUnregisterTokenPlay);
+		radioService.stopListening(this.tokenPause);
+		radioService.stopListening(this.tokenPlay);
 	}
 
 	play() {

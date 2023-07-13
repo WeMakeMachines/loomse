@@ -15,14 +15,14 @@ export default class Events {
 	}
 
 	start({ payload }: Event) {
-		radioService.broadcast(DirectorEvent.SCENE_EVENT, {
+		radioService.broadcastOnChannel(DirectorEvent.SCENE_EVENT, {
 			action: EventAction.START,
 			payload
 		});
 	}
 
 	stop({ payload }: Event) {
-		radioService.broadcast(DirectorEvent.SCENE_EVENT, {
+		radioService.broadcastOnChannel(DirectorEvent.SCENE_EVENT, {
 			action: EventAction.STOP,
 			payload
 		});
