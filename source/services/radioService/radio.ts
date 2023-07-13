@@ -1,5 +1,8 @@
 import { random } from '../../lib/common';
 
+type Channel = string;
+type ListenerToken = string;
+
 /**
  * Underlying radio which ties the event mechanism together
  *
@@ -9,18 +12,15 @@ import { random } from '../../lib/common';
  */
 export default class Radio {
 	public registry: {
-		[key: string]: {
-			[key: string]: {
-				handler: (...args: any[]) => void;
-				context?: void;
-			};
+		[key: Channel]: {
+			[key: ListenerToken]: (...args: any[]) => void;
 		};
 	} = {};
 
 	/**
 	 * Returns a random sequence of characters to the specified length
 	 */
-	static tokenGenerator(length: number): string {
+	static tokenGenerator(length: number): ListenerToken {
 		const token = [];
 
 		for (let i = 0; i < length; i += 1) {
@@ -45,16 +45,16 @@ export default class Radio {
 	 *
 	 * Executes listener handlers
 	 */
-	broadcastOnChannel(channel: string, signal?: any): void {
+	broadcastOnChannel(channel: Channel, signal?: any): void {
 		if (!this.registry[channel]) {
 			console.warn(`Channel ${channel} has no listeners`);
 
 			return;
 		}
 
-		Object.values(this.registry[channel]).forEach((listener) => {
-			listener.handler.call(listener.context, signal);
-		});
+		Object.values(this.registry[channel]).forEach((listener) =>
+			listener(signal)
+		);
 	}
 
 	/**
@@ -63,17 +63,16 @@ export default class Radio {
 	 * Returns a listener token, which is used to uniquely identify the listener
 	 */
 	listenToChannel(
-		channel: string,
-		handler: (...args: any[]) => void,
-		context?: any
+		channel: Channel,
+		handler: (...args: any[]) => void
 	): string {
-		const listenerToken = Radio.tokenGenerator(32);
+		const listenerToken: ListenerToken = Radio.tokenGenerator(32);
 
 		if (!this.registry[channel]) {
 			this.registry[channel] = {};
 		}
 
-		this.registry[channel][listenerToken] = { handler, context };
+		this.registry[channel][listenerToken] = handler;
 
 		return listenerToken;
 	}
@@ -81,7 +80,7 @@ export default class Radio {
 	/**
 	 * Remove a listener from a channel, using the unique listener token
 	 */
-	stopListening(listenerToken: string): void {
+	stopListening(listenerToken: ListenerToken): void {
 		const channel = Object.keys(this.registry).filter((channel) => {
 			const tokens = Object.keys(this.registry[channel]);
 

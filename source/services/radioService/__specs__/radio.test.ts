@@ -13,7 +13,7 @@ describe('Radio', () => {
 			const channel = 'lemon';
 
 			radio.registry = {
-				[channel]: { abc: { handler: functionToCall } }
+				[channel]: { abc: functionToCall }
 			};
 
 			radio.broadcastOnChannel(channel);
@@ -29,7 +29,7 @@ describe('Radio', () => {
 			const channel = 'lemon';
 
 			radio.registry = {
-				[channel]: { abc: { handler: functionToCall } }
+				[channel]: { abc: functionToCall }
 			};
 
 			radio.broadcastOnChannel(channel, message);
@@ -72,28 +72,6 @@ describe('Radio', () => {
 			radio.stopListening(listenerToken);
 
 			expect(radio.registry[channel]).toEqual(undefined);
-		});
-	});
-
-	describe('register / broadcast methods', () => {
-		test('should run the handler in the correct context', () => {
-			const channel = 'lemon';
-
-			const myModule = {
-				context: {},
-				setContext() {
-					this.context = this;
-				},
-				radioServiceRegister() {
-					radio.listenToChannel(channel, this.setContext, this);
-				}
-			};
-
-			myModule.radioServiceRegister();
-
-			radio.broadcastOnChannel(channel);
-
-			expect(myModule.context).toEqual(myModule);
 		});
 	});
 
