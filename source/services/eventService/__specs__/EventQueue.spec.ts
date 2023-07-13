@@ -3,12 +3,10 @@ import { ScriptedEvent } from '../../../types/scriptedStory';
 
 const mockTimedObjects: ScriptedEvent[] = [
 	{
-		group: 'orange',
 		in: 0,
 		out: 2000
 	},
 	{
-		group: 'orange',
 		in: 3000,
 		out: 4000
 	}

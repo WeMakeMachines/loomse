@@ -15,17 +15,15 @@ export default class Events {
 		});
 	}
 
-	start({ group, payload }: ScriptedEvent) {
+	start({ payload }: ScriptedEvent) {
 		radioService.broadcast(DirectorEvent.SCENE_EVENT, {
-			group,
 			action: EventAction.START,
 			payload
 		});
 	}
 
-	stop({ group, payload }: ScriptedEvent) {
+	stop({ payload }: ScriptedEvent) {
 		radioService.broadcast(DirectorEvent.SCENE_EVENT, {
-			group,
 			action: EventAction.STOP,
 			payload
 		});

@@ -23,6 +23,11 @@ export interface ScriptedScene {
 }
 
 export interface ScriptedVideo {
+	sources: {
+		mp4?: string;
+		ogg?: string;
+		webm?: string;
+	};
 	autoplay?: boolean;
 	controls?: boolean;
 	loop?:
@@ -33,17 +38,9 @@ export interface ScriptedVideo {
 		| boolean;
 	muted?: boolean;
 	subtitles?: string;
-	sources: {
-		mp4?: string;
-		ogg?: string;
-		webm?: string;
-	};
 }
 
 export interface ScriptedEvent {
-	group: string;
-	type?: string;
-	disabled?: boolean;
 	in: number;
 	out: number;
 	payload?: {
