@@ -5,6 +5,7 @@ import styles from './styles';
 import Story from './Components/Story';
 import Scene from './Components/Scene';
 
+import { getCurrentScene } from './reporters/sceneReporter';
 import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
 import {
 	broadcastDirectorPause,
@@ -65,12 +66,16 @@ export default class LoomSE {
 		mount(this.el, this.scene);
 	}
 
-	currentDuration() {
+	currentDuration(): number {
 		return getCurrentDuration();
 	}
 
-	currentTime() {
+	currentTime(): number {
 		return getCurrentTime();
+	}
+
+	currentScene(): string {
+		return getCurrentScene();
 	}
 
 	startScript(json: object) {
