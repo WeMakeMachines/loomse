@@ -76,8 +76,8 @@ export default class Video {
 		this.broadcastTimeUpdateEvent = () =>
 			broadcastVideoTimeUpdate(this.el.currentTime);
 
-		this.tokenPause = listenToDirectorPause(() => this.pause);
-		this.tokenPlay = listenToDirectorPlay(() => this.play);
+		this.tokenPause = listenToDirectorPause(() => this.pause());
+		this.tokenPlay = listenToDirectorPlay(() => this.play());
 
 		this.listenToVideoEvents();
 	}
