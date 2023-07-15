@@ -13,6 +13,8 @@ import {
 } from '../../services/radioService/broadcast';
 import { ScriptedEvent } from '../../types/scriptedStory';
 
+class SubtitlesError extends Error {}
+
 export default class Subtitles {
 	public cues: Cue[] | null = null;
 	public filePath: string;
@@ -30,26 +32,24 @@ export default class Subtitles {
 
 	constructor(filePath: string) {
 		this.filePath = filePath;
-
 		this.format = extractFormatFromFileName(filePath).format;
 
-		getTextFile(filePath)
-			.then((text) => {
-				this.fileContents = text;
-				parser(this.format, text).then((cues) => {
-					this.cues = cues;
-					this.eventService = eventService({
-						events: Subtitles.mapCueToScriptedEvent(cues),
-						startEventCallback: this.post,
-						stopEventCallback: this.clear
-					});
-				});
-			})
-			.catch((error) => {
-				this.fileContents = null;
-				console.warn('Unable to activate subtitles');
-				console.warn(error);
-			});
+		this.parseTextFile(filePath).catch((error) => {
+			throw new SubtitlesError(
+				`Unable to parse subtitles file, ${error.message}`
+			);
+		});
+	}
+
+	async parseTextFile(filePath: string) {
+		this.fileContents = await getTextFile(filePath);
+		this.cues = await parser(this.format, this.fileContents);
+
+		this.eventService = eventService({
+			events: Subtitles.mapCueToScriptedEvent(this.cues),
+			startEventCallback: this.post,
+			stopEventCallback: this.clear
+		});
 	}
 
 	post({ payload }: ScriptedEvent) {
