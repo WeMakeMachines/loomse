@@ -5,13 +5,13 @@ import {
 	parser
 } from 'simple-subtitle-parser';
 
-import { EventService, eventService } from '../../services/eventService';
 import { getTextFile } from '../../lib/browser/fetch';
-import { Event } from '../../services/eventService/EventQueue';
+import { eventService, EventService } from '../../services/eventService';
 import {
 	broadcastSubtitleClear,
 	broadcastSubtitlePost
 } from '../../services/radioService/broadcast';
+import { ScriptedEvent } from '../../types/scriptedStory';
 
 export default class Subtitles {
 	public cues: Cue[] | null = null;
@@ -20,7 +20,7 @@ export default class Subtitles {
 	public format: Format;
 	public eventService: EventService | null = null;
 
-	static mapCueToScriptedEvent(cue: Cue[]): Event[] {
+	static mapCueToScriptedEvent(cue: Cue[]): ScriptedEvent[] {
 		return cue.map((cue) => ({
 			in: cue.startTime,
 			out: cue.endTime,
@@ -52,7 +52,7 @@ export default class Subtitles {
 			});
 	}
 
-	post({ payload }: Event) {
+	post({ payload }: ScriptedEvent) {
 		broadcastSubtitlePost(payload);
 	}
 

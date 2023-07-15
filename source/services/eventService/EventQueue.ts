@@ -1,3 +1,5 @@
+import { ScriptedEvent } from '../../types/scriptedStory';
+
 export interface TimedObject {
 	id: number;
 	time: number;
@@ -9,19 +11,13 @@ export enum EventAction {
 	STOP = 'stop'
 }
 
-export interface Event {
-	in: number;
-	out: number;
-	payload?: any;
-}
-
 export default class EventQueue {
 	public index = 0;
 
-	public events: Event[];
+	public events: ScriptedEvent[];
 	public queue: TimedObject[];
 
-	constructor(events: Event[]) {
+	constructor(events: ScriptedEvent[]) {
 		this.events = events;
 		this.queue = this.build();
 

@@ -1,22 +1,23 @@
 import { secondsToMilliseconds } from '../../lib/time';
-import { radio } from '../radioService/radio';
-import EventQueue, { TimedObject, Event, EventAction } from './EventQueue';
+import { ScriptedEvent } from '../../types/scriptedStory';
 import { listenToVideoTimeUpdate } from '../radioService/listenTo';
+import { radio } from '../radioService/radio';
+import EventQueue, { TimedObject, EventAction } from './EventQueue';
 
 class EventServiceError extends Error {}
 
 interface EventServiceProps {
-	events: Event[];
-	startEventCallback: (event: Event) => void;
-	stopEventCallback: (event: Event) => void;
+	events: ScriptedEvent[];
+	startEventCallback: (event: ScriptedEvent) => void;
+	stopEventCallback: (event: ScriptedEvent) => void;
 }
 
 export class EventService {
 	public queue: EventQueue;
 
 	private readonly listenerToken: string;
-	private readonly startEventCallback: (event: Event) => void;
-	private readonly stopEventCallback: (event: Event) => void;
+	private readonly startEventCallback: (event: ScriptedEvent) => void;
+	private readonly stopEventCallback: (event: ScriptedEvent) => void;
 
 	constructor({
 		events,
