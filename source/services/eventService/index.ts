@@ -43,18 +43,19 @@ export class EventService {
 		}
 
 		const milliseconds = secondsToMilliseconds(time);
+		const pending = this.queue.getPending();
 
-		if (!milliseconds || !this.queue.pending) {
+		if (!milliseconds || !pending) {
 			return;
 		}
 
-		if (milliseconds >= this.queue.pending.time) {
-			this.parseAction(this.queue.pending);
+		if (milliseconds >= pending.time) {
+			this.parseAction(pending);
 		}
 	}
 
 	parseAction(event: TimedObject) {
-		const eventData = this.queue.events[event.id];
+		const eventData = this.queue.getEvent(event.id);
 
 		if (!eventData) {
 			throw new EventServiceError('Event data not found');
