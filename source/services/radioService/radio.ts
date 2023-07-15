@@ -10,7 +10,7 @@ type ListenerToken = string;
  *
  * Listeners consist of a callback function, which is executed when the channel is broadcasting
  */
-export default class Radio {
+export class Radio {
 	public registry: {
 		[key: Channel]: {
 			[key: ListenerToken]: (...args: any[]) => void;

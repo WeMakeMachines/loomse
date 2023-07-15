@@ -1,4 +1,4 @@
-import Radio from '../radio';
+import { Radio } from '../radio';
 
 describe('Radio', () => {
 	let radio: Radio;
