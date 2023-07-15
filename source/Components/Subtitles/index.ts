@@ -6,12 +6,8 @@ import {
 } from 'simple-subtitle-parser';
 
 import { getTextFile } from '../../lib/browser/fetch';
-import { eventService, EventService } from '../../services/eventService';
-import {
-	broadcastSubtitleClear,
-	broadcastSubtitlePost
-} from '../../services/radioService/broadcast';
 import { ScriptedEvent } from '../../types/scriptedStory';
+import { subtitleEventService } from '../../services/subtitleEventService';
 
 class SubtitlesError extends Error {}
 
@@ -20,7 +16,6 @@ export default class Subtitles {
 	public filePath: string;
 	public fileContents: string | null = null;
 	public format: Format;
-	public eventService: EventService | null = null;
 
 	static mapCueToScriptedEvent(cue: Cue[]): ScriptedEvent[] {
 		return cue.map((cue) => ({
@@ -45,24 +40,8 @@ export default class Subtitles {
 		this.fileContents = await getTextFile(filePath);
 		this.cues = await parser(this.format, this.fileContents);
 
-		this.eventService = eventService({
-			events: Subtitles.mapCueToScriptedEvent(this.cues),
-			startEventCallback: this.post,
-			stopEventCallback: this.clear
-		});
-	}
-
-	post({ payload }: ScriptedEvent) {
-		broadcastSubtitlePost(payload);
-	}
-
-	clear() {
-		broadcastSubtitleClear();
-	}
-
-	stopListeningToRadio() {
-		if (this.eventService) {
-			this.eventService.stopListeningToRadio();
-		}
+		subtitleEventService.initialise(
+			Subtitles.mapCueToScriptedEvent(this.cues)
+		);
 	}
 }

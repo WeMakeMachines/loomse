@@ -12,7 +12,7 @@ interface EventServiceProps {
 	stopEventCallback: (event: ScriptedEvent) => void;
 }
 
-export class EventService {
+class EventService {
 	public queue: EventQueue;
 
 	private readonly listenerToken: string;
@@ -77,6 +77,8 @@ export class EventService {
 		this.queue.advance();
 	}
 }
+
+export type EventServiceType = EventService;
 
 export const eventService = (parameters: EventServiceProps) =>
 	new EventService(parameters);
