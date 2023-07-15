@@ -2,8 +2,8 @@ import { el, mount, unmount, setStyle } from 'redom';
 
 import styles from './styles';
 
-import Story from './Components/Story';
-import Scene from './Components/Scene';
+import Story from './components/Story';
+import Scene from './components/Scene';
 
 import { getCurrentScene } from './reporters/sceneReporter';
 import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
