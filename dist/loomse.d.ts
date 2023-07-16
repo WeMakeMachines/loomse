@@ -1,4 +1,4 @@
-export default class LoomSE {
+export declare class LoomSE {
 	el: HTMLElement;
 	version: string;
 	v: string;
@@ -17,7 +17,40 @@ export default class LoomSE {
 	startScript(json: object): Promise<void>;
 	pause(): void;
 	play(): void;
+	registerPlugin(pluginProps: UserPluginProps): void;
 	reloadScene(): void;
 	resize(width: number, height: number): void;
 	skipTo(sceneName: string): void;
 }
+
+interface UserPluginProps {
+	name: string;
+	parentEl?: HTMLElement;
+	el: HTMLElement;
+	alwaysOn?: boolean;
+	hooks?: {
+		run?: () => void;
+		cleanup?: () => void;
+	};
+}
+
+type StopListeningFunction = () => void;
+
+export declare const listenToDirectorPause: (
+	handler: () => void
+) => StopListeningFunction;
+export declare const listenToDirectorPlay: (
+	handler: () => void
+) => StopListeningFunction;
+export declare const listenToDirectorSceneChange: (
+	handler: (sceneId: string) => void
+) => StopListeningFunction;
+export declare const listenToDirectorSceneEvent: (
+	handler: (message: any) => void
+) => StopListeningFunction;
+export declare const listenToVideoDurationChanged: (
+	handler: (duration: number) => void
+) => StopListeningFunction;
+export declare const listenToVideoTimeUpdate: (
+	handler: (time: number) => void
+) => StopListeningFunction;
