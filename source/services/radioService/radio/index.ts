@@ -2,6 +2,7 @@ import { random } from '../../../lib/common';
 
 type Channel = string;
 type ListenerToken = string;
+type Handler = (...args: any[]) => void;
 
 /**
  * Underlying radio which ties the event mechanism together
@@ -11,9 +12,9 @@ type ListenerToken = string;
  * Listeners consist of a callback function, which is executed when the channel is broadcasting
  */
 export class Radio {
-	public registry: {
+	private registry: {
 		[key: Channel]: {
-			[key: ListenerToken]: (...args: any[]) => void;
+			[key: ListenerToken]: Handler;
 		};
 	} = {};
 
@@ -60,12 +61,12 @@ export class Radio {
 	/**
 	 * Register a listener to a channel
 	 *
-	 * Returns a listener token, which is used to uniquely identify the listener
+	 * Returns a deregister function, which is used to deregister the listener from the radio registry
 	 */
 	listenToChannel(
 		channel: Channel,
 		handler: (...args: any[]) => void
-	): string {
+	): () => void {
 		const listenerToken: ListenerToken = Radio.tokenGenerator(32);
 
 		if (!this.registry[channel]) {
@@ -74,7 +75,7 @@ export class Radio {
 
 		this.registry[channel][listenerToken] = handler;
 
-		return listenerToken;
+		return () => this.stopListening(listenerToken);
 	}
 
 	/**
