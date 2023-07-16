@@ -4,6 +4,7 @@ import styles from './styles';
 
 import Story from './components/Story';
 import Scene from './components/Scene';
+import Plugin, { PluginProps } from './components/Plugin';
 
 import { getCurrentScene } from './reporters/sceneReporter';
 import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
@@ -11,19 +12,31 @@ import {
 	broadcastDirectorPause,
 	broadcastDirectorPlay
 } from './services/radioService/broadcasters';
+import {
+	listenToDirectorPlay,
+	listenToDirectorPause,
+	listenToDirectorSceneChange,
+	listenToDirectorSceneEvent,
+	listenToVideoTimeUpdate,
+	listenToVideoDurationChanged
+} from './services/radioService/listeners';
 import { RadioChannel } from './services/radioService/channelTypes';
 import { ScriptedStory } from './types/scriptedStory';
 
 import { VERSION } from './version';
-import { listenToDirectorSceneEvent } from './services/radioService/listeners';
 
-export default class LoomSE {
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+type UserPluginProps = Optional<PluginProps, 'parentEl'>;
+
+class LoomSEError extends Error {}
+
+class LoomSE {
 	public el: HTMLElement;
 	public version = VERSION;
 	public v = VERSION;
+	public scene: Scene | null = null;
 
 	private story: Story | null = null;
-	private scene: Scene | null = null;
 
 	constructor(root: HTMLElement, { width = '100%', height = '100%' }) {
 		this.el = el('div', {
@@ -97,6 +110,19 @@ export default class LoomSE {
 		broadcastDirectorPlay();
 	}
 
+	registerPlugin(pluginProps: UserPluginProps): void {
+		const parentEl = pluginProps.parentEl || this.scene?.el;
+		if (!parentEl) {
+			throw new LoomSEError(
+				'Unable to register plugin, no suitable mount point'
+			);
+		}
+
+		Plugin.registerPlugin({ parentEl, ...pluginProps });
+
+		console.log(`Loomse: Plugin "${pluginProps.name}" registered`);
+	}
+
 	reloadScene() {
 		if (this.scene?.sceneId) {
 			this.loadScene(this.scene?.sceneId);
@@ -111,3 +137,13 @@ export default class LoomSE {
 		this.loadScene(sceneName);
 	}
 }
+
+export {
+	LoomSE,
+	listenToDirectorPlay,
+	listenToDirectorPause,
+	listenToDirectorSceneChange,
+	listenToDirectorSceneEvent,
+	listenToVideoTimeUpdate,
+	listenToVideoDurationChanged
+};
