@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "loomse",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "description": "Interactive storytelling for the modern web",
   "author": "Franco Speziali",
   "license": "MIT",
