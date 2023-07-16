@@ -8,11 +8,11 @@ import {
 	broadcastVideoSeeked,
 	broadcastVideoSeeking,
 	broadcastVideoTimeUpdate
-} from '../../services/radioService/broadcast';
+} from '../../services/radioService/broadcasters';
 import {
 	listenToDirectorPause,
 	listenToDirectorPlay
-} from '../../services/radioService/listenTo';
+} from '../../services/radioService/listeners';
 import { radio } from '../../services/radioService/radio';
 import Source from './Source';
 import styles from './styles';

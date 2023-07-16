@@ -1,6 +1,6 @@
 import { eventService, EventServiceType } from '../eventService';
 import { EventAction } from '../eventService/EventQueue';
-import { broadcastDirectorSceneEvent } from '../radioService/broadcast';
+import { broadcastDirectorSceneEvent } from '../radioService/broadcasters';
 import { ScriptedEvent } from '../../types/scriptedStory';
 
 class ScriptedEventService {

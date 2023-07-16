@@ -6,7 +6,7 @@ import styles from './styles';
 import {
 	listenToVideoDurationChanged,
 	listenToVideoTimeUpdate
-} from '../../services/radioService/listenTo';
+} from '../../services/radioService/listeners';
 import { radio } from '../../services/radioService/radio';
 
 export default class Timeline {

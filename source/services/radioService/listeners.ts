@@ -1,5 +1,5 @@
 import { radio } from './radio';
-import { RadioChannel } from './channels';
+import { RadioChannel } from './channelTypes';
 
 export const listenToDirectorPause = (handler: () => void): string =>
 	radio.listenToChannel(RadioChannel.DIRECTOR_PAUSE, handler);

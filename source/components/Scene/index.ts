@@ -5,7 +5,7 @@ import styles from './styles';
 import Timeline from '../Timeline';
 import Video from '../Video';
 
-import { broadcastDirectorSceneChange } from '../../services/radioService/broadcast';
+import { broadcastDirectorSceneChange } from '../../services/radioService/broadcasters';
 import { ScriptedScene } from '../../types/scriptedStory';
 import { scriptedEventService } from '../../services/scriptedEventService';
 

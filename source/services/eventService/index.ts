@@ -1,6 +1,6 @@
 import { secondsToMilliseconds } from '../../lib/time';
 import { ScriptedEvent } from '../../types/scriptedStory';
-import { listenToVideoTimeUpdate } from '../radioService/listenTo';
+import { listenToVideoTimeUpdate } from '../radioService/listeners';
 import { radio } from '../radioService/radio';
 import EventQueue, { TimedObject, EventAction } from './EventQueue';
 

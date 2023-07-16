@@ -1,4 +1,4 @@
-import { listenToDirectorSceneChange } from '../../services/radioService/listenTo';
+import { listenToDirectorSceneChange } from '../../services/radioService/listeners';
 
 export default class SceneReporter {
 	public currentScene: string;

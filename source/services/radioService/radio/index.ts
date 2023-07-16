@@ -1,4 +1,4 @@
-import { random } from '../../lib/common';
+import { random } from '../../../lib/common';
 
 type Channel = string;
 type ListenerToken = string;

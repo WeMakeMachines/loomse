@@ -1,6 +1,6 @@
 import { radio } from './radio';
 
-import { RadioChannel } from './channels';
+import { RadioChannel } from './channelTypes';
 import { EventAction } from '../eventService/EventQueue';
 
 export const broadcastDirectorPause = () =>

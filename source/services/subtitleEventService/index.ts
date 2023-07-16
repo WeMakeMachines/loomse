@@ -2,7 +2,7 @@ import { eventService, EventServiceType } from '../eventService';
 import {
 	broadcastSubtitleClear,
 	broadcastSubtitlePost
-} from '../radioService/broadcast';
+} from '../radioService/broadcasters';
 import { ScriptedEvent } from '../../types/scriptedStory';
 
 class SubtitleEventService {

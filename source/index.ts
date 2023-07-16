@@ -10,12 +10,12 @@ import { getCurrentDuration, getCurrentTime } from './reporters/videoReporter';
 import {
 	broadcastDirectorPause,
 	broadcastDirectorPlay
-} from './services/radioService/broadcast';
-import { RadioChannel } from './services/radioService/channels';
+} from './services/radioService/broadcasters';
+import { RadioChannel } from './services/radioService/channelTypes';
 import { ScriptedStory } from './types/scriptedStory';
 
 import { VERSION } from './version';
-import { listenToDirectorSceneEvent } from './services/radioService/listenTo';
+import { listenToDirectorSceneEvent } from './services/radioService/listeners';
 
 export default class LoomSE {
 	public el: HTMLElement;
