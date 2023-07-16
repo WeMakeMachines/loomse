@@ -1,7 +1,9 @@
 import { secondsToMilliseconds } from '../../lib/time';
 import { ScriptedEvent } from '../../types/scriptedStory';
-import { listenToVideoTimeUpdate } from '../radioService/listeners';
-import { radio } from '../radioService/radio';
+import {
+	listenToVideoTimeUpdate,
+	StopListeningFunction
+} from '../radioService/listeners';
 import EventQueue, { TimedObject, EventAction } from './EventQueue';
 
 class EventServiceError extends Error {}
@@ -15,9 +17,9 @@ interface EventServiceProps {
 class EventService {
 	public queue: EventQueue;
 
-	private readonly listenerToken: string;
 	private readonly startEventCallback: (event: ScriptedEvent) => void;
 	private readonly stopEventCallback: (event: ScriptedEvent) => void;
+	private readonly stopListeningToTimeUpdate: StopListeningFunction;
 
 	constructor({
 		events,
@@ -28,13 +30,13 @@ class EventService {
 		this.startEventCallback = startEventCallback;
 		this.stopEventCallback = stopEventCallback;
 
-		this.listenerToken = listenToVideoTimeUpdate((time) =>
+		this.stopListeningToTimeUpdate = listenToVideoTimeUpdate((time) =>
 			this.isReadyToAction(time)
 		);
 	}
 
 	stopListeningToRadio() {
-		radio.stopListening(this.listenerToken);
+		this.stopListeningToTimeUpdate();
 	}
 
 	isReadyToAction(time: number) {

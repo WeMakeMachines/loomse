@@ -5,17 +5,17 @@ import styles from './styles';
 
 import {
 	listenToVideoDurationChanged,
-	listenToVideoTimeUpdate
+	listenToVideoTimeUpdate,
+	StopListeningFunction
 } from '../../services/radioService/listeners';
-import { radio } from '../../services/radioService/radio';
 
 export default class Timeline {
 	public duration = 999;
 
 	public el: HTMLElement;
 	public progressCounter: ProgressCounter;
-	public tokenDurationChanged: string;
-	public tokenTimeUpdate: string;
+	public stopListeningToDurationChanged: StopListeningFunction;
+	public stopListeningToTimeUpdate: StopListeningFunction;
 
 	constructor() {
 		this.el = el(
@@ -24,10 +24,12 @@ export default class Timeline {
 			(this.progressCounter = new ProgressCounter())
 		);
 
-		this.tokenDurationChanged = listenToVideoDurationChanged((duration) => {
-			this.duration = duration;
-		});
-		this.tokenTimeUpdate = listenToVideoTimeUpdate((time) =>
+		this.stopListeningToDurationChanged = listenToVideoDurationChanged(
+			(duration) => {
+				this.duration = duration;
+			}
+		);
+		this.stopListeningToTimeUpdate = listenToVideoTimeUpdate((time) =>
 			this.updateProgress(time)
 		);
 	}
@@ -37,8 +39,8 @@ export default class Timeline {
 	}
 
 	stopListeningToRadio() {
-		radio.stopListening(this.tokenDurationChanged);
-		radio.stopListening(this.tokenTimeUpdate);
+		this.stopListeningToDurationChanged();
+		this.stopListeningToTimeUpdate();
 	}
 
 	updateProgress(time: number) {

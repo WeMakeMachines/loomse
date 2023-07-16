@@ -1,5 +1,7 @@
 import { el, mount } from 'redom';
 
+import { StopListeningFunction } from '../../services/radioService/listeners';
+
 import {
 	broadcastVideoDurationChanged,
 	broadcastVideoEnded,
@@ -13,7 +15,6 @@ import {
 	listenToDirectorPause,
 	listenToDirectorPlay
 } from '../../services/radioService/listeners';
-import { radio } from '../../services/radioService/radio';
 import Source from './Source';
 import styles from './styles';
 import Subtitles from '../Subtitles';
@@ -37,8 +38,8 @@ export default class Video {
 	public broadcastSeekedEvent: () => void;
 	public broadcastSeekingEvent: () => void;
 	public broadcastTimeUpdateEvent: () => void;
-	public tokenPause: string;
-	public tokenPlay: string;
+	public stopListeningToVideoPause: StopListeningFunction;
+	public stopListeningToVideoPlay: StopListeningFunction;
 	public sources: { [key: string]: Source };
 
 	constructor({
@@ -76,8 +77,10 @@ export default class Video {
 		this.broadcastTimeUpdateEvent = () =>
 			broadcastVideoTimeUpdate(this.el.currentTime);
 
-		this.tokenPause = listenToDirectorPause(() => this.pause());
-		this.tokenPlay = listenToDirectorPlay(() => this.play());
+		this.stopListeningToVideoPause = listenToDirectorPause(() =>
+			this.pause()
+		);
+		this.stopListeningToVideoPlay = listenToDirectorPlay(() => this.play());
 
 		this.listenToVideoEvents();
 	}
@@ -147,8 +150,8 @@ export default class Video {
 	}
 
 	stopListeningToRadio() {
-		radio.stopListening(this.tokenPause);
-		radio.stopListening(this.tokenPlay);
+		this.stopListeningToVideoPause();
+		this.stopListeningToVideoPlay();
 	}
 
 	play() {
