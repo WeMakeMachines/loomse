@@ -1,4 +1,4 @@
-import { ScriptedEvent } from '../../types/scriptedStory';
+import { ScriptedEvent } from '../../../types/scriptedStory';
 
 export interface TimedObject {
 	id: number;

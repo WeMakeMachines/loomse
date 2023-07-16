@@ -1,5 +1,5 @@
-import { ScriptedEvent } from '../../../types/scriptedStory';
-import EventQueue from '../EventQueue';
+import { ScriptedEvent } from '../../../../types/scriptedStory';
+import EventQueue from '../../EventQueue';
 
 const mockTimedObjects: ScriptedEvent[] = [
 	{
