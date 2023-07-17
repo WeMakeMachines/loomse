@@ -17,17 +17,20 @@ export declare class LoomSE {
 	startScript(json: object): Promise<void>;
 	pause(): void;
 	play(): void;
-	registerPlugin(pluginProps: UserPluginProps): void;
+	registerPlugin(pluginProps: PluginProps): void;
 	reloadScene(): void;
 	resize(width: number, height: number): void;
 	skipTo(sceneName: string): void;
 }
 
-interface UserPluginProps {
+interface PluginProps {
 	name: string;
-	parentEl?: HTMLElement;
-	el: HTMLElement;
-	alwaysOn?: boolean;
+	mount?: {
+		parentEl: HTMLElement;
+		el: HTMLElement;
+		onLoad?: boolean;
+		persist?: boolean;
+	};
 	hooks?: {
 		run?: () => void;
 		cleanup?: () => void;

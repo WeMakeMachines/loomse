@@ -1,24 +1,32 @@
-import { mount, unmount } from 'redom';
+import { mount as redomMount, unmount } from 'redom';
 
 import { pluginRegistry } from '../../services/pluginRegistryService';
 
 export interface PluginProps {
 	name: string;
-	parentEl: HTMLElement;
-	el: HTMLElement;
-	alwaysOn?: boolean;
+	mount?: {
+		parentEl: HTMLElement;
+		el: HTMLElement;
+		onLoad?: boolean;
+		persist?: boolean;
+	};
 	hooks?: {
 		run?: () => void;
 		cleanup?: () => void;
 	};
 }
 
+class PluginError extends Error {}
+
 export default class Plugin {
 	public readonly name: string;
-	public readonly parentEl: HTMLElement;
-	public readonly el: HTMLElement;
-	public readonly alwaysOn: boolean;
-	public readonly hooks: {
+	public readonly mount?: {
+		onLoad?: boolean;
+		persist?: boolean;
+		parentEl: HTMLElement;
+		el: HTMLElement;
+	};
+	public readonly hooks?: {
 		run?: () => void;
 		cleanup?: () => void;
 	};
@@ -27,29 +35,40 @@ export default class Plugin {
 		const plugin = new Plugin(pluginProps);
 		pluginRegistry.registerPlugin(plugin);
 
+		console.log(`Loomse: Plugin "${pluginProps.name}" registered`);
+
 		return;
 	}
 
-	constructor({ name, parentEl, el, alwaysOn, hooks = {} }: PluginProps) {
+	constructor({ name, hooks, mount }: PluginProps) {
 		this.name = name;
-		this.parentEl = parentEl;
-		this.el = el;
-		this.alwaysOn = alwaysOn || false;
 		this.hooks = {
 			run: hooks?.run,
 			cleanup: hooks?.cleanup
 		};
 
-		if (alwaysOn) {
-			mount(this.parentEl, this.el);
+		if (mount) {
+			if (!mount.el || !mount.parentEl) {
+				throw new PluginError(
+					'Unable to register plugin, no suitable mount point'
+				);
+			}
+
+			this.mount = mount;
+
+			if (mount.onLoad) {
+				redomMount(this.mount.parentEl, this.mount.el);
+			}
 		}
 	}
 
 	unmount() {
-		if (this.hooks.cleanup) {
+		if (this.hooks?.cleanup) {
 			this.hooks.cleanup();
 		}
 
-		unmount(this.parentEl, this.el);
+		if (this.mount) {
+			unmount(this.mount.parentEl, this.mount.el);
+		}
 	}
 }

@@ -25,11 +25,6 @@ import { ScriptedStory } from './types/scriptedStory';
 
 import { VERSION } from './version';
 
-type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
-type UserPluginProps = Optional<PluginProps, 'parentEl'>;
-
-class LoomSEError extends Error {}
-
 class LoomSE {
 	public el: HTMLElement;
 	public version = VERSION;
@@ -110,17 +105,8 @@ class LoomSE {
 		broadcastDirectorPlay();
 	}
 
-	registerPlugin(pluginProps: UserPluginProps): void {
-		const parentEl = pluginProps.parentEl || this.scene?.el;
-		if (!parentEl) {
-			throw new LoomSEError(
-				'Unable to register plugin, no suitable mount point'
-			);
-		}
-
-		Plugin.registerPlugin({ parentEl, ...pluginProps });
-
-		console.log(`Loomse: Plugin "${pluginProps.name}" registered`);
+	registerPlugin(pluginProps: PluginProps): void {
+		Plugin.registerPlugin(pluginProps);
 	}
 
 	reloadScene() {

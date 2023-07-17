@@ -19,7 +19,7 @@ class ScriptedEventService {
 		if (pluginName) {
 			const plugin = pluginRegistry.getPlugin(pluginName);
 
-			if (plugin?.hooks.run) {
+			if (plugin?.hooks?.run) {
 				plugin.hooks.run();
 			}
 		}
@@ -34,7 +34,9 @@ class ScriptedEventService {
 		if (pluginName) {
 			const plugin = pluginRegistry.getPlugin(pluginName);
 
-			plugin?.unmount();
+			if (plugin && !plugin.mount?.persist) {
+				plugin?.unmount();
+			}
 		}
 
 		broadcastDirectorSceneEvent({
