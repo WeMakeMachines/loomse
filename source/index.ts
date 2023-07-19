@@ -20,7 +20,6 @@ import {
 	listenToVideoTimeUpdate,
 	listenToVideoDurationChanged
 } from './services/radioService/listeners';
-import { RadioChannel } from './services/radioService/channelTypes';
 import { ScriptedStory } from './types/scriptedStory';
 
 import { VERSION } from './version';
@@ -43,19 +42,6 @@ class LoomSE {
 		});
 
 		mount(root, this.el);
-
-		this.setupSyntheticEvents();
-	}
-
-	// Here we relay internal messages from the radioService to the "outside" world via custom events
-	private setupSyntheticEvents() {
-		listenToDirectorSceneEvent((message) => {
-			this.el.dispatchEvent(
-				new CustomEvent(RadioChannel.DIRECTOR_SCENE_EVENT, {
-					detail: message
-				})
-			);
-		});
 	}
 
 	private setStory(storyObject: Story) {
