@@ -75,11 +75,7 @@ describe('radio', () => {
 				[listenerToken2]: jest.fn()
 			};
 
-			console.log(radio['registry']);
-
 			radio.stopListening(listenerToken1);
-
-			console.log(radio['registry']);
 
 			expect(radio['registry'][channel][listenerToken1]).toBeUndefined();
 		});
