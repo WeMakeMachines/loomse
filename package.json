@@ -22,30 +22,32 @@
     "interactive",
     "interactive-storytelling"
   ],
-  "type": "module",
-  "main": "./dist/loomse.min.js",
-  "module": "./dist/loomse.es.min.js",
-  "types": "./dist/loomse.d.ts",
+  "main": "./dist/loomse.cjs.mjs",
+  "module": "./dist/loomse.esm.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/loomse.esm.mjs",
+      "default": "./dist/loomse.cjs.mjs"
+    }
+  },
   "scripts": {
-    "prebuild": "rm -rf ./dist && mkdir dist && cp ./source/loomse.d.ts ./dist/ && cp oss-licenses.json ./dist/ && node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > source/version.ts",
-    "build": "rollup --config",
-    "prebuild-dev": "npm run prebuild",
-    "build-dev": "mode=dev rollup --config",
+    "prebuild": "node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > source/version.ts",
+    "build": "tsup",
     "prettier": "prettier --write 'source/**/*.ts'",
     "eslint": "eslint source",
     "test": "jest --verbose"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.1.0",
-    "@rollup/plugin-terser": "^0.4.3",
-    "@rollup/plugin-typescript": "^11.1.2",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "eslint": "^8.44.0",
     "prettier": "3.0.0",
-    "rollup": "^3.26.2",
     "ts-jest": "^29.1.1",
+    "tsup": "^7.1.0",
     "typescript": "^5.1.6"
   },
   "dependencies": {
