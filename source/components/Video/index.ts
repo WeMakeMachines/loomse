@@ -102,7 +102,11 @@ export default class Video {
 				continue;
 			}
 
-			generatedSources[key] = new Source(key, sources[key]);
+			try {
+				generatedSources[key] = new Source(key, sources[key]);
+			} catch (error) {
+				console.warn(`${error}, skipping...`);
+			}
 		}
 
 		return generatedSources;
