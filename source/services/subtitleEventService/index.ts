@@ -1,15 +1,15 @@
-import { eventService, EventServiceType } from '../eventService';
+import { ScriptedEvent } from '../../types/scriptedStory';
 import {
 	broadcastSubtitleClear,
 	broadcastSubtitlePost
 } from '../radioService/broadcasters';
-import { ScriptedEvent } from '../../types/scriptedStory';
+import EventService from '../eventService';
 
-class SubtitleEventService {
-	public eventService: EventServiceType | null = null;
+export default class SubtitleEventService {
+	private eventService: EventService | null = null;
 
 	initialise(events: ScriptedEvent[]) {
-		this.eventService = eventService({
+		this.eventService = new EventService({
 			events,
 			startEventCallback: this.start,
 			stopEventCallback: this.stop
@@ -32,5 +32,3 @@ class SubtitleEventService {
 		this.eventService.stopListeningToRadio();
 	}
 }
-
-export const subtitleEventService = new SubtitleEventService();

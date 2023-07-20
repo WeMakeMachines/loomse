@@ -1,6 +1,6 @@
 import { mount as redomMount, unmount } from 'redom';
 
-import { pluginRegistry } from '../../services/pluginRegistryService';
+import { pluginRegistryService } from '../../services';
 
 export interface PluginProps {
 	name: string;
@@ -33,7 +33,7 @@ export default class Plugin {
 
 	static registerPlugin(pluginProps: PluginProps) {
 		const plugin = new Plugin(pluginProps);
-		pluginRegistry.registerPlugin(plugin);
+		pluginRegistryService.registerPlugin(plugin);
 
 		console.log(`Loomse: Plugin "${pluginProps.name}" registered`);
 

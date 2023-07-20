@@ -4,17 +4,17 @@ import styles from './styles';
 import Video from '../Video';
 
 import { broadcastDirectorSceneChange } from '../../services/radioService/broadcasters';
-import { scriptedEventService } from '../../services/scriptedEventService';
+import { scriptedEventService } from '../../services';
 import { ScriptedScene } from '../../types/scriptedStory';
 
 export default class Scene {
 	public el: HTMLElement;
-	public sceneId: string;
+	public sceneName: string;
 	public video: Video;
 	public longName: string | undefined;
 
-	constructor(sceneId: string, { events, longName, video }: ScriptedScene) {
-		broadcastDirectorSceneChange(sceneId);
+	constructor(sceneName: string, { events, longName, video }: ScriptedScene) {
+		broadcastDirectorSceneChange(sceneName);
 
 		this.el = el(
 			'div',
@@ -22,7 +22,7 @@ export default class Scene {
 			(this.video = new Video(video))
 		);
 
-		this.sceneId = sceneId;
+		this.sceneName = sceneName;
 		this.longName = longName;
 
 		scriptedEventService.initialise(events);

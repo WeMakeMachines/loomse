@@ -1,23 +1,29 @@
-import { eventService, EventServiceType } from '../eventService';
-import { EventAction } from '../eventService/EventQueue';
-import { broadcastDirectorSceneEvent } from '../radioService/broadcasters';
 import { ScriptedEvent } from '../../types/scriptedStory';
-import { pluginRegistry } from '../pluginRegistryService';
+import { EventAction } from '../eventService/EventQueue';
+import EventService from '../eventService';
+import { broadcastDirectorSceneEvent } from '../radioService/broadcasters';
+import { pluginRegistryService } from '../';
 
-class ScriptedEventService {
-	public eventService: EventServiceType | null = null;
+export default class ScriptedEventService {
+	private eventService: EventService | null = null;
 
 	initialise(events: ScriptedEvent[]) {
-		this.eventService = eventService({
+		this.eventService = new EventService({
 			events,
 			startEventCallback: this.start,
 			stopEventCallback: this.stop
 		});
 	}
 
+	getEvents(): ScriptedEvent[] {
+		if (!this.eventService) return [];
+
+		return this.eventService.queue.events;
+	}
+
 	start({ pluginName, payload }: ScriptedEvent) {
 		if (pluginName) {
-			const plugin = pluginRegistry.getPlugin(pluginName);
+			const plugin = pluginRegistryService.getPlugin(pluginName);
 
 			if (plugin?.hooks?.run) {
 				plugin.hooks.run();
@@ -32,7 +38,7 @@ class ScriptedEventService {
 
 	stop({ pluginName, payload }: ScriptedEvent) {
 		if (pluginName) {
-			const plugin = pluginRegistry.getPlugin(pluginName);
+			const plugin = pluginRegistryService.getPlugin(pluginName);
 
 			if (plugin && !plugin.mount?.persist) {
 				plugin?.unmount();
@@ -53,5 +59,3 @@ class ScriptedEventService {
 		this.eventService.stopListeningToRadio();
 	}
 }
-
-export const scriptedEventService = new ScriptedEventService();

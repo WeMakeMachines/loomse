@@ -1,8 +1,11 @@
 import {
 	listenToVideoDurationChanged,
 	listenToVideoTimeUpdate
-} from '../../services/radioService/listeners';
+} from '../../radioService/listeners';
 
+/**
+ * Listens to and keeps track of video events
+ */
 export default class VideoReporter {
 	public currentDuration = 0;
 	public currentTime = 0;

@@ -7,7 +7,7 @@ import {
 
 import { getTextFile } from '../../lib/browser/fetch';
 import { ScriptedEvent } from '../../types/scriptedStory';
-import { subtitleEventService } from '../../services/subtitleEventService';
+import { subtitleEventService } from '../../services';
 
 class SubtitlesError extends Error {}
 

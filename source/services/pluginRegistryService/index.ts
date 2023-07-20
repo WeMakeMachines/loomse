@@ -2,16 +2,16 @@ import Plugin from '../../components/Plugin';
 
 type PluginName = string;
 
-class PluginRegistryError extends Error {}
+class PluginRegistryServiceError extends Error {}
 
-export class PluginRegistry {
+export default class PluginRegistryService {
 	private readonly registry: {
 		[key: PluginName]: Plugin;
 	} = {};
 
 	registerPlugin(plugin: Plugin) {
 		if (this.registry[plugin.name])
-			throw new PluginRegistryError(
+			throw new PluginRegistryServiceError(
 				`Unable to register plugin: A plugin with the name "${plugin.name}" has already been registered`
 			);
 
@@ -26,5 +26,3 @@ export class PluginRegistry {
 		return this.registry[name];
 	}
 }
-
-export const pluginRegistry = new PluginRegistry();

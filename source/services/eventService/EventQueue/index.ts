@@ -12,9 +12,9 @@ export enum EventAction {
 }
 
 export default class EventQueue {
-	private index = 0;
+	public readonly events: ScriptedEvent[];
 
-	private readonly events: ScriptedEvent[];
+	private index = 0;
 	private readonly queue: TimedObject[];
 
 	static buildQueueFromScriptedEvents(

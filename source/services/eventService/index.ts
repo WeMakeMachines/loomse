@@ -14,7 +14,7 @@ interface EventServiceProps {
 	stopEventCallback: (event: ScriptedEvent) => void;
 }
 
-class EventService {
+export default class EventService {
 	public queue: EventQueue;
 
 	private readonly startEventCallback: (event: ScriptedEvent) => void;
@@ -79,8 +79,3 @@ class EventService {
 		this.queue.advance();
 	}
 }
-
-export type EventServiceType = EventService;
-
-export const eventService = (parameters: EventServiceProps) =>
-	new EventService(parameters);
