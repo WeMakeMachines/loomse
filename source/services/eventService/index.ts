@@ -8,44 +8,31 @@ import EventQueue, { TimedObject, EventAction } from './EventQueue';
 
 class EventServiceError extends Error {}
 
-interface EventServiceProps {
-	events: ScriptedEvent[];
-	startEventCallback: (event: ScriptedEvent) => void;
-	stopEventCallback: (event: ScriptedEvent) => void;
-}
+export default abstract class EventService {
+	private queue: EventQueue = new EventQueue();
 
-export default class EventService {
-	public queue: EventQueue;
+	public stopListeningToRadio: StopListeningFunction = () => {};
+	public events: ScriptedEvent[] = [];
 
-	private readonly startEventCallback: (event: ScriptedEvent) => void;
-	private readonly stopEventCallback: (event: ScriptedEvent) => void;
-	private readonly stopListeningToTimeUpdate: StopListeningFunction;
-
-	constructor({
-		events,
-		startEventCallback,
-		stopEventCallback
-	}: EventServiceProps) {
-		this.queue = new EventQueue(events);
-		this.startEventCallback = startEventCallback;
-		this.stopEventCallback = stopEventCallback;
-
-		this.stopListeningToTimeUpdate = listenToVideoTimeUpdate((time) =>
+	protected setEvents(events: ScriptedEvent[]) {
+		this.events = events;
+		this.queue.setQueue(EventQueue.buildQueueFromScriptedEvents(events));
+		this.stopListeningToRadio = listenToVideoTimeUpdate((time) =>
 			this.isReadyToAction(time)
 		);
 	}
 
-	stopListeningToRadio() {
-		this.stopListeningToTimeUpdate();
-	}
+	protected abstract startEventCallback(scriptedEvent: ScriptedEvent): void;
 
-	isReadyToAction(time: number) {
+	protected abstract stopEventCallback(scriptedEvent: ScriptedEvent): void;
+
+	private isReadyToAction(time: number) {
 		if (!time) {
 			return;
 		}
 
 		const milliseconds = secondsToMilliseconds(time);
-		const pending = this.queue.getPending();
+		const pending = this.queue.getPendingObject();
 
 		if (!milliseconds || !pending) {
 			return;
@@ -56,8 +43,9 @@ export default class EventService {
 		}
 	}
 
-	parseAction(event: TimedObject) {
-		const eventData = this.queue.getEvent(event.id);
+	private parseAction(event: TimedObject) {
+		const eventId = this.queue.getCurrentTimedEventId();
+		const eventData = this.events[eventId];
 
 		if (!eventData) {
 			throw new EventServiceError('Event data not found');
@@ -76,6 +64,6 @@ export default class EventService {
 				return;
 		}
 
-		this.queue.advance();
+		this.queue.advanceQueue();
 	}
 }

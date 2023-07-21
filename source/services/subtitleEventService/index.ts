@@ -5,30 +5,16 @@ import {
 } from '../radioService/broadcasters';
 import EventService from '../eventService';
 
-export default class SubtitleEventService {
-	private eventService: EventService | null = null;
-
-	initialise(events: ScriptedEvent[]) {
-		this.eventService = new EventService({
-			events,
-			startEventCallback: this.start,
-			stopEventCallback: this.stop
-		});
+export default class SubtitleEventService extends EventService {
+	public setEvents(events: ScriptedEvent[]) {
+		super.setEvents(events);
 	}
 
-	start({ payload }: ScriptedEvent) {
+	protected startEventCallback({ payload }: ScriptedEvent) {
 		broadcastSubtitlePost(payload);
 	}
 
-	stop() {
+	protected stopEventCallback() {
 		broadcastSubtitleClear();
-	}
-
-	stopListeningToRadio() {
-		if (!this.eventService) {
-			return;
-		}
-
-		this.eventService.stopListeningToRadio();
 	}
 }

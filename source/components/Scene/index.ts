@@ -25,7 +25,7 @@ export default class Scene {
 		this.sceneName = sceneName;
 		this.longName = longName;
 
-		scriptedEventService.initialise(events);
+		scriptedEventService.setEvents(events);
 
 		this.video.play();
 	}

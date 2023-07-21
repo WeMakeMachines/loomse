@@ -12,10 +12,8 @@ export enum EventAction {
 }
 
 export default class EventQueue {
-	public readonly events: ScriptedEvent[];
-
-	private index = 0;
-	private readonly queue: TimedObject[];
+	private queueIndex = 0;
+	private queue: TimedObject[] = [];
 
 	static buildQueueFromScriptedEvents(
 		events: ScriptedEvent[]
@@ -41,35 +39,30 @@ export default class EventQueue {
 		return queue;
 	}
 
-	constructor(events: ScriptedEvent[]) {
-		this.events = events;
-		this.queue = EventQueue.buildQueueFromScriptedEvents(events);
-
+	setQueue(timedObjects: TimedObject[]) {
+		this.queueIndex = 0;
+		this.queue = timedObjects;
 		this.sort('asc');
-	}
-
-	getEvent(id: number): ScriptedEvent {
-		return this.events[id];
-	}
-
-	getIndex() {
-		return this.index;
-	}
-
-	getPending(): TimedObject | undefined {
-		if (this.index > this.queue.length - 1) {
-			return;
-		}
-
-		return this.queue[this.index];
 	}
 
 	getQueue(): TimedObject[] {
 		return this.queue;
 	}
 
-	advance() {
-		this.index += 1;
+	getCurrentTimedEventId() {
+		return this.queue[this.queueIndex].id;
+	}
+
+	getPendingObject(): TimedObject | undefined {
+		if (this.queueIndex > this.queue.length - 1) {
+			return;
+		}
+
+		return this.queue[this.queueIndex];
+	}
+
+	advanceQueue() {
+		this.queueIndex += 1;
 	}
 
 	sort(type: 'desc' | 'asc') {

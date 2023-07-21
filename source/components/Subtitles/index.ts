@@ -40,7 +40,7 @@ export default class Subtitles {
 		this.fileContents = await getTextFile(filePath);
 		this.cues = await parser(this.format, this.fileContents);
 
-		subtitleEventService.initialise(
+		subtitleEventService.setEvents(
 			Subtitles.mapCueToScriptedEvent(this.cues)
 		);
 	}

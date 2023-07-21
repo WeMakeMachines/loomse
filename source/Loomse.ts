@@ -80,7 +80,7 @@ export default class Loomse {
 	}
 
 	currentEvents(): ScriptedEvent[] {
-		return scriptedEventService.getEvents();
+		return scriptedEventService.events;
 	}
 
 	pause() {
