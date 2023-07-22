@@ -9,10 +9,10 @@ import EventQueue, { TimedObject, EventAction } from './EventQueue';
 class EventServiceError extends Error {}
 
 export default abstract class EventService {
-	private queue: EventQueue = new EventQueue();
-
 	public stopListeningToRadio: StopListeningFunction = () => {};
 	public events: ScriptedEvent[] = [];
+
+	protected constructor(private queue: EventQueue) {}
 
 	protected setEvents(events: ScriptedEvent[]) {
 		this.events = events;

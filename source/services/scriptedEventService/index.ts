@@ -1,10 +1,17 @@
+import { container, singleton } from 'tsyringe';
+
 import { ScriptedEvent } from '../../types/scriptedStory';
-import { EventAction } from '../eventService/EventQueue';
+import EventQueue, { EventAction } from '../eventService/EventQueue';
 import EventService from '../eventService';
 import { broadcastDirectorSceneEvent } from '../radioService/broadcasters';
 import { pluginRegistryService } from '../';
 
+@singleton()
 export default class ScriptedEventService extends EventService {
+	constructor() {
+		super(container.resolve(EventQueue));
+	}
+
 	public setEvents(events: ScriptedEvent[]) {
 		super.setEvents(events);
 	}
