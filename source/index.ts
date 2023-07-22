@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import Loomse from './Loomse';
+import { container } from 'tsyringe';
 
 import {
 	listenToDirectorPlay,
@@ -9,16 +9,20 @@ import {
 	listenToVideoTimeUpdate,
 	listenToVideoDurationChanged
 } from './services/radioService/listeners';
-
-function createStory(root: HTMLElement, json: object): LoomseType {
-	return Loomse.getInstance(root, json);
-}
+import Loomse from './Loomse';
 
 type LoomseType = Loomse;
 
+function createStory(root: HTMLElement, json: object): LoomseType {
+	container.register('root', { useValue: root });
+	container.register('json', { useValue: json });
+
+	return container.resolve(Loomse);
+}
+
 export {
-	LoomseType,
 	createStory,
+	LoomseType,
 	listenToDirectorPlay,
 	listenToDirectorPause,
 	listenToDirectorSceneChange,

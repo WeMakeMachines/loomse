@@ -11,28 +11,23 @@ import { ScriptedEvent, ScriptedStory } from './types/scriptedStory';
 import { reporterService, scriptedEventService } from './services';
 import styles from './styles';
 import { VERSION } from './version';
+import { inject, injectable, singleton } from 'tsyringe';
 
 class LoomseError extends Error {}
 
+@injectable()
+@singleton()
 export default class Loomse {
 	public el: HTMLElement;
 	public version = VERSION;
 	public scene: Scene | null = null;
 
 	private story: Story | null = null;
-	private static instance: Loomse;
 
-	public static getInstance(root: HTMLElement, json: object) {
-		if (!Loomse.instance) {
-			Loomse.instance = new Loomse(root, json);
-		} else {
-			console.warn('Story can only be set once');
-		}
-
-		return Loomse.instance;
-	}
-
-	private constructor(root: HTMLElement, json: object) {
+	constructor(
+		@inject('root') root: HTMLElement,
+		@inject('json') json: object
+	) {
 		this.el = el('div', {
 			style: {
 				...styles,
