@@ -25,7 +25,7 @@ export default class ScriptedEventService extends EventService {
 			}
 
 			if (plugin?.hooks?.run) {
-				plugin.hooks.run();
+				plugin.hooks.run(payload);
 			}
 		}
 

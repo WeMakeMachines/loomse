@@ -44,5 +44,5 @@ export interface ScriptedEvent {
 	pluginName?: string;
 	in: number;
 	out: number;
-	payload?: any;
+	payload?: object;
 }

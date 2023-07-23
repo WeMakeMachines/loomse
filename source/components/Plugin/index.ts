@@ -11,7 +11,7 @@ export interface PluginProps {
 		persist?: boolean;
 	};
 	hooks?: {
-		run?: () => void;
+		run?: (payload?: object) => void;
 		cleanup?: () => void;
 	};
 }
@@ -27,7 +27,7 @@ export default class Plugin {
 		el: HTMLElement;
 	};
 	public readonly hooks?: {
-		run?: () => void;
+		run?: (payload?: object) => void;
 		cleanup?: () => void;
 	};
 
