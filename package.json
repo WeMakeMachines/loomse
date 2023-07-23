@@ -25,6 +25,7 @@
   "main": "./dist/loomse.cjs.mjs",
   "module": "./dist/loomse.esm.mjs",
   "types": "./dist/index.d.mts",
+  "style": "./dist/styles.css",
   "exports": {
     "./package.json": "./package.json",
     ".": {

@@ -1,4 +1,4 @@
-import { el, mount, unmount, setStyle } from 'redom';
+import { el, mount, unmount } from 'redom';
 
 import Story from './components/Story';
 import Scene from './components/Scene';
@@ -9,7 +9,6 @@ import {
 } from './services/radioService/broadcasters';
 import { ScriptedEvent, ScriptedStory } from './types/scriptedStory';
 import { reporterService, scriptedEventService } from './services';
-import styles from './styles';
 import { VERSION } from './version';
 import { inject, injectable, singleton } from 'tsyringe';
 
@@ -28,13 +27,7 @@ export default class Loomse {
 		@inject('root') root: HTMLElement,
 		@inject('json') json: object
 	) {
-		this.el = el('div', {
-			style: {
-				...styles,
-				width: '100%',
-				height: '100%'
-			}
-		});
+		this.el = el('div.loomse__root');
 
 		mount(root, this.el);
 
@@ -94,10 +87,6 @@ export default class Loomse {
 		if (this.scene?.sceneName) {
 			this.loadScene(this.scene?.sceneName);
 		}
-	}
-
-	resize(width: number, height: number) {
-		setStyle(this.el, { width: `${width}`, height: `${height}` });
 	}
 
 	skipTo(sceneName: string) {

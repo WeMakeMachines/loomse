@@ -16,7 +16,6 @@ import {
 	listenToDirectorPlay
 } from '../../services/radioService/listeners';
 import Source from './Source';
-import styles from './styles';
 import Subtitles from '../Subtitles';
 
 class VideoError extends Error {}
@@ -53,9 +52,9 @@ export default class Video {
 			autoplay: false,
 			controls: controls,
 			loop: loop,
-			muted: muted,
-			style: { ...styles }
+			muted: muted
 		});
+		this.el.className = 'loomse__video';
 
 		this.sources = this.setSources(sources);
 		this.mountSources();

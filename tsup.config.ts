@@ -8,7 +8,8 @@ export default defineConfig([
 		dts: 'source/index.ts',
 		splitting: false,
 		sourcemap: true,
-		clean: true
+		clean: true,
+		publicDir: true
 	},
 	{
 		format: 'esm',

@@ -1,6 +1,5 @@
 import { el } from 'redom';
 
-import styles from './styles';
 import Video from '../Video';
 
 import { broadcastDirectorSceneChange } from '../../services/radioService/broadcasters';
@@ -16,11 +15,7 @@ export default class Scene {
 	constructor(sceneName: string, { events, longName, video }: ScriptedScene) {
 		broadcastDirectorSceneChange(sceneName);
 
-		this.el = el(
-			'div',
-			{ style: { ...styles } },
-			(this.video = new Video(video))
-		);
+		this.el = el('div.loomse__scene', (this.video = new Video(video)));
 
 		this.sceneName = sceneName;
 		this.longName = longName;
