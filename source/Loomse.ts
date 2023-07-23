@@ -46,6 +46,12 @@ export default class Loomse {
 	private loadScene(sceneName: string) {
 		if (!this.story) return;
 
+		if (!sceneName || !this.story.scenes[sceneName]) {
+			throw new LoomseError(
+				`Scene "${sceneName}" does not exist in script`
+			);
+		}
+
 		if (this.scene) {
 			unmount(this.el, this.scene);
 		}
