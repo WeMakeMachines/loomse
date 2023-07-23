@@ -1,4 +1,4 @@
-import { el } from 'redom';
+import { el, unmount } from 'redom';
 
 import Video from '../Video';
 
@@ -27,5 +27,6 @@ export default class Scene {
 
 	onunmount() {
 		scriptedEventService.stopListeningToRadio();
+		unmount(this.el, this.video.el);
 	}
 }

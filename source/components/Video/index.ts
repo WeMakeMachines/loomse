@@ -1,4 +1,4 @@
-import { el, mount } from 'redom';
+import { el, mount, unmount } from 'redom';
 
 import { StopListeningFunction } from '../../services/radioService/listeners';
 
@@ -87,6 +87,7 @@ export default class Video {
 	onunmount() {
 		this.stopListeningToVideoEvents();
 		this.stopListeningToRadio();
+		this.unmountSources();
 	}
 
 	setSources(sources: { [key: string]: string }) {
@@ -111,7 +112,7 @@ export default class Video {
 		return generatedSources;
 	}
 
-	mountSources() {
+	manageSources(callback: (source: Source) => void) {
 		for (const key in this.sources) {
 			if (!this.sources.hasOwnProperty(key)) {
 				continue;
@@ -119,8 +120,16 @@ export default class Video {
 
 			const source = this.sources[key];
 
-			mount(this.el, source.el);
+			callback(source);
 		}
+	}
+
+	mountSources() {
+		this.manageSources((source) => mount(this.el, source.el));
+	}
+
+	unmountSources() {
+		this.manageSources((source) => unmount(this.el, source.el));
 	}
 
 	listenToVideoEvents() {
