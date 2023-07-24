@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Loomse story",
+  "description": "This document outlines the correct formatting for the scripted story",
+  "properties": {
+    "shortName": { "type": "string" },
+    "longName": { "type": "string" },
+    "author": { "type": "string" },
+    "description": { "type": "string" },
+    "firstScene": { "type": "string" },
+    "language": { "type": "string" },
+    "scenes": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/ScriptedScene" }
+    }
+  },
+  "required": ["firstScene", "scenes"],
+  "definitions": {
+    "ScriptedScene": {
+      "type": "object",
+      "properties": {
+        "longName": { "type": "string" },
+        "video": { "$ref": "#/definitions/ScriptedVideo" },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ScriptedEvent" }
+        }
+      },
+      "required": ["video", "events"]
+    },
+    "ScriptedVideo": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "object",
+          "properties": {
+            "mp4": { "type": "string" },
+            "ogg": { "type": "string" },
+            "webm": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "autoplay": { "type": "boolean" },
+        "controls": { "type": "boolean" },
+        "loop": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "in": { "type": "number" },
+                "out": { "type": "number" }
+              },
+              "required": ["in", "out"]
+            }
+          ]
+        },
+        "muted": { "type": "boolean" },
+        "subtitles": { "type": "string" }
+      }
+    },
+    "ScriptedEvent": {
+      "type": "object",
+      "properties": {
+        "pluginName": { "type": "string" },
+        "in": { "type": "number" },
+        "out": { "type": "number" },
+        "payload": {}
+      },
+      "required": ["in", "out"]
+    }
+  }
+}
