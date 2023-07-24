@@ -2,37 +2,41 @@
 
 All the power for developing your non-linear narrative rests inside a JSON based script file.  
   
-You could also define separate scripts for mobile and desktop (you will have to pass in the correct script into LoomSE).
+You could also define separate scripts for mobile and desktop (you will have to pass in the correct script into Loomse).
 
-You can view an [example script](script-example.json) to give you an idea of how to structure your JSON.
+You can view an [example script](loomse-story-example.json) to give you an idea of how to structure your JSON.
 
-Please refer to the [script schema](schemas/story-script.json).  
+Please refer to the [script schema](schemas/loomse-story.json).  
 
 You can use the above schema with a validation tool such as AJV, to validate your JSON.
 
 ## Checklist
 
-✔️ Video assets in one or more formats
+- ✔️ Video assets in one or more formats (mp4, ogg, webm)
+- ✔️ Subtitle files
 
 ## Adding a scene to the story script
-In LoomSE, videos are organised in "scenes". Before adding your video, you must create a scene.
+
+In Loomse, videos are organised in "scenes". Before adding your video, you must create a scene.
 
 You can only provide 1 video per scene, but you can supply that video in multiple formats (for example `mp4`, `ogg` or `webm`).
 
 In the following example, we create one scene called "intro":
 
 ```json
-"scenes": {
-  "intro": {
-    "longName": "",
-    "video": {
-      "autoplay": true,
-      "muted": true,
-      "sources": {
-        "mp4": "intro.mp4"
-      }
-    },
-    "events": []
+{
+  "scenes": {
+    "intro": {
+      "longName": "",
+      "video": {
+        "autoplay": true,
+        "muted": true,
+        "sources": {
+          "mp4": "intro.mp4"
+        }
+      },
+      "events": []
+    }
   }
 }
 ```
@@ -40,12 +44,13 @@ In the following example, we create one scene called "intro":
 A scene must include a video and a have an events property (even if it is empty).
 
 ## Adding an event to a scene
+
 Events are added as an array of objects. The following is an example of one event:
 
 ```json
 [
     {
-      "group": "skipTo",
+      "pluginName": "skipToScene",
       "in": 6000,
       "out": 6000,
       "payload": {
@@ -55,7 +60,7 @@ Events are added as an array of objects. The following is an example of one even
 ]
 ```
 
-`group` - refers to a non-unique value which designates that this event is of a certain type. Use this property to categorise your events.
+`skipToScene` - refers to the plugin which will be triggered
 
 `in` - refers to the start time of the event (in milliseconds)
 
@@ -64,12 +69,14 @@ Events are added as an array of objects. The following is an example of one even
 `payload` - a user defined object
 
 ## Example use
+
 In the following example, we will define 2 scenes.
 
 The first scene will refer to the second scene via an event.
 
 ```json
-"scenes": {
+{
+  "scenes": {
     "intro": {
       "longName": "",
       "video": {
@@ -81,7 +88,7 @@ The first scene will refer to the second scene via an event.
       },
       "events": [
         {
-          "group": "skipTo",
+          "pluginName": "skipTo",
           "in": 5000,
           "out": 5000,
           "payload": {
@@ -102,6 +109,7 @@ The first scene will refer to the second scene via an event.
       "events": []
     }
   }
+}
 ```
 
-To have loomse act on the data in the event, you will need to listen and respond to the events generated in the DOM. By taking control of how these events are handled, you can build rich and complex interactive systems. Learn more about this in our [Getting Started](GETTING_STARTED.md) guide.
+To have Loomse act on the data in the event, you will need to listen and respond to the events generated in the DOM. By taking control of how these events are handled, you can build rich and complex interactive systems.

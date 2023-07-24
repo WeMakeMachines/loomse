@@ -1,6 +1,6 @@
 ![Logo](assets/logo.png)
 
-# Loom Story Engine
+# (Loom) (S)tory (E)ngine 
 *Interactive storytelling for the modern web - create your script in Loom, tell multiple tales*
 
 ## What is LoomSE?
@@ -9,44 +9,43 @@ LoomSE is a client side HTML5 video and event manager. Events can be scheduled t
 ### One script, multiple stories
 With loomse, content creators can tell interactive stories over the modern web. Create your script in loomse, tell multiple tales.
 
-## Installation
-This repository includes multiple minified versions of LoomSE
-- `/dist/loomse.min.js` - UMD definition. Suitable for browsers
-- `/dist/loomse.e.min.js` - ES module, for usage with modules
+## Quick start guide
 
-#### via npm ###
-```
+```bash
 npm i loomse
 ```
 
-## Usage
-See our **[Getting Started Guide](docs/GETTING_STARTED.md)** for a more detailed introduction
-
-#### Example usage  
-  
 ##### HTML
 ```html
 <div id="loomse"></div>
 ``` 
 
-##### JavaScript
-```js
-const parent = document.getElementById('loomse');  
-const loomSE = new LoomSE(parent, {  
-  width: "800px",  
-  height: "600px"
-});
+Optionally, you can also import the styles into your project
+
+```html
+<link rel="stylesheet" href="node_modules/loomse/dist/styles.css" />
 ```
 
+##### JavaScript
+```js
+(async () => {
+    const response = await fetch("/story-script.json");
+    const json = await response.json();
+    const loomse = createStory(parent, json);
+})();
+```
+
+See our **[Getting Started Guide](docs/GETTING_STARTED.md)** for a more detailed introduction
+
+## Dependencies
+
+Under the hood, Loomse uses the [RE:DOM](https://redom.js.org) library to handle DOM interactions.
+
+For parsing subtitle files, Loomse uses [Simple Subtitle Parser](https://github.com/WeMakeMachines/simple-subtitle-parser)
+
 ## API
-Visit the **[API](docs/API.md)** reference
 
-## The Story Script
-Use the provided **[template script](docs/script-template.json)**
-
-Or look at the **[example script](docs/script-example.json)**
-
-Or Learn how to **[build Your Story](docs/BUILDING_YOUR_STORY.md)**
+Visit the **[API](docs/API/API.md)** reference
 
 ## Terminology
   

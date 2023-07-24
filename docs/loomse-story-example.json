@@ -3,21 +3,21 @@
   "longName": "",
   "author": "Franco Speziali",
   "description": "A sample script to demonstrate the capabilities of Loom",
-  "firstScene": "farmhack",
-  "language": "en_GB",
+  "firstScene": "shore",
   "scenes": {
-    "farmhack": {
+    "shore": {
       "longName": "",
       "video": {
         "autoplay": true,
         "muted": true,
+        "subtitles": "subs.srt",
         "sources": {
-          "mp4": "assets/videos/farmhack-graph-demo.mp4"
+          "mp4": "assets/mp4/shore.mp4"
         }
       },
       "events": [
         {
-          "group": "showContentWithLogo",
+          "pluginName": "showContentWithLogo",
           "in": 0,
           "out": 11000,
           "payload": {
@@ -25,27 +25,27 @@
           }
         },
         {
-          "group": "skipTo",
+          "pluginName": "skipTo",
           "in": 11000,
           "out": 11000,
           "payload": {
-            "nextScene": "rideInCar"
+            "nextScene": "dolphins"
           }
         }
       ]
     },
-    "rideInCar": {
+    "dolphins": {
       "longName": "",
       "video": {
         "autoplay": true,
         "muted": true,
         "sources": {
-          "mp4": "assets/videos/ride-in-car.mp4"
+          "mp4": "assets/mp4/dolphins.mp4"
         }
       },
       "events": [
         {
-          "group": "showContent",
+          "pluginName": "showContent",
           "in": 500,
           "out": 4000,
           "payload": {
@@ -53,7 +53,7 @@
           }
         },
         {
-          "group": "showContent",
+          "pluginName": "showContent",
           "in": 4500,
           "out": 9500,
           "payload": {
@@ -61,11 +61,11 @@
           }
         },
         {
-          "group": "skipTo",
+          "pluginName": "skipTo",
           "in": 10000,
           "out": 10000,
           "payload": {
-            "nextScene": "farmhack"
+            "nextScene": "shore"
           }
         }
       ]
