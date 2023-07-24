@@ -1,4 +1,4 @@
-import { ScriptedEvent } from '../../../types/scriptedStory';
+import { StoryEvent } from '../../../types/StoryType';
 
 export interface TimedObject {
 	id: number;
@@ -15,9 +15,7 @@ export default class EventQueue {
 	private queueIndex = 0;
 	private queue: TimedObject[] = [];
 
-	static buildQueueFromScriptedEvents(
-		events: ScriptedEvent[]
-	): TimedObject[] {
+	static buildQueueFromScriptedEvents(events: StoryEvent[]): TimedObject[] {
 		const queue: TimedObject[] = [];
 
 		for (let i = 0; i < events.length; i += 1) {

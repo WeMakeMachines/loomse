@@ -1,28 +1,26 @@
-/**
- * Derived from /schemas/script.json
- */
-
-export interface ScriptedStory {
+export interface StoryType {
 	shortName?: string;
 	longName?: string;
 	author?: string;
 	description?: string;
 	firstScene: string;
 	language?: string;
-	scenes: ScriptedScenes;
+	scenes: StoryScenes;
 }
 
-export interface ScriptedScenes {
-	[key: string]: ScriptedScene;
+type SceneName = string;
+
+export interface StoryScenes {
+	[key: SceneName]: StoryScene;
 }
 
-export interface ScriptedScene {
+export interface StoryScene {
 	longName?: string;
-	video: ScriptedVideo;
-	events: ScriptedEvent[];
+	video: StoryVideo;
+	events: StoryEvent[];
 }
 
-export interface ScriptedVideo {
+export interface StoryVideo {
 	sources: {
 		mp4?: string;
 		ogg?: string;
@@ -40,7 +38,7 @@ export interface ScriptedVideo {
 	subtitles?: string;
 }
 
-export interface ScriptedEvent {
+export interface StoryEvent {
 	pluginName?: string;
 	in: number;
 	out: number;

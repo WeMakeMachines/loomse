@@ -1,8 +1,8 @@
-import { ScriptedStory, ScriptedScenes } from '../../types/scriptedStory';
+import { StoryType, StoryScenes } from '../../types/StoryType';
 
-export default class Story implements ScriptedStory {
+export default class Story implements StoryType {
 	public firstScene: string;
-	public scenes: ScriptedScenes;
+	public scenes: StoryScenes;
 	public author?: string;
 	public shortName?: string;
 	public longName?: string;
@@ -17,7 +17,7 @@ export default class Story implements ScriptedStory {
 		longName,
 		description,
 		language
-	}: ScriptedStory) {
+	}: Story) {
 		this.firstScene = firstScene;
 		this.scenes = scenes;
 		this.shortName = shortName;

@@ -1,6 +1,6 @@
 import { container, singleton } from 'tsyringe';
 
-import { ScriptedEvent } from '../../types/scriptedStory';
+import { StoryEvent } from '../../types/StoryType';
 import {
 	broadcastSubtitleClear,
 	broadcastSubtitlePost
@@ -14,11 +14,11 @@ export default class SubtitleEventService extends EventService {
 		super(container.resolve(EventQueue));
 	}
 
-	public setEvents(events: ScriptedEvent[]) {
+	public setEvents(events: StoryEvent[]) {
 		super.setEvents(events);
 	}
 
-	protected startEventCallback({ payload }: ScriptedEvent) {
+	protected startEventCallback({ payload }: StoryEvent) {
 		broadcastSubtitlePost(payload);
 	}
 

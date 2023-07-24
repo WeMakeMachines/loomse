@@ -6,7 +6,7 @@ import {
 } from 'simple-subtitle-parser';
 
 import { getTextFile } from '../../lib/browser/fetch';
-import { ScriptedEvent } from '../../types/scriptedStory';
+import { StoryEvent } from '../../types/StoryType';
 import { subtitleEventService } from '../../services';
 
 class SubtitlesError extends Error {}
@@ -17,7 +17,7 @@ export default class Subtitles {
 	public fileContents: string | null = null;
 	public format: Format;
 
-	static mapCueToScriptedEvent(cue: Cue[]): ScriptedEvent[] {
+	static mapCueToScriptedEvent(cue: Cue[]): StoryEvent[] {
 		return cue.map((cue) => ({
 			in: cue.startTime,
 			out: cue.endTime,

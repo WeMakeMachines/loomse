@@ -4,7 +4,7 @@ import Video from '../Video';
 
 import { broadcastDirectorSceneChange } from '../../services/radioService/broadcasters';
 import { scriptedEventService } from '../../services';
-import { ScriptedScene } from '../../types/scriptedStory';
+import { StoryScene } from '../../types/StoryType';
 
 export default class Scene {
 	public el: HTMLElement;
@@ -12,7 +12,7 @@ export default class Scene {
 	public video: Video;
 	public longName: string | undefined;
 
-	constructor(sceneName: string, { events, longName, video }: ScriptedScene) {
+	constructor(sceneName: string, { events, longName, video }: StoryScene) {
 		broadcastDirectorSceneChange(sceneName);
 
 		this.el = el('div.loomse__scene', (this.video = new Video(video)));

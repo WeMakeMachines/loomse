@@ -1,6 +1,6 @@
 import { container, singleton } from 'tsyringe';
 
-import { ScriptedEvent } from '../../types/scriptedStory';
+import { StoryEvent } from '../../types/StoryType';
 import EventQueue, { EventAction } from '../eventService/EventQueue';
 import EventService from '../eventService';
 import { broadcastDirectorSceneEvent } from '../radioService/broadcasters';
@@ -12,11 +12,11 @@ export default class ScriptedEventService extends EventService {
 		super(container.resolve(EventQueue));
 	}
 
-	public setEvents(events: ScriptedEvent[]) {
+	public setEvents(events: StoryEvent[]) {
 		super.setEvents(events);
 	}
 
-	protected startEventCallback({ pluginName, payload }: ScriptedEvent) {
+	protected startEventCallback({ pluginName, payload }: StoryEvent) {
 		if (pluginName) {
 			const plugin = pluginRegistryService.getPlugin(pluginName);
 
@@ -35,7 +35,7 @@ export default class ScriptedEventService extends EventService {
 		});
 	}
 
-	protected stopEventCallback({ pluginName, payload }: ScriptedEvent) {
+	protected stopEventCallback({ pluginName, payload }: StoryEvent) {
 		if (pluginName) {
 			const plugin = pluginRegistryService.getPlugin(pluginName);
 

@@ -7,7 +7,7 @@ import {
 	broadcastDirectorPause,
 	broadcastDirectorPlay
 } from './services/radioService/broadcasters';
-import { ScriptedEvent, ScriptedStory } from './types/scriptedStory';
+import { StoryEvent, StoryType } from './types/StoryType';
 import { reporterService, scriptedEventService } from './services';
 import { VERSION } from './version';
 import { inject, injectable, singleton } from 'tsyringe';
@@ -21,7 +21,7 @@ export default class Loomse {
 	public version = VERSION;
 	public scene: Scene | null = null;
 
-	private story: Story | null = null;
+	private story: StoryType | null = null;
 
 	constructor(
 		@inject('root') root: HTMLElement,
@@ -32,14 +32,14 @@ export default class Loomse {
 		mount(root, this.el);
 
 		try {
-			this.setStory(json as ScriptedStory);
-			this.loadScene((json as ScriptedStory).firstScene);
+			this.setStory(json as StoryType);
+			this.loadScene((json as StoryType).firstScene);
 		} catch (error) {
 			throw new LoomseError(`Unable to load story object, ${error}`);
 		}
 	}
 
-	private setStory(storyObject: Story) {
+	private setStory(storyObject: StoryType) {
 		this.story = new Story(storyObject);
 	}
 
@@ -73,7 +73,7 @@ export default class Loomse {
 		return reporterService.getCurrentScene();
 	}
 
-	currentEvents(): ScriptedEvent[] {
+	currentEvents(): StoryEvent[] {
 		return scriptedEventService.events;
 	}
 

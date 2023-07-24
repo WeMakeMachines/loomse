@@ -3,7 +3,7 @@ import { el } from 'redom';
 import {
 	VideoFileExtension,
 	VideoMIME_Type
-} from '../../types/videoSourceTypes';
+} from '../../types/VideoSourceTypes';
 
 class SourceError extends Error {}
 

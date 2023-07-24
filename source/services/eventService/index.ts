@@ -1,5 +1,5 @@
 import { secondsToMilliseconds } from '../../lib/time';
-import { ScriptedEvent } from '../../types/scriptedStory';
+import { StoryEvent } from '../../types/StoryType';
 import {
 	listenToVideoTimeUpdate,
 	StopListeningFunction
@@ -10,11 +10,11 @@ class EventServiceError extends Error {}
 
 export default abstract class EventService {
 	public stopListeningToRadio: StopListeningFunction = () => {};
-	public events: ScriptedEvent[] = [];
+	public events: StoryEvent[] = [];
 
 	protected constructor(private queue: EventQueue) {}
 
-	protected setEvents(events: ScriptedEvent[]) {
+	protected setEvents(events: StoryEvent[]) {
 		this.events = events;
 		this.queue.setQueue(EventQueue.buildQueueFromScriptedEvents(events));
 		this.stopListeningToRadio = listenToVideoTimeUpdate((time) =>
@@ -22,9 +22,9 @@ export default abstract class EventService {
 		);
 	}
 
-	protected abstract startEventCallback(scriptedEvent: ScriptedEvent): void;
+	protected abstract startEventCallback(scriptedEvent: StoryEvent): void;
 
-	protected abstract stopEventCallback(scriptedEvent: ScriptedEvent): void;
+	protected abstract stopEventCallback(scriptedEvent: StoryEvent): void;
 
 	private isReadyToAction(time: number) {
 		if (!time) {
