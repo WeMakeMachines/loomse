@@ -17,7 +17,6 @@ import {
 } from '../../services/radioService/listeners';
 import Source from './Source';
 import Subtitles from '../Subtitles';
-import { secondsToMilliseconds } from '../../lib/time';
 
 class VideoError extends Error {}
 
@@ -67,25 +66,21 @@ export default class Video {
 		this.broadcastEndedEvent = () => broadcastVideoEnded();
 
 		this.broadcastDurationChangeEvent = () =>
-			broadcastVideoDurationChanged(
-				secondsToMilliseconds(this.el.duration)
-			);
+			broadcastVideoDurationChanged(this.el.duration);
 
 		this.broadcastPlayingEvent = () =>
-			broadcastVideoPlaying(secondsToMilliseconds(this.el.currentTime));
+			broadcastVideoPlaying(this.el.currentTime);
 
 		this.broadcastPausedEvent = () => broadcastVideoPaused();
 
 		this.broadcastSeekedEvent = () =>
-			broadcastVideoSeeked(secondsToMilliseconds(this.el.currentTime));
+			broadcastVideoSeeked(this.el.currentTime);
 
 		this.broadcastSeekingEvent = () =>
-			broadcastVideoSeeking(secondsToMilliseconds(this.el.currentTime));
+			broadcastVideoSeeking(this.el.currentTime);
 
 		this.broadcastTimeUpdateEvent = () =>
-			broadcastVideoTimeUpdate(
-				secondsToMilliseconds(this.el.currentTime)
-			);
+			broadcastVideoTimeUpdate(this.el.currentTime);
 
 		this.stopListeningToVideoPause = listenToDirectorPause(() =>
 			this.pause()

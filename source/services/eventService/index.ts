@@ -1,4 +1,3 @@
-import { secondsToMilliseconds } from '../../lib/time';
 import { StoryEvent } from '../../types/StoryType';
 import {
 	listenToVideoTimeUpdate,
@@ -31,7 +30,7 @@ export default abstract class EventService {
 			return;
 		}
 
-		const milliseconds = secondsToMilliseconds(time);
+		const milliseconds = time;
 		const pending = this.queue.getPendingObject();
 
 		if (!milliseconds || !pending) {
