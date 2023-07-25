@@ -77,8 +77,8 @@ For our plugin to be triggered, we must configure our script with an event trigg
 ```json
 {
     "pluginName": "skipToScene",
-    "in": 1000,
-    "out": 1000,
+    "in": 10,
+    "out": 10,
     "payload": {
       "nextScene": "scene-2"
     }
@@ -100,8 +100,8 @@ Within the full context of the script, it would look like this;
       "events": [
         {
           "pluginName": "skipToScene",
-          "in": 1000,
-          "out": 1000,
+          "in": 10,
+          "out": 10,
           "payload": {
             "nextScene": "scene-2"
           }

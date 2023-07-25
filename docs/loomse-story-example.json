@@ -10,7 +10,7 @@
       "video": {
         "autoplay": true,
         "muted": true,
-        "subtitles": "subs.srt",
+        "subtitles": "subtitles.srt",
         "sources": {
           "mp4": "assets/mp4/shore.mp4"
         }
@@ -19,15 +19,15 @@
         {
           "pluginName": "showContentWithLogo",
           "in": 0,
-          "out": 11000,
+          "out": 11,
           "payload": {
             "text": "Loom Story Engine"
           }
         },
         {
-          "pluginName": "skipTo",
-          "in": 11000,
-          "out": 11000,
+          "pluginName": "skipToScene",
+          "in": 11,
+          "out": 11,
           "payload": {
             "nextScene": "dolphins"
           }
@@ -46,24 +46,24 @@
       "events": [
         {
           "pluginName": "showContent",
-          "in": 500,
-          "out": 4000,
+          "in": 0.5,
+          "out": 4,
           "payload": {
             "text": "This text is not part of the video file"
           }
         },
         {
           "pluginName": "showContent",
-          "in": 4500,
-          "out": 9500,
+          "in": 4.5,
+          "out": 9.5,
           "payload": {
             "text": "It is generated from an event"
           }
         },
         {
-          "pluginName": "skipTo",
-          "in": 10000,
-          "out": 10000,
+          "pluginName": "skipToScene",
+          "in": 10,
+          "out": 10,
           "payload": {
             "nextScene": "shore"
           }

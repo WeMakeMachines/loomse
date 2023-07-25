@@ -35,7 +35,7 @@ Optionally, you can also import the styles into your project
 })();
 ```
 
-See our **[Getting Started Guide](docs/GETTING_STARTED.md)** for a more detailed introduction
+To learn more about building a script, see [building your story](docs/BUILDING_YOUR_STORY.md)
 
 ## Dependencies
 
