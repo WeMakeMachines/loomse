@@ -9,15 +9,21 @@ import {
 	listenToVideoTimeUpdate,
 	listenToVideoDurationChanged
 } from './services/radioService/listeners';
-import Loomse from './Loomse';
+import PluginRegistryService from './services/pluginRegistryService';
+import ReporterService from './services/reporterService';
+import ScriptedEventService from './services/scriptedEventService';
+import Services from './Services';
 
-type LoomseType = Loomse;
+type LoomseType = Services;
 
 function createStory(root: HTMLElement, json: object): LoomseType {
-	container.register('root', { useValue: root });
-	container.register('json', { useValue: json });
-
-	return container.resolve(Loomse);
+	return new Services(
+		container.resolve(PluginRegistryService),
+		container.resolve(ReporterService),
+		container.resolve(ScriptedEventService),
+		root,
+		json
+	);
 }
 
 export {

@@ -3,7 +3,7 @@ import { el, unmount } from 'redom';
 import Video from '../Video';
 
 import { broadcastDirectorSceneChange } from '../../services/radioService/broadcasters';
-import { scriptedEventService } from '../../services';
+import ScriptedEventService from '../../services/scriptedEventService';
 import { StoryScene } from '../../types/StoryType';
 
 export default class Scene {
@@ -12,7 +12,11 @@ export default class Scene {
 	public video: Video;
 	public longName: string | undefined;
 
-	constructor(sceneName: string, { events, longName, video }: StoryScene) {
+	constructor(
+		private scriptedEventService: ScriptedEventService,
+		sceneName: string,
+		{ events, longName, video }: StoryScene
+	) {
 		broadcastDirectorSceneChange(sceneName);
 
 		this.el = el('div.loomse__scene', (this.video = new Video(video)));
@@ -20,13 +24,13 @@ export default class Scene {
 		this.sceneName = sceneName;
 		this.longName = longName;
 
-		scriptedEventService.setEvents(events);
+		this.scriptedEventService.setEvents(events);
 
 		this.video.play();
 	}
 
 	onunmount() {
-		scriptedEventService.stopListeningToRadio();
+		this.scriptedEventService.stopListeningToRadio();
 		unmount(this.el, this.video.el);
 	}
 }

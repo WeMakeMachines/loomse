@@ -17,6 +17,8 @@ import {
 } from '../../services/radioService/listeners';
 import Source from './Source';
 import Subtitles from '../Subtitles';
+import { container } from 'tsyringe';
+import SubtitleEventService from '../../services/subtitleEventService';
 
 class VideoError extends Error {}
 
@@ -60,7 +62,7 @@ export default class Video {
 		this.mountSources();
 
 		if (subtitles) {
-			new Subtitles(subtitles);
+			new Subtitles(container.resolve(SubtitleEventService), subtitles);
 		}
 
 		this.broadcastEndedEvent = () => broadcastVideoEnded();

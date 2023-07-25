@@ -6,8 +6,8 @@ import {
 } from 'simple-subtitle-parser';
 
 import { getTextFile } from '../../lib/browser/fetch';
+import SubtitleEventService from '../../services/subtitleEventService';
 import { StoryEvent } from '../../types/StoryType';
-import { subtitleEventService } from '../../services';
 
 class SubtitlesError extends Error {}
 
@@ -25,7 +25,10 @@ export default class Subtitles {
 		}));
 	}
 
-	constructor(filePath: string) {
+	constructor(
+		private subtitleEventService: SubtitleEventService,
+		filePath: string
+	) {
 		this.filePath = filePath;
 		this.format = extractFormatFromFileName(filePath).format;
 
@@ -40,7 +43,7 @@ export default class Subtitles {
 		this.fileContents = await getTextFile(filePath);
 		this.cues = await parser(this.format, this.fileContents);
 
-		subtitleEventService.setEvents(
+		this.subtitleEventService.setEvents(
 			Subtitles.mapCueToScriptedEvent(this.cues)
 		);
 	}

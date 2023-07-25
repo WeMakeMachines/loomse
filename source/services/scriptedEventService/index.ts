@@ -4,11 +4,11 @@ import { StoryEvent } from '../../types/StoryType';
 import EventQueue, { EventAction } from '../eventService/EventQueue';
 import EventService from '../eventService';
 import { broadcastDirectorSceneEvent } from '../radioService/broadcasters';
-import { pluginRegistryService } from '../';
+import PluginRegistryService from '../pluginRegistryService';
 
 @singleton()
 export default class ScriptedEventService extends EventService {
-	constructor() {
+	constructor(private pluginRegistryService: PluginRegistryService) {
 		super(container.resolve(EventQueue));
 	}
 
@@ -18,7 +18,7 @@ export default class ScriptedEventService extends EventService {
 
 	protected startEventCallback({ pluginName, payload }: StoryEvent) {
 		if (pluginName) {
-			const plugin = pluginRegistryService.getPlugin(pluginName);
+			const plugin = this.pluginRegistryService.getPlugin(pluginName);
 
 			if (!plugin) {
 				console.warn(`Plugin "${pluginName}" not registered`);
@@ -37,7 +37,7 @@ export default class ScriptedEventService extends EventService {
 
 	protected stopEventCallback({ pluginName, payload }: StoryEvent) {
 		if (pluginName) {
-			const plugin = pluginRegistryService.getPlugin(pluginName);
+			const plugin = this.pluginRegistryService.getPlugin(pluginName);
 
 			if (plugin && !plugin.mount?.persist) {
 				plugin?.unmount();

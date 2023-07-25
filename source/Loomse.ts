@@ -1,31 +1,24 @@
 import { el, mount, unmount } from 'redom';
+import { container, singleton } from 'tsyringe';
 
-import Story from './components/Story';
-import Scene from './components/Scene';
-import Plugin, { PluginProps } from './components/Plugin';
 import {
 	broadcastDirectorPause,
 	broadcastDirectorPlay
 } from './services/radioService/broadcasters';
-import { StoryEvent, StoryType } from './types/StoryType';
-import { reporterService, scriptedEventService } from './services';
-import { VERSION } from './version';
-import { inject, singleton } from 'tsyringe';
+import Story from './components/Story';
+import Scene from './components/Scene';
+import { StoryType } from './types/StoryType';
+import ScriptedEventService from './services/scriptedEventService';
 
 class LoomseError extends Error {}
 
 @singleton()
 export default class Loomse {
 	public el: HTMLElement;
-	public version = VERSION;
 	public scene: Scene | null = null;
-
 	private story: StoryType | null = null;
 
-	constructor(
-		@inject('root') root: HTMLElement,
-		@inject('json') json: object
-	) {
+	constructor(root: HTMLElement, json: object) {
 		this.el = el('div.loomse__root');
 
 		mount(root, this.el);
@@ -55,25 +48,13 @@ export default class Loomse {
 			unmount(this.el, this.scene);
 		}
 
-		this.scene = new Scene(sceneName, this.story.scenes[sceneName]);
+		this.scene = new Scene(
+			container.resolve(ScriptedEventService),
+			sceneName,
+			this.story.scenes[sceneName]
+		);
 
 		mount(this.el, this.scene);
-	}
-
-	currentDuration(): number {
-		return reporterService.getCurrentDuration();
-	}
-
-	currentTime(): number {
-		return reporterService.getCurrentTime();
-	}
-
-	currentScene(): string {
-		return reporterService.getCurrentScene();
-	}
-
-	currentEvents(): StoryEvent[] {
-		return scriptedEventService.events;
 	}
 
 	pause() {
@@ -82,10 +63,6 @@ export default class Loomse {
 
 	play() {
 		broadcastDirectorPlay();
-	}
-
-	registerPlugin(pluginProps: PluginProps): void {
-		Plugin.registerPlugin(pluginProps);
 	}
 
 	reloadScene() {

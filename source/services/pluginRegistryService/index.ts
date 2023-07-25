@@ -1,9 +1,12 @@
+import { singleton } from 'tsyringe';
+
 import Plugin from '../../components/Plugin';
 
 type PluginName = string;
 
 class PluginRegistryServiceError extends Error {}
 
+@singleton()
 export default class PluginRegistryService {
 	private readonly registry: {
 		[key: PluginName]: Plugin;
