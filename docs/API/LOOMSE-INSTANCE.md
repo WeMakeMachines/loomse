@@ -95,9 +95,3 @@ Skips to the named scene
 #### Returns `HTMLElement`
 
 The root element where Loomse is registered
-
-### `version`
-
-#### Returns `string`
-
-The current version of Loomse
