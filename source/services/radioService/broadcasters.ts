@@ -42,7 +42,7 @@ export const broadcastVideoSeeking = (currentTime: number) =>
 export const broadcastVideoTimeUpdate = (currentTime: number) =>
 	radio.broadcastOnChannel(RadioChannel.VIDEO_TIMEUPDATE, currentTime);
 
-export const broadcastSubtitlePost = (subtitle: string) =>
+export const broadcastSubtitlePost = (subtitle: object) =>
 	radio.broadcastOnChannel(RadioChannel.SUBTITLE_POST, subtitle);
 
 export const broadcastSubtitleClear = () =>

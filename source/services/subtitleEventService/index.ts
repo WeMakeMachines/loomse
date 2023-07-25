@@ -19,7 +19,9 @@ export default class SubtitleEventService extends EventService {
 	}
 
 	protected startEventCallback({ payload }: StoryEvent) {
-		broadcastSubtitlePost(payload);
+		if (payload) {
+			broadcastSubtitlePost(payload);
+		}
 	}
 
 	protected stopEventCallback() {
