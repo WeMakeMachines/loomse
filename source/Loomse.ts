@@ -10,11 +10,10 @@ import {
 import { StoryEvent, StoryType } from './types/StoryType';
 import { reporterService, scriptedEventService } from './services';
 import { VERSION } from './version';
-import { inject, injectable, singleton } from 'tsyringe';
+import { inject, singleton } from 'tsyringe';
 
 class LoomseError extends Error {}
 
-@injectable()
 @singleton()
 export default class Loomse {
 	public el: HTMLElement;

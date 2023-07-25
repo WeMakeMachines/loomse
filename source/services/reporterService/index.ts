@@ -1,9 +1,8 @@
-import { injectable, singleton } from 'tsyringe';
+import { singleton } from 'tsyringe';
 
 import SceneReporter from './SceneReporter';
 import VideoReporter from './VideoReporter';
 
-@injectable()
 @singleton()
 export default class ReporterService {
 	constructor(
