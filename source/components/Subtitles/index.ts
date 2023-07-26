@@ -19,8 +19,8 @@ export default class Subtitles {
 
 	static mapCueToScriptedEvent(cue: Cue[]): StoryEvent[] {
 		return cue.map((cue) => ({
-			in: cue.startTime,
-			out: cue.endTime,
+			in: cue.startTime.totals.inSeconds,
+			out: cue.endTime.totals.inSeconds,
 			payload: cue.text
 		}));
 	}
