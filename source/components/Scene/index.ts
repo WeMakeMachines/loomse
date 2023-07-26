@@ -20,12 +20,10 @@ export default class Scene {
 		broadcastDirectorSceneChange(sceneName);
 
 		this.el = el('div.loomse__scene', (this.video = new Video(video)));
-
 		this.sceneName = sceneName;
 		this.longName = longName;
 
 		this.scriptedEventService.setEvents(events);
-
 		this.video.play();
 	}
 

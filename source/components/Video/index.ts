@@ -93,12 +93,6 @@ export default class Video {
 		this.listenToVideoEvents();
 	}
 
-	onunmount() {
-		this.stopListeningToVideoEvents();
-		this.stopListeningToRadio();
-		this.unmountSources();
-	}
-
 	setSources(sources: { [key: string]: string }) {
 		if (!sources) {
 			throw new VideoError('No video sources found');
@@ -191,5 +185,11 @@ export default class Video {
 		} else {
 			this.pause();
 		}
+	}
+
+	onunmount() {
+		this.stopListeningToVideoEvents();
+		this.stopListeningToRadio();
+		this.unmountSources();
 	}
 }
