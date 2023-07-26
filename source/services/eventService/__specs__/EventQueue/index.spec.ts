@@ -4,25 +4,25 @@ import EventQueue, { EventAction, TimedObject } from '../../EventQueue';
 const mockScriptedEvents: StoryEvent[] = [
 	{
 		in: 0,
-		out: 2000
+		out: 20
 	},
 	{
-		in: 3000,
-		out: 4000
+		in: 30,
+		out: 40
 	}
 ];
 
 const sortedMockTimedObjects: TimedObject[] = [
 	{ id: 0, time: 0, action: EventAction.START },
-	{ id: 0, time: 2000, action: EventAction.STOP },
-	{ id: 1, time: 3000, action: EventAction.START },
-	{ id: 1, time: 4000, action: EventAction.STOP }
+	{ id: 0, time: 20, action: EventAction.STOP },
+	{ id: 1, time: 30, action: EventAction.START },
+	{ id: 1, time: 40, action: EventAction.STOP }
 ];
 
 const unSortedMockTimedObjects: TimedObject[] = [
-	{ id: 1, time: 3000, action: EventAction.START },
-	{ id: 0, time: 2000, action: EventAction.STOP },
-	{ id: 1, time: 4000, action: EventAction.STOP },
+	{ id: 1, time: 30, action: EventAction.START },
+	{ id: 0, time: 20, action: EventAction.STOP },
+	{ id: 1, time: 40, action: EventAction.STOP },
 	{ id: 0, time: 0, action: EventAction.START }
 ];
 
@@ -39,9 +39,9 @@ describe('EventQueue', () => {
 				EventQueue.buildQueueFromScriptedEvents(mockScriptedEvents);
 			const expected = [
 				{ id: 0, time: 0, action: EventAction.START },
-				{ id: 0, time: 2000, action: EventAction.STOP },
-				{ id: 1, time: 3000, action: EventAction.START },
-				{ id: 1, time: 4000, action: EventAction.STOP }
+				{ id: 0, time: 20, action: EventAction.STOP },
+				{ id: 1, time: 30, action: EventAction.START },
+				{ id: 1, time: 40, action: EventAction.STOP }
 			];
 
 			expect(actual).toEqual(expected);
@@ -110,7 +110,7 @@ describe('EventQueue', () => {
 			eventQueue['queueIndex'] = 1;
 
 			const actual = eventQueue.getPendingObject();
-			const expected = { id: 0, time: 2000, action: 'stop' };
+			const expected = { id: 0, time: 20, action: 'stop' };
 
 			expect(actual).toEqual(expected);
 		});
@@ -144,9 +144,9 @@ describe('EventQueue', () => {
 			const actual = eventQueue['queue'];
 			const expected = [
 				{ id: 0, time: 0, action: 'start' },
-				{ id: 0, time: 2000, action: 'stop' },
-				{ id: 1, time: 3000, action: 'start' },
-				{ id: 1, time: 4000, action: 'stop' }
+				{ id: 0, time: 20, action: 'stop' },
+				{ id: 1, time: 30, action: 'start' },
+				{ id: 1, time: 40, action: 'stop' }
 			];
 
 			expect(actual).toEqual(expected);
@@ -158,9 +158,9 @@ describe('EventQueue', () => {
 
 			const actual = eventQueue.getQueue();
 			const expected = [
-				{ id: 1, time: 4000, action: 'stop' },
-				{ id: 1, time: 3000, action: 'start' },
-				{ id: 0, time: 2000, action: 'stop' },
+				{ id: 1, time: 40, action: 'stop' },
+				{ id: 1, time: 30, action: 'start' },
+				{ id: 0, time: 20, action: 'stop' },
 				{ id: 0, time: 0, action: 'start' }
 			];
 
