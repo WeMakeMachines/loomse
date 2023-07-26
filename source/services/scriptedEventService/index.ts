@@ -1,3 +1,4 @@
+import { mount } from 'redom';
 import { container, singleton } from 'tsyringe';
 
 import { StoryEvent } from '../../types/StoryType';
@@ -22,9 +23,19 @@ export default class ScriptedEventService extends EventService {
 
 			if (!plugin) {
 				console.warn(`Plugin "${pluginName}" not registered`);
+
+				return;
 			}
 
-			if (plugin?.hooks?.run) {
+			if (
+				plugin.mount?.el &&
+				plugin?.mount?.parentEl &&
+				!plugin.mount.persist
+			) {
+				mount(plugin.mount.parentEl, plugin.mount.el);
+			}
+
+			if (plugin.hooks?.run) {
 				plugin.hooks.run(payload);
 			}
 		}
