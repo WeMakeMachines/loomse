@@ -139,128 +139,24 @@ var listenToDirectorSceneEvent = /* @__PURE__ */ __name((handler) => radio.liste
 var listenToVideoDurationChanged = /* @__PURE__ */ __name((handler) => radio.listenToChannel(RadioChannel.VIDEO_DURATION_CHANGED, handler), "listenToVideoDurationChanged");
 var listenToVideoTimeUpdate = /* @__PURE__ */ __name((handler) => radio.listenToChannel(RadioChannel.VIDEO_TIMEUPDATE, handler), "listenToVideoTimeUpdate");
 
-// source/Loomse.ts
-import { el as el4, mount as mount2, unmount as unmount4 } from "redom";
-
-// source/components/Story/index.ts
-var _Story = class _Story {
-  constructor({ firstScene, scenes, author, shortName, longName, description, language }) {
-    __publicField(this, "firstScene");
-    __publicField(this, "scenes");
-    __publicField(this, "author");
-    __publicField(this, "shortName");
-    __publicField(this, "longName");
-    __publicField(this, "description");
-    __publicField(this, "language");
-    this.firstScene = firstScene;
-    this.scenes = scenes;
-    this.shortName = shortName;
-    this.longName = longName;
-    this.author = author;
-    this.description = description;
-    this.language = language;
-  }
-};
-__name(_Story, "Story");
-var Story = _Story;
-
-// source/components/Scene/index.ts
-import { el as el3, unmount as unmount2 } from "redom";
-
-// source/components/Video/index.ts
-import { el as el2, mount, unmount } from "redom";
-
-// source/services/radioService/broadcasters.ts
-var broadcastDirectorPause = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.DIRECTOR_PAUSE), "broadcastDirectorPause");
-var broadcastDirectorPlay = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.DIRECTOR_PLAY), "broadcastDirectorPlay");
-var broadcastDirectorSceneChange = /* @__PURE__ */ __name((sceneId) => radio.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_CHANGE, sceneId), "broadcastDirectorSceneChange");
-var broadcastDirectorSceneEvent = /* @__PURE__ */ __name((signal) => radio.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_EVENT, {
-  action: signal.action,
-  message: signal.payload
-}), "broadcastDirectorSceneEvent");
-var broadcastVideoEnded = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.VIDEO_ENDED), "broadcastVideoEnded");
-var broadcastVideoDurationChanged = /* @__PURE__ */ __name((duration) => radio.broadcastOnChannel(RadioChannel.VIDEO_DURATION_CHANGED, duration), "broadcastVideoDurationChanged");
-var broadcastVideoPaused = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.VIDEO_PAUSED), "broadcastVideoPaused");
-var broadcastVideoPlaying = /* @__PURE__ */ __name((currentTime) => radio.broadcastOnChannel(RadioChannel.VIDEO_PLAYING, currentTime), "broadcastVideoPlaying");
-var broadcastVideoSeeked = /* @__PURE__ */ __name((currentTime) => radio.broadcastOnChannel(RadioChannel.VIDEO_SEEKED, currentTime), "broadcastVideoSeeked");
-var broadcastVideoSeeking = /* @__PURE__ */ __name((currentTime) => radio.broadcastOnChannel(RadioChannel.VIDEO_SEEKING, currentTime), "broadcastVideoSeeking");
-var broadcastVideoTimeUpdate = /* @__PURE__ */ __name((currentTime) => radio.broadcastOnChannel(RadioChannel.VIDEO_TIMEUPDATE, currentTime), "broadcastVideoTimeUpdate");
-var broadcastSubtitlePost = /* @__PURE__ */ __name((subtitle) => radio.broadcastOnChannel(RadioChannel.SUBTITLE_POST, subtitle), "broadcastSubtitlePost");
-var broadcastSubtitleClear = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.SUBTITLE_CLEAR), "broadcastSubtitleClear");
-
-// source/components/Video/Source.ts
-import { el } from "redom";
-
-// source/types/VideoSourceTypes.ts
-var VideoFileExtension;
-(function(VideoFileExtension2) {
-  VideoFileExtension2["MP4"] = "mp4";
-  VideoFileExtension2["OGG"] = "ogg";
-  VideoFileExtension2["WEBM"] = "webm";
-})(VideoFileExtension || (VideoFileExtension = {}));
-var VideoMIME_Type;
-(function(VideoMIME_Type2) {
-  VideoMIME_Type2["MP4"] = "video/mp4";
-  VideoMIME_Type2["OGG"] = "video/ogg";
-  VideoMIME_Type2["WEBM"] = "video/webm";
-})(VideoMIME_Type || (VideoMIME_Type = {}));
-
-// source/components/Video/Source.ts
-var _a;
-var SourceError = (_a = class extends Error {
-}, __name(_a, "SourceError"), _a);
-var _Source = class _Source {
-  constructor(fileExtension, uri) {
-    __publicField(this, "el");
-    const videoMIME_Type = _Source.mapFileExtensionToMIME_Type(fileExtension);
-    if (!_Source.canPlayMimeType(videoMIME_Type)) {
-      throw new SourceError(`Video format ${videoMIME_Type} not supported by browser`);
-    }
-    this.el = el("source", {
-      src: uri,
-      type: videoMIME_Type
-    });
-  }
-  static canPlayMimeType(videoMIME_Type) {
-    const videoElement = document.createElement("video");
-    return Boolean(videoElement.canPlayType(videoMIME_Type));
-  }
-  static mapFileExtensionToMIME_Type(fileExtension) {
-    switch (fileExtension) {
-      case VideoFileExtension.MP4:
-        return VideoMIME_Type.MP4;
-      case VideoFileExtension.OGG:
-        return VideoMIME_Type.OGG;
-      case VideoFileExtension.WEBM:
-        return VideoMIME_Type.WEBM;
-      default:
-        throw new SourceError("Unable to process source in Video file");
-    }
-  }
-};
-__name(_Source, "Source");
-var Source = _Source;
-
-// source/components/Subtitles/index.ts
-import { extractFormatFromFileName, parser } from "simple-subtitle-parser";
-
-// source/lib/browser/fetch.ts
-function getTextFile(filePath) {
-  return __async(this, null, function* () {
-    const response = yield fetch(filePath);
-    return response.text();
-  });
-}
-__name(getTextFile, "getTextFile");
-
-// source/services/index.ts
-import { container as container3 } from "tsyringe";
-
 // source/services/pluginRegistryService/index.ts
+import { singleton } from "tsyringe";
+function _ts_decorate(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+__name(_ts_decorate, "_ts_decorate");
+var _a;
+var PluginRegistryServiceError = (_a = class extends Error {
+}, __name(_a, "PluginRegistryServiceError"), _a);
 var _a2;
-var PluginRegistryServiceError = (_a2 = class extends Error {
-}, __name(_a2, "PluginRegistryServiceError"), _a2);
-var _PluginRegistryService = class _PluginRegistryService {
+var PluginRegistryService = (_a2 = class {
   constructor() {
     __publicField(this, "registry", {});
   }
@@ -275,12 +171,13 @@ var _PluginRegistryService = class _PluginRegistryService {
     }
     return this.registry[name];
   }
-};
-__name(_PluginRegistryService, "PluginRegistryService");
-var PluginRegistryService = _PluginRegistryService;
+}, __name(_a2, "PluginRegistryService"), _a2);
+PluginRegistryService = _ts_decorate([
+  singleton()
+], PluginRegistryService);
 
 // source/services/reporterService/index.ts
-import { injectable, singleton } from "tsyringe";
+import { singleton as singleton2 } from "tsyringe";
 
 // source/services/reporterService/SceneReporter/index.ts
 var _SceneReporter = class _SceneReporter {
@@ -318,7 +215,7 @@ __name(_VideoReporter, "VideoReporter");
 var VideoReporter = _VideoReporter;
 
 // source/services/reporterService/index.ts
-function _ts_decorate(decorators, target, key, desc) {
+function _ts_decorate2(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -328,7 +225,7 @@ function _ts_decorate(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
-__name(_ts_decorate, "_ts_decorate");
+__name(_ts_decorate2, "_ts_decorate");
 function _ts_metadata(k, v) {
   if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
     return Reflect.metadata(k, v);
@@ -352,9 +249,8 @@ var ReporterService = (_a3 = class {
     return this.sceneReporter.currentScene;
   }
 }, __name(_a3, "ReporterService"), _a3);
-ReporterService = _ts_decorate([
-  injectable(),
-  singleton(),
+ReporterService = _ts_decorate2([
+  singleton2(),
   _ts_metadata("design:type", Function),
   _ts_metadata("design:paramtypes", [
     typeof SceneReporter === "undefined" ? Object : SceneReporter,
@@ -363,7 +259,8 @@ ReporterService = _ts_decorate([
 ], ReporterService);
 
 // source/services/scriptedEventService/index.ts
-import { container, singleton as singleton2 } from "tsyringe";
+import { mount } from "redom";
+import { injectable } from "tsyringe";
 
 // source/services/eventService/EventQueue/index.ts
 var EventAction;
@@ -393,8 +290,12 @@ var _EventQueue = class _EventQueue {
     }
     return queue;
   }
-  setQueue(timedObjects) {
+  reset() {
+    this.queue = [];
     this.queueIndex = 0;
+  }
+  setQueue(timedObjects) {
+    this.reset();
     this.queue = timedObjects;
     this.sort("asc");
   }
@@ -428,122 +329,86 @@ __name(_EventQueue, "EventQueue");
 var EventQueue = _EventQueue;
 
 // source/services/eventService/index.ts
+import { container } from "tsyringe";
 var _a4;
 var EventServiceError = (_a4 = class extends Error {
 }, __name(_a4, "EventServiceError"), _a4);
 var _EventService = class _EventService {
-  constructor(queue) {
+  constructor(queue = container.resolve(EventQueue)) {
     __publicField(this, "queue");
-    __publicField(this, "stopListeningToRadio");
     __publicField(this, "events");
+    __publicField(this, "stopListeningToRadio");
     this.queue = queue;
+    this.events = [];
     this.stopListeningToRadio = () => {
     };
-    this.events = [];
   }
-  setEvents(events) {
-    this.events = events;
-    this.queue.setQueue(EventQueue.buildQueueFromScriptedEvents(events));
-    this.stopListeningToRadio = listenToVideoTimeUpdate((time) => this.isReadyToAction(time));
-  }
-  isReadyToAction(time) {
-    if (!time) {
-      return;
-    }
-    const milliseconds = time;
+  getCurrentlyActionableEvent(seconds) {
     const pending = this.queue.getPendingObject();
-    if (!milliseconds || !pending) {
+    if (!pending) {
       return;
     }
-    if (milliseconds >= pending.time) {
-      this.parseAction(pending);
+    if (seconds >= pending.time) {
+      const eventData = this.events[pending.id];
+      if (!eventData) {
+        throw new EventServiceError("Event data not found");
+      }
+      return {
+        event: eventData,
+        action: pending.action
+      };
     }
   }
-  parseAction(event) {
-    const eventId = this.queue.getCurrentTimedEventId();
-    const eventData = this.events[eventId];
-    if (!eventData) {
-      throw new EventServiceError("Event data not found");
-    }
-    switch (event.action) {
+  actionEvent({ event, action }) {
+    switch (action) {
       case EventAction.START:
-        this.startEventCallback(eventData);
+        this.startEventCallback(event);
         break;
       case EventAction.STOP:
-        this.stopEventCallback(eventData);
+        this.stopEventCallback(event);
         break;
       default:
         return;
     }
     this.queue.advanceQueue();
   }
+  setEvents(events) {
+    this.events = events;
+    this.queue.setQueue(EventQueue.buildQueueFromScriptedEvents(events));
+    this.stopListeningToRadio = listenToVideoTimeUpdate((time) => {
+      const actionableEvent = this.getCurrentlyActionableEvent(time);
+      if (actionableEvent) {
+        this.actionEvent(actionableEvent);
+      }
+    });
+  }
+  dispose() {
+    this.queue.reset();
+    this.stopListeningToRadio();
+  }
 };
 __name(_EventService, "EventService");
 var EventService = _EventService;
 
-// source/services/scriptedEventService/index.ts
-function _ts_decorate2(decorators, target, key, desc) {
-  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-    r = Reflect.decorate(decorators, target, key, desc);
-  else
-    for (var i = decorators.length - 1; i >= 0; i--)
-      if (d = decorators[i])
-        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-  return c > 3 && r && Object.defineProperty(target, key, r), r;
-}
-__name(_ts_decorate2, "_ts_decorate");
-function _ts_metadata2(k, v) {
-  if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-    return Reflect.metadata(k, v);
-}
-__name(_ts_metadata2, "_ts_metadata");
-var _a5;
-var ScriptedEventService = (_a5 = class extends EventService {
-  constructor() {
-    super(container.resolve(EventQueue));
-  }
-  setEvents(events) {
-    super.setEvents(events);
-  }
-  startEventCallback({ pluginName, payload }) {
-    var _a12;
-    if (pluginName) {
-      const plugin = pluginRegistryService.getPlugin(pluginName);
-      if (!plugin) {
-        console.warn(`Plugin "${pluginName}" not registered`);
-      }
-      if ((_a12 = plugin == null ? void 0 : plugin.hooks) == null ? void 0 : _a12.run) {
-        plugin.hooks.run(payload);
-      }
-    }
-    broadcastDirectorSceneEvent({
-      action: EventAction.START,
-      payload
-    });
-  }
-  stopEventCallback({ pluginName, payload }) {
-    var _a12;
-    if (pluginName) {
-      const plugin = pluginRegistryService.getPlugin(pluginName);
-      if (plugin && !((_a12 = plugin.mount) == null ? void 0 : _a12.persist)) {
-        plugin == null ? void 0 : plugin.unmount();
-      }
-    }
-    broadcastDirectorSceneEvent({
-      action: EventAction.STOP,
-      payload
-    });
-  }
-}, __name(_a5, "ScriptedEventService"), _a5);
-ScriptedEventService = _ts_decorate2([
-  singleton2(),
-  _ts_metadata2("design:type", Function),
-  _ts_metadata2("design:paramtypes", [])
-], ScriptedEventService);
+// source/services/radioService/broadcasters.ts
+var broadcastDirectorPause = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.DIRECTOR_PAUSE), "broadcastDirectorPause");
+var broadcastDirectorPlay = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.DIRECTOR_PLAY), "broadcastDirectorPlay");
+var broadcastDirectorSceneChange = /* @__PURE__ */ __name((sceneId) => radio.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_CHANGE, sceneId), "broadcastDirectorSceneChange");
+var broadcastDirectorSceneEvent = /* @__PURE__ */ __name((signal) => radio.broadcastOnChannel(RadioChannel.DIRECTOR_SCENE_EVENT, {
+  action: signal.action,
+  message: signal.payload
+}), "broadcastDirectorSceneEvent");
+var broadcastVideoEnded = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.VIDEO_ENDED), "broadcastVideoEnded");
+var broadcastVideoDurationChanged = /* @__PURE__ */ __name((duration) => radio.broadcastOnChannel(RadioChannel.VIDEO_DURATION_CHANGED, duration), "broadcastVideoDurationChanged");
+var broadcastVideoPaused = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.VIDEO_PAUSED), "broadcastVideoPaused");
+var broadcastVideoPlaying = /* @__PURE__ */ __name((currentTime) => radio.broadcastOnChannel(RadioChannel.VIDEO_PLAYING, currentTime), "broadcastVideoPlaying");
+var broadcastVideoSeeked = /* @__PURE__ */ __name((currentTime) => radio.broadcastOnChannel(RadioChannel.VIDEO_SEEKED, currentTime), "broadcastVideoSeeked");
+var broadcastVideoSeeking = /* @__PURE__ */ __name((currentTime) => radio.broadcastOnChannel(RadioChannel.VIDEO_SEEKING, currentTime), "broadcastVideoSeeking");
+var broadcastVideoTimeUpdate = /* @__PURE__ */ __name((currentTime) => radio.broadcastOnChannel(RadioChannel.VIDEO_TIMEUPDATE, currentTime), "broadcastVideoTimeUpdate");
+var broadcastSubtitlePost = /* @__PURE__ */ __name((subtitle) => radio.broadcastOnChannel(RadioChannel.SUBTITLE_POST, subtitle), "broadcastSubtitlePost");
+var broadcastSubtitleClear = /* @__PURE__ */ __name(() => radio.broadcastOnChannel(RadioChannel.SUBTITLE_CLEAR), "broadcastSubtitleClear");
 
-// source/services/subtitleEventService/index.ts
-import { container as container2, singleton as singleton3 } from "tsyringe";
+// source/services/scriptedEventService/index.ts
 function _ts_decorate3(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
@@ -555,78 +420,290 @@ function _ts_decorate3(decorators, target, key, desc) {
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
 __name(_ts_decorate3, "_ts_decorate");
+function _ts_metadata2(k, v) {
+  if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+    return Reflect.metadata(k, v);
+}
+__name(_ts_metadata2, "_ts_metadata");
+var _a5;
+var ScriptedEventService = (_a5 = class extends EventService {
+  constructor(pluginRegistryService) {
+    super();
+    __publicField(this, "pluginRegistryService");
+    this.pluginRegistryService = pluginRegistryService;
+  }
+  startEventCallback({ pluginName, payload }) {
+    var _a14, _b, _c;
+    if (pluginName) {
+      const plugin = this.pluginRegistryService.getPlugin(pluginName);
+      if (!plugin) {
+        console.warn(`Plugin "${pluginName}" not registered`);
+        return;
+      }
+      if (((_a14 = plugin.mount) == null ? void 0 : _a14.el) && ((_b = plugin == null ? void 0 : plugin.mount) == null ? void 0 : _b.parentEl) && !plugin.mount.persist) {
+        mount(plugin.mount.parentEl, plugin.mount.el);
+      }
+      if ((_c = plugin.hooks) == null ? void 0 : _c.run) {
+        plugin.hooks.run(payload);
+      }
+    }
+    broadcastDirectorSceneEvent({
+      action: EventAction.START,
+      payload
+    });
+  }
+  stopEventCallback({ pluginName, payload }) {
+    var _a14;
+    if (pluginName) {
+      const plugin = this.pluginRegistryService.getPlugin(pluginName);
+      if (!plugin) {
+        console.warn(`Plugin "${pluginName}" not registered`);
+        return;
+      }
+      if (plugin && !((_a14 = plugin.mount) == null ? void 0 : _a14.persist)) {
+        plugin == null ? void 0 : plugin.unmount();
+      }
+    }
+    broadcastDirectorSceneEvent({
+      action: EventAction.STOP,
+      payload
+    });
+  }
+}, __name(_a5, "ScriptedEventService"), _a5);
+ScriptedEventService = _ts_decorate3([
+  injectable(),
+  _ts_metadata2("design:type", Function),
+  _ts_metadata2("design:paramtypes", [
+    typeof PluginRegistryService === "undefined" ? Object : PluginRegistryService
+  ])
+], ScriptedEventService);
+
+// source/Services.ts
+import { singleton as singleton4 } from "tsyringe";
+
+// source/components/Plugin/index.ts
+import { mount as redomMount, unmount } from "redom";
+var _a6;
+var PluginError = (_a6 = class extends Error {
+}, __name(_a6, "PluginError"), _a6);
+var _Plugin = class _Plugin {
+  constructor({ name, hooks, mount: mount4 }) {
+    __publicField(this, "name");
+    __publicField(this, "mount");
+    __publicField(this, "hooks");
+    this.name = name;
+    this.hooks = {
+      run: hooks == null ? void 0 : hooks.run,
+      cleanup: hooks == null ? void 0 : hooks.cleanup
+    };
+    if (mount4) {
+      if (!mount4.el || !mount4.parentEl) {
+        throw new PluginError("Unable to register plugin, no suitable mount point");
+      }
+      this.mount = mount4;
+      if (mount4.onLoad) {
+        redomMount(this.mount.parentEl, this.mount.el);
+      }
+    }
+  }
+  unmount() {
+    var _a14;
+    if ((_a14 = this.hooks) == null ? void 0 : _a14.cleanup) {
+      this.hooks.cleanup();
+    }
+    if (this.mount) {
+      unmount(this.mount.parentEl, this.mount.el);
+    }
+  }
+};
+__name(_Plugin, "Plugin");
+var Plugin = _Plugin;
+
+// source/Loomse.ts
+import { el as el4, mount as mount3, unmount as unmount4 } from "redom";
+import { container as container3, singleton as singleton3 } from "tsyringe";
+
+// source/components/Story/index.ts
+var _Story = class _Story {
+  constructor({ firstScene, scenes, author, shortName, longName, description, language }) {
+    __publicField(this, "firstScene");
+    __publicField(this, "scenes");
+    __publicField(this, "author");
+    __publicField(this, "shortName");
+    __publicField(this, "longName");
+    __publicField(this, "description");
+    __publicField(this, "language");
+    this.firstScene = firstScene;
+    this.scenes = scenes;
+    this.shortName = shortName;
+    this.longName = longName;
+    this.author = author;
+    this.description = description;
+    this.language = language;
+  }
+};
+__name(_Story, "Story");
+var Story = _Story;
+
+// source/components/Scene/index.ts
+import { el as el3, unmount as unmount3 } from "redom";
+import { container as container2 } from "tsyringe";
+
+// source/services/subtitleEventService/index.ts
+import { injectable as injectable2 } from "tsyringe";
+function _ts_decorate4(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+__name(_ts_decorate4, "_ts_decorate");
 function _ts_metadata3(k, v) {
   if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
     return Reflect.metadata(k, v);
 }
 __name(_ts_metadata3, "_ts_metadata");
-var _a6;
-var SubtitleEventService = (_a6 = class extends EventService {
+var _a7;
+var SubtitleEventService = (_a7 = class extends EventService {
   constructor() {
-    super(container2.resolve(EventQueue));
-  }
-  setEvents(events) {
-    super.setEvents(events);
+    super();
   }
   startEventCallback({ payload }) {
-    broadcastSubtitlePost(payload);
+    if (payload) {
+      broadcastSubtitlePost(payload);
+    }
   }
   stopEventCallback() {
     broadcastSubtitleClear();
   }
-}, __name(_a6, "SubtitleEventService"), _a6);
-SubtitleEventService = _ts_decorate3([
-  singleton3(),
+}, __name(_a7, "SubtitleEventService"), _a7);
+SubtitleEventService = _ts_decorate4([
+  injectable2(),
   _ts_metadata3("design:type", Function),
   _ts_metadata3("design:paramtypes", [])
 ], SubtitleEventService);
 
-// source/services/index.ts
-var pluginRegistryService = new PluginRegistryService();
-var reporterService = container3.resolve(ReporterService);
-var scriptedEventService = container3.resolve(ScriptedEventService);
-var subtitleEventService = container3.resolve(SubtitleEventService);
+// source/components/Video/index.ts
+import { el as el2, mount as mount2, unmount as unmount2 } from "redom";
 
 // source/components/Subtitles/index.ts
-var _a7;
-var SubtitlesError = (_a7 = class extends Error {
-}, __name(_a7, "SubtitlesError"), _a7);
+import { extractFormatFromFileName, parser } from "simple-subtitle-parser";
+
+// source/lib/browser/fetch.ts
+function getTextFile(filePath) {
+  return __async(this, null, function* () {
+    const response = yield fetch(filePath);
+    return response.text();
+  });
+}
+__name(getTextFile, "getTextFile");
+
+// source/components/Subtitles/index.ts
+var _a8;
+var SubtitlesError = (_a8 = class extends Error {
+}, __name(_a8, "SubtitlesError"), _a8);
 var _Subtitles = class _Subtitles {
   constructor(filePath) {
     __publicField(this, "cues", null);
     __publicField(this, "filePath");
-    __publicField(this, "fileContents", null);
+    __publicField(this, "fileContents", "");
     __publicField(this, "format");
     this.filePath = filePath;
     this.format = extractFormatFromFileName(filePath).format;
-    this.parseTextFile(filePath).catch((error) => {
-      throw new SubtitlesError(`Unable to parse subtitles file, ${error.message}`);
+    this.getTextFile().catch((error) => {
+      throw new SubtitlesError(`Unable to read subtitle file ${filePath}, ${error.message}`);
     });
   }
   static mapCueToScriptedEvent(cue) {
     return cue.map((cue2) => ({
-      in: cue2.startTime,
-      out: cue2.endTime,
+      in: cue2.startTime.totals.inSeconds,
+      out: cue2.endTime.totals.inSeconds,
       payload: cue2.text
     }));
   }
-  parseTextFile(filePath) {
+  getTextFile() {
     return __async(this, null, function* () {
-      this.fileContents = yield getTextFile(filePath);
-      this.cues = yield parser(this.format, this.fileContents);
-      subtitleEventService.setEvents(_Subtitles.mapCueToScriptedEvent(this.cues));
+      this.fileContents = yield getTextFile(this.filePath);
+    });
+  }
+  parseFileContents() {
+    return __async(this, null, function* () {
+      try {
+        this.cues = yield parser(this.format, this.fileContents);
+        return _Subtitles.mapCueToScriptedEvent(this.cues);
+      } catch (error) {
+        throw new SubtitlesError(`Unable to parse subtitles file, ${error.message}`);
+      }
     });
   }
 };
 __name(_Subtitles, "Subtitles");
 var Subtitles = _Subtitles;
 
+// source/components/Video/Source.ts
+import { el } from "redom";
+
+// source/types/VideoSourceTypes.ts
+var VideoFileExtension;
+(function(VideoFileExtension2) {
+  VideoFileExtension2["MP4"] = "mp4";
+  VideoFileExtension2["OGG"] = "ogg";
+  VideoFileExtension2["WEBM"] = "webm";
+})(VideoFileExtension || (VideoFileExtension = {}));
+var VideoMIME_Type;
+(function(VideoMIME_Type2) {
+  VideoMIME_Type2["MP4"] = "video/mp4";
+  VideoMIME_Type2["OGG"] = "video/ogg";
+  VideoMIME_Type2["WEBM"] = "video/webm";
+})(VideoMIME_Type || (VideoMIME_Type = {}));
+
+// source/components/Video/Source.ts
+var _a9;
+var SourceError = (_a9 = class extends Error {
+}, __name(_a9, "SourceError"), _a9);
+var _Source = class _Source {
+  constructor(fileExtension, uri) {
+    __publicField(this, "el");
+    const videoMIME_Type = _Source.mapFileExtensionToMIME_Type(fileExtension);
+    if (!_Source.canPlayMimeType(videoMIME_Type)) {
+      throw new SourceError(`Video format ${videoMIME_Type} not supported by browser`);
+    }
+    this.el = el("source", {
+      src: uri,
+      type: videoMIME_Type
+    });
+  }
+  static canPlayMimeType(videoMIME_Type) {
+    const videoElement = document.createElement("video");
+    return Boolean(videoElement.canPlayType(videoMIME_Type));
+  }
+  static mapFileExtensionToMIME_Type(fileExtension) {
+    switch (fileExtension) {
+      case VideoFileExtension.MP4:
+        return VideoMIME_Type.MP4;
+      case VideoFileExtension.OGG:
+        return VideoMIME_Type.OGG;
+      case VideoFileExtension.WEBM:
+        return VideoMIME_Type.WEBM;
+      default:
+        throw new SourceError("Unable to process source in Video file");
+    }
+  }
+};
+__name(_Source, "Source");
+var Source = _Source;
+
 // source/components/Video/index.ts
-var _a8;
-var VideoError = (_a8 = class extends Error {
-}, __name(_a8, "VideoError"), _a8);
+var _a10;
+var VideoError = (_a10 = class extends Error {
+}, __name(_a10, "VideoError"), _a10);
 var _Video = class _Video {
-  constructor({ controls = false, loop = false, muted = false, sources, subtitles }) {
+  constructor(subtitleEventService, { controls = false, loop = false, muted = false, sources, subtitles }) {
+    __publicField(this, "subtitleEventService");
     __publicField(this, "el");
     __publicField(this, "broadcastEndedEvent");
     __publicField(this, "broadcastDurationChangeEvent");
@@ -638,6 +715,7 @@ var _Video = class _Video {
     __publicField(this, "stopListeningToVideoPause");
     __publicField(this, "stopListeningToVideoPlay");
     __publicField(this, "sources");
+    this.subtitleEventService = subtitleEventService;
     this.el = el2("video", {
       autoplay: false,
       controls,
@@ -647,9 +725,6 @@ var _Video = class _Video {
     this.el.className = "loomse__video";
     this.sources = this.setSources(sources);
     this.mountSources();
-    if (subtitles) {
-      new Subtitles(subtitles);
-    }
     this.broadcastEndedEvent = () => broadcastVideoEnded();
     this.broadcastDurationChangeEvent = () => broadcastVideoDurationChanged(this.el.duration);
     this.broadcastPlayingEvent = () => broadcastVideoPlaying(this.el.currentTime);
@@ -660,11 +735,18 @@ var _Video = class _Video {
     this.stopListeningToVideoPause = listenToDirectorPause(() => this.pause());
     this.stopListeningToVideoPlay = listenToDirectorPlay(() => this.play());
     this.listenToVideoEvents();
+    if (subtitles) {
+      this.setSubtitles(subtitles).catch((error) => {
+        console.warn(`Unable to setup subtitles, ${error}`);
+      });
+    }
   }
-  onunmount() {
-    this.stopListeningToVideoEvents();
-    this.stopListeningToRadio();
-    this.unmountSources();
+  setSubtitles(subtitlesFilePath) {
+    return __async(this, null, function* () {
+      const subtitles = new Subtitles(subtitlesFilePath);
+      const cues = yield subtitles.parseFileContents();
+      this.subtitleEventService.setEvents(cues);
+    });
   }
   setSources(sources) {
     if (!sources) {
@@ -693,10 +775,10 @@ var _Video = class _Video {
     }
   }
   mountSources() {
-    this.manageSources((source) => mount(this.el, source.el));
+    this.manageSources((source) => mount2(this.el, source.el));
   }
   unmountSources() {
-    this.manageSources((source) => unmount(this.el, source.el));
+    this.manageSources((source) => unmount2(this.el, source.el));
   }
   listenToVideoEvents() {
     this.el.addEventListener("ended", this.broadcastEndedEvent);
@@ -735,82 +817,42 @@ var _Video = class _Video {
       this.pause();
     }
   }
+  onunmount() {
+    this.subtitleEventService.dispose();
+    this.stopListeningToVideoEvents();
+    this.stopListeningToRadio();
+    this.unmountSources();
+  }
 };
 __name(_Video, "Video");
 var Video = _Video;
 
 // source/components/Scene/index.ts
 var _Scene = class _Scene {
-  constructor(sceneName, { events, longName, video }) {
+  constructor(scriptedEventService, sceneName, { events, longName, video }) {
+    __publicField(this, "scriptedEventService");
     __publicField(this, "el");
     __publicField(this, "sceneName");
     __publicField(this, "video");
     __publicField(this, "longName");
+    this.scriptedEventService = scriptedEventService;
     broadcastDirectorSceneChange(sceneName);
-    this.el = el3("div.loomse__scene", this.video = new Video(video));
+    this.el = el3("div.loomse__scene", this.video = new Video(container2.resolve(SubtitleEventService), video));
     this.sceneName = sceneName;
     this.longName = longName;
-    scriptedEventService.setEvents(events);
+    this.scriptedEventService.setEvents(events);
     this.video.play();
   }
-  onunmount() {
-    scriptedEventService.stopListeningToRadio();
-    unmount2(this.el, this.video.el);
+  cleanup() {
+    this.scriptedEventService.dispose();
+    unmount3(this.el, this.video.el);
   }
 };
 __name(_Scene, "Scene");
 var Scene = _Scene;
 
-// source/components/Plugin/index.ts
-import { mount as redomMount, unmount as unmount3 } from "redom";
-var _a9;
-var PluginError = (_a9 = class extends Error {
-}, __name(_a9, "PluginError"), _a9);
-var _Plugin = class _Plugin {
-  constructor({ name, hooks, mount: mount3 }) {
-    __publicField(this, "name");
-    __publicField(this, "mount");
-    __publicField(this, "hooks");
-    this.name = name;
-    this.hooks = {
-      run: hooks == null ? void 0 : hooks.run,
-      cleanup: hooks == null ? void 0 : hooks.cleanup
-    };
-    if (mount3) {
-      if (!mount3.el || !mount3.parentEl) {
-        throw new PluginError("Unable to register plugin, no suitable mount point");
-      }
-      this.mount = mount3;
-      if (mount3.onLoad) {
-        redomMount(this.mount.parentEl, this.mount.el);
-      }
-    }
-  }
-  static registerPlugin(pluginProps) {
-    const plugin = new _Plugin(pluginProps);
-    pluginRegistryService.registerPlugin(plugin);
-    console.log(`Loomse: Plugin "${pluginProps.name}" registered`);
-    return;
-  }
-  unmount() {
-    var _a12;
-    if ((_a12 = this.hooks) == null ? void 0 : _a12.cleanup) {
-      this.hooks.cleanup();
-    }
-    if (this.mount) {
-      unmount3(this.mount.parentEl, this.mount.el);
-    }
-  }
-};
-__name(_Plugin, "Plugin");
-var Plugin = _Plugin;
-
-// source/version.ts
-var VERSION = "1.0.0";
-
 // source/Loomse.ts
-import { inject, injectable as injectable2, singleton as singleton4 } from "tsyringe";
-function _ts_decorate4(decorators, target, key, desc) {
+function _ts_decorate5(decorators, target, key, desc) {
   var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
   if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
     r = Reflect.decorate(decorators, target, key, desc);
@@ -820,30 +862,23 @@ function _ts_decorate4(decorators, target, key, desc) {
         r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
-__name(_ts_decorate4, "_ts_decorate");
+__name(_ts_decorate5, "_ts_decorate");
 function _ts_metadata4(k, v) {
   if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
     return Reflect.metadata(k, v);
 }
 __name(_ts_metadata4, "_ts_metadata");
-function _ts_param(paramIndex, decorator) {
-  return function(target, key) {
-    decorator(target, key, paramIndex);
-  };
-}
-__name(_ts_param, "_ts_param");
-var _a10;
-var LoomseError = (_a10 = class extends Error {
-}, __name(_a10, "LoomseError"), _a10);
 var _a11;
-var Loomse = (_a11 = class {
+var LoomseError = (_a11 = class extends Error {
+}, __name(_a11, "LoomseError"), _a11);
+var _a12;
+var Loomse = (_a12 = class {
   constructor(root, json) {
     __publicField(this, "el");
-    __publicField(this, "version", VERSION);
     __publicField(this, "scene", null);
     __publicField(this, "story", null);
     this.el = el4("div.loomse__root");
-    mount2(root, this.el);
+    mount3(root, this.el);
     try {
       this.setStory(json);
       this.loadScene(json.firstScene);
@@ -854,29 +889,22 @@ var Loomse = (_a11 = class {
   setStory(storyObject) {
     this.story = new Story(storyObject);
   }
-  loadScene(sceneName) {
-    if (!this.story)
-      return;
-    if (!sceneName || !this.story.scenes[sceneName]) {
-      throw new LoomseError(`Scene "${sceneName}" does not exist in script`);
-    }
+  unloadExistingScene() {
     if (this.scene) {
+      this.scene.cleanup();
       unmount4(this.el, this.scene);
     }
-    this.scene = new Scene(sceneName, this.story.scenes[sceneName]);
-    mount2(this.el, this.scene);
   }
-  currentDuration() {
-    return reporterService.getCurrentDuration();
-  }
-  currentTime() {
-    return reporterService.getCurrentTime();
-  }
-  currentScene() {
-    return reporterService.getCurrentScene();
-  }
-  currentEvents() {
-    return scriptedEventService.events;
+  loadScene(sceneName) {
+    if (!this.story) {
+      throw new LoomseError("No story loaded");
+    }
+    const newScene = this.story.scenes[sceneName];
+    if (!newScene) {
+      throw new LoomseError(`Scene "${sceneName}" does not exist in script`);
+    }
+    this.scene = new Scene(container3.resolve(ScriptedEventService), sceneName, newScene);
+    mount3(this.el, this.scene);
   }
   pause() {
     broadcastDirectorPause();
@@ -884,24 +912,20 @@ var Loomse = (_a11 = class {
   play() {
     broadcastDirectorPlay();
   }
-  registerPlugin(pluginProps) {
-    Plugin.registerPlugin(pluginProps);
-  }
   reloadScene() {
-    var _a12, _b;
-    if ((_a12 = this.scene) == null ? void 0 : _a12.sceneName) {
+    var _a14, _b;
+    this.unloadExistingScene();
+    if ((_a14 = this.scene) == null ? void 0 : _a14.sceneName) {
       this.loadScene((_b = this.scene) == null ? void 0 : _b.sceneName);
     }
   }
-  skipTo(sceneName) {
+  changeScene(sceneName) {
+    this.unloadExistingScene();
     this.loadScene(sceneName);
   }
-}, __name(_a11, "Loomse"), _a11);
-Loomse = _ts_decorate4([
-  injectable2(),
-  singleton4(),
-  _ts_param(0, inject("root")),
-  _ts_param(1, inject("json")),
+}, __name(_a12, "Loomse"), _a12);
+Loomse = _ts_decorate5([
+  singleton3(),
   _ts_metadata4("design:type", Function),
   _ts_metadata4("design:paramtypes", [
     typeof HTMLElement === "undefined" ? Object : HTMLElement,
@@ -909,15 +933,67 @@ Loomse = _ts_decorate4([
   ])
 ], Loomse);
 
+// source/Services.ts
+function _ts_decorate6(decorators, target, key, desc) {
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    r = Reflect.decorate(decorators, target, key, desc);
+  else
+    for (var i = decorators.length - 1; i >= 0; i--)
+      if (d = decorators[i])
+        r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+__name(_ts_decorate6, "_ts_decorate");
+function _ts_metadata5(k, v) {
+  if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+    return Reflect.metadata(k, v);
+}
+__name(_ts_metadata5, "_ts_metadata");
+var _a13;
+var Services = (_a13 = class extends Loomse {
+  constructor(pluginRegistryService, reporterService, scriptedEventService, root, json) {
+    super(root, json);
+    __publicField(this, "pluginRegistryService");
+    __publicField(this, "reporterService");
+    __publicField(this, "scriptedEventService");
+    this.pluginRegistryService = pluginRegistryService;
+    this.reporterService = reporterService;
+    this.scriptedEventService = scriptedEventService;
+  }
+  currentDuration() {
+    return this.reporterService.getCurrentDuration();
+  }
+  currentTime() {
+    return this.reporterService.getCurrentTime();
+  }
+  currentScene() {
+    return this.reporterService.getCurrentScene();
+  }
+  currentEvents() {
+    return this.scriptedEventService.events;
+  }
+  registerPlugin(pluginProps) {
+    const plugin = new Plugin(pluginProps);
+    this.pluginRegistryService.registerPlugin(plugin);
+    console.log(`Loomse: Plugin "${pluginProps.name}" registered`);
+  }
+}, __name(_a13, "Services"), _a13);
+Services = _ts_decorate6([
+  singleton4(),
+  _ts_metadata5("design:type", Function),
+  _ts_metadata5("design:paramtypes", [
+    typeof PluginRegistryService === "undefined" ? Object : PluginRegistryService,
+    typeof ReporterService === "undefined" ? Object : ReporterService,
+    typeof ScriptedEventService === "undefined" ? Object : ScriptedEventService,
+    typeof HTMLElement === "undefined" ? Object : HTMLElement,
+    Object
+  ])
+], Services);
+
 // source/index.ts
 function createStory(root, json) {
-  container4.register("root", {
-    useValue: root
-  });
-  container4.register("json", {
-    useValue: json
-  });
-  return container4.resolve(Loomse);
+  return new Services(container4.resolve(PluginRegistryService), container4.resolve(ReporterService), container4.resolve(ScriptedEventService), root, json);
 }
 __name(createStory, "createStory");
 export {
@@ -929,4 +1005,3 @@ export {
   listenToVideoDurationChanged,
   listenToVideoTimeUpdate
 };
-//# sourceMappingURL=loomse.esm.mjs.map
