@@ -37,8 +37,13 @@ export default class EventQueue {
 		return queue;
 	}
 
-	setQueue(timedObjects: TimedObject[]) {
+	reset() {
+		this.queue = [];
 		this.queueIndex = 0;
+	}
+
+	setQueue(timedObjects: TimedObject[]) {
+		this.reset();
 		this.queue = timedObjects;
 		this.sort('asc');
 	}

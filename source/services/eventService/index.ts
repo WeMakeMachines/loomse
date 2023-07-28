@@ -8,9 +8,9 @@ import EventQueue, { EventAction } from './EventQueue';
 class EventServiceError extends Error {}
 
 export default abstract class EventService {
-	public stopListeningToRadio: StopListeningFunction = () => {};
 	public events: StoryEvent[] = [];
 
+	protected stopListeningToRadio: StopListeningFunction = () => {};
 	protected constructor(private queue: EventQueue) {}
 
 	public setEvents(events: StoryEvent[]) {
@@ -70,5 +70,11 @@ export default abstract class EventService {
 		}
 
 		this.queue.advanceQueue();
+	}
+
+	public resetService() {
+		this.stopListeningToRadio();
+		this.events = [];
+		this.queue.reset();
 	}
 }

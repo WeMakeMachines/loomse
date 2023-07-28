@@ -28,7 +28,7 @@ export default class Scene {
 	}
 
 	onunmount() {
-		this.scriptedEventService.stopListeningToRadio();
+		this.scriptedEventService.resetService();
 		unmount(this.el, this.video.el);
 	}
 }
