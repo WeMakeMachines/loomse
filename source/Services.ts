@@ -4,7 +4,7 @@ import PluginRegistryService from './services/pluginRegistryService';
 import ReporterService from './services/reporterService';
 import ScriptedEventService from './services/scriptedEventService';
 import Plugin, { PluginProps } from './components/Plugin';
-import { StoryEvent } from './types/StoryType';
+import { SceneEvent } from './types/StoryType';
 import Loomse from './Loomse';
 
 @singleton()
@@ -31,7 +31,7 @@ export default class Services extends Loomse {
 		return this.reporterService.getCurrentScene();
 	}
 
-	currentEvents(): StoryEvent[] {
+	currentEvents(): SceneEvent[] {
 		return this.scriptedEventService.events;
 	}
 

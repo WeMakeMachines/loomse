@@ -7,7 +7,7 @@ import {
 
 import { getTextFile } from '../../lib/browser/fetch';
 import SubtitleEventService from '../../services/subtitleEventService';
-import { StoryEvent } from '../../types/StoryType';
+import { SceneEvent } from '../../types/StoryType';
 
 class SubtitlesError extends Error {}
 
@@ -17,7 +17,7 @@ export default class Subtitles {
 	public fileContents: string | null = null;
 	public format: Format;
 
-	static mapCueToScriptedEvent(cue: Cue[]): StoryEvent[] {
+	static mapCueToScriptedEvent(cue: Cue[]): SceneEvent[] {
 		return cue.map((cue) => ({
 			in: cue.startTime.totals.inSeconds,
 			out: cue.endTime.totals.inSeconds,

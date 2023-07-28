@@ -1,7 +1,7 @@
 import { mount } from 'redom';
 import { container, singleton } from 'tsyringe';
 
-import { StoryEvent } from '../../types/StoryType';
+import { SceneEvent } from '../../types/StoryType';
 import EventQueue, { EventAction } from '../eventService/EventQueue';
 import EventService from '../eventService';
 import { broadcastDirectorSceneEvent } from '../radioService/broadcasters';
@@ -13,7 +13,7 @@ export default class ScriptedEventService extends EventService {
 		super(container.resolve(EventQueue));
 	}
 
-	protected startEventCallback({ pluginName, payload }: StoryEvent) {
+	protected startEventCallback({ pluginName, payload }: SceneEvent) {
 		if (pluginName) {
 			const plugin = this.pluginRegistryService.getPlugin(pluginName);
 
@@ -42,7 +42,7 @@ export default class ScriptedEventService extends EventService {
 		});
 	}
 
-	protected stopEventCallback({ pluginName, payload }: StoryEvent) {
+	protected stopEventCallback({ pluginName, payload }: SceneEvent) {
 		if (pluginName) {
 			const plugin = this.pluginRegistryService.getPlugin(pluginName);
 

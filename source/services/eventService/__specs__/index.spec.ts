@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 import { container, singleton } from 'tsyringe';
 
-import { StoryEvent } from '../../../types/StoryType';
+import { SceneEvent } from '../../../types/StoryType';
 import EventService from '../index';
 import EventQueue, { EventAction, TimedObject } from '../EventQueue';
 
 jest.mock('../EventQueue');
 
-const mockEvents_1: StoryEvent[] = [
+const mockEvents_1: SceneEvent[] = [
 	{
 		pluginName: 'test-plugin-1',
 		in: 0,
@@ -26,7 +26,7 @@ const mockEvents_1: StoryEvent[] = [
 	}
 ];
 
-const mockEvents_2: StoryEvent[] = [
+const mockEvents_2: SceneEvent[] = [
 	{
 		pluginName: 'test-plugin-1',
 		in: 2,
@@ -77,7 +77,7 @@ class MockEventService extends EventService {
 
 	public stopEventCallback() {}
 
-	public setEvents(events: StoryEvent[]) {
+	public setEvents(events: SceneEvent[]) {
 		super.setEvents(events);
 	}
 }

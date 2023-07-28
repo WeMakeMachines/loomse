@@ -16,11 +16,11 @@ export interface StoryScenes {
 
 export interface StoryScene {
 	longName?: string;
-	video: StoryVideo;
-	events: StoryEvent[];
+	video: SceneVideo;
+	events: SceneEvent[];
 }
 
-export interface StoryVideo {
+export interface SceneVideo {
 	sources: {
 		mp4?: string;
 		ogg?: string;
@@ -38,7 +38,7 @@ export interface StoryVideo {
 	subtitles?: string;
 }
 
-export interface StoryEvent {
+export interface SceneEvent {
 	pluginName?: string;
 	in: number;
 	out: number;

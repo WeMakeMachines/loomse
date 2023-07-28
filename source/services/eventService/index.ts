@@ -1,4 +1,4 @@
-import { StoryEvent } from '../../types/StoryType';
+import { SceneEvent } from '../../types/StoryType';
 import {
 	listenToVideoTimeUpdate,
 	StopListeningFunction
@@ -8,12 +8,12 @@ import EventQueue, { EventAction } from './EventQueue';
 class EventServiceError extends Error {}
 
 export default abstract class EventService {
-	public events: StoryEvent[] = [];
+	public events: SceneEvent[] = [];
 
 	protected stopListeningToRadio: StopListeningFunction = () => {};
 	protected constructor(private queue: EventQueue) {}
 
-	public setEvents(events: StoryEvent[]) {
+	public setEvents(events: SceneEvent[]) {
 		this.events = events;
 		this.queue.setQueue(EventQueue.buildQueueFromScriptedEvents(events));
 		this.stopListeningToRadio = listenToVideoTimeUpdate((time) => {
@@ -25,13 +25,13 @@ export default abstract class EventService {
 		});
 	}
 
-	protected abstract startEventCallback(scriptedEvent: StoryEvent): void;
+	protected abstract startEventCallback(scriptedEvent: SceneEvent): void;
 
-	protected abstract stopEventCallback(scriptedEvent: StoryEvent): void;
+	protected abstract stopEventCallback(scriptedEvent: SceneEvent): void;
 
 	private getCurrentlyActionableEvent(
 		seconds: number
-	): { event: StoryEvent; action: EventAction } | undefined {
+	): { event: SceneEvent; action: EventAction } | undefined {
 		const pending = this.queue.getPendingObject();
 
 		if (!pending) {
@@ -53,7 +53,7 @@ export default abstract class EventService {
 		event,
 		action
 	}: {
-		event: StoryEvent;
+		event: SceneEvent;
 		action: EventAction;
 	}) {
 		switch (action) {

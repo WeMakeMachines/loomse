@@ -1,7 +1,7 @@
-import { StoryEvent } from '../../../../types/StoryType';
+import { SceneEvent } from '../../../../types/StoryType';
 import EventQueue, { EventAction, TimedObject } from '../../EventQueue';
 
-const mockScriptedEvents: StoryEvent[] = [
+const mockScriptedEvents: SceneEvent[] = [
 	{
 		in: 0,
 		out: 20
