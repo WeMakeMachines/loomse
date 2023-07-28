@@ -46,6 +46,12 @@ export default class ScriptedEventService extends EventService {
 		if (pluginName) {
 			const plugin = this.pluginRegistryService.getPlugin(pluginName);
 
+			if (!plugin) {
+				console.warn(`Plugin "${pluginName}" not registered`);
+
+				return;
+			}
+
 			if (plugin && !plugin.mount?.persist) {
 				plugin?.unmount();
 			}
