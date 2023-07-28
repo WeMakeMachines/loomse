@@ -30,14 +30,14 @@ export default abstract class EventService {
 			return;
 		}
 
-		const milliseconds = time;
+		const seconds = time;
 		const pending = this.queue.getPendingObject();
 
-		if (!milliseconds || !pending) {
+		if (!seconds || !pending) {
 			return;
 		}
 
-		if (milliseconds >= pending.time) {
+		if (seconds >= pending.time) {
 			this.parseAction(pending);
 		}
 	}
