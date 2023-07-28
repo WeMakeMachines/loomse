@@ -37,6 +37,7 @@
   "scripts": {
     "prebuild": "npm run test",
     "build": "tsup",
+    "build:dev": "NODE_ENV=development tsup",
     "prettier": "prettier --write 'source/**/*.ts'",
     "eslint": "eslint source",
     "test": "jest --verbose"
