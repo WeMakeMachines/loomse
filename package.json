@@ -35,6 +35,7 @@
     }
   },
   "scripts": {
+    "prebuild": "npm run test",
     "build": "tsup",
     "prettier": "prettier --write 'source/**/*.ts'",
     "eslint": "eslint source",
