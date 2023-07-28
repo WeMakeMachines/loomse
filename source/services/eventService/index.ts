@@ -13,7 +13,7 @@ export default abstract class EventService {
 
 	protected constructor(private queue: EventQueue) {}
 
-	protected setEvents(events: StoryEvent[]) {
+	public setEvents(events: StoryEvent[]) {
 		this.events = events;
 		this.queue.setQueue(EventQueue.buildQueueFromScriptedEvents(events));
 		this.stopListeningToRadio = listenToVideoTimeUpdate((time) =>

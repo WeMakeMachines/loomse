@@ -13,10 +13,6 @@ export default class ScriptedEventService extends EventService {
 		super(container.resolve(EventQueue));
 	}
 
-	public setEvents(events: StoryEvent[]) {
-		super.setEvents(events);
-	}
-
 	protected startEventCallback({ pluginName, payload }: StoryEvent) {
 		if (pluginName) {
 			const plugin = this.pluginRegistryService.getPlugin(pluginName);

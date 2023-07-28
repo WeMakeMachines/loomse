@@ -14,10 +14,6 @@ export default class SubtitleEventService extends EventService {
 		super(container.resolve(EventQueue));
 	}
 
-	public setEvents(events: StoryEvent[]) {
-		super.setEvents(events);
-	}
-
 	protected startEventCallback({ payload }: StoryEvent) {
 		if (payload) {
 			broadcastSubtitlePost(payload);
