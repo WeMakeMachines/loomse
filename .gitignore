@@ -1,8 +1,9 @@
 ### Dev environment ###
 .idea
+coverage/
 
 ### NPM ###
 node_modules
 
-## OS ##
+### OS ###
 .DS_Store
