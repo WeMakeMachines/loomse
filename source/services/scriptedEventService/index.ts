@@ -1,16 +1,16 @@
 import { mount } from 'redom';
-import { container, singleton } from 'tsyringe';
+import { injectable } from 'tsyringe';
 
 import { SceneEvent } from '../../types/StoryType';
-import EventQueue, { EventAction } from '../eventService/EventQueue';
+import { EventAction } from '../eventService/EventQueue';
 import EventService from '../eventService';
 import { broadcastDirectorSceneEvent } from '../radioService/broadcasters';
 import PluginRegistryService from '../pluginRegistryService';
 
-@singleton()
+@injectable()
 export default class ScriptedEventService extends EventService {
 	constructor(private pluginRegistryService: PluginRegistryService) {
-		super(container.resolve(EventQueue));
+		super();
 	}
 
 	protected startEventCallback({ pluginName, payload }: SceneEvent) {

@@ -11,14 +11,13 @@ import {
 	broadcastVideoSeeking,
 	broadcastVideoTimeUpdate
 } from '../../services/radioService/broadcasters';
+import SubtitleEventService from '../../services/subtitleEventService';
 import {
 	listenToDirectorPause,
 	listenToDirectorPlay
 } from '../../services/radioService/listeners';
-import Source from './Source';
 import Subtitles from '../Subtitles';
-import { container } from 'tsyringe';
-import SubtitleEventService from '../../services/subtitleEventService';
+import Source from './Source';
 
 class VideoError extends Error {}
 
@@ -43,13 +42,16 @@ export default class Video {
 	public stopListeningToVideoPlay: StopListeningFunction;
 	public sources: { [key: string]: Source };
 
-	constructor({
-		controls = false,
-		loop = false,
-		muted = false,
-		sources,
-		subtitles
-	}: VideoProps) {
+	constructor(
+		public subtitleEventService: SubtitleEventService,
+		{
+			controls = false,
+			loop = false,
+			muted = false,
+			sources,
+			subtitles
+		}: VideoProps
+	) {
 		this.el = el('video', {
 			autoplay: false,
 			controls: controls,
@@ -60,10 +62,6 @@ export default class Video {
 
 		this.sources = this.setSources(sources);
 		this.mountSources();
-
-		if (subtitles) {
-			new Subtitles(container.resolve(SubtitleEventService), subtitles);
-		}
 
 		this.broadcastEndedEvent = () => broadcastVideoEnded();
 
@@ -91,6 +89,19 @@ export default class Video {
 		this.stopListeningToVideoPlay = listenToDirectorPlay(() => this.play());
 
 		this.listenToVideoEvents();
+
+		if (subtitles) {
+			this.setSubtitles(subtitles).catch((error) => {
+				console.warn(`Unable to setup subtitles, ${error}`);
+			});
+		}
+	}
+
+	async setSubtitles(subtitlesFilePath: string) {
+		const subtitles = new Subtitles(subtitlesFilePath);
+		const cues = await subtitles.parseFileContents();
+
+		this.subtitleEventService.setEvents(cues);
 	}
 
 	setSources(sources: { [key: string]: string }) {
@@ -188,6 +199,7 @@ export default class Video {
 	}
 
 	onunmount() {
+		this.subtitleEventService.dispose();
 		this.stopListeningToVideoEvents();
 		this.stopListeningToRadio();
 		this.unmountSources();

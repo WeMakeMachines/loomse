@@ -35,23 +35,30 @@ export default class Loomse {
 		this.story = new Story(storyObject);
 	}
 
-	private loadScene(sceneName: string) {
-		if (!this.story) return;
+	private unloadExistingScene() {
+		if (this.scene) {
+			this.scene.cleanup();
+			unmount(this.el, this.scene);
+		}
+	}
 
-		if (!sceneName || !this.story.scenes[sceneName]) {
+	private loadScene(sceneName: string) {
+		if (!this.story) {
+			throw new LoomseError('No story loaded');
+		}
+
+		const newScene = this.story.scenes[sceneName];
+
+		if (!newScene) {
 			throw new LoomseError(
 				`Scene "${sceneName}" does not exist in script`
 			);
 		}
 
-		if (this.scene) {
-			unmount(this.el, this.scene);
-		}
-
 		this.scene = new Scene(
 			container.resolve(ScriptedEventService),
 			sceneName,
-			this.story.scenes[sceneName]
+			newScene
 		);
 
 		mount(this.el, this.scene);
@@ -66,12 +73,15 @@ export default class Loomse {
 	}
 
 	reloadScene() {
+		this.unloadExistingScene();
+
 		if (this.scene?.sceneName) {
 			this.loadScene(this.scene?.sceneName);
 		}
 	}
 
-	skipTo(sceneName: string) {
+	changeScene(sceneName: string) {
+		this.unloadExistingScene();
 		this.loadScene(sceneName);
 	}
 }

@@ -80,7 +80,7 @@ An object with some or all of the following properties:
 > >
 > > The callback which should execute before unmounting the plugin
 
-### `skipTo(sceneName)`
+### `changeScene(sceneName)`
 
 Skips to the named scene
 

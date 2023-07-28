@@ -1,3 +1,5 @@
+import { container, Disposable } from 'tsyringe';
+
 import { SceneEvent } from '../../types/StoryType';
 import {
 	listenToVideoTimeUpdate,
@@ -7,23 +9,14 @@ import EventQueue, { EventAction } from './EventQueue';
 
 class EventServiceError extends Error {}
 
-export default abstract class EventService {
+export default abstract class EventService implements Disposable {
 	public events: SceneEvent[] = [];
 
 	protected stopListeningToRadio: StopListeningFunction = () => {};
-	protected constructor(private queue: EventQueue) {}
 
-	public setEvents(events: SceneEvent[]) {
-		this.events = events;
-		this.queue.setQueue(EventQueue.buildQueueFromScriptedEvents(events));
-		this.stopListeningToRadio = listenToVideoTimeUpdate((time) => {
-			const actionableEvent = this.getCurrentlyActionableEvent(time);
-
-			if (actionableEvent) {
-				this.actionEvent(actionableEvent);
-			}
-		});
-	}
+	protected constructor(
+		private queue: EventQueue = container.resolve(EventQueue)
+	) {}
 
 	protected abstract startEventCallback(scriptedEvent: SceneEvent): void;
 
@@ -72,9 +65,20 @@ export default abstract class EventService {
 		this.queue.advanceQueue();
 	}
 
-	public resetService() {
-		this.stopListeningToRadio();
-		this.events = [];
+	public setEvents(events: SceneEvent[]) {
+		this.events = events;
+		this.queue.setQueue(EventQueue.buildQueueFromScriptedEvents(events));
+		this.stopListeningToRadio = listenToVideoTimeUpdate((time) => {
+			const actionableEvent = this.getCurrentlyActionableEvent(time);
+
+			if (actionableEvent) {
+				this.actionEvent(actionableEvent);
+			}
+		});
+	}
+
+	public dispose() {
 		this.queue.reset();
+		this.stopListeningToRadio();
 	}
 }

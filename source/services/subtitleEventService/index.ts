@@ -1,4 +1,4 @@
-import { container, singleton } from 'tsyringe';
+import { injectable } from 'tsyringe';
 
 import { SceneEvent } from '../../types/StoryType';
 import {
@@ -6,12 +6,11 @@ import {
 	broadcastSubtitlePost
 } from '../radioService/broadcasters';
 import EventService from '../eventService';
-import EventQueue from '../eventService/EventQueue';
 
-@singleton()
+@injectable()
 export default class SubtitleEventService extends EventService {
 	constructor() {
-		super(container.resolve(EventQueue));
+		super();
 	}
 
 	protected startEventCallback({ payload }: SceneEvent) {

@@ -1,10 +1,11 @@
 import { el, unmount } from 'redom';
-
-import Video from '../Video';
+import { container } from 'tsyringe';
 
 import { broadcastDirectorSceneChange } from '../../services/radioService/broadcasters';
 import ScriptedEventService from '../../services/scriptedEventService';
+import SubtitleEventService from '../../services/subtitleEventService';
 import { StoryScene } from '../../types/StoryType';
+import Video from '../Video';
 
 export default class Scene {
 	public el: HTMLElement;
@@ -19,16 +20,21 @@ export default class Scene {
 	) {
 		broadcastDirectorSceneChange(sceneName);
 
-		this.el = el('div.loomse__scene', (this.video = new Video(video)));
+		this.el = el(
+			'div.loomse__scene',
+			(this.video = new Video(
+				container.resolve(SubtitleEventService),
+				video
+			))
+		);
 		this.sceneName = sceneName;
 		this.longName = longName;
-
 		this.scriptedEventService.setEvents(events);
 		this.video.play();
 	}
 
-	onunmount() {
-		this.scriptedEventService.resetService();
+	cleanup() {
+		this.scriptedEventService.dispose();
 		unmount(this.el, this.video.el);
 	}
 }
