@@ -8,7 +8,7 @@ class PluginRegistryServiceError extends Error {}
 
 @singleton()
 export default class PluginRegistryService {
-	private readonly registry: {
+	private registry: {
 		[key: PluginName]: Plugin;
 	} = {};
 
