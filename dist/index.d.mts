@@ -38,7 +38,7 @@ declare class Plugin {
 }
 
 declare class PluginRegistryService {
-    private readonly registry;
+    private registry;
     registerPlugin(plugin: Plugin): void;
     getPlugin(name: string): Plugin | undefined;
 }
