@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { container } from 'tsyringe';
 
+import { enableChangeToScenePlugin } from './plugins/changeToScene/changeToScene.config';
 import {
 	listenToDirectorPlay,
 	listenToDirectorPause,
@@ -17,13 +18,17 @@ import Services from './Services';
 type LoomseType = Services;
 
 function createStory(root: HTMLElement, json: object): LoomseType {
-	return new Services(
+	const services = new Services(
 		container.resolve(PluginRegistryService),
 		container.resolve(ReporterService),
 		container.resolve(ScriptedEventService),
 		root,
 		json
 	);
+
+	enableChangeToScenePlugin(services);
+
+	return services;
 }
 
 export {
