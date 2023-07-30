@@ -30,6 +30,25 @@ var __async = (__this, __arguments, generator) => {
 import "reflect-metadata";
 import { container as container4 } from "tsyringe";
 
+// source/plugins/changeToScene/changeToScene.config.ts
+function enableChangeToScenePlugin(loomse) {
+  loomse.registerPlugin({
+    name: "changeToScene",
+    hooks: {
+      run: (payload) => {
+        const typedPayload = payload;
+        if (!typedPayload || !typedPayload.nextScene) {
+          console.warn("Plugin: 'changeToScene' can not find a payload or payload.nextScene property");
+          return;
+        }
+        const { nextScene } = typedPayload;
+        loomse.changeScene(nextScene);
+      }
+    }
+  });
+}
+__name(enableChangeToScenePlugin, "enableChangeToScenePlugin");
+
 // source/lib/common/index.ts
 function random(minRange, maxRange) {
   let range = maxRange - minRange;
@@ -993,7 +1012,9 @@ Services = _ts_decorate6([
 
 // source/index.ts
 function createStory(root, json) {
-  return new Services(container4.resolve(PluginRegistryService), container4.resolve(ReporterService), container4.resolve(ScriptedEventService), root, json);
+  const services = new Services(container4.resolve(PluginRegistryService), container4.resolve(ReporterService), container4.resolve(ScriptedEventService), root, json);
+  enableChangeToScenePlugin(services);
+  return services;
 }
 __name(createStory, "createStory");
 export {
