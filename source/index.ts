@@ -13,12 +13,12 @@ import {
 import PluginRegistryService from './services/pluginRegistryService';
 import ReporterService from './services/reporterService';
 import ScriptedEventService from './services/scriptedEventService';
-import Services from './Services';
+import LoomseServices from './Services';
 
-type LoomseType = Services;
+type LoomseType = LoomseServices;
 
 function createStory(root: HTMLElement, json: object): LoomseType {
-	const services = new Services(
+	const services = new LoomseServices(
 		container.resolve(PluginRegistryService),
 		container.resolve(ReporterService),
 		container.resolve(ScriptedEventService),
